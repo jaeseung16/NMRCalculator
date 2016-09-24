@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="1dR-7C-1Er">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--iPadNMR Calc View Controller-->
+        <scene sceneID="CSa-pL-epT">
+            <objects>
+                <viewController storyboardIdentifier="nucleus" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gNc-cn-1JD" customClass="iPadNMRCalcViewController" customModule="NMRCalculator" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0Tg-5A-Rs1"/>
+                        <viewControllerLayoutGuide type="bottom" id="u6z-nR-l8j"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Neo-Mh-kg1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="54E-06-NfV">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="fCp-L9-wgw"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dataSource" destination="gNc-cn-1JD" id="3fy-0t-s6H"/>
+                                    <outlet property="delegate" destination="gNc-cn-1JD" id="Vag-u0-CBO"/>
+                                </connections>
+                            </pickerView>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="osV-tl-NPQ">
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="HkD-BK-kHL">
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tmm-2s-vjm">
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <state key="normal" title="Search Web"/>
+                                        <connections>
+                                            <action selector="searchwebButtonDown:" destination="gNc-cn-1JD" eventType="touchUpInside" id="Z6f-Wh-jsj"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="HkD-BK-kHL" firstAttribute="leading" secondItem="osV-tl-NPQ" secondAttribute="leading" id="8KJ-u5-QWg"/>
+                                    <constraint firstAttribute="trailing" secondItem="tmm-2s-vjm" secondAttribute="trailing" id="8ar-Yh-FbS"/>
+                                    <constraint firstItem="tmm-2s-vjm" firstAttribute="width" secondItem="HkD-BK-kHL" secondAttribute="width" multiplier="0.3" id="YeH-zR-YsG"/>
+                                    <constraint firstItem="tmm-2s-vjm" firstAttribute="height" secondItem="HkD-BK-kHL" secondAttribute="height" id="vJP-mi-zTL"/>
+                                </constraints>
+                            </stackView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="rma-p6-9pK">
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="NuK-8S-LfL">
+                                    <rect key="frame" x="0.0" y="62" width="343" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </view>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NucleusTableCell" rowHeight="34" id="2C3-qg-JSv" customClass="NMRParametersTableViewCell" customModule="NMRCalculator" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="343" height="34"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2C3-qg-JSv" id="ELS-WM-2gV">
+                                            <frame key="frameInset" width="343" height="34"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="UTi-ow-2vj">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="w2I-Ne-WTi">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="gNc-cn-1JD" id="zdP-Ik-1ci"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="w2I-Ne-WTi" firstAttribute="leading" secondItem="UTi-ow-2vj" secondAttribute="trailing" constant="8" id="Fpj-T2-WzR"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="w2I-Ne-WTi" secondAttribute="trailing" id="XJ6-os-Qfz"/>
+                                                <constraint firstItem="w2I-Ne-WTi" firstAttribute="centerY" secondItem="ELS-WM-2gV" secondAttribute="centerY" id="d1a-wf-eHT"/>
+                                                <constraint firstItem="UTi-ow-2vj" firstAttribute="centerY" secondItem="ELS-WM-2gV" secondAttribute="centerY" id="iTF-SH-cnx"/>
+                                                <constraint firstItem="w2I-Ne-WTi" firstAttribute="width" secondItem="UTi-ow-2vj" secondAttribute="width" multiplier="9:16" id="kU0-x9-cxo"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <constraints>
+                                            <constraint firstItem="UTi-ow-2vj" firstAttribute="leading" secondItem="2C3-qg-JSv" secondAttribute="leading" constant="8" id="Hek-dS-j7O"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="itemLabel" destination="UTi-ow-2vj" id="8Pk-lm-Lfa"/>
+                                            <outlet property="itemValue" destination="w2I-Ne-WTi" id="Cr9-aP-ydZ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="gNc-cn-1JD" id="7PK-k9-lgU"/>
+                                    <outlet property="delegate" destination="gNc-cn-1JD" id="A3r-PI-Hne"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="54E-06-NfV" secondAttribute="trailing" id="2KD-yp-8Rl"/>
+                            <constraint firstItem="54E-06-NfV" firstAttribute="centerX" secondItem="Neo-Mh-kg1" secondAttribute="centerX" id="421-Ns-CnK"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="54E-06-NfV" secondAttribute="leading" id="Iva-A1-uG6"/>
+                            <constraint firstItem="rma-p6-9pK" firstAttribute="centerX" secondItem="Neo-Mh-kg1" secondAttribute="centerX" id="NIf-6t-Rlp"/>
+                            <constraint firstItem="rma-p6-9pK" firstAttribute="top" secondItem="osV-tl-NPQ" secondAttribute="bottom" constant="4" id="NzQ-Xv-hRO"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="osV-tl-NPQ" secondAttribute="leading" id="Q77-AY-c1x"/>
+                            <constraint firstItem="54E-06-NfV" firstAttribute="top" secondItem="0Tg-5A-Rs1" secondAttribute="bottom" id="blv-Mz-eOH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="osV-tl-NPQ" secondAttribute="trailing" id="m7X-bX-2rc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="rma-p6-9pK" secondAttribute="trailing" id="n8N-x2-VcJ"/>
+                            <constraint firstItem="u6z-nR-l8j" firstAttribute="top" secondItem="rma-p6-9pK" secondAttribute="bottom" constant="8" id="q65-FJ-eIN"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="rma-p6-9pK" secondAttribute="leading" id="tn9-kC-8md"/>
+                            <constraint firstItem="osV-tl-NPQ" firstAttribute="top" secondItem="54E-06-NfV" secondAttribute="bottom" constant="5" id="x6m-Rs-qlH"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="NucleusPicker" destination="54E-06-NfV" id="C36-iR-hWL"/>
+                        <outlet property="iPadNMRCalcTable" destination="rma-p6-9pK" id="huZ-83-JRV"/>
+                        <outlet property="nucleusName" destination="HkD-BK-kHL" id="wKV-Jm-JGG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6vf-mg-VYs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-556" y="149"/>
+        </scene>
+        <!--NMR Calculator-->
+        <scene sceneID="rBD-7l-KFj">
+            <objects>
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="ONM-gr-85D" customClass="NMRCalcMasterViewController" customModule="NMRCalculator" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="CaY-1x-9gv">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="pJv-Gn-VgP">
+                            <rect key="frame" x="0.0" y="136" width="375" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MasterViewTableCell" id="Hoh-Ae-cbn" customClass="NMRCalcMasterItems" customModule="NMRCalculator" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hoh-Ae-cbn" id="dQj-m9-Ngm">
+                                    <frame key="frameInset" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Nuclear Magnetic Resonance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7vU-m2-fJR">
+                                            <frame key="frameInset" minX="8" minY="8" width="584" height="27"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="menuItems" destination="7vU-m2-fJR" id="fHv-ae-ywR"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="ONM-gr-85D" id="Eex-MZ-sN1"/>
+                            <outlet property="delegate" destination="ONM-gr-85D" id="V9M-mu-mCG"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="NMR Calculator" id="dGB-jv-LQI"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="E9U-qO-djH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="264" y="-505"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="qah-k7-DQZ">
+            <objects>
+                <navigationController id="eCl-uq-r4K" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="FWm-AO-Gg7">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ONM-gr-85D" kind="relationship" relationship="rootViewController" id="dCm-Jk-wZM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5cO-wh-kZS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-556" y="-507"/>
+        </scene>
+        <!--Split View Controller-->
+        <scene sceneID="LOD-Gg-nZC">
+            <objects>
+                <splitViewController id="1dR-7C-1Er" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="eCl-uq-r4K" kind="relationship" relationship="masterViewController" id="Xu6-EO-kXd"/>
+                        <segue destination="gNc-cn-1JD" kind="relationship" relationship="detailViewController" id="YAz-6i-azI"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2XO-vA-dgB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1376" y="-178"/>
+        </scene>
+    </scenes>
+</document>
