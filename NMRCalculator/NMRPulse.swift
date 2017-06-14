@@ -96,6 +96,9 @@ class NMRPulse {
         
     }
     
+    // ToDo: When the sign of the filpangle changes, keep the duration being positive and change the sign of the amplitude !
+    // ToDo: Likewise, when the sign of the amplitude changes, keep the duration being positive and change the signe of the flipangle!
+    
     func update(name: String) -> Bool {
         
         if let to_update = parameters(rawValue: name) {

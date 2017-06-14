@@ -117,7 +117,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
             itemValues1 = [(pulse.duration)!.format(".5"),(pulse.flipangle)!.format(".4"), ((pulse.amplitude)!*1_000).format(".6") ]
             
             for k in 0..<valueTextField1.count {
-                switch k {
+                if let value = itemValues1?[k] {
+                    valueTextField1[k].text = value
+                }
+                
+/*                switch k {
                 case 0:
                     if let tp = pulse.duration {
                         valueTextField1[k].text = tp.format(".5")
@@ -132,7 +136,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     }
                 default:
                     break
-                }
+                }*/
             }
             
         }
@@ -165,7 +169,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         
         if let calc = nmrCalc {
-            itemValues3 = [(calc.repetitionTime)!.format(".3"),(calc.relaxationTime)!.format(".3"), ((calc.angleErnst)!*180.0/M_PI).format(".4") ]
+            itemValues3 = [(calc.repetitionTime)!.format(".3"),(calc.relaxationTime)!.format(".3"), ((calc.angleErnst)!*180.0/Double.pi).format(".4") ]
             
             for k in 0..<valueTextField3.count {
                 switch k {
@@ -179,7 +183,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     }
                 case 2:
                     if let angle = calc.angleErnst {
-                        valueTextField3[k].text = (angle * 180.0 / M_PI).format(".4")
+                        valueTextField3[k].text = (angle * 180.0 / Double.pi).format(".4")
                     }
                 default:
                     break
@@ -207,205 +211,163 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         if let x = Double(textField.text!) {
             switch textField {
             case valueTextField1[0]: // Textfield for the duration of the 1st pulse
-                if nmrCalc!.set_pulseparameter("duration", of: 0, to_value: x) == false {
+                
+                guard nmrCalc!.set_pulseparameter("duration", of: 0, to_value: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_pulseparameter("duration", of: 0, to_value: Double(textbeforeediting!)! ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
+                    textField.text = textbeforeediting
+                    break
                 }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 0 {
-                        if fixedItem == menuItems1![1] {
-                            if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                            }
-                        } else if fixedItem == menuItems1![2] {
-                            if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                        } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                        }
-                    }
-                } else {
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
                     if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
+                    break
+                }
+                
+                if fixedItem == menuItems1![1] {
+                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
+                    }
+                } else if fixedItem == menuItems1![2] {
+                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
+                    }
                 }
                 
             case valueTextField1[1]: // Textfield for the flip angle of the 1st pulse
-                if nmrCalc!.set_pulseparameter("flipangle", of: 0, to_value: x) == false {
+                
+                guard nmrCalc!.set_pulseparameter("flipangle", of: 0, to_value: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_pulseparameter("flipangle", of: 0, to_value: Double(textbeforeediting!)! ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
+                    textField.text = textbeforeediting
+                    break
                 }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 0 {
-                        if fixedItem == menuItems1![2] {
-                            if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                            }
-                        } else if fixedItem == menuItems1![0] {
-                            if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                        } else if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                        }
-                    }
-                } else {
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     } else if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
+                    break
+                }
+                
+                if fixedItem == menuItems1![2] {
+                    if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
+                    }
+                } else if fixedItem == menuItems1![0] {
+                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
+                    }
                 }
                 
             case valueTextField1[2]: // Textfield for the RF amplitude of the 1st pulse
-                if nmrCalc!.set_pulseparameter("amplitude", of: 0, to_value: x/1_000.0) == false {
+                
+                guard nmrCalc!.set_pulseparameter("amplitude", of: 0, to_value: x/1_000.0) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_pulseparameter("amplitude", of: 0, to_value: Double(textbeforeediting!)!/1_000.0 ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
+                    textField.text = textbeforeediting
+                    break
                 }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 0 {
-                        if fixedItem == menuItems1![1] {
-                            if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                            }
-                        } else if fixedItem == menuItems1![0] {
-                            if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                        } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                        }
-                    }
-                } else {
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
+                    break
+                }
+                
+                if fixedItem == menuItems1![1] {
+                    if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
+                    }
+                } else if fixedItem == menuItems1![0] {
+                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
+                    }
                 }
                 
             case valueTextField2[0]: // Textfield for the duration of the second pulse
-                if nmrCalc!.set_pulseparameter("duration", of: 1, to_value: x) == false {
+                
+                guard nmrCalc!.set_pulseparameter("duration", of: 1, to_value: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_pulseparameter("duration", of: 1, to_value: Double(textbeforeediting!)! ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
+                    textField.text = textbeforeediting
+                    break
                 }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 1 {
-                        if fixedItem == menuItems2![1] {
-                            if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                            }
-                        } else if fixedItem == menuItems2![2] {
-                            if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                        } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                        }
-                    }
-                } else {
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
                     if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
+                    break
+                }
+                
+                if fixedItem == menuItems2![1] {
+                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
+                    }
+                } else if fixedItem == menuItems2![2] {
+                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
+                    }
                 }
                 
             case valueTextField2[1]: // Textfield for the flip angle of the second pulse
-                if nmrCalc!.set_pulseparameter("flipangle", of: 1, to_value: x) == false {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_pulseparameter("flipangle", of: 1, to_value: Double(textbeforeediting!)! ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
-                }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 1 {
-                        if fixedItem == menuItems2![2] {
-                            if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                            }
-                        } else if fixedItem == menuItems2![0] {
-                            if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                        } else if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                        }
-                    }
-                } else {
+                guard nmrCalc!.set_pulseparameter("flipangle", of: 1, to_value: x) else {
+                    warnings("Unable to comply.", message: "The value is out of range.")
+                    textField.text = textbeforeediting
+                    break
+                }
+            
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     } else if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
+                    break
                 }
                 
+                if fixedItem == menuItems2![2] {
+                    if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
+                    }
+                } else if fixedItem == menuItems2![0] {
+                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
+                    }
+                }
+
             case valueTextField2[2]: // Textfield for the RF amplitude of the second pulse
-                if nmrCalc!.set_pulseparameter("amplitude", of: 1, to_value: x/1_000.0) == false {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_pulseparameter("amplitude", of: 1, to_value: Double(textbeforeediting!)!/1_000.0 ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
-                }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 1 {
-                        if fixedItem == menuItems2![1] {
-                            if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                            }
-                        } else if fixedItem == menuItems2![0] {
-                            if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                        } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                        }
-                    }
-                } else {
+                guard nmrCalc!.set_pulseparameter("amplitude", of: 1, to_value: x/1_000.0) else {
+                    warnings("Unable to comply.", message: "The value is out of range.")
+                    textField.text = textbeforeediting
+                    break
+                }
+
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
+                    }
+                    break
+                }
+                
+                if fixedItem == menuItems2![1] {
+                    if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
+                    }
+                } else if fixedItem == menuItems2![0] {
+                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                 }
@@ -448,107 +410,85 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
 
             case valueTextField3[0]:
-                if nmrCalc!.set_ernstparameter("repetition", to: x) == false {
+                
+                guard nmrCalc!.set_ernstparameter("repetition", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_ernstparameter("repetition", to: Double(textbeforeediting!)! ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
+                    textField.text = textbeforeediting
+                    break
                 }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 2 {
-                        if fixedItem == menuItems3![1] {
-                            if nmrCalc!.evaluate_ernstparameter("angle") == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                            }
-                        } else if fixedItem == menuItems3![2] {
-                            if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_ernstparameter("angle") == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                        } else if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
-                        }
-                    }
-                } else {
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
                     if nmrCalc!.evaluate_ernstparameter("angle") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
                     } else if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
                     }
+                    break
                 }
                 
+                if fixedItem == menuItems3![1] {
+                    if nmrCalc!.evaluate_ernstparameter("angle") == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+                    }
+                } else if fixedItem == menuItems3![2] {
+                    if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
+                    }
+                }
+
             case valueTextField3[1]:
-                if nmrCalc!.set_ernstparameter("relaxation", to: x) == false {
+                
+                guard nmrCalc!.set_ernstparameter("relaxation", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_ernstparameter("relaxation", to: Double(textbeforeediting!)! ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
+                    textField.text = textbeforeediting
+                    break
                 }
                 
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 2 {
-                        if fixedItem == menuItems3![0] {
-                            if nmrCalc!.evaluate_ernstparameter("angle") == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                            }
-                        } else if fixedItem == menuItems3![2] {
-                            if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_ernstparameter("angle") == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                        } else if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
-                        }
-                    }
-                } else {
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
                     if nmrCalc!.evaluate_ernstparameter("angle") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
                     } else if nmrCalc!.evaluate_ernstparameter("repetition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
                     }
+                    break
                 }
-
+                
+                if fixedItem == menuItems3![0] {
+                    if nmrCalc!.evaluate_ernstparameter("angle") == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+                    }
+                } else if fixedItem == menuItems3![2] {
+                    if nmrCalc!.evaluate_ernstparameter("repetition") == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
+                    }
+                }
+                
             case valueTextField3[2]:
-                if nmrCalc!.set_ernstparameter("angle", to: x * M_PI / 180.0) == false {
+                guard nmrCalc!.set_ernstparameter("angle", to: x * Double.pi / 180.0) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
-                    if nmrCalc!.set_ernstparameter("angle", to: Double(textbeforeediting!)! ) == false {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                    }
+                    textField.text = textbeforeediting
+                    break
                 }
-
-                if let fixed = selectedItem {
-                    if (fixed as NSIndexPath).section == 2 {
-                        if fixedItem == menuItems3![0] {
-                            if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
-                            }
-                        } else if fixedItem == menuItems3![1] {
-                            if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                                warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
-                            }
-                        }
-                    } else {
-                        if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
-                        } else if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
-                            warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
-                        }
-                    }
-                } else {
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
                     if nmrCalc!.evaluate_ernstparameter("repetition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
                     } else if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
                     }
+                    break
                 }
-
+                
+                if fixedItem == menuItems3![0] {
+                    if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
+                    }
+                } else if fixedItem == menuItems3![1] {
+                    if nmrCalc!.evaluate_ernstparameter("repetition") == false {
+                        warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
+                    }
+                }
+                
             default:
                 break
             }

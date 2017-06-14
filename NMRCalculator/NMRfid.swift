@@ -30,22 +30,22 @@ class NMRfid {
         imag = [Double]()
     }
     
-    func set_parameter(_ name: String, to_value: Double) -> Bool {
-        if let to_set = parameters(rawValue: name) {
-            switch to_set {
+    func parameterSet(of name: String, to value: Double) -> Bool {
+        if let parameter = parameters(rawValue: name) {
+            switch parameter {
             case .size:
-                if to_value <= Double( UInt.max ) && to_value > Double( UInt.min ) {
-                    size = UInt(to_value)
+                if value <= Double( UInt.max ) && value > Double( UInt.min ) {
+                    size = UInt(value)
                     return true
                 }
             case .duration:
-                if to_value > 0 {
-                    duration = to_value
+                if value > 0 {
+                    duration = value
                     return true
                 }
             case .dwell:
-                if to_value > 0 {
-                    dwell = to_value
+                if value > 0 {
+                    dwell = value
                     return true
                 }
             }

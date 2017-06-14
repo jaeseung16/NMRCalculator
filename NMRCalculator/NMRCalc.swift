@@ -33,8 +33,8 @@ class NMRCalc {
         }
     }
     
-    let gammaProton = 267.522128 / 2 / M_PI // in MHz/T
-    let gammaElectron = 176.0859644 / 2 / M_PI // in GHz/T
+    let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
+    let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
     
     init() {
         acqNMR = NMRfid()
@@ -56,36 +56,43 @@ class NMRCalc {
         case electron
     }
     
-    func set_resonance(_ name: String, to_value: Double) -> Bool {
+    func updateResonance(with name: String, equal value: Double) -> Bool {
         if let to_set = resonance(rawValue: name) {
             switch to_set {
             case .field:
-                fieldExternal = to_value
-                frequencyLarmor = fieldExternal! * gyromagneticratio!
-                frequencyProton = fieldExternal! * gammaProton
-                frequencyElectron = fieldExternal! * gammaElectron
+                fieldExternal = value
+                freqLarmor()
                 return true
             case .larmor:
-                frequencyLarmor = to_value
-                fieldExternal = frequencyLarmor! / gyromagneticratio!
-                frequencyProton = fieldExternal! * gammaProton
-                frequencyElectron = fieldExternal! * gammaElectron
+                // frequencyLarmor = to_value
+                fieldExternal = value / gyromagneticratio!
+                freqLarmor()
                 return true
             case .proton:
-                frequencyProton = to_value
-                fieldExternal = frequencyProton! / gammaProton
-                frequencyLarmor = fieldExternal! * gyromagneticratio!
-                frequencyElectron = fieldExternal! * gammaElectron
+                // frequencyProton = to_value
+                fieldExternal = value / gammaProton
+                freqLarmor()
                 return true
             case .electron:
-                frequencyElectron = to_value
-                fieldExternal = frequencyElectron! / gammaElectron
-                frequencyLarmor = fieldExternal! * gyromagneticratio!
-                frequencyProton = fieldExternal! * gammaProton
+                // frequencyElectron = to_value
+                fieldExternal = value / gammaElectron
+                freqLarmor()
                 return true
             }
         }
         return false
+    }
+    
+    func freqLarmor() {
+
+        if let B0 = fieldExternal, let gamma = gyromagneticratio {
+            frequencyLarmor = B0 * gamma
+            frequencyProton = B0 * gammaProton
+            frequencyElectron = B0 * gammaElectron
+        } else {
+            print("Check whether there are values for the external field and gyromagnetic ratio.")
+        }
+        
     }
 
     // MARK: Setting parameters for the time domain
@@ -96,9 +103,9 @@ class NMRCalc {
         case dwell
     }
     
-    func set_ACQparameter(_ name: String, to_value: Double) -> Bool {
+    func set_ACQparameter(_ name: String, to value: Double) -> Bool {
         if let acq = acqNMR {
-            return acq.set_parameter(name, to_value: to_value)
+            return acq.parameterSet(of: name, to: value)
         }
         
         return false
@@ -194,7 +201,7 @@ class NMRCalc {
                     relaxationTime = value
                     return true
                 case .angle:
-                    if value <= M_PI / 2.0 {
+                    if value <= Double.pi / 2.0 {
                         angleErnst = value
                         return true
                     }
@@ -243,10 +250,10 @@ class NMRCalc {
         if let cat = nmrCalc_category(rawValue: category) {
             switch cat {
             case .resonance:
-                return set_resonance(name, to_value: value)
+                return updateResonance(with: name, equal: value)
             case .acquisition:
                 if let acq = acqNMR {
-                    return acq.set_parameter(name, to_value: value)
+                    return acq.parameterSet(of: name, to: value)
                 }
             case .spectrum:
                 if let spec = specNMR {

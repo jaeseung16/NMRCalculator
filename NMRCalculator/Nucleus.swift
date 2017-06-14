@@ -29,7 +29,7 @@ class Nucleus {
         self.symbolNucleus = items[4]
         self.naturalabundance = items[5]
         self.nuclearspin = items[6]
-        self.gyromagneticratio = String( Double(items[7])! / 2.0 / M_PI * 10.0 )
+        self.gyromagneticratio = String( Double(items[7])! / 2.0 / Double.pi * 10.0 )
     }
 
 }

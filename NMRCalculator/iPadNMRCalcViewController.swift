@@ -43,7 +43,7 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
         nucleus = Nucleus(identifier: nucleusTable![0])
         
         nmrCalc = NMRCalc(nucleus: nucleus!)
-        if nmrCalc!.set_resonance("field", to_value: 1.0) == false {
+        if nmrCalc!.updateResonance(with: "field", equal: 1.0) == false {
             warnings("Unable to comply.", message: "The value is out of range.")
         }
         
@@ -187,22 +187,22 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
             
             switch textField {
             case valueTextField[0]: // Textfield for larmor frequency
-                if nmrCalc!.set_resonance("larmor", to_value: x) == false {
+                if nmrCalc!.updateResonance(with: "larmor", equal: x) == false {
                     warnings("Unable to comply.", message: "The value is out of range.")
                 }
                 
             case valueTextField[1]: // Textfield for external magnetic field
-                if nmrCalc!.set_resonance("field", to_value: x) == false {
+                if nmrCalc!.updateResonance(with: "field", equal: x) == false {
                     warnings("Unable to comply.", message: "The value is out of range.")
                 }
                 
             case valueTextField[2]: // Textfield for proton's larmor frequency
-                if nmrCalc!.set_resonance("proton", to_value: x) == false {
+                if nmrCalc!.updateResonance(with: "proton", equal: x) == false {
                     warnings("Unable to comply.", message: "The value is out of range.")
                 }
                 
             case valueTextField[3]: // Textfield for electron's larmor frequency
-                if nmrCalc!.set_resonance("electron", to_value: x) == false {
+                if nmrCalc!.updateResonance(with: "electron", equal: x) == false {
                     warnings("Unable to comply.", message: "The value is out of range.")
                 }
                 
@@ -268,7 +268,7 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         nucleus = Nucleus(identifier: nucleusTable![row])
         nmrCalc!.nucleus = nucleus!
-        if nmrCalc!.set_resonance("field", to_value: Double(valueTextField[1].text!)!) == false {
+        if nmrCalc!.updateResonance(with: "field", equal: Double(valueTextField[1].text!)!) == false {
             warnings("Unable to comply.", message: "The value is out of range.")
         }
         
