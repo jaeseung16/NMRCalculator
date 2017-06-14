@@ -145,25 +145,8 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
             itemValues2 = [(pulse.duration)!.format(".5"),(pulse.flipangle)!.format(".4"), ((pulse.amplitude)!*1_000).format(".6"), (nmrCalc!.relativepower)!.format(".5") ]
             
             for k in 0..<valueTextField2.count {
-                switch k {
-                case 0:
-                    if let tp = pulse.duration {
-                        valueTextField2[k].text = tp.format(".5")
-                    }
-                case 1:
-                    if let fa = pulse.flipangle {
-                        valueTextField2[k].text = fa.format(".4")
-                    }
-                case 2:
-                    if let amp = pulse.amplitude {
-                        valueTextField2[k].text = (amp*1_000).format(".6")
-                    }
-                case 3:
-                    if let dB = nmrCalc!.relativepower {
-                        valueTextField2[k].text = dB.format(".5")
-                    }
-                default:
-                    break
+                if let value = itemValues2?[k] {
+                    valueTextField2[k].text = value
                 }
             }
         }
