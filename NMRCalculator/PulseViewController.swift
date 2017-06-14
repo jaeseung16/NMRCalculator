@@ -121,22 +121,6 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     valueTextField1[k].text = value
                 }
                 
-/*                switch k {
-                case 0:
-                    if let tp = pulse.duration {
-                        valueTextField1[k].text = tp.format(".5")
-                    }
-                case 1:
-                    if let fa = pulse.flipangle {
-                        valueTextField1[k].text = fa.format(".4")
-                    }
-                case 2:
-                    if let amp = pulse.amplitude {
-                        valueTextField1[k].text = (amp*1_000).format(".6")
-                    }
-                default:
-                    break
-                }*/
             }
             
         }
@@ -155,21 +139,8 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
             itemValues3 = [(calc.repetitionTime)!.format(".3"),(calc.relaxationTime)!.format(".3"), ((calc.angleErnst)!*180.0/Double.pi).format(".4") ]
             
             for k in 0..<valueTextField3.count {
-                switch k {
-                case 0:
-                    if let repetition = calc.repetitionTime {
-                        valueTextField3[k].text = repetition.format(".3")
-                    }
-                case 1:
-                    if let relaxation = calc.relaxationTime {
-                        valueTextField3[k].text = relaxation.format(".3")
-                    }
-                case 2:
-                    if let angle = calc.angleErnst {
-                        valueTextField3[k].text = (angle * 180.0 / Double.pi).format(".4")
-                    }
-                default:
-                    break
+                if let value = itemValues3?[k] {
+                    valueTextField3[k].text = value
                 }
             }
         }
