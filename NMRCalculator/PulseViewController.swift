@@ -30,54 +30,53 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var textbeforeediting: String?
     
     var selectedItem: IndexPath?
-    var indexForRelativePower: IndexPath?
     var fixedItem: String?
+    let indexForRelativePower = IndexPath(row: 3, section: 1)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         
-        indexForRelativePower = IndexPath(row: 3, section: 1)
-        
         nmrCalc = NMRCalc()
         nmrCalc!.pulseNMR.append(NMRPulse(μs: 10.0, kHz: 25.0))
         nmrCalc!.pulseNMR.append(NMRPulse(μs: 10_000.0, kHz: 0.1))
         
-        if nmrCalc!.calculate_dB() == false {
+        guard nmrCalc!.calculate_dB() else {
             warnings("Unable to comply.", message: "Cannot compare the powers.")
+            return
         }
         
-        if nmrCalc!.set_ernstparameter("repetition", to: 1.0) == false {
+        guard nmrCalc!.set_ernstparameter("repetition", to: 1.0) else {
             warnings("Unable to comply.", message: "Cannot initialize the repetition time.")
+            return
         }
         
-        if nmrCalc!.set_ernstparameter("relaxation", to: 1.0) == false {
+        guard nmrCalc!.set_ernstparameter("relaxation", to: 1.0) else {
             warnings("Unable to comply.", message: "Cannot initialize the relaxation time.")
+            return
         }
         
-        if nmrCalc!.evaluate_ernstparameter("angle") == false {
+        guard nmrCalc!.evaluate_ernstparameter("angle") else {
             warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+            return
         }
         
         update_textfields()
         
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         registerForKeyboardNotifications()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        super.viewWillDisappear(animated)
     }
     
     func registerForKeyboardNotifications() {
