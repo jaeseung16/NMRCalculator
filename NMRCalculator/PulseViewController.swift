@@ -78,6 +78,8 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewWillDisappear(animated)
     }
     
+     // MARK: Methods for Keyboard
+    
     func subscribeToKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -87,8 +89,6 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-    
-    // MARK: Keyboard
     
     func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
