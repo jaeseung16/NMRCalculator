@@ -12,15 +12,15 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     @IBOutlet weak var PulseTableView: UITableView!
     
-    var menuItems1: [String]?
-    var menuItems2: [String]?
-    var menuItems3: [String]?
+    let menuItems1 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz"]
+    let menuItems2 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz", "RF power relative to 1st (dB)"]
+    let menuItems3 = [ "Repetition Time (sec)", "Relaxation Time (sec)", "Ernst Angle (˚)" ]
     
     var itemValues1: [String]?
     var itemValues2: [String]?
     var itemValues3: [String]?
     
-    var sections: [String]?
+    let sections = ["1st Pulse", "2nd Pulse", "Ernst Angle"]
     var valueTextField1 = Array(repeating: UITextField(), count: 3)
     var valueTextField2 = Array(repeating: UITextField(), count: 4)
     var valueTextField3 = Array(repeating: UITextField(), count: 3)
@@ -37,14 +37,6 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        
-        menuItems1 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz"]
-        
-        menuItems2 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz", "RF power relative to 1st (dB)"]
-        
-        menuItems3 = [ "Repetition Time (sec)", "Relaxation Time (sec)", "Ernst Angle (˚)" ]
-        
-        sections = ["1st Pulse", "2nd Pulse", "Ernst Angle"]
         
         indexForRelativePower = IndexPath(row: 3, section: 1)
         
@@ -181,11 +173,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems1![1] {
+                if fixedItem == menuItems1[1] {
                     if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
-                } else if fixedItem == menuItems1![2] {
+                } else if fixedItem == menuItems1[2] {
                     if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
@@ -208,11 +200,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems1![2] {
+                if fixedItem == menuItems1[2] {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
-                } else if fixedItem == menuItems1![0] {
+                } else if fixedItem == menuItems1[0] {
                     if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
@@ -235,11 +227,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems1![1] {
+                if fixedItem == menuItems1[1] {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
-                } else if fixedItem == menuItems1![0] {
+                } else if fixedItem == menuItems1[0] {
                     if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
@@ -262,11 +254,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems2![1] {
+                if fixedItem == menuItems2[1] {
                     if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
-                } else if fixedItem == menuItems2![2] {
+                } else if fixedItem == menuItems2[2] {
                     if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
@@ -289,11 +281,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems2![2] {
+                if fixedItem == menuItems2[2] {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
-                } else if fixedItem == menuItems2![0] {
+                } else if fixedItem == menuItems2[0] {
                     if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
@@ -316,11 +308,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems2![1] {
+                if fixedItem == menuItems2[1] {
                     if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
-                } else if fixedItem == menuItems2![0] {
+                } else if fixedItem == menuItems2[0] {
                     if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
@@ -348,9 +340,9 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     if let cell = PulseTableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
                         switch (selectedItem! as NSIndexPath).section {
                         case 0:
-                            cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
                         case 1:
-                            cell.itemLabel.text = menuItems2![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
                         default:
                             break
                         }
@@ -380,11 +372,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems3![1] {
+                if fixedItem == menuItems3[1] {
                     if nmrCalc!.evaluate_ernstparameter("angle") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
                     }
-                } else if fixedItem == menuItems3![2] {
+                } else if fixedItem == menuItems3[2] {
                     if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
                     }
@@ -407,11 +399,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems3![0] {
+                if fixedItem == menuItems3[0] {
                     if nmrCalc!.evaluate_ernstparameter("angle") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
                     }
-                } else if fixedItem == menuItems3![2] {
+                } else if fixedItem == menuItems3[2] {
                     if nmrCalc!.evaluate_ernstparameter("repetition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
                     }
@@ -433,11 +425,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     break
                 }
                 
-                if fixedItem == menuItems3![0] {
+                if fixedItem == menuItems3[0] {
                     if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
                     }
-                } else if fixedItem == menuItems3![1] {
+                } else if fixedItem == menuItems3[1] {
                     if nmrCalc!.evaluate_ernstparameter("repetition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
                     }
@@ -463,17 +455,17 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
     // MARK: UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sections!.count
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return menuItems1!.count
+            return menuItems1.count
         case 1:
-            return menuItems2!.count
+            return menuItems2.count
         case 2:
-            return menuItems3!.count
+            return menuItems3.count
         default:
             return 0
         }
@@ -487,15 +479,15 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         switch (indexPath as NSIndexPath).section {
         case 0:
-            labeltext = menuItems1![(indexPath as NSIndexPath).row]
+            labeltext = menuItems1[(indexPath as NSIndexPath).row]
             valuetext = itemValues1![(indexPath as NSIndexPath).row]
             valueTextField1[(indexPath as NSIndexPath).row] = cell.itemValue
         case 1:
-            labeltext = menuItems2![(indexPath as NSIndexPath).row]
+            labeltext = menuItems2[(indexPath as NSIndexPath).row]
             valuetext = itemValues2![(indexPath as NSIndexPath).row]
             valueTextField2[(indexPath as NSIndexPath).row] = cell.itemValue
         case 2:
-            labeltext = menuItems3![(indexPath as NSIndexPath).row]
+            labeltext = menuItems3[(indexPath as NSIndexPath).row]
             valuetext = itemValues3![(indexPath as NSIndexPath).row]
             valueTextField3[(indexPath as NSIndexPath).row] = cell.itemValue
         default:
@@ -515,7 +507,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PulseTableViewHeader") as! PulseHeaderTableViewCell
         
-        cell.pulseHeaderLabel.text = sections![section]
+        cell.pulseHeaderLabel.text = sections[section]
         
         return cell
     }
@@ -554,11 +546,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     fixedItem = cell.itemLabel.text
                     switch (selectedItem! as NSIndexPath).section {
                     case 0:
-                        cell.itemLabel.text = "☒ " + menuItems1![(selectedItem! as NSIndexPath).row]
+                        cell.itemLabel.text = "☒ " + menuItems1[(selectedItem! as NSIndexPath).row]
                     case 1:
-                        cell.itemLabel.text = "☒ " + menuItems2![(selectedItem! as NSIndexPath).row]
+                        cell.itemLabel.text = "☒ " + menuItems2[(selectedItem! as NSIndexPath).row]
                     case 2:
-                        cell.itemLabel.text = "☒ " + menuItems3![(selectedItem! as NSIndexPath).row]
+                        cell.itemLabel.text = "☒ " + menuItems3[(selectedItem! as NSIndexPath).row]
                     default:
                         break
                     }
@@ -575,11 +567,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
                         switch (selectedItem! as NSIndexPath).section {
                         case 0:
-                            cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
                         case 1:
-                            cell.itemLabel.text = menuItems2![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
                         case 2:
-                            cell.itemLabel.text = menuItems3![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems3[(selectedItem! as NSIndexPath).row]
                         default:
                             break
                         }
@@ -597,11 +589,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
                         switch (selectedItem! as NSIndexPath).section {
                         case 0:
-                            cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
                         case 1:
-                            cell.itemLabel.text = menuItems2![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
                         case 2:
-                            cell.itemLabel.text = menuItems3![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = menuItems3[(selectedItem! as NSIndexPath).row]
                         default:
                             break
                         }
@@ -616,11 +608,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                         fixedItem = cell.itemLabel.text
                         switch (selectedItem! as NSIndexPath).section {
                         case 0:
-                            cell.itemLabel.text = "☒ " + menuItems1![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = "☒ " + menuItems1[(selectedItem! as NSIndexPath).row]
                         case 1:
-                            cell.itemLabel.text = "☒ " + menuItems2![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = "☒ " + menuItems2[(selectedItem! as NSIndexPath).row]
                         case 2:
-                            cell.itemLabel.text = "☒ " + menuItems3![(selectedItem! as NSIndexPath).row]
+                            cell.itemLabel.text = "☒ " + menuItems3[(selectedItem! as NSIndexPath).row]
                         default:
                             break
                         }
@@ -637,11 +629,11 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
             if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
                 switch (selectedItem! as NSIndexPath).section {
                 case 0:
-                    cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
+                    cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
                 case 1:
-                    cell.itemLabel.text = menuItems2![(selectedItem! as NSIndexPath).row]
+                    cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
                 case 2:
-                    cell.itemLabel.text = menuItems3![(selectedItem! as NSIndexPath).row]
+                    cell.itemLabel.text = menuItems3[(selectedItem! as NSIndexPath).row]
                 default:
                     break
                 }
