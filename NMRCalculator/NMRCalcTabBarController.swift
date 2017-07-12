@@ -23,12 +23,3 @@ class NMRCalcTabBarController: UITabBarController {
         
     }
 }
-
-extension NMRCalcTabBarController: UITabBarControllerDelegate {
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        // viewController.nmrCalc = self.nmrCalc
-        
-        let viewControllerID = viewController.restorationIdentifier!
-        print("\(viewControllerID)")
-    }
-}
