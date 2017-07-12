@@ -21,9 +21,9 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var itemValues3: [String]?
     
     var sections: [String]?
-    var valueTextField1 = [UITextField]()
-    var valueTextField2 = [UITextField]()
-    var valueTextField3 = [UITextField]()
+    var valueTextField1 = Array(repeating: UITextField(), count: 3)
+    var valueTextField2 = Array(repeating: UITextField(), count: 4)
+    var valueTextField3 = Array(repeating: UITextField(), count: 3)
     
     var nmrCalc: NMRCalc?
     var activeField: UITextField?
@@ -489,15 +489,15 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         case 0:
             labeltext = menuItems1![(indexPath as NSIndexPath).row]
             valuetext = itemValues1![(indexPath as NSIndexPath).row]
-            valueTextField1.append(cell.itemValue)
+            valueTextField1[(indexPath as NSIndexPath).row] = cell.itemValue
         case 1:
             labeltext = menuItems2![(indexPath as NSIndexPath).row]
             valuetext = itemValues2![(indexPath as NSIndexPath).row]
-            valueTextField2.append(cell.itemValue)
+            valueTextField2[(indexPath as NSIndexPath).row] = cell.itemValue
         case 2:
             labeltext = menuItems3![(indexPath as NSIndexPath).row]
             valuetext = itemValues3![(indexPath as NSIndexPath).row]
-            valueTextField3.append(cell.itemValue)
+            valueTextField3[(indexPath as NSIndexPath).row] = cell.itemValue
         default:
             labeltext = nil
         }
