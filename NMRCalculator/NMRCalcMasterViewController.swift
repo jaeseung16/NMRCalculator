@@ -16,7 +16,8 @@ class NMRCalcMasterViewController: UITableViewController {
     var solutionVC: UIViewController?
     var infoVC: UIViewController?
     
-    var menuItems: [String]?
+    let viewControllers = ["nucleus", "signalView", "pulseView", "solutionView", "infoView"]
+    let menuItems = ["Nucleus", "Signal", "RF Pulse", "Solution", "Info"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +38,12 @@ class NMRCalcMasterViewController: UITableViewController {
         
         infoVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "infoView")
         
-        let menuItems = ["Nucleus", "Signal", "RF Pulse", "Solution", "Info"]
-        self.menuItems = menuItems
         
-        let firstIndexPath = IndexPath(row: 0, section: 0)
-        self.tableView.selectRow(at: firstIndexPath, animated: true, scrollPosition: .top)
-        self.tableView(self.tableView, didSelectRowAt: firstIndexPath)
+        // self.menuItems = menuItems
+        
+        // let firstIndexPath = IndexPath(row: 0, section: 0)
+        // self.tableView.selectRow(at: firstIndexPath, animated: true, scrollPosition: .top)
+        // self.tableView(self.tableView, didSelectRowAt: firstIndexPath)
 
     }
 
@@ -60,14 +61,14 @@ class NMRCalcMasterViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return menuItems!.count
+        return self.menuItems.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MasterViewTableCell", for: indexPath) as! NMRCalcMasterItems
 
-        cell.menuItems.text = menuItems![(indexPath as NSIndexPath).row]
+        cell.menuItems.text = menuItems[(indexPath as NSIndexPath).row]
 
         return cell
     }
