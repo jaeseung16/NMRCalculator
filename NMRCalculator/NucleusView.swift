@@ -51,14 +51,14 @@ import UIKit
         
         character_attribute[NSFontAttributeName] = UIFont.systemFont(ofSize: fontsize, weight: UIFontWeightRegular)
         
-        let abundance_text = "Natural Abundance: \(nucleus.naturalabundance!) %"
+        let abundance_text = "Natural Abundance: \(nucleus.naturalAbundance!) %"
        
         abundance.attributedText = NSAttributedString(string: abundance_text, attributes: character_attribute)
 
-        let spin_text = "Nuclear Spin: \(nucleus.nuclearspin!)"
+        let spin_text = "Nuclear Spin: \(nucleus.nuclearSpin!)"
         spin.attributedText = NSAttributedString(string: spin_text, attributes: character_attribute)
         
-        let gamma_text = "Gyromagnetic Ratio: \(Double(nucleus.gyromagneticratio!)!.format(".3")) MHz/T"
+        let gamma_text = "Gyromagnetic Ratio: \(Double(nucleus.gyromagneticRatio!)!.format(".3")) MHz/T"
         gamma.attributedText = NSAttributedString(string: gamma_text, attributes: character_attribute)
     }
     

@@ -9,15 +9,25 @@
 import Foundation
 
 
-class Nucleus {
+struct Nucleus {
     var identifier: String?
     var nameNucleus: String?
     var atomicNumber: String?
     var atomicWeight: String?
     var symbolNucleus: String?
-    var naturalabundance: String?
-    var nuclearspin: String?
-    var gyromagneticratio: String?
+    var naturalAbundance: String?
+    var nuclearSpin: String?
+    var gyromagneticRatio: String?
+    
+    var γ: Double? {
+        get {
+            if let gamma = self.gyromagneticRatio {
+                return Double(gamma)
+            } else {
+                return nil
+            }
+        }
+    }
     
     init(identifier: String) {
         let items = identifier.components(separatedBy: " ")
@@ -27,9 +37,9 @@ class Nucleus {
         self.atomicNumber = items[2]
         self.atomicWeight = items[3]
         self.symbolNucleus = items[4]
-        self.naturalabundance = items[5]
-        self.nuclearspin = items[6]
-        self.gyromagneticratio = String( Double(items[7])! / 2.0 / Double.pi * 10.0 )
+        self.naturalAbundance = items[5]
+        self.nuclearSpin = items[6]
+        self.gyromagneticRatio = String( Double(items[7])! / 2.0 / Double.pi * 10.0 )
     }
 
 }

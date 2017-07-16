@@ -10,6 +10,8 @@ import Foundation
 
 class NMRCalc {
     
+    // MARK: Properties
+    
     var nucleus: Nucleus?
     
     var acqNMR: NMRfid?
@@ -29,12 +31,14 @@ class NMRCalc {
     
     var gyromagneticratio: Double? {
         get {
-            return Double((nucleus?.gyromagneticratio)!)
+            return nucleus?.γ
         }
     }
     
     let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
     let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
+    
+    // MARK: Methods
     
     init() {
         acqNMR = NMRfid()
@@ -47,7 +51,7 @@ class NMRCalc {
         self.nucleus = nucleus
     }
     
-    // MARK: Setting parameters for resonance frequency
+    // MARK: Enum for resonance frequency
     
     enum resonance: String {
         case field
@@ -56,45 +60,7 @@ class NMRCalc {
         case electron
     }
     
-    func updateResonance(with name: String, equal value: Double) -> Bool {
-        if let to_set = resonance(rawValue: name) {
-            switch to_set {
-            case .field:
-                fieldExternal = value
-                freqLarmor()
-                return true
-            case .larmor:
-                // frequencyLarmor = to_value
-                fieldExternal = value / gyromagneticratio!
-                freqLarmor()
-                return true
-            case .proton:
-                // frequencyProton = to_value
-                fieldExternal = value / gammaProton
-                freqLarmor()
-                return true
-            case .electron:
-                // frequencyElectron = to_value
-                fieldExternal = value / gammaElectron
-                freqLarmor()
-                return true
-            }
-        }
-        return false
-    }
     
-    func freqLarmor() {
-
-        if let B0 = fieldExternal, let gamma = gyromagneticratio {
-            frequencyLarmor = B0 * gamma
-            frequencyProton = B0 * gammaProton
-            frequencyElectron = B0 * gammaElectron
-        } else {
-            print("Check whether there are values for the external field and gyromagnetic ratio.")
-        }
-        
-    }
-
     // MARK: Setting parameters for the time domain
     
     enum acq_parameters: String {
@@ -265,4 +231,42 @@ class NMRCalc {
         }
         return false
     }
+}
+
+// MARK: Methods for resonance frequency
+extension NMRCalc {
+    func updateResonance(with name: String, equal value: Double) -> Bool {
+        guard let name = resonance(rawValue: name), let nucleus = self.nucleus else {
+            return false
+        }
+        
+        switch name {
+        case .field:
+            self.fieldExternal = value
+        case .larmor:
+            self.fieldExternal = value / nucleus.γ!
+        case .proton:
+            self.fieldExternal = value / gammaProton
+        case .electron:
+            self.fieldExternal = value / gammaElectron
+        }
+        
+        return larmorFrequency(at: self.fieldExternal!)
+    }
+    
+    func larmorFrequency(at B0: Double) -> Bool {
+        
+        guard let gamma = nucleus?.γ else {
+            print("Check whether there are values for the external field and gyromagnetic ratio.")
+            return false
+        }
+        self.fieldExternal = B0
+        self.frequencyLarmor = B0 * gamma
+        self.frequencyProton = B0 * gammaProton
+        self.frequencyElectron = B0 * gammaElectron
+        
+        return true
+        
+    }
+
 }

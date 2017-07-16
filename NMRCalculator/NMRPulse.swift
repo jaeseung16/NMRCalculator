@@ -9,6 +9,8 @@
 import Foundation
 
 class NMRPulse {
+    
+    // MARK: Properties
     var duration: Double? // pulse duration in μs
     var flipangle: Double? // flip angle in degree
     var amplitude: Double? // RF amplitude in kHz
@@ -20,6 +22,8 @@ class NMRPulse {
         case amplitude
         case offset
     }
+    
+    // MARK: Methods
     
     init() {
         duration = Double()
