@@ -39,8 +39,8 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Do any additional setup after loading the view.
         
         nmrCalc = NMRCalc()
-        nmrCalc!.pulseNMR.append(NMRPulse(μs: 10.0, kHz: 25.0))
-        nmrCalc!.pulseNMR.append(NMRPulse(μs: 10_000.0, kHz: 0.1))
+        nmrCalc!.pulseNMR.append(NMRPulse())
+        nmrCalc!.pulseNMR.append(NMRPulse())
         
         guard nmrCalc!.calculate_dB() else {
             warnings("Unable to comply.", message: "Cannot compare the powers.")
@@ -109,7 +109,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func update_textfields() {
         
         if let pulse = nmrCalc!.pulseNMR[0] {
-            itemValues1 = [(pulse.duration)!.format(".5"),(pulse.flipangle)!.format(".4"), ((pulse.amplitude)!*1_000).format(".6") ]
+            itemValues1 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
             
             for k in 0..<valueTextField1.count {
                 if let value = itemValues1?[k] {
@@ -121,7 +121,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         
         if let pulse = nmrCalc!.pulseNMR[1] {
-            itemValues2 = [(pulse.duration)!.format(".5"),(pulse.flipangle)!.format(".4"), ((pulse.amplitude)!*1_000).format(".6"), (nmrCalc!.relativepower)!.format(".5") ]
+            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc!.relativepower)?.format(".5"))! ]
             
             for k in 0..<valueTextField2.count {
                 if let value = itemValues2?[k] {
@@ -161,162 +161,162 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
             switch textField {
             case valueTextField1[0]: // Textfield for the duration of the 1st pulse
                 
-                guard nmrCalc!.set_pulseparameter("duration", of: 0, to_value: x) else {
+                guard nmrCalc!.setParameter("duration", in: "pulse1", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
+                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems1[1] {
-                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
                 } else if fixedItem == menuItems1[2] {
-                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                 }
                 
             case valueTextField1[1]: // Textfield for the flip angle of the 1st pulse
                 
-                guard nmrCalc!.set_pulseparameter("flipangle", of: 0, to_value: x) else {
+                guard nmrCalc!.setParameter("flipangle", in: "pulse1", to_value: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
+                    } else if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems1[2] {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
                 } else if fixedItem == menuItems1[0] {
-                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
                 }
                 
             case valueTextField1[2]: // Textfield for the RF amplitude of the 1st pulse
                 
-                guard nmrCalc!.set_pulseparameter("amplitude", of: 0, to_value: x/1_000.0) else {
+                guard nmrCalc!.setParameter("amplitude", in: "pulse1", to: x/1_000.0) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
+                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems1[1] {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
                 } else if fixedItem == menuItems1[0] {
-                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 0) == false {
+                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                 }
                 
             case valueTextField2[0]: // Textfield for the duration of the second pulse
                 
-                guard nmrCalc!.set_pulseparameter("duration", of: 1, to_value: x) else {
+                guard nmrCalc!.setParameter("duration", in: "pulse2", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
+                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems2[1] {
-                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
                 } else if fixedItem == menuItems2[2] {
-                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                 }
                 
             case valueTextField2[1]: // Textfield for the flip angle of the second pulse
                 
-                guard nmrCalc!.set_pulseparameter("flipangle", of: 1, to_value: x) else {
+                guard nmrCalc!.setParameter("flipangle", in: "pulse2", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
             
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
+                    } else if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems2[2] {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
                 } else if fixedItem == menuItems2[0] {
-                    if nmrCalc!.evaluate_pulseparameter("amplitude", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
                     }
                 }
 
             case valueTextField2[2]: // Textfield for the RF amplitude of the second pulse
                 
-                guard nmrCalc!.set_pulseparameter("amplitude", of: 1, to_value: x/1_000.0) else {
+                guard nmrCalc!.setParameter("amplitude", in: "pulse2", to: x/1_000.0) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
+                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems2[1] {
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
                 } else if fixedItem == menuItems2[0] {
-                    if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
+                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
                     }
                 }
@@ -325,18 +325,18 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 // nmrCalc!.set_relativepower(x)
                 nmrCalc!.relativepower = x
                 
-                if let amp0 =  nmrCalc!.pulseNMR[0]!.amplitude {
-                    if nmrCalc!.set_pulseparameter("amplitude", of: 1, to_value: pow(10.0, 1.0 * x / 20.0) * amp0 ) == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude of the second pulse.")
-                    }
-                    
-                    if nmrCalc!.evaluate_pulseparameter("duration", of: 1) == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluate_pulseparameter("flipangle", of: 1) == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                    
+                let amp0 = nmrCalc!.pulseNMR[0]!.amplitude
+
+                if nmrCalc!.setParameter("amplitude", in: "pulse2", to: pow(10.0, 1.0 * x / 20.0) * amp0 ) == false {
+                    warnings("Unable to comply.", message: "Cannot calculate the amplitude of the second pulse.")
                 }
+                
+                if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
+                    warnings("Unable to comply.", message: "Cannot calculate the duration.")
+                } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
+                    warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
+                }
+                
                 
                 if fixedItem != nil && selectedItem != nil {
                     PulseTableView.deselectRow(at: selectedItem!, animated: true)
