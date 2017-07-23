@@ -26,7 +26,7 @@ import UIKit
 
     }
     
-    convenience init(frame: CGRect, nucleus: Nucleus){
+    convenience init(frame: CGRect, nucleus: NMRNucleus){
         self.init(frame: frame)
         
         var fontsize = CGFloat(12.0)
@@ -37,28 +37,28 @@ import UIKit
         
         var character_attribute: [String: AnyObject] = [NSBaselineOffsetAttributeName : fontsize as AnyObject, NSFontAttributeName: UIFont.systemFont(ofSize: fontsize, weight: UIFontWeightBold)]
 
-        let textforweight = NSMutableAttributedString(string: nucleus.atomicWeight!)
-        textforweight.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.atomicWeight!.lengthOfBytes(using: String.Encoding.utf8)) )
+        let textforweight = NSMutableAttributedString(string: nucleus.atomicWeight)
+        textforweight.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.atomicWeight.lengthOfBytes(using: String.Encoding.utf8)) )
         
         character_attribute[NSBaselineOffsetAttributeName] = 0 as AnyObject?
         character_attribute[NSFontAttributeName] = UIFont.systemFont(ofSize: 2.0 * fontsize, weight: UIFontWeightBold)
 
-        let textforname = NSMutableAttributedString(string: nucleus.symbolNucleus!)
-        textforname.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.symbolNucleus!.lengthOfBytes(using: String.Encoding.utf8)) )
+        let textforname = NSMutableAttributedString(string: nucleus.symbolNucleus)
+        textforname.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.symbolNucleus.lengthOfBytes(using: String.Encoding.utf8)) )
         textforweight.append(textforname)
         
         symbol.attributedText = textforweight
         
         character_attribute[NSFontAttributeName] = UIFont.systemFont(ofSize: fontsize, weight: UIFontWeightRegular)
         
-        let abundance_text = "Natural Abundance: \(nucleus.naturalAbundance!) %"
+        let abundance_text = "Natural Abundance: \(nucleus.naturalAbundance) %"
        
         abundance.attributedText = NSAttributedString(string: abundance_text, attributes: character_attribute)
 
-        let spin_text = "Nuclear Spin: \(nucleus.nuclearSpin!)"
+        let spin_text = "Nuclear Spin: \(nucleus.nuclearSpin)"
         spin.attributedText = NSAttributedString(string: spin_text, attributes: character_attribute)
         
-        let gamma_text = "Gyromagnetic Ratio: \(Double(nucleus.gyromagneticRatio!)!.format(".3")) MHz/T"
+        let gamma_text = "Gyromagnetic Ratio: \(Double(nucleus.gyromagneticRatio)!.format(".3")) MHz/T"
         gamma.attributedText = NSAttributedString(string: gamma_text, attributes: character_attribute)
     }
     
