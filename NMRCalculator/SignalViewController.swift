@@ -40,17 +40,17 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         nmrCalc = NMRCalc()
         
-        guard nmrCalc!.set_ACQparameter("size", to: 1000.0),
-            nmrCalc!.set_ACQparameter("duration", to: 10.0),
-            nmrCalc!.evaluate_ACQparameter("dwell")
+        guard nmrCalc!.setParameter("size", in: "acquisition", to: 1000.0),
+            nmrCalc!.setParameter("duration", in: "acquisition", to: 10.0),
+            nmrCalc!.evaluateParameter("dwell", in: "acquisition")
         else {
             warnings("Unable to comply.", message: "The value is out of range.")
             return
         }
         
-        guard nmrCalc!.set_specparameter("size", to_value: 1000.0),
-            nmrCalc!.set_specparameter("width", to_value: 1.0),
-            nmrCalc!.evaluate_specparameter("resolution")
+        guard nmrCalc!.setParameter("size", in: "spectrum", to: 1000.0),
+            nmrCalc!.setParameter("size", in: "spectrum", to: 1.0),
+            nmrCalc!.evaluateParameter("resolution", in: "spectrum")
         else {
             warnings("Unable to comply.", message: "The value is out of range.")
             return
@@ -114,22 +114,16 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func update_textfields() {
         
         if let acq = nmrCalc!.acqNMR {
-            itemValues1 = [ String(acq.size!), (acq.duration!/1_000.0).format(".3"), acq.dwell!.format(".3") ]
+            itemValues1 = [ String(acq.size), (acq.duration/1_000.0).format(".3"), acq.dwell.format(".3") ]
             
             for k in 0..<valueTextField1.count {
                 switch k {
                 case 0:
-                    if let nofid = acq.size {
-                        valueTextField1[k].text = "\(nofid)"
-                    }
+                    valueTextField1[k].text = "\(acq.size)"
                 case 1:
-                    if let duration = acq.duration {
-                        valueTextField1[k].text = (duration/1_000.0).format(".3")
-                    }
+                    valueTextField1[k].text = (acq.duration/1_000.0).format(".3")
                 case 2:
-                    if let dw = acq.dwell {
-                        valueTextField1[k].text = dw.format(".3")
-                    }
+                    valueTextField1[k].text = acq.dwell.format(".3")
                 default:
                     break
                 }
@@ -138,22 +132,16 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         if let spec = nmrCalc!.specNMR {
             
-            itemValues2 = [ String(spec.size!), (spec.width!).format(".3"), (spec.resolution!).format(".3") ]
+            itemValues2 = [ String(spec.size), (spec.width).format(".3"), (spec.resolution).format(".3") ]
         
             for k in 0..<valueTextField2.count {
                 switch k {
                 case 0:
-                    if let nospec = spec.size {
-                        valueTextField2[k].text = String(nospec)
-                    }
+                    valueTextField2[k].text = String(spec.size)
                 case 1:
-                    if let specwidth = spec.width {
-                        valueTextField2[k].text = specwidth.format(".3")
-                    }
+                    valueTextField2[k].text = spec.width.format(".3")
                 case 2:
-                    if let freqresol = spec.resolution {
-                        valueTextField2[k].text = freqresol.format(".3")
-                    }
+                    valueTextField2[k].text = spec.resolution.format(".3")
                 default:
                     break
                 }
@@ -183,162 +171,162 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
             switch textField {
             case valueTextField1[0]: // Textfield for the size of FID
                 
-                guard nmrCalc!.set_ACQparameter("size", to: x) else {
+                guard nmrCalc!.setParameter("size", in: "acquisition", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluate_ACQparameter("duration") == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluate_ACQparameter("dwell") == false {
+                    } else if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems1![1] {
-                    if nmrCalc!.evaluate_ACQparameter("dwell") == false {
+                    if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
                     }
                 } else if fixedItem == menuItems1![2] {
-                    if nmrCalc!.evaluate_ACQparameter("duration") == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
                 }
                 
             case valueTextField1[1]: // Textfield for aquisition duration
                 
-                guard nmrCalc!.set_ACQparameter("duration", to: x * 1_000.0) else {
+                guard nmrCalc!.setParameter("duration", in: "acquisition", to: x * 1_000.0) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluate_ACQparameter("size") == false {
+                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    } else if nmrCalc!.evaluate_ACQparameter("dwell") == false {
+                    } else if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems1![0] {
-                    if nmrCalc!.evaluate_ACQparameter("dwell") == false {
+                    if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
                     }
                 } else if fixedItem == menuItems1![2] {
-                    if nmrCalc!.evaluate_ACQparameter("size") == false {
+                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
                     }
                 }
                 
             case valueTextField1[2]: // Textfield for dwell time
 
-                guard nmrCalc!.set_ACQparameter("dwell", to: x) else {
+                guard nmrCalc!.setParameter("dwell", in: "acquisition", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluate_ACQparameter("size") == false {
+                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    } else if nmrCalc!.evaluate_ACQparameter("duration") == false {
+                    } else if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems1![0] {
-                    if nmrCalc!.evaluate_ACQparameter("duration") == false {
+                    if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the duration.")
                     }
                 } else if fixedItem == menuItems1![1] {
-                    if nmrCalc!.evaluate_ACQparameter("size") == false {
+                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
                     }
                 }
                 
             case valueTextField2[0]: // Textfield for the size of spectrum
                 
-                guard nmrCalc!.set_specparameter("size", to_value: x) else {
+                guard nmrCalc!.setParameter("size", in: "spectrum", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluate_specparameter("resolution") == false {
+                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the resolution.")
-                    } else if nmrCalc!.evaluate_specparameter("width") == false {
+                    } else if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems2![1] {
-                    if nmrCalc!.evaluate_specparameter("resolution") == false {
+                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the resolution.")
                     }
                 } else if fixedItem == menuItems2![2] {
-                    if nmrCalc!.evaluate_specparameter("width") == false {
+                    if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
                     }
                 }
                 
             case valueTextField2[1]: // Textfield for spectral width
 
-                guard nmrCalc!.set_specparameter("width", to_value: x) else {
+                guard nmrCalc!.setParameter("width", in: "spectrum", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluate_specparameter("resolution") == false {
+                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the resolution.")
-                    } else if nmrCalc!.evaluate_specparameter("size") == false {
+                    } else if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems2![0] {
-                    if nmrCalc!.evaluate_specparameter("resolution") == false {
+                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the resolution.")
                     }
                 } else if fixedItem == menuItems2![2] {
-                    if nmrCalc!.evaluate_specparameter("size") == false {
+                    if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
                     }
                 }
                 
             case valueTextField2[2]: // Textfield for frequency resolution
                 
-                guard nmrCalc!.set_specparameter("resolution", to_value: x) else {
+                guard nmrCalc!.setParameter("resolution", in: "spectrum", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluate_specparameter("width") == false {
+                    if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
-                    } else if nmrCalc!.evaluate_specparameter("size") == false {
+                    } else if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
                     }
                     break
                 }
                 
                 if fixedItem == menuItems2![0] {
-                    if nmrCalc!.evaluate_specparameter("width") == false {
+                    if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
                     }
                 } else if fixedItem == menuItems2![1] {
-                    if nmrCalc!.evaluate_specparameter("size") == false {
+                    if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
                         warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
                     }
                 }
