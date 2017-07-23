@@ -24,8 +24,8 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     @IBOutlet weak var nucleusName: UILabel!
     
     var nucleusTable: [String]?
-    var nucleus: Nucleus?
-    var proton: Nucleus?
+    var nucleus: NMRNucleus?
+    var proton: NMRNucleus?
     
     let numberofColumn = 1
     
@@ -53,20 +53,19 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         let tabbarviewcontroller = self.tabBarController  as! NMRCalcTabBarController
         nmrCalc = tabbarviewcontroller.nmrCalc
         
-        proton = Nucleus(identifier: nucleusTable![0])
-        nucleus = Nucleus(identifier: nucleusTable![0])
+        proton = NMRNucleus(identifier: nucleusTable![0])
+        nucleus = NMRNucleus(identifier: nucleusTable![0])
         
         nmrCalc!.nucleus = nucleus!
-        if nmrCalc!.updateResonance(with: "field", equal: 1.0) == false {
+        
+        guard nmrCalc!.setParameter("field", in: "resonance", to: 1.0) else {
             warnings("Unable to comply.", message: "The value is out of range.")
+            return
         }
         
-        if let identifier = nmrCalc!.nucleus!.nameNucleus {
-            let sections = [identifier]
-            self.sections = sections
-        }
+        self.sections = [nmrCalc!.nucleus!.nameNucleus]
         
-        menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
+        self.menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
         
         update_textfields()
     }
@@ -110,36 +109,33 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     // MARK: Update the textfields
     
     func update_textfields() {
-            
-            itemValues = [nmrCalc!.frequencyLarmor!.format(".4"), nmrCalc!.fieldExternal!.format(".4"), nmrCalc!.frequencyProton!.format(".4"), nmrCalc!.frequencyElectron!.format(".4")]
-            
+        
+        self.itemValues = [nmrCalc!.frequencyLarmor!.format(".4"), nmrCalc!.fieldExternal!.format(".4"), nmrCalc!.frequencyProton!.format(".4"), nmrCalc!.frequencyElectron!.format(".4")]
+        
+        if let larmor = nmrCalc?.larmorNMR {
             for k in 0..<valueTextField.count {
                 switch k {
                 case 0:
-                    if let larmor = nmrCalc!.frequencyLarmor {
-                        valueTextField[k].text = larmor.format(".4")
-                    }
+                    valueTextField[k].text = larmor.frequencyLarmor.format(".4")
+                    
                 case 1:
-                    if let B0 = nmrCalc!.fieldExternal {
-                        valueTextField[k].text = B0.format(".4")
-                    }
+                    valueTextField[k].text = larmor.fieldExternal.format(".4")
+                    
                 case 2:
-                    if let protonfreq = nmrCalc!.frequencyProton {
-                        valueTextField[k].text = protonfreq.format(".4")
-                    }
+                    valueTextField[k].text = larmor.frequencyProton.format(".4")
+                    
                 case 3:
-                    if let electronfreq = nmrCalc!.frequencyElectron {
-                        valueTextField[k].text = electronfreq.format(".4")
-                    }
+                    valueTextField[k].text = larmor.frequencyElectron.format(".4")
+                    
                 default:
                     break
                 }
             }
-            
-            if let name = nmrCalc!.nucleus?.nameNucleus {
-                nucleusName.text = name
-            }
-
+        }
+        
+        if let nucleus = nmrCalc?.nucleus {
+            nucleusName.text = nucleus.nameNucleus
+        }
 
     }
     
@@ -154,7 +150,6 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        
         return 90.0
     }
     
@@ -163,31 +158,30 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-
-        if let items = nucleusTable?[row] {
-            if let label = view as! NucleusView! {
-                return label
-            } else {
-
-                let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: Nucleus(identifier: items))
-                return label
-            }
-        } else {
-            let label2 = UILabel()
-            label2.text = ""
-            return label2
+        
+        guard let items = nucleusTable?[row] else {
+            let label = UILabel()
+            label.text = ""
+            return label
         }
+        
+        if let label = view as! NucleusView! {
+            return label
+        } else {
+            let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: NMRNucleus(identifier: items))
+            return label
+        }
+
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        nucleus = Nucleus(identifier: nucleusTable![row])
+        nucleus = NMRNucleus(identifier: nucleusTable![row])
         nmrCalc!.nucleus = nucleus!
         if nmrCalc!.updateResonance(with: "field", equal: Double(valueTextField[1].text!)!) == false {
             warnings("Unable to comply.", message: "The value is out of range.")
         }
         
         update_textfields()
-
     }
     
     // MARK: UITextFieldDelegate
@@ -206,13 +200,12 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
             
         } else {
             NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
-            nucleus = Nucleus(identifier: nucleusTable![selected])
-            nmrCalc!.nucleus = nucleus!
+            nucleus = NMRNucleus(identifier: nucleusTable![selected])
+            nmrCalc!.nucleus = nucleus
             nucleusName.text = nmrCalc!.nucleus!.nameNucleus
             
             return true
         }
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -235,25 +228,49 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         if let x = Double(textField.text!) {
             switch textField {
             case valueTextField[0]: // Textfield for larmor frequency
-                if nmrCalc!.updateResonance(with: "larmor", equal: x) == false {
+                guard nmrCalc!.setParameter("larmor", in: "resonance", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
+                    return
                 }
+                
+                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+                
             case valueTextField[1]: // Textfield for external magnetic field
-                if nmrCalc!.updateResonance(with: "field", equal: x) == false {
+                guard nmrCalc!.setParameter("field", in: "resonance", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
+                    return
                 }
+                
+                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+
             case valueTextField[2]: // Textfield for proton's larmor frequency
-                if nmrCalc!.updateResonance(with: "proton", equal: x) == false {
+                guard nmrCalc!.setParameter("proton", in: "resonance", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
+                    return
                 }
+                
+                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+
             case valueTextField[3]: // Textfield for electron's larmor frequency
-                if nmrCalc!.updateResonance(with: "electron", equal: x) == false {
+                guard nmrCalc!.setParameter("electron", in: "resonance", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
+                    return
                 }
+                
+                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+
             default:
                 break
             }
