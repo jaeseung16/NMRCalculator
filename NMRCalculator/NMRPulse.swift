@@ -8,13 +8,11 @@
 
 import Foundation
 
-class NMRPulse {
-    
-    // MARK: Properties
-    var duration: Double? // pulse duration in μs
-    var flipangle: Double? // flip angle in degree
-    var amplitude: Double? // RF amplitude in kHz
-    var offset: Double? // frequency offset in Hz
+struct NMRPulse {
+    var duration = 0.0 // pulse duration in μs
+    var flipangle = 0.0 // flip angle in degree
+    public var amplitude = 0.0 // RF amplitude in kHz
+    var offset = 0.0 // frequency offset in Hz
     
     enum parameters: String {
         case duration
@@ -23,110 +21,63 @@ class NMRPulse {
         case offset
     }
     
-    // MARK: Methods
-    
     init() {
-        duration = Double()
-        flipangle = Double()
-        amplitude = Double()
-        offset = 0.0
-    }
-    
-    convenience init(μs: Double) {
-        self.init()
-        self.duration = μs
-    }
-    
-    convenience init(degree: Double) {
-        self.init()
-        self.flipangle = degree
-    }
-    
-    convenience init(kHz: Double) {
-        self.init()
-        self.amplitude = kHz
-    }
-    
-    convenience init(degree: Double, μs: Double) {
-        self.init()
-        self.flipangle = degree
-        self.duration = μs
-        if update(name: "amplitude") == false {
-            print("Initialization failed.")
-        }
-    }
-    
-    convenience init(degree: Double, kHz: Double) {
-        self.init()
-        self.flipangle = degree
-        self.amplitude = kHz
-        if update(name: "duration") == false {
-            print("Initialization failed.")
-        }
-    }
-    
-    convenience init(μs: Double, kHz: Double) {
-        self.init()
-        self.duration = μs
-        self.amplitude = kHz
-        if update(name: "flipangle") == false {
-            print("Initialization failed.")
-        }
-    }
-    
-    func set_parameter(name: String, to_value: Double) -> Bool {
-        if let to_set = parameters(rawValue: name) {
-            switch to_set {
-            case .amplitude:
-                if to_value != 0 {
-                    amplitude = to_value
-                }
-                return true
-            case .duration:
-                if to_value > 0 {
-                    duration = to_value
-                }
-                return true
-            case .flipangle:
-                flipangle = to_value
-                return true
-            case .offset:
-                offset = to_value
-                return true
-            }
-        }
-        
-        return false
         
     }
     
-    // ToDo: When the sign of the filpangle changes, keep the duration being positive and change the sign of the amplitude !
-    // ToDo: Likewise, when the sign of the amplitude changes, keep the duration being positive and change the signe of the flipangle!
-    
-    func update(name: String) -> Bool {
+    mutating func setParameter(parameter name: String, to value: Double) -> Bool {
         
-        if let to_update = parameters(rawValue: name) {
-            switch to_update {
-            case .duration:
-                if flipangle != nil && amplitude != nil {
-                    duration = ( flipangle! / amplitude! ) * ( 1000.0 / 360.0 )
-                    return true
-                }
-            case .amplitude:
-                if flipangle != nil && duration != nil {
-                    amplitude = ( flipangle! / duration! ) * ( 1000.0 / 360.0 )
-                    return true
-                }
-            case .flipangle:
-                if duration != nil && amplitude != nil {
-                    flipangle = ( duration! * amplitude! ) * ( 360.0 / 1000.0 )
-                    return true
-                }
-            case .offset:
-                    return true
-            }
+        guard let parameter = parameters(rawValue: name) else { return false }
+        
+        switch parameter {
+        case .amplitude:
+            self.amplitude = value
+        case .duration:
+            guard value >= 0 else { return false }
+            self.duration = value
+        case .flipangle:
+            self.flipangle = value
+        case .offset:
+            self.offset = value
         }
-
-        return false
+        
+        return true
     }
+    
+    mutating func updateParameter(name: String) -> Bool {
+        
+        guard let parameter = parameters(rawValue: name) else { return false }
+        
+        switch parameter {
+        case .duration:
+            guard (self.amplitude != 0) else { return false }
+            self.duration = ( self.flipangle / self.amplitude ) * ( 1000.0 / 360.0 )
+            
+        case .amplitude:
+            guard (self.duration != 0) else { return false }
+            self.amplitude = ( self.flipangle / self.duration ) * ( 1000.0 / 360.0 )
+            
+        case .flipangle:
+            self.flipangle = ( self.duration * self.amplitude ) * ( 360.0 / 1000.0 )
+            
+        case .offset:
+            break
+            
+        }
+        
+        return true
+    }
+    
+    func describe() -> String {
+        let string1 = "Pulse duration = \(self.duration) μs"
+        
+        let string2 = "Flip angle = \(self.flipangle)˚"
+        
+        let string3 = "ɷ₁/2π = \(self.amplitude) kHz"
+        
+        let string4 = "Frequency offset = \(self.offset) Hz"
+        
+        return string1 + "\n" + string2 + "\n" + string3 + "\n" + string4
+    }
+    
 }
