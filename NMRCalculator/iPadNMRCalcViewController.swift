@@ -49,6 +49,10 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
             return
         }
         
+        let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+        
         self.sections = [nmrCalc!.nucleus!.nameNucleus]
         
         self.menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
@@ -191,8 +195,7 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
                     textField.text = textbeforeediting
                     return
                 }
-                
-                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
+
                 let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
                 
@@ -215,7 +218,6 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
                 }
                 
                 let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
                 
             case valueTextField[3]: // Textfield for electron's larmor frequency
@@ -226,7 +228,6 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
                 }
                 
                 let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
                 
             default:
@@ -291,9 +292,15 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         nucleus = NMRNucleus(identifier: nucleusTable![row])
         nmrCalc!.nucleus = nucleus!
-        if nmrCalc!.updateResonance(with: "field", equal: Double(valueTextField[1].text!)!) == false {
+        nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
+        
+        if nmrCalc!.setParameter("field", in: "resonance", to: Double(valueTextField[1].text!)!) == false {
             warnings("Unable to comply.", message: "The value is out of range.")
         }
+        
+        let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
         
         update_textfields()
         

@@ -58,11 +58,11 @@ struct NMRfid {
             self.size = UInt( 1000.0 * self.duration / self.dwell )
             
         case .duration:
-            self.duration = Double(self.size) * self.dwell
+            self.duration = Double(self.size) * self.dwell / 1000.0
             
         case .dwell:
             guard self.size > 0 else { return false }
-            self.dwell = self.duration / Double(self.size)
+            self.dwell = 1000.0 * self.duration / Double(self.size)
             
         }
         

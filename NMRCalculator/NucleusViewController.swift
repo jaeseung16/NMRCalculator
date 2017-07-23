@@ -244,7 +244,6 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                     return
                 }
                 
-                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
                 
@@ -265,9 +264,8 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                     textField.text = textbeforeediting
                     return
                 }
-                
+
                 let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
 
             case valueTextField[3]: // Textfield for electron's larmor frequency
@@ -276,9 +274,8 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                     textField.text = textbeforeediting
                     return
                 }
-                
+
                 let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("field", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
 
             default:

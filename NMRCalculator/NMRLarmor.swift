@@ -43,10 +43,13 @@ struct NMRLarmor {
             self.fieldExternal = value
         case .larmor:
             self.frequencyLarmor = value
+            self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
         case .proton:
             self.frequencyProton = value
+            self.fieldExternal = self.frequencyProton / self.gammaProton
         case .electron:
             self.frequencyElectron = value
+            self.fieldExternal = self.frequencyElectron / self.gammaElectron
         }
         
         return true
@@ -59,7 +62,7 @@ struct NMRLarmor {
         switch parameter {
         case .field:
             self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
-            
+
         case .larmor:
             self.frequencyLarmor = self.fieldExternal * self.nucleus.γ
             
