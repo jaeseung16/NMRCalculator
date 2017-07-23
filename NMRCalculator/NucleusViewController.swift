@@ -181,7 +181,9 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         nucleus = NMRNucleus(identifier: nucleusTable![row])
         nmrCalc!.nucleus = nucleus!
-        if nmrCalc!.updateResonance(with: "field", equal: Double(valueTextField[1].text!)!) == false {
+        nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
+        
+        if nmrCalc!.setParameter("field", in: "resonance", to: Double(valueTextField[1].text!)!) == false {
             warnings("Unable to comply.", message: "The value is out of range.")
         }
         
