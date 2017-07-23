@@ -63,6 +63,10 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
             return
         }
         
+        let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+        
         self.sections = [nmrCalc!.nucleus!.nameNucleus]
         
         self.menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
@@ -110,9 +114,9 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     
     func update_textfields() {
         
-        self.itemValues = [nmrCalc!.frequencyLarmor!.format(".4"), nmrCalc!.fieldExternal!.format(".4"), nmrCalc!.frequencyProton!.format(".4"), nmrCalc!.frequencyElectron!.format(".4")]
-        
         if let larmor = nmrCalc?.larmorNMR {
+            self.itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
+            
             for k in 0..<valueTextField.count {
                 switch k {
                 case 0:
@@ -180,6 +184,10 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         if nmrCalc!.updateResonance(with: "field", equal: Double(valueTextField[1].text!)!) == false {
             warnings("Unable to comply.", message: "The value is out of range.")
         }
+        
+        let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+        let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
         
         update_textfields()
     }

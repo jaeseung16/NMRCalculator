@@ -188,7 +188,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             case valueTextField1[1]: // Textfield for the flip angle of the 1st pulse
                 
-                guard nmrCalc!.setParameter("flipangle", in: "pulse1", to_value: x) else {
+                guard nmrCalc!.setParameter("flipangle", in: "pulse1", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break

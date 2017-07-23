@@ -302,10 +302,11 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
     // MARK: Update the textfields
     
     func update_textfields() {
-
-        itemValues = [nmrCalc!.frequencyLarmor!.format(".4"), nmrCalc!.fieldExternal!.format(".4"), nmrCalc!.frequencyProton!.format(".4"), nmrCalc!.frequencyElectron!.format(".4")]
             
         if let larmor = nmrCalc?.larmorNMR {
+            
+            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
+            
             for k in 0..<valueTextField.count {
                 switch k {
                 case 0:

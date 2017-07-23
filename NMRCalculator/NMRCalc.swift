@@ -192,25 +192,24 @@ class NMRCalc {
         
         switch category {
         case .resonance:
-            guard var larmor = larmorNMR else { return false }
-            
-            return larmor.setParameter(parameter: name, to: value)
+            guard larmorNMR != nil else { return false }
+            return larmorNMR!.setParameter(parameter: name, to: value)
             
         case .acquisition:
-            guard var acq = acqNMR else { return false }
-            return acq.setFID(parameter: name, to: value)
+            guard acqNMR != nil else { return false }
+            return acqNMR!.setFID(parameter: name, to: value)
             
         case .spectrum:
-            guard var spec = specNMR else { return false }
-            return spec.setSpectrum(parameter: name, to: value)
+            guard specNMR != nil else { return false }
+            return specNMR!.setSpectrum(parameter: name, to: value)
             
         case .pulse1:
-            guard var pulse = pulseNMR[0] else { return false }
-            return pulse.setParameter(parameter: name, to: value)
+            guard pulseNMR[0] != nil else { return false }
+            return pulseNMR[0]!.setParameter(parameter: name, to: value)
             
         case .pulse2:
-            guard var pulse = pulseNMR[1] else { return false }
-            return pulse.setParameter(parameter: name, to: value)
+            guard pulseNMR[1] != nil else { return false }
+            return pulseNMR[1]!.setParameter(parameter: name, to: value)
             
         case .ernstAngle:
             return set_ernstparameter(name, to: value)
@@ -223,25 +222,24 @@ class NMRCalc {
         
         switch category {
         case .resonance:
-            guard var larmor = larmorNMR else { return false }
-            
-            return larmor.updateParameter(name: name)
+            guard larmorNMR != nil else { return false }
+            return larmorNMR!.updateParameter(name: name)
             
         case .acquisition:
-            guard var acq = acqNMR else { return false }
-            return acq.updateParameters(name: name)
+            guard acqNMR != nil else { return false }
+            return acqNMR!.updateParameters(name: name)
             
         case .spectrum:
-            guard var spec = specNMR else { return false }
-            return spec.updateParameter(name: name)
+            guard specNMR != nil else { return false }
+            return specNMR!.updateParameter(name: name)
             
         case .pulse1:
-            guard var pulse = pulseNMR[0] else { return false }
-            return pulse.updateParameter(name: name)
+            guard pulseNMR[0] != nil else { return false }
+            return pulseNMR[0]!.updateParameter(name: name)
             
         case .pulse2:
-            guard var pulse = pulseNMR[1] else { return false }
-            return pulse.updateParameter(name: name)
+            guard pulseNMR[1] != nil else { return false }
+            return pulseNMR[1]!.updateParameter(name: name)
             
         case .ernstAngle:
             return false
