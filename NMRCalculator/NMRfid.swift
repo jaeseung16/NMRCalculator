@@ -8,13 +8,13 @@
 
 import Foundation
 
-class NMRfid {
+struct NMRfid {
     
-    var size: UInt? // number of data points
-    var duration: Double? // duration in ms
-    var dwell: Double? // dwell time in μs
-    var real: [Double] // real part
-    var imag: [Double] // imaginary part
+    var size: UInt = 0 // number of data points
+    var duration: Double = 0.0 // duration in ms
+    var dwell: Double = 0.0 // dwell time in μs
+    //    var real: [Double] // real part
+    //    var imag: [Double] // imaginary part
     
     enum parameters: String {
         case size
@@ -23,65 +23,60 @@ class NMRfid {
     }
     
     init() {
-        size = UInt()
-        duration = Double()
-        dwell = Double()
-        real = [Double]()
-        imag = [Double]()
+        
     }
     
-    func parameterSet(of name: String, to value: Double) -> Bool {
-        if let parameter = parameters(rawValue: name) {
-            switch parameter {
-            case .size:
-                if value <= Double( UInt.max ) && value > Double( UInt.min ) {
-                    size = UInt(value)
-                    return true
-                }
-            case .duration:
-                if value > 0 {
-                    duration = value
-                    return true
-                }
-            case .dwell:
-                if value > 0 {
-                    dwell = value
-                    return true
-                }
-            }
+    mutating func setFID(parameter name: String, to value: Double) -> Bool {
+        
+        guard let parameter = parameters(rawValue: name) else { return false }
+        
+        switch parameter {
+        case .size:
+            guard ( value <= Double( UInt.max ) ) && ( value > Double( UInt.min ) ) else { return false }
+            self.size = UInt(value)
+            
+        case .duration:
+            guard value > 0 else { return false }
+            self.duration = value
+            
+        case .dwell:
+            guard value > 0 else { return false }
+            self.dwell = value
         }
         
-        return false
+        return true
         
     }
     
-    func update(_ name: String) -> Bool {
+    mutating func updateParameters(name: String) -> Bool {
         
-        if let to_update = parameters(rawValue: name) {
-            switch to_update {
-            case .size:
-                if duration != nil && dwell != nil {
-                    size = UInt( 1000.0 * duration! / dwell! )
-                    return true
-                }
-
-            case .duration:
-                if size != nil && dwell != nil {
-                    duration = Double(size!) * dwell! / 1000.0
-                    return true
-                }
-
-            case .dwell:
-                if size != nil && duration != nil {
-                    dwell = duration! / Double(size!) * 1000.0
-                    return true
-                }
-
-            }
+        guard let parameter = parameters(rawValue: name) else { return false }
+        
+        switch parameter {
+        case .size:
+            guard self.dwell > 0 else { return false }
+            self.size = UInt( 1000.0 * self.duration / self.dwell )
+            
+        case .duration:
+            self.duration = Double(self.size) * self.dwell
+            
+        case .dwell:
+            guard self.size > 0 else { return false }
+            self.dwell = self.duration / Double(self.size)
             
         }
         
-        return false
+        return true
+    }
+    
+    func describe() -> String {
+        let string1 = "FID size = \(self.size)"
+        
+        let string2 = "FID duration = \(self.duration) ms"
+        
+        let string3 = "Dwell time = \(self.dwell) μs"
+        
+        return string1 + "\n" + string2 + "\n" + string3
     }
     
 }
