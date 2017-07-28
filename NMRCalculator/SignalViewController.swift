@@ -38,7 +38,10 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         sections = ["Time domain", "Frequency domain"]
         
-        nmrCalc = NMRCalc()
+        if  UIDevice.current.userInterfaceIdiom == .phone {
+            let tabbarviewcontroller = self.tabBarController as! NMRCalcTabBarController
+            nmrCalc = tabbarviewcontroller.nmrCalc
+        }
         
         guard nmrCalc!.setParameter("size", in: "acquisition", to: 1000.0),
             nmrCalc!.setParameter("duration", in: "acquisition", to: 10.0),
