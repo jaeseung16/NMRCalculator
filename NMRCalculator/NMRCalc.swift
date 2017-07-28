@@ -19,11 +19,6 @@ class NMRCalc {
     var specNMR: NMRSpectrum?
     var pulseNMR: [NMRPulse?]
     
-    var frequencyLarmor: Double?
-    var fieldExternal: Double?
-    var frequencyProton: Double?
-    var frequencyElectron: Double?
-    
     var relativepower: Double?
     
     var repetitionTime: Double?
@@ -54,58 +49,8 @@ class NMRCalc {
         self.larmorNMR = NMRLarmor(nucleus: nucleus)
     }
     
-    // MARK: Enum for resonance frequency
-    
-    enum resonance: String {
-        case field
-        case larmor
-        case proton
-        case electron
-    }
-    
-    
-    // MARK: Setting parameters for the time domain
-    
-    enum acq_parameters: String {
-        case size
-        case duration
-        case dwell
-    }
-    
-    // MARK: Setting parameters for the frequecny domain
-    
-    enum spec_parameters: String {
-        case size
-        case width
-        case resolution
-    }
-    
     // MARK: Setting parameters for pulses
-    
-    enum pulse_parameters: String {
-        case duration
-        case flipangle
-        case amplitude
-    }
-    
-    func set_pulseparameter(_ name: String, of number: Int, to value: Double) -> Bool {
-        
-        if var pulse = pulseNMR[number] {
-            return pulse.setParameter(parameter: name, to: value)
-        }
-        return false
-        
-    }
-    
-    func evaluate_pulseparameter(_ name: String, of number: Int) -> Bool {
-        
-        if var pulse = pulseNMR[number] {
-            return pulse.updateParameter(name: name)
-        }
-        
-        return false
-    }
-    
+
     
     func calculate_dB() -> Bool {
         
@@ -245,70 +190,5 @@ class NMRCalc {
             return false
         }
         
-    }
-}
-
-// MARK: Methods for resonance frequency
-extension NMRCalc {
-    
-    func updateResonance(with name: String, equal value: Double) -> Bool {
-        guard let name = resonance(rawValue: name), let nucleus = self.nucleus else {
-            return false
-        }
-        
-        switch name {
-        case .field:
-            self.fieldExternal = value
-        case .larmor:
-            self.fieldExternal = value / nucleus.γ
-        case .proton:
-            self.fieldExternal = value / gammaProton
-        case .electron:
-            self.fieldExternal = value / gammaElectron
-        }
-        
-        return larmorFrequency(at: self.fieldExternal!)
-    }
-    
-    func larmorFrequency(at B0: Double) -> Bool {
-        
-        guard let gamma = nucleus?.γ else {
-            print("Check whether there are values for the external field and gyromagnetic ratio.")
-            return false
-        }
-        self.fieldExternal = B0
-        self.frequencyLarmor = B0 * gamma
-        self.frequencyProton = B0 * gammaProton
-        self.frequencyElectron = B0 * gammaElectron
-        
-        return true
-        
-    }
-    
-}
-
-extension NMRCalc {
-    func setACQ(parameter name: String, to value: Double) -> Bool {
-        guard var acq = acqNMR else { return false }
-        
-        return acq.setFID(parameter: name, to: value)
-    }
-    
-    func evaluateACQ(parameter name: String) -> Bool {
-        guard var acq = acqNMR else { return false }
-        
-        return acq.updateParameters(name: name)
-    }
-    
-    func setSpectrum(parameter name: String, to value: Double) -> Bool {
-        guard var spec = specNMR else { return false }
-        
-        return spec.setSpectrum(parameter: name, to: value)
-    }
-    
-    func evaluate_specparameter(_ name: String) -> Bool {
-        guard var spec = specNMR else { return false }
-        
-        return spec.updateParameter(name: name)
     }
 }

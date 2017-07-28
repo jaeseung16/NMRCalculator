@@ -11,10 +11,12 @@ import UIKit
 class NMRCalcMasterViewController: UITableViewController {
 
     var nucleusVC: UIViewController?
-    var signalVC: UIViewController?
-    var pulseVC: UIViewController?
+    // var signalVC: UIViewController?
+    // var pulseVC: UIViewController?
     var solutionVC: UIViewController?
     var infoVC: UIViewController?
+    
+    var nmrCalc = NMRCalc()
     
     let viewControllers = ["nucleus", "signalView", "pulseView", "solutionView", "infoView"]
     let menuItems = ["Nucleus", "Signal", "RF Pulse", "Solution", "Info"]
@@ -30,9 +32,9 @@ class NMRCalcMasterViewController: UITableViewController {
         
         nucleusVC = UIStoryboard(name: "iPadStoryboard", bundle: nil).instantiateViewController(withIdentifier: "nucleus")
         
-        signalVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signalView")
+        // signalVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signalView")
         
-        pulseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "pulseView")
+        // pulseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "pulseView")
         
         solutionVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "solutionView")
         
@@ -74,13 +76,19 @@ class NMRCalcMasterViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewControllerIdentifier = viewControllers[(indexPath as NSIndexPath).row]
+        
         switch (indexPath as NSIndexPath).row {
         case 0:
             self.showDetailViewController(nucleusVC!, sender: self)
         case 1:
-            self.showDetailViewController(signalVC!, sender: self)
+            let signalVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllerIdentifier) as! SignalViewController
+            signalVC.nmrCalc = self.nmrCalc
+            self.showDetailViewController(signalVC, sender: self)
         case 2:
-            self.showDetailViewController(pulseVC!, sender: self)
+            let pulseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllerIdentifier) as! PulseViewController
+            pulseVC.nmrCalc = self.nmrCalc
+            self.showDetailViewController(pulseVC, sender: self)
         case 3:
             self.showDetailViewController(solutionVC!, sender: self)
         case 4:

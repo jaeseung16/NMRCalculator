@@ -49,7 +49,7 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         guard nmrCalc!.setParameter("size", in: "spectrum", to: 1000.0),
-            nmrCalc!.setParameter("size", in: "spectrum", to: 1.0),
+            nmrCalc!.setParameter("width", in: "spectrum", to: 1.0),
             nmrCalc!.evaluateParameter("resolution", in: "spectrum")
         else {
             warnings("Unable to comply.", message: "The value is out of range.")
