@@ -16,16 +16,38 @@ class ChemCalc {
     var mol: Double? // solute amount in mol
     var weight: Double? // solute amount in gram
     var amount_h2o: Double? // solvent amount in gram or mL
-    var chemicalname: String?
+    var chemicalName: String?
     
     init() {
 
     }
     
+    // MARK: Method to set parameter
+    
+    enum chemCategory: String {
+        case chemical
+        case molecularWeight
+        case amountSolute
+        case amountSolvent
+    }
+    
+    func setParameter(_ name: String, in category: String, to value: String) -> Bool {
+        guard let category = chemCategory(rawValue: category) else { return false }
+        
+        switch category {
+        case .chemical:
+            self.chemicalName = value
+        default:
+            break
+        }
+        return false
+        
+    }
+    
     // MARK: set the name of a chemical
     
     func set_chemicalname(_ name: String) {
-        chemicalname = name
+        chemicalName = name
     }
     
     // MARK: set the molecular weight of a chemical
