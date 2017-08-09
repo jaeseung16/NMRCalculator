@@ -187,7 +187,7 @@ class NMRCalc {
             return pulseNMR[1]!.updateParameter(name: name)
             
         case .ernstAngle:
-            return false
+            return evaluate_ernstparameter(name)
         }
         
     }

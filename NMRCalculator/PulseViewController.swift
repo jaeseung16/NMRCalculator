@@ -374,82 +374,103 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
             case valueTextField3[0]:
                 
-                guard nmrCalc!.set_ernstparameter("repetition", to: x) else {
+                guard nmrCalc!.setParameter("repetition", in: "ernstAngle", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    if nmrCalc!.evaluate_ernstparameter("angle") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                    } else if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
+                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
+                        guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle")  else {
+                            warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+                            break
+                        }
+                        break
                     }
                     break
                 }
                 
-                if fixedItem == menuItems3[1] {
-                    if nmrCalc!.evaluate_ernstparameter("angle") == false {
+                switch fixedItem! {
+                case menuItems3[1]:
+                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
                         warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+                        break
                     }
-                } else if fixedItem == menuItems3[2] {
-                    if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
+                case menuItems3[2]:
+                    guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle") else {
                         warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
+                        break
                     }
+                default:
+                    break
                 }
 
             case valueTextField3[1]:
                 
-                guard nmrCalc!.set_ernstparameter("relaxation", to: x) else {
+                guard nmrCalc!.setParameter("relaxation", in: "ernstAngle", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    if nmrCalc!.evaluate_ernstparameter("angle") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                    } else if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
+                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
+                        guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle")  else {
+                            warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+                            break
+                        }
+                        break
                     }
                     break
                 }
                 
-                if fixedItem == menuItems3[0] {
-                    if nmrCalc!.evaluate_ernstparameter("angle") == false {
+                switch fixedItem! {
+                case menuItems3[0]:
+                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
                         warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+                        break
                     }
-                } else if fixedItem == menuItems3[2] {
-                    if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
+                case menuItems3[2]:
+                    guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle") else {
+                        warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
+                        break
                     }
+                default:
+                    break
                 }
                 
             case valueTextField3[2]:
-                guard nmrCalc!.set_ernstparameter("angle", to: x * Double.pi / 180.0) else {
+                guard nmrCalc!.setParameter("angle", in: "ernstAngle", to: x * Double.pi / 180.0) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     break
                 }
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
-                    } else if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
+                    guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle") else {
+                        guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle")  else {
+                            warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
+                            break
+                        }
+                        break
                     }
                     break
                 }
                 
-                if fixedItem == menuItems3[0] {
-                    if nmrCalc!.evaluate_ernstparameter("relaxation") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
+                switch fixedItem! {
+                case menuItems3[0]:
+                    guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle") else {
+                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
+                        break
                     }
-                } else if fixedItem == menuItems3[1] {
-                    if nmrCalc!.evaluate_ernstparameter("repetition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the repetition time.")
+                case menuItems3[1]:
+                    guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle") else {
+                        warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
+                        break
                     }
+                default:
+                    break
                 }
                 
             default:

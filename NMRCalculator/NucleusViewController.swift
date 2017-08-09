@@ -335,7 +335,7 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     }
     
     @IBAction func searchwebButtonDown(_ sender: UIButton) {
-        var queryString = "http://www.google.com/search?q="
+        var queryString = "https://www.google.com/search?q="
         queryString += nucleusName.text!
         queryString += "&oe=utf-8&ie=utf-8"
         
