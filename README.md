@@ -1,9 +1,6 @@
 # NMRCalculator
 Download from the App Store: https://itunes.apple.com/us/app/id1146296877
 
-Send us an email.
-
-
 Description
 
 The app evaluates the values of some basic parameters used in nuclear magnetic resonance (NMR) spectroscopy.
