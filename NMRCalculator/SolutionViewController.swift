@@ -16,7 +16,7 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
     
     let menuItems = ["Molecular weight (g/mol)", "Concentration (mM)", "Concentration (wt%)",
                      "Mass of solute (mg)", "Mass (g) or volume (mL) of water"]
-    var itemValues: [String]?
+    var itemValues = Array(repeating: String(), count: 5)
     var valueTextField = Array(repeating: UITextField(), count: 5)
     
     var chemCalc = ChemCalc()
@@ -28,31 +28,14 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
         
         // Do any additional setup after loading the view.
         
-        if chemCalc.set_molecularweight(100.0) == false {
-            
-        }
+        /*let _ = chemCalc.set_molecularweight(100.0)
+        let _ = chemCalc.set_amount("solute", gram: 1.0)
+        let _ = chemCalc.set_amount("solvent", gram: 100.0)
+        let _ = chemCalc.update("mol")
+        let _ = chemCalc.update("molL")
+        let _ = chemCalc.update("mass")
         
-        if chemCalc.set_amount("solute", gram: 1.0) == false {
-            
-        }
-        
-        if chemCalc.set_amount("solvent", gram: 100.0) == false {
-            
-        }
-        
-        if chemCalc.update("mol") == false {
-            
-        }
-        
-        if chemCalc.update("molL") == false {
-            
-        }
-        
-        if chemCalc.update("mass") == false {
-            
-        }
-        
-        chemCalc.set_chemicalname("Chemical Name (optional)")
+        chemCalc.set_chemicalname("Chemical Name (optional)")*/
         
         update_textfields()
         
@@ -100,33 +83,26 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
     
     func update_textfields() {
         
-        itemValues = [chemCalc.molecularweight!.format(".5"), (chemCalc.molL!*1_000).format(".4"),(chemCalc.massfraction!*100).format(".4"), (chemCalc.weight!*1_000).format(".5"), chemCalc.amount_h2o!.format(".5")]
+        itemValues = [chemCalc.molecularWeight.format(".5"), (chemCalc.molConcentration*1_000).format(".4"),(chemCalc.wtConcentration*100).format(".4"), (chemCalc.gramSolute*1_000).format(".5"), chemCalc.amountSolvent.format(".5")]
         
         for k in 0..<valueTextField.count {
+            
             switch k {
             case 0:
-                if let mw = chemCalc.molecularweight {
-                    valueTextField[k].text = mw.format(".5")
-                }
+                itemValues[k] = chemCalc.molecularWeight.format(".5")
             case 1:
-                if let concent = chemCalc.molL {
-                    valueTextField[k].text = (concent*1000.0).format(".4")
-                }
+                itemValues[k] = (chemCalc.molConcentration*1_000).format(".4")
             case 2:
-                if let concent = chemCalc.massfraction {
-                    valueTextField[k].text = (concent*100.0).format(".4")
-                }
+                itemValues[k] = (chemCalc.wtConcentration*100).format(".4")
             case 3:
-                if let wt = chemCalc.weight {
-                    valueTextField[k].text = (wt*1000.0).format(".5")
-                }
+                itemValues[k] = (chemCalc.gramSolute*1_000).format(".5")
             case 4:
-                if let wt = chemCalc.amount_h2o {
-                    valueTextField[k].text = wt.format(".5")
-                }
+                itemValues[k] = chemCalc.amountSolvent.format(".5")
             default:
                 break
             }
+            
+            valueTextField[k].text = itemValues[k]
         }
         
         ChemName.text = chemCalc.chemicalName
@@ -147,100 +123,134 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let text = textField.text else { return }
+        
         if textField == ChemName {
-            chemCalc.set_chemicalname(textField.text!)
-        } else if let x = Double(textField.text!) {
+            let _ = chemCalc.setParameter("chemical", to: text)
+        } else if let value = Double(text) {
             switch textField {
             case valueTextField[0]: // Textfield for molecular weight
-                if chemCalc.set_molecularweight(x) == false {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    if chemCalc.set_molecularweight(Double(textbeforeediting!)!) == false {
+                guard chemCalc.setParameter("molecularWeight", to: Double(value)) else {
+                    guard chemCalc.setParameter("molecularWeight", to: textbeforeediting! ) else {
                         warnings("Unable to comply.", message: "The value is out of range.")
+                        break
                     }
+                    break
                 }
                 
-                if chemCalc.update("mol") == false {
-                     warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                } else if chemCalc.update("molL") == false {
+                guard chemCalc.updateParameter("molSolute") else {
+                    warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
+                    break
+                }
+                
+                guard chemCalc.updateParameter("molConcentration") else {
                     warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
+                    break
                 }
                 
             case valueTextField[1]: // Textfield for concentration in mol
-                if chemCalc.set_concentration("molL", number: x/1000.0) == false {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    if chemCalc.set_concentration("molL", number: Double(textbeforeediting!)!/1000.0 ) == false {
+                guard chemCalc.setParameter("molConcentration", to: value/1000.0) else {
+                    guard chemCalc.setParameter("molConcentration", to: Double(textbeforeediting!)!/1000.0) else {
                         warnings("Unable to comply.", message: "The value is out of range.")
+                        break
                     }
+                    break
                 }
                 
-                if chemCalc.update("mol_reverse") == false {
+                guard chemCalc.updateParameter("molSolute", flag: false) else {
                     warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                } else if chemCalc.update("weight") == false {
+                    break
+                }
+                
+                guard chemCalc.updateParameter("gramSolute") else {
                     warnings("Unable to comply.", message: "Cannot calculate the amount in mg.")
-                } else if chemCalc.update("mass") == false {
+                    break
+                }
+                
+                guard chemCalc.updateParameter("wtConcentration") else {
                     warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
+                    break
                 }
                 
             case valueTextField[2]: // Textfield for concentration in wt%
-                if chemCalc.set_concentration("mass", number: x/100.0) == false {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    if chemCalc.set_concentration("mass", number: Double(textbeforeediting!)!/100.0) == false {
+                guard chemCalc.setParameter("wtConcentration", to: value/100.0) else {
+                    guard chemCalc.setParameter("wtConcentration", to: Double(textbeforeediting!)!/100.0) else {
                         warnings("Unable to comply.", message: "The value is out of range.")
+                        break
                     }
+                    break
                 }
                 
-                if chemCalc.update("weight_reverse") == false {
+                guard chemCalc.updateParameter("gramSolute", flag: false) else {
                     warnings("Unable to comply.", message: "Cannot calculate the amount in mg.")
-                } else if chemCalc.update("mol") == false {
+                    break
+                }
+                
+                guard chemCalc.updateParameter("molSolute") else {
                     warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                } else if chemCalc.update("molL") == false {
+                    break
+                }
+                
+                guard chemCalc.updateParameter("molConcentration") else {
                     warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
+                    break
                 }
                 
             case valueTextField[3]: // Textfield for amount of solute
-                if chemCalc.set_amount("solute", gram: x/1000.0) == false {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    if chemCalc.set_amount("solute", gram: Double(textbeforeediting!)!/1000.0) == false {
+                guard chemCalc.setParameter("gramSolute", to: value/1000.0) else {
+                    guard chemCalc.setParameter("gramSolute", to: Double(textbeforeediting!)!/1000.0) else {
                         warnings("Unable to comply.", message: "The value is out of range.")
+                        break
                     }
+                    break
                 }
                 
-                if chemCalc.update("mol") == false {
+                guard chemCalc.updateParameter("molSolute") else {
                     warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                } else if chemCalc.update("molL") == false {
+                    break
+                }
+                
+                guard chemCalc.updateParameter("molConcentration") else {
                     warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
-                } else if chemCalc.update("mass") == false {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
+                    break
+                }
+                
+                guard chemCalc.updateParameter("wtConcentration") else {
+                   warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
+                    break
                 }
                 
             case valueTextField[4]: // Textfield for amount of water
-                if chemCalc.set_amount("solvent", gram: x) == false {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    if chemCalc.set_amount("solvent", gram: Double(textbeforeediting!)!) == false {
-                       warnings("Unable to comply.", message: "The value is out of range.")
+                guard chemCalc.setParameter("amountSolvent", to: value) else {
+                    guard chemCalc.setParameter("amountSolvent", to: Double(textbeforeediting!)!) else {
+                        warnings("Unable to comply.", message: "The value is out of range.")
+                        break
                     }
+                    break
                 }
                 
-                if chemCalc.update("molL") == false {
+                guard chemCalc.updateParameter("molConcentration") else {
                     warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
-                } else if chemCalc.update("mass") == false {
+                    break
+                }
+                
+                guard chemCalc.updateParameter("wtConcentration") else {
                     warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
+                    break
                 }
                 
             default:
                 break
             }
-            
         } else {
             textField.text = textbeforeediting
         }
-        
-        
+    
         update_textfields()
-        
+    
         activeField = nil
     }
-    
+
     func warnings(_ title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -264,7 +274,7 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "SolutionTableCell", for: indexPath) as! SolutionTableViewCell
         
         cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
+        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
         valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
         
         return cell
