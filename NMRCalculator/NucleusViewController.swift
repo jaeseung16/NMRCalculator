@@ -299,7 +299,7 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func keyboardDidShow(_ notification: Notification) {
+    @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let pickerSize = NucleusPicker.frame
@@ -308,7 +308,7 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         NucleusTableView.scrollIndicatorInsets = contentInsets
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
         NucleusTableView.contentInset = contentInsets
         NucleusTableView.scrollIndicatorInsets = contentInsets

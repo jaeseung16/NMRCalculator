@@ -104,7 +104,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func keyboardDidShow(_ notification: Notification) {
+    @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
@@ -112,7 +112,7 @@ class PulseViewController: UIViewController, UITableViewDelegate, UITableViewDat
         PulseTableView.scrollIndicatorInsets = contentInsets
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
         PulseTableView.contentInset = contentInsets
         PulseTableView.scrollIndicatorInsets = contentInsets

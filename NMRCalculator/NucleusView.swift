@@ -35,13 +35,13 @@ import UIKit
             fontsize = 18.0
         }
         
-        var character_attribute: [String: AnyObject] = [NSBaselineOffsetAttributeName : fontsize as AnyObject, NSFontAttributeName: UIFont.systemFont(ofSize: fontsize, weight: UIFontWeightBold)]
+        var character_attribute: [String: AnyObject] = [NSAttributedStringKey.baselineOffset.rawValue : fontsize as AnyObject, NSAttributedStringKey.font.rawValue: UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.bold)]
 
         let textforweight = NSMutableAttributedString(string: nucleus.atomicWeight)
         textforweight.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.atomicWeight.lengthOfBytes(using: String.Encoding.utf8)) )
         
-        character_attribute[NSBaselineOffsetAttributeName] = 0 as AnyObject?
-        character_attribute[NSFontAttributeName] = UIFont.systemFont(ofSize: 2.0 * fontsize, weight: UIFontWeightBold)
+        character_attribute[NSAttributedStringKey.baselineOffset] = 0 as AnyObject?
+        character_attribute[NSAttributedStringKey.font] = UIFont.systemFont(ofSize: 2.0 * fontsize, weight: UIFont.Weight.bold)
 
         let textforname = NSMutableAttributedString(string: nucleus.symbolNucleus)
         textforname.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.symbolNucleus.lengthOfBytes(using: String.Encoding.utf8)) )
@@ -49,7 +49,7 @@ import UIKit
         
         symbol.attributedText = textforweight
         
-        character_attribute[NSFontAttributeName] = UIFont.systemFont(ofSize: fontsize, weight: UIFontWeightRegular)
+        character_attribute[NSAttributedStringKey.font] = UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.regular)
         
         let abundance_text = "Natural Abundance: \(nucleus.naturalAbundance) %"
        

@@ -86,7 +86,7 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: Keyboard
     
-    func keyboardDidShow(_ notification: Notification) {
+    @objc func keyboardDidShow(_ notification: Notification) {
 
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
@@ -96,7 +96,7 @@ class SignalViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
         SignalTableView.contentInset = contentInsets
         SignalTableView.scrollIndicatorInsets = contentInsets
