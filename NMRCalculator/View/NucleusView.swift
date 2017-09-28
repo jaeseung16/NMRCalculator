@@ -35,7 +35,7 @@ import UIKit
             fontsize = 18.0
         }
         
-        var character_attribute: [String: AnyObject] = [NSAttributedStringKey.baselineOffset.rawValue : fontsize as AnyObject, NSAttributedStringKey.font.rawValue: UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.bold)]
+        var character_attribute: [NSAttributedStringKey: AnyObject] = [NSAttributedStringKey(rawValue: NSAttributedStringKey.baselineOffset.rawValue) : fontsize as AnyObject, NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.bold)]
 
         let textforweight = NSMutableAttributedString(string: nucleus.atomicWeight)
         textforweight.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.atomicWeight.lengthOfBytes(using: String.Encoding.utf8)) )

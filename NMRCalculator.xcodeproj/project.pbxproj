@@ -24,6 +24,8 @@
 		0B5AC1721D5E9AF1002102C8 /* iPadNMRCalcViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5AC1711D5E9AF1002102C8 /* iPadNMRCalcViewController.swift */; };
 		0B5AC1741D5EA3AF002102C8 /* NMRParametersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5AC1731D5EA3AF002102C8 /* NMRParametersTableViewCell.swift */; };
 		0B5BC4CC1D12010F00BF168B /* NucleusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5BC4CB1D12010F00BF168B /* NucleusView.swift */; };
+		0B5D35821F7C6DC7004F70BF /* NMRCalc2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D35811F7C6DC7004F70BF /* NMRCalc2.swift */; };
+		0B5D35841F7C7474004F70BF /* NMRSignalCalc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D35831F7C7474004F70BF /* NMRSignalCalc.swift */; };
 		0B6ACF031D08E88000D7D342 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6ACF021D08E88000D7D342 /* AppDelegate.swift */; };
 		0B6ACF051D08E88000D7D342 /* NucleusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6ACF041D08E88000D7D342 /* NucleusViewController.swift */; };
 		0B6ACF071D08E88000D7D342 /* SignalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6ACF061D08E88000D7D342 /* SignalViewController.swift */; };
@@ -70,6 +72,8 @@
 		0B5AC1711D5E9AF1002102C8 /* iPadNMRCalcViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iPadNMRCalcViewController.swift; sourceTree = "<group>"; };
 		0B5AC1731D5EA3AF002102C8 /* NMRParametersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NMRParametersTableViewCell.swift; sourceTree = "<group>"; };
 		0B5BC4CB1D12010F00BF168B /* NucleusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NucleusView.swift; sourceTree = "<group>"; };
+		0B5D35811F7C6DC7004F70BF /* NMRCalc2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalc2.swift; sourceTree = "<group>"; };
+		0B5D35831F7C7474004F70BF /* NMRSignalCalc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRSignalCalc.swift; sourceTree = "<group>"; };
 		0B6ACEFF1D08E88000D7D342 /* NMRCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NMRCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B6ACF021D08E88000D7D342 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B6ACF041D08E88000D7D342 /* NucleusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NucleusViewController.swift; sourceTree = "<group>"; };
@@ -110,6 +114,62 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B34D5291F7B19C5006E71D0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0B48D9F71D35A2380094BBAF /* ChemCalc.swift */,
+				0B52382D1D28969200AA3DF6 /* NMRCalc.swift */,
+				0B5D35811F7C6DC7004F70BF /* NMRCalc2.swift */,
+				0B03D2DB1D7A389D008AF186 /* NMRfid.swift */,
+				0B52037D1F251EAA00DCCD1C /* NMRLarmor.swift */,
+				0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */,
+				0B03D2D71D7A2E8F008AF186 /* NMRPulse.swift */,
+				0B03D2D91D7A361C008AF186 /* NMRSpectrum.swift */,
+				0B5D35831F7C7474004F70BF /* NMRSignalCalc.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		0B34D52A1F7B19D0006E71D0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0B5339851D5FC9DF00089DF3 /* NMRCalcMasterItems.swift */,
+				0B5AC1731D5EA3AF002102C8 /* NMRParametersTableViewCell.swift */,
+				0BF022DB1D63C11000EA75F2 /* NucleusTableViewCell.swift */,
+				0B5BC4CB1D12010F00BF168B /* NucleusView.swift */,
+				0BBB5A491D62A43E005DB3FE /* PulseHeaderTableViewCell.swift */,
+				0B5339911D5FF92400089DF3 /* PulseTableViewCell.swift */,
+				0BF022D91D63BAFB00EA75F2 /* SignalHeaderTableViewCell.swift */,
+				0B3A79BA1D6146B700F713F4 /* SignalTableViewCell.swift */,
+				0B53398D1D5FDB4200089DF3 /* SolutionTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0B34D52B1F7B19D8006E71D0 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				0B590F121D51504C0064C926 /* InfoViewController.swift */,
+				0B5AC1711D5E9AF1002102C8 /* iPadNMRCalcViewController.swift */,
+				0B3A79B61D61448200F713F4 /* NMRCalcMasterViewController.swift */,
+				0B9A1D881D402FF40007372F /* NMRCalcTabBarController.swift */,
+				0B6ACF041D08E88000D7D342 /* NucleusViewController.swift */,
+				0B1326F21D2C6AB8000473BC /* PulseViewController.swift */,
+				0B6ACF061D08E88000D7D342 /* SignalViewController.swift */,
+				0BA0F3171D36F41C00BC8B5F /* SolutionViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		0B34D52C1F7B1A51006E71D0 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				0B590F141D5155300064C926 /* InfoText.rtf */,
+				0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		0B6ACEF61D08E87F00D7D342 = {
 			isa = PBXGroup;
 			children = (
@@ -131,39 +191,17 @@
 		0B6ACF011D08E88000D7D342 /* NMRCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				0B34D52C1F7B1A51006E71D0 /* Assets */,
+				0B34D52B1F7B19D8006E71D0 /* ViewController */,
+				0B34D52A1F7B19D0006E71D0 /* View */,
+				0B34D5291F7B19C5006E71D0 /* Model */,
 				0B6ACF021D08E88000D7D342 /* AppDelegate.swift */,
 				0B6ACF0B1D08E88000D7D342 /* Assets.xcassets */,
-				0B48D9F71D35A2380094BBAF /* ChemCalc.swift */,
 				0B6ACF101D08E88000D7D342 /* Info.plist */,
-				0B590F141D5155300064C926 /* InfoText.rtf */,
-				0B590F121D51504C0064C926 /* InfoViewController.swift */,
-				0B5AC1711D5E9AF1002102C8 /* iPadNMRCalcViewController.swift */,
 				0BE1313A1D56C9F600CE6121 /* iPadStoryboard.storyboard */,
 				0B6ACF0D1D08E88000D7D342 /* LaunchScreen.storyboard */,
 				0B6ACF081D08E88000D7D342 /* Main.storyboard */,
-				0B52382D1D28969200AA3DF6 /* NMRCalc.swift */,
-				0B5339851D5FC9DF00089DF3 /* NMRCalcMasterItems.swift */,
-				0B3A79B61D61448200F713F4 /* NMRCalcMasterViewController.swift */,
-				0B9A1D881D402FF40007372F /* NMRCalcTabBarController.swift */,
-				0B03D2DB1D7A389D008AF186 /* NMRfid.swift */,
-				0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */,
-				0B5AC1731D5EA3AF002102C8 /* NMRParametersTableViewCell.swift */,
-				0B03D2D71D7A2E8F008AF186 /* NMRPulse.swift */,
-				0B03D2D91D7A361C008AF186 /* NMRSpectrum.swift */,
-				0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */,
-				0B52037D1F251EAA00DCCD1C /* NMRLarmor.swift */,
-				0BF022DB1D63C11000EA75F2 /* NucleusTableViewCell.swift */,
-				0B5BC4CB1D12010F00BF168B /* NucleusView.swift */,
 				0B8CD4DD1D1239290017DCE6 /* NucleusView.xib */,
-				0B6ACF041D08E88000D7D342 /* NucleusViewController.swift */,
-				0BBB5A491D62A43E005DB3FE /* PulseHeaderTableViewCell.swift */,
-				0B5339911D5FF92400089DF3 /* PulseTableViewCell.swift */,
-				0B1326F21D2C6AB8000473BC /* PulseViewController.swift */,
-				0BF022D91D63BAFB00EA75F2 /* SignalHeaderTableViewCell.swift */,
-				0B3A79BA1D6146B700F713F4 /* SignalTableViewCell.swift */,
-				0B6ACF061D08E88000D7D342 /* SignalViewController.swift */,
-				0B53398D1D5FDB4200089DF3 /* SolutionTableViewCell.swift */,
-				0BA0F3171D36F41C00BC8B5F /* SolutionViewController.swift */,
 			);
 			path = NMRCalculator;
 			sourceTree = "<group>";
@@ -292,6 +330,7 @@
 				0B590F131D51504C0064C926 /* InfoViewController.swift in Sources */,
 				0BF022DC1D63C11000EA75F2 /* NucleusTableViewCell.swift in Sources */,
 				0B03D2D81D7A2E8F008AF186 /* NMRPulse.swift in Sources */,
+				0B5D35821F7C6DC7004F70BF /* NMRCalc2.swift in Sources */,
 				0B5AC1721D5E9AF1002102C8 /* iPadNMRCalcViewController.swift in Sources */,
 				0B6ACF031D08E88000D7D342 /* AppDelegate.swift in Sources */,
 				0B52382E1D28969200AA3DF6 /* NMRCalc.swift in Sources */,
@@ -301,6 +340,7 @@
 				0B3A79BB1D6146B700F713F4 /* SignalTableViewCell.swift in Sources */,
 				0BFEB1281D0CA8FE00F37F1B /* NMRNucleus.swift in Sources */,
 				0B03D2DC1D7A389D008AF186 /* NMRfid.swift in Sources */,
+				0B5D35841F7C7474004F70BF /* NMRSignalCalc.swift in Sources */,
 				0B5BC4CC1D12010F00BF168B /* NucleusView.swift in Sources */,
 				0B9A1D891D402FF40007372F /* NMRCalcTabBarController.swift in Sources */,
 				0B5339921D5FF92400089DF3 /* PulseTableViewCell.swift in Sources */,
@@ -401,6 +441,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -448,6 +489,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

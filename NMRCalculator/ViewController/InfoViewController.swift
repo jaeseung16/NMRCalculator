@@ -42,7 +42,7 @@ class InfoViewController: UIViewController {
         if let infourl = Bundle.main.url(forResource: "InfoText", withExtension: "rtf") {
             
             do {
-                let infotext = try NSAttributedString(url: infourl, options:[NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf] , documentAttributes: nil)
+                let infotext = try NSAttributedString(url: infourl, options:[NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf] , documentAttributes: nil)
                 
                 return infotext
                 

@@ -1,5 +1,5 @@
 //
-//  NMRSpectrum.swift
+//  NMRfid.swift
 //  NMRCalculator
 //
 //  Created by Jae-Seung Lee on 9/2/16.
@@ -8,24 +8,25 @@
 
 import Foundation
 
-struct NMRSpectrum {
-    var size: UInt = 0 // number of data points
-    var width: Double = 0.0 // spectral width in kHz
-    var resolution: Double = 0.0 // spectral resolution in Hz
+struct NMRfid {
+    
+    var size: UInt = 1000 // number of data points
+    var duration: Double = 10.0 // duration in ms
+    var dwell: Double = 10.0 // dwell time in μs
     //    var real: [Double] // real part
     //    var imag: [Double] // imaginary part
     
     enum parameters: String {
         case size
-        case width
-        case resolution
+        case duration
+        case dwell
     }
     
     init() {
         
     }
     
-    mutating func setSpectrum(parameter name: String, to value: Double) -> Bool {
+    mutating func setFID(parameter name: String, to value: Double) -> Bool {
         
         guard let parameter = parameters(rawValue: name) else { return false }
         
@@ -34,45 +35,48 @@ struct NMRSpectrum {
             guard ( value <= Double( UInt.max ) ) && ( value > Double( UInt.min ) ) else { return false }
             self.size = UInt(value)
             
-        case .width:
+        case .duration:
             guard value > 0 else { return false }
-            self.width = value
+            self.duration = value
             
-        case .resolution:
+        case .dwell:
             guard value > 0 else { return false }
-            self.resolution = value
+            self.dwell = value
         }
         
         return true
         
     }
     
-    mutating func updateParameter(name: String) -> Bool {
+    mutating func updateParameters(name: String) -> Bool {
+        
         guard let parameter = parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .size:
-            guard self.resolution > 0 else { return false }
-            self.size = UInt( 1000.0 * self.width / self.resolution )
+            guard self.dwell > 0 else { return false }
+            self.size = UInt( 1000.0 * self.duration / self.dwell )
             
-        case .width:
-            self.width = Double(self.size) * self.resolution / 1000.0
+        case .duration:
+            self.duration = Double(self.size) * self.dwell / 1000.0
             
-        case .resolution:
+        case .dwell:
             guard self.size > 0 else { return false }
-            self.resolution = 1000.0 * self.width / Double(self.size)
+            self.dwell = 1000.0 * self.duration / Double(self.size)
+            
         }
         
         return true
     }
     
     func describe() -> String {
-        let string1 = "Spectrum size = \(self.size)"
+        let string1 = "FID size = \(self.size)"
         
-        let string2 = "Spectral width = \(self.width) kHz"
+        let string2 = "FID duration = \(self.duration) ms"
         
-        let string3 = "Resolution = \(self.resolution) Hz"
+        let string3 = "Dwell time = \(self.dwell) μs"
         
         return string1 + "\n" + string2 + "\n" + string3
     }
+    
 }
