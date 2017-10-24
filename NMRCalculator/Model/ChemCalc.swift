@@ -57,7 +57,7 @@ class ChemCalc {
             case .molecularWeight:
                 self.molecularWeight = value
             case .molConcentration:
-                    self.molConcentration = value
+                self.molConcentration = value
             case .wtConcentration:
                 self.wtConcentration = value
             case .molSolute:

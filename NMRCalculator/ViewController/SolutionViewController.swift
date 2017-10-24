@@ -20,25 +20,11 @@ class SolutionViewController: UIViewController {
     var valueTextField = Array(repeating: UITextField(), count: 5)
     
     var chemCalc = ChemCalc()
-    var activeField: UITextField?
     var textbeforeediting: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        
-        /*let _ = chemCalc.set_molecularweight(100.0)
-        let _ = chemCalc.set_amount("solute", gram: 1.0)
-        let _ = chemCalc.set_amount("solvent", gram: 100.0)
-        let _ = chemCalc.update("mol")
-        let _ = chemCalc.update("molL")
-        let _ = chemCalc.update("mass")
-        
-        chemCalc.set_chemicalname("Chemical Name (optional)")*/
-        
         update_textfields()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -77,29 +63,22 @@ class SolutionViewController: UIViewController {
 // MARK: - Methods custom to SolutionViewController
 extension SolutionViewController {
     func update_textfields() {
-        itemValues = [chemCalc.molecularWeight.format(".5"), (chemCalc.molConcentration*1_000).format(".4"),(chemCalc.wtConcentration*100).format(".4"), (chemCalc.gramSolute*1_000).format(".5"), chemCalc.amountSolvent.format(".5")]
+        updateItemValues()
         
+        // copy itemValues into valueTextField
         for k in 0..<valueTextField.count {
-            
-            switch k {
-            case 0:
-                itemValues[k] = chemCalc.molecularWeight.format(".5")
-            case 1:
-                itemValues[k] = (chemCalc.molConcentration*1_000).format(".4")
-            case 2:
-                itemValues[k] = (chemCalc.wtConcentration*100).format(".4")
-            case 3:
-                itemValues[k] = (chemCalc.gramSolute*1_000).format(".5")
-            case 4:
-                itemValues[k] = chemCalc.amountSolvent.format(".5")
-            default:
-                break
-            }
-            
             valueTextField[k].text = itemValues[k]
         }
         
         ChemName.text = chemCalc.chemicalName
+    }
+    
+    func updateItemValues() {
+        itemValues[0] = chemCalc.molecularWeight.format(".5")
+        itemValues[1] = (chemCalc.molConcentration*1_000).format(".4")
+        itemValues[2] = (chemCalc.wtConcentration*100).format(".4")
+        itemValues[3] = (chemCalc.gramSolute*1_000).format(".5")
+        itemValues[4] = chemCalc.amountSolvent.format(".5")
     }
     
     func warnings(_ title: String, message: String) {
@@ -139,9 +118,8 @@ extension SolutionViewController: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        activeField = textField
         textbeforeediting = textField.text
-        textField.text = nil
+        textField.text = ""
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -153,10 +131,7 @@ extension SolutionViewController: UITextFieldDelegate {
             switch textField {
             case valueTextField[0]: // Textfield for molecular weight
                 guard chemCalc.setParameter("molecularWeight", to: Double(value)) else {
-                    guard chemCalc.setParameter("molecularWeight", to: textbeforeediting! ) else {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                        break
-                    }
+                    warnings("Unable to comply.", message: "The value is out of range.")
                     break
                 }
                 
@@ -172,10 +147,7 @@ extension SolutionViewController: UITextFieldDelegate {
                 
             case valueTextField[1]: // Textfield for concentration in mol
                 guard chemCalc.setParameter("molConcentration", to: value/1000.0) else {
-                    guard chemCalc.setParameter("molConcentration", to: Double(textbeforeediting!)!/1000.0) else {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                        break
-                    }
+                    warnings("Unable to comply.", message: "The value is out of range.")
                     break
                 }
                 
@@ -196,10 +168,7 @@ extension SolutionViewController: UITextFieldDelegate {
                 
             case valueTextField[2]: // Textfield for concentration in wt%
                 guard chemCalc.setParameter("wtConcentration", to: value/100.0) else {
-                    guard chemCalc.setParameter("wtConcentration", to: Double(textbeforeediting!)!/100.0) else {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                        break
-                    }
+                    warnings("Unable to comply.", message: "The value is out of range.")
                     break
                 }
                 
@@ -220,10 +189,7 @@ extension SolutionViewController: UITextFieldDelegate {
                 
             case valueTextField[3]: // Textfield for amount of solute
                 guard chemCalc.setParameter("gramSolute", to: value/1000.0) else {
-                    guard chemCalc.setParameter("gramSolute", to: Double(textbeforeediting!)!/1000.0) else {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                        break
-                    }
+                    warnings("Unable to comply.", message: "The value is out of range.")
                     break
                 }
                 
@@ -244,10 +210,7 @@ extension SolutionViewController: UITextFieldDelegate {
                 
             case valueTextField[4]: // Textfield for amount of water
                 guard chemCalc.setParameter("amountSolvent", to: value) else {
-                    guard chemCalc.setParameter("amountSolvent", to: Double(textbeforeediting!)!) else {
-                        warnings("Unable to comply.", message: "The value is out of range.")
-                        break
-                    }
+                    warnings("Unable to comply.", message: "The value is out of range.")
                     break
                 }
                 
@@ -265,11 +228,10 @@ extension SolutionViewController: UITextFieldDelegate {
                 break
             }
         } else {
+            warnings("Unable to comply.", message: "Please enter a positive number.")
             textField.text = textbeforeediting
         }
         
         update_textfields()
-        
-        activeField = nil
     }
 }
