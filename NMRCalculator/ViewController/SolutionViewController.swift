@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SolutionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UITextFieldDelegate {
+class SolutionViewController: UIViewController {
     
 
     @IBOutlet weak var SolutionTableView: UITableView!
@@ -39,11 +39,6 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
         
         update_textfields()
         
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -77,12 +72,11 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
         SolutionTableView.contentInset = contentInsets
         SolutionTableView.scrollIndicatorInsets = contentInsets
     }
-    
-    
-    // MARK: Update the textfields
-    
+}
+
+// MARK: - Methods custom to SolutionViewController
+extension SolutionViewController {
     func update_textfields() {
-        
         itemValues = [chemCalc.molecularWeight.format(".5"), (chemCalc.molConcentration*1_000).format(".4"),(chemCalc.wtConcentration*100).format(".4"), (chemCalc.gramSolute*1_000).format(".5"), chemCalc.amountSolvent.format(".5")]
         
         for k in 0..<valueTextField.count {
@@ -106,11 +100,39 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         ChemName.text = chemCalc.chemicalName
-        
     }
     
-    // MARK: UITextFieldDelegate
+    func warnings(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(ok)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+extension SolutionViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return menuItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SolutionTableCell", for: indexPath) as! SolutionTableViewCell
+        
+        cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
+        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
+        valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
+        
+        return cell
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension SolutionViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -216,7 +238,7 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
                 }
                 
                 guard chemCalc.updateParameter("wtConcentration") else {
-                   warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
+                    warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
                     break
                 }
                 
@@ -245,39 +267,9 @@ class SolutionViewController: UIViewController, UITableViewDelegate, UITableView
         } else {
             textField.text = textbeforeediting
         }
-    
+        
         update_textfields()
-    
+        
         activeField = nil
     }
-
-    func warnings(_ title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(ok)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    // MARK: - Table view data source
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return menuItems.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SolutionTableCell", for: indexPath) as! SolutionTableViewCell
-        
-        cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
-        valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
-        
-        return cell
-    }
-
 }
