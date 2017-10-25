@@ -130,99 +130,39 @@ extension SolutionViewController: UITextFieldDelegate {
         } else if let value = Double(text) {
             switch textField {
             case valueTextField[0]: // Textfield for molecular weight
-                guard chemCalc.setParameter("molecularWeight", to: Double(value)) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molSolute") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molConcentration") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
-                    break
-                }
+                chemCalc.updateMolecularWeight(to: value, completionHandler: { (error) in
+                    if (error != nil) {
+                        warnings("Unable to comply", message: error!)
+                    }
+                })
                 
             case valueTextField[1]: // Textfield for concentration in mol
-                guard chemCalc.setParameter("molConcentration", to: value/1000.0) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molSolute", flag: false) else {
-                    warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("gramSolute") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the amount in mg.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("wtConcentration") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
-                    break
-                }
+                chemCalc.updateMolConcentration(to: value/1000.0, completionHandler: { (error) in
+                    if (error != nil) {
+                        warnings("Unable to comply", message: error!)
+                    }
+                })
                 
             case valueTextField[2]: // Textfield for concentration in wt%
-                guard chemCalc.setParameter("wtConcentration", to: value/100.0) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("gramSolute", flag: false) else {
-                    warnings("Unable to comply.", message: "Cannot calculate the amount in mg.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molSolute") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molConcentration") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
-                    break
-                }
+                chemCalc.updateWtConcentration(to: value/100.0, completionHandler: { (error) in
+                    if (error != nil) {
+                        warnings("Unable to comply", message: error!)
+                    }
+                })
                 
             case valueTextField[3]: // Textfield for amount of solute
-                guard chemCalc.setParameter("gramSolute", to: value/1000.0) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molSolute") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the amount in mol.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molConcentration") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("wtConcentration") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
-                    break
-                }
+                chemCalc.updateGramSolute(to: value/1000.0, completionHandler: { (error) in
+                    if (error != nil) {
+                        warnings("Unable to comply", message: error!)
+                    }
+                })
                 
             case valueTextField[4]: // Textfield for amount of water
-                guard chemCalc.setParameter("amountSolvent", to: value) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("molConcentration") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in mM.")
-                    break
-                }
-                
-                guard chemCalc.updateParameter("wtConcentration") else {
-                    warnings("Unable to comply.", message: "Cannot calculate the concentration in wt%.")
-                    break
-                }
+                chemCalc.updateAmountSolvent(to: value, completionHandler: { (error) in
+                    if (error != nil) {
+                        warnings("Unable to comply", message: error!)
+                    }
+                })
                 
             default:
                 break
