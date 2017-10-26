@@ -77,11 +77,6 @@ class NucleusViewController: UIViewController {
 
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
@@ -89,7 +84,6 @@ class NucleusViewController: UIViewController {
     }
     
     // MARK: Initialize the nuclues table
-    
     func readtable() -> [String]? {
         if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
             
@@ -107,8 +101,7 @@ class NucleusViewController: UIViewController {
         return nil
     }
     
-    // MARK: Update the textfields
-    
+    // MARK: Update textfields
     func update_textfields() {
         if let larmor = nmrCalc?.larmorNMR {
             self.itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
