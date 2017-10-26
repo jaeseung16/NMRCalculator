@@ -135,35 +135,30 @@ extension SolutionViewController: UITextFieldDelegate {
                         warnings("Unable to comply", message: error!)
                     }
                 })
-                
             case valueTextField[1]: // Textfield for concentration in mol
                 chemCalc.updateMolConcentration(to: value/1000.0, completionHandler: { (error) in
                     if (error != nil) {
                         warnings("Unable to comply", message: error!)
                     }
                 })
-                
             case valueTextField[2]: // Textfield for concentration in wt%
                 chemCalc.updateWtConcentration(to: value/100.0, completionHandler: { (error) in
                     if (error != nil) {
                         warnings("Unable to comply", message: error!)
                     }
                 })
-                
             case valueTextField[3]: // Textfield for amount of solute
                 chemCalc.updateGramSolute(to: value/1000.0, completionHandler: { (error) in
                     if (error != nil) {
                         warnings("Unable to comply", message: error!)
                     }
                 })
-                
             case valueTextField[4]: // Textfield for amount of water
                 chemCalc.updateAmountSolvent(to: value, completionHandler: { (error) in
                     if (error != nil) {
                         warnings("Unable to comply", message: error!)
                     }
                 })
-                
             default:
                 break
             }

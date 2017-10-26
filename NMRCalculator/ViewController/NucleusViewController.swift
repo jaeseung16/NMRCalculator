@@ -14,13 +14,10 @@ extension Double {
     }
 }
 
-class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
-    
-    
+class NucleusViewController: UIViewController {
+    // MARK: Properties
     @IBOutlet weak var NucleusTableView: UITableView!
-    
     @IBOutlet weak var NucleusPicker: UIPickerView!
-    
     @IBOutlet weak var nucleusName: UILabel!
     
     var nucleusTable: [String]?
@@ -113,7 +110,6 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     // MARK: Update the textfields
     
     func update_textfields() {
-        
         if let larmor = nmrCalc?.larmorNMR {
             self.itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
             
@@ -140,11 +136,53 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         if let nucleus = nmrCalc?.nucleus {
             nucleusName.text = nucleus.nameNucleus
         }
-
     }
     
-    // MARK: UIPickerViewDelegate
+    // MARK: Methods for Keyboard
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
     
+    @objc func keyboardDidShow(_ notification: Notification) {
+        let info = (notification as NSNotification).userInfo!
+        let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let pickerSize = NucleusPicker.frame
+        let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height - pickerSize.height, 0.0)
+        NucleusTableView.contentInset = contentInsets
+        NucleusTableView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        let contentInsets = UIEdgeInsets.zero
+        NucleusTableView.contentInset = contentInsets
+        NucleusTableView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @IBAction func searchwebButtonDown(_ sender: UIButton) {
+        var queryString = "https://www.google.com/search?q="
+        queryString += nucleusName.text!
+        queryString += "&oe=utf-8&ie=utf-8"
+        
+        let url : URL = URL(string: queryString)!
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+    
+    // MARK: Warning messages
+    
+    func warnings(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(ok)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
+extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -162,7 +200,6 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        
         guard let items = nucleusTable?[row] else {
             let label = UILabel()
             label.text = ""
@@ -175,7 +212,6 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
             let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: NMRNucleus(identifier: items))
             return label
         }
-
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -193,9 +229,31 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         
         update_textfields()
     }
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     
-    // MARK: UITextFieldDelegate
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return menuItems!.count
+    }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
+        
+        cell.itemLabel.text = menuItems![(indexPath as NSIndexPath).row]
+        cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
+        valueTextField.append(cell.itemValue)
+        
+        return cell
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension NucleusViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         
         let selected = NucleusPicker.selectedRow(inComponent: 0)
@@ -234,7 +292,6 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        
         if let x = Double(textField.text!) {
             switch textField {
             case valueTextField[0]: // Textfield for larmor frequency
@@ -257,27 +314,27 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                 let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-
+                
             case valueTextField[2]: // Textfield for proton's larmor frequency
                 guard nmrCalc!.setParameter("proton", in: "resonance", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     return
                 }
-
+                
                 let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-
+                
             case valueTextField[3]: // Textfield for electron's larmor frequency
                 guard nmrCalc!.setParameter("electron", in: "resonance", to: x) else {
                     warnings("Unable to comply.", message: "The value is out of range.")
                     textField.text = textbeforeediting
                     return
                 }
-
+                
                 let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
                 let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-
+                
             default:
                 break
             }
@@ -289,70 +346,6 @@ class NucleusViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         update_textfields()
         
         activeField = nil
-
-}
-    
-    // MARK: Keyboard
-    
-    func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    @objc func keyboardDidShow(_ notification: Notification) {
-        let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        let pickerSize = NucleusPicker.frame
-        let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height - pickerSize.height, 0.0)
-        NucleusTableView.contentInset = contentInsets
-        NucleusTableView.scrollIndicatorInsets = contentInsets
-    }
-    
-    @objc func keyboardWillHide(_ notification: Notification) {
-        let contentInsets = UIEdgeInsets.zero
-        NucleusTableView.contentInset = contentInsets
-        NucleusTableView.scrollIndicatorInsets = contentInsets
-    }
-    
-    // MARK: UITableViewDataSource
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItems!.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
-        
-        cell.itemLabel.text = menuItems![(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
-        valueTextField.append(cell.itemValue)
-        
-        return cell
-    }
-    
-    @IBAction func searchwebButtonDown(_ sender: UIButton) {
-        var queryString = "https://www.google.com/search?q="
-        queryString += nucleusName.text!
-        queryString += "&oe=utf-8&ie=utf-8"
-        
-        let url : URL = URL(string: queryString)!
-        
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        }
-    }
-    
-    // MARK: Warning messages
-    
-    func warnings(_ title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(ok)
-        present(alert, animated: true, completion: nil)
     }
 }
 
