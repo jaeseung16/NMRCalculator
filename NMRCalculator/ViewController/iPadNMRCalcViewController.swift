@@ -8,12 +8,10 @@
 
 import UIKit
 
-class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
-    
+class iPadNMRCalcViewController: UIViewController {
+    // MARK: - Properties
     @IBOutlet weak var iPadNMRCalcTable: UITableView!
-    
     @IBOutlet weak var NucleusPicker: UIPickerView!
-    
     @IBOutlet weak var nucleusName: UILabel!
     
     var nucleusTable: [String]?
@@ -32,6 +30,7 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
     var itemValues: [String]?
     var valueTextField = [UITextField]()
     
+    // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,11 +60,6 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
 
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         registerForKeyboardNotifications()
@@ -77,8 +71,7 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    // MARK: Keyboard
-    
+    // MARK: - Methods for Keyboard
     func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -105,8 +98,7 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
         iPadNMRCalcTable.scrollIndicatorInsets = contentInsets
     }
 
-    // MARK: Initialize the nuclues table
-    
+    // MARK: Method to initialize the nuclues table
     func readtable() -> [String]? {
         if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
             
@@ -124,129 +116,60 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
         return nil
     }
 
-    // MARK: UITableViewDataSource
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItems!.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NMRParametersTableViewCell
-        
-        cell.itemLabel.text = menuItems![(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
-        valueTextField.append(cell.itemValue)
-        
-        return cell
-
-    }
-
-    // MARK: UITextFieldDelegate
-    
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        
-        let selected = NucleusPicker.selectedRow(inComponent: 0)
-        
-        if selected == -1 {
-            let alert = UIAlertController(title: "Unable to comply.", message: "Select a nucleus.", preferredStyle: .alert)
-            let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(ok)
-            present(alert, animated: true, completion: nil)
+    // MARK: Method to update textfields
+    func update_textfields() {
+        if let larmor = nmrCalc?.larmorNMR {
             
-            return false
+            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
             
-        } else {
-            NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
-            nucleus = NMRNucleus(identifier: nucleusTable![selected])
-            nmrCalc!.nucleus = nucleus!
-            nucleusName.text = nmrCalc!.nucleus!.nameNucleus
-            
-            return true
-        }
-        
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        NucleusPicker.isUserInteractionEnabled = true
-        return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        NucleusPicker.isUserInteractionEnabled = false
-        activeField = textField
-        textbeforeediting = textField.text
-        textField.text = nil
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
-        if let x = Double(textField.text!) {
-            
-            switch textField {
-            case valueTextField[0]: // Textfield for larmor frequency
-                guard nmrCalc!.setParameter("larmor", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
+            for k in 0..<valueTextField.count {
+                switch k {
+                case 0:
+                    valueTextField[k].text = larmor.frequencyLarmor.format(".4")
+                    
+                case 1:
+                    valueTextField[k].text = larmor.fieldExternal.format(".4")
+                    
+                case 2:
+                    valueTextField[k].text = larmor.frequencyProton.format(".4")
+                    
+                case 3:
+                    valueTextField[k].text = larmor.frequencyElectron.format(".4")
+                    
+                default:
+                    break
                 }
-
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[1]: // Textfield for external magnetic field
-                guard nmrCalc!.setParameter("field", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[2]: // Textfield for proton's larmor frequency
-                guard nmrCalc!.setParameter("proton", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[3]: // Textfield for electron's larmor frequency
-                guard nmrCalc!.setParameter("electron", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                
-            default:
-                break
             }
-            
-            
-        } else {
-            textField.text = textbeforeediting
         }
-        
-        update_textfields()
-        
-        activeField = nil
- 
+            
+        if let name = nmrCalc!.nucleus?.nameNucleus {
+            nucleusName.text = name
+        }
     }
     
-    // MARK: UIPickerViewDelegate
+    @IBAction func searchwebButtonDown(_ sender: UIButton) {
+        var queryString = "https://www.google.com/search?q="
+        queryString += nucleusName.text!
+        queryString += "&oe=utf-8&ie=utf-8"
+        
+        let url : URL = URL(string: queryString)!
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
     
+    // MARK: Warning messages
+    func warnings(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(ok)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDelegate
+extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -260,7 +183,6 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-
         return 420.0
     }
     
@@ -303,63 +225,117 @@ class iPadNMRCalcViewController: UIViewController, UITableViewDelegate, UITableV
         let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
         
         update_textfields()
-        
     }
-    
-    // MARK: Update the textfields
-    
-    func update_textfields() {
-            
-        if let larmor = nmrCalc?.larmorNMR {
-            
-            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
-            
-            for k in 0..<valueTextField.count {
-                switch k {
-                case 0:
-                    valueTextField[k].text = larmor.frequencyLarmor.format(".4")
-                    
-                case 1:
-                    valueTextField[k].text = larmor.fieldExternal.format(".4")
-                    
-                case 2:
-                    valueTextField[k].text = larmor.frequencyProton.format(".4")
-                    
-                case 3:
-                    valueTextField[k].text = larmor.frequencyElectron.format(".4")
-                    
-                default:
-                    break
-                }
-            }
-        }
-            
-        if let name = nmrCalc!.nucleus?.nameNucleus {
-            nucleusName.text = name
-        }
-        
-    }
-    
-    
-    @IBAction func searchwebButtonDown(_ sender: UIButton) {
-        var queryString = "https://www.google.com/search?q="
-        queryString += nucleusName.text!
-        queryString += "&oe=utf-8&ie=utf-8"
-        
-        let url : URL = URL(string: queryString)!
-        
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        }
-    }
-    
-    // MARK: Warning messages
-    
-    func warnings(_ title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(ok)
-        present(alert, animated: true, completion: nil)
-    }
+}
 
+// MARK: - UITableViewDelegate, UITableViewDataSource
+extension iPadNMRCalcViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return menuItems!.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NMRParametersTableViewCell
+        
+        cell.itemLabel.text = menuItems![(indexPath as NSIndexPath).row]
+        cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
+        valueTextField.append(cell.itemValue)
+        
+        return cell
+        
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension iPadNMRCalcViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        let selected = NucleusPicker.selectedRow(inComponent: 0)
+        
+        if selected == -1 {
+            let alert = UIAlertController(title: "Unable to comply.", message: "Select a nucleus.", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(ok)
+            present(alert, animated: true, completion: nil)
+            return false
+        } else {
+            NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
+            nucleus = NMRNucleus(identifier: nucleusTable![selected])
+            nmrCalc!.nucleus = nucleus!
+            nucleusName.text = nmrCalc!.nucleus!.nameNucleus
+            return true
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        NucleusPicker.isUserInteractionEnabled = true
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        NucleusPicker.isUserInteractionEnabled = false
+        activeField = textField
+        textbeforeediting = textField.text
+        textField.text = nil
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if let x = Double(textField.text!) {
+            switch textField {
+            case valueTextField[0]: // Textfield for larmor frequency
+                guard nmrCalc!.setParameter("larmor", in: "resonance", to: x) else {
+                    warnings("Unable to comply.", message: "The value is out of range.")
+                    textField.text = textbeforeediting
+                    return
+                }
+                
+                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+                
+            case valueTextField[1]: // Textfield for external magnetic field
+                guard nmrCalc!.setParameter("field", in: "resonance", to: x) else {
+                    warnings("Unable to comply.", message: "The value is out of range.")
+                    textField.text = textbeforeediting
+                    return
+                }
+                
+                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+                
+            case valueTextField[2]: // Textfield for proton's larmor frequency
+                guard nmrCalc!.setParameter("proton", in: "resonance", to: x) else {
+                    warnings("Unable to comply.", message: "The value is out of range.")
+                    textField.text = textbeforeediting
+                    return
+                }
+                
+                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+                
+            case valueTextField[3]: // Textfield for electron's larmor frequency
+                guard nmrCalc!.setParameter("electron", in: "resonance", to: x) else {
+                    warnings("Unable to comply.", message: "The value is out of range.")
+                    textField.text = textbeforeediting
+                    return
+                }
+                
+                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
+                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
+                
+            default:
+                break
+            }
+        } else {
+            textField.text = textbeforeediting
+        }
+        
+        update_textfields()
+        activeField = nil
+    }
 }
