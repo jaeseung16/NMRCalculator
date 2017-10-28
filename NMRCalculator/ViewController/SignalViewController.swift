@@ -194,74 +194,50 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        func toggleCellState(_ cell: SignalTableViewCell, _ state: Bool) {
+        func toggleCellState(_ selectedItem: IndexPath, _ state: Bool) {
+            guard let cell = tableView.cellForRow(at: selectedItem) as? SignalTableViewCell else {
+                return
+            }
+            
+            fixedItem = state ? nil : cell.itemLabel.text
+            
+            switch (selectedItem as NSIndexPath).section {
+            case 0:
+                if state {
+                    cell.itemLabel.text = menuItems1![(selectedItem as NSIndexPath).row]
+                } else {
+                    cell.itemLabel.text = "☒ " + menuItems1![(selectedItem as NSIndexPath).row]
+                }
+            case 1:
+                if state {
+                    cell.itemLabel.text = menuItems1![(selectedItem as NSIndexPath).row]
+                } else {
+                    cell.itemLabel.text = "☒ " + menuItems1![(selectedItem as NSIndexPath).row]
+                }
+            default:
+                break
+            }
             cell.itemValue.isEnabled = state
             cell.itemValue.textColor = state ? .black : .gray
             cell.itemValue.text = cell.itemValue.text // Without this, textColor is not being updated.
             cell.itemLabel.textColor = state ? .black : .gray
         }
         
-        if selectedItem == nil {
-            selectedItem = indexPath
-            tableView.selectRow(at: selectedItem!, animated: true, scrollPosition: UITableViewScrollPosition.none)
-            if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
-                fixedItem = cell.itemLabel.text
-                toggleCellState(cell, false)
-                
-                switch (selectedItem! as NSIndexPath).section {
-                case 0:
-                    cell.itemLabel.text = "☒ " + menuItems1![(selectedItem! as NSIndexPath).row]
-                case 1:
-                    cell.itemLabel.text = "☒ " + menuItems2![(selectedItem! as NSIndexPath).row]
-                default:
-                    break
-                }
+        if let item = selectedItem {
+            if indexPath == item {
+                tableView.deselectRow(at: indexPath, animated: true)
+                toggleCellState(indexPath, true)
+                selectedItem = nil
+            } else {
+                tableView.deselectRow(at: item, animated: true)
+                toggleCellState(item, true)
+                toggleCellState(indexPath, false)
+                selectedItem = indexPath
             }
         } else {
-            if indexPath == selectedItem! {
-                tableView.deselectRow(at: indexPath, animated: true)
-                if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
-                    toggleCellState(cell, true)
-                    switch (selectedItem! as NSIndexPath).section {
-                    case 0:
-                        cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
-                    case 1:
-                        cell.itemLabel.text = menuItems2![(selectedItem! as NSIndexPath).row]
-                    default:
-                        break
-                    }
-                }
-                selectedItem = nil
-                fixedItem = nil
-            } else {
-                tableView.deselectRow(at: selectedItem!, animated: true)
-                if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
-                    toggleCellState(cell, true)
-                    switch (selectedItem! as NSIndexPath).section {
-                    case 0:
-                        cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
-                    case 1:
-                        cell.itemLabel.text = menuItems2![(selectedItem! as NSIndexPath).row]
-                    default:
-                        break
-                    }
-                }
-                
-                selectedItem = indexPath
-                tableView.selectRow(at: selectedItem!, animated: true, scrollPosition: UITableViewScrollPosition.none)
-                if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
-                    toggleCellState(cell, false)
-                    fixedItem = cell.itemLabel.text
-                    switch (selectedItem! as NSIndexPath).section {
-                    case 0:
-                        cell.itemLabel.text = "☒ " + menuItems1![(selectedItem! as NSIndexPath).row]
-                    case 1:
-                        cell.itemLabel.text = "☒ " + menuItems2![(selectedItem! as NSIndexPath).row]
-                    default:
-                        break
-                    }
-                }
-            }
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.none)
+            toggleCellState(indexPath, false)
+            selectedItem = indexPath
         }
     }
 }
@@ -281,30 +257,31 @@ extension SignalViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let x = Double(textField.text!) {
+            var toUpdate = ""
+            
             switch textField {
             case valueTextField1[0]: // Textfield for the size of FID
-                guard nmrCalc!.setParameter("size", in: "acquisition", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
+                    nmrCalc!.updateParameter("size", in: "acquisition", to: x, and: "duration") { error in
+                        if (error != nil) {
+                            self.warnings("Unable to comply.", message: error!)
+                            textField.text = self.textbeforeediting
+                        }
                     }
                     break
                 }
-                
+
                 if fixedItem == menuItems1![1] {
-                    if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
-                    }
+                    toUpdate = "dwell"
                 } else if fixedItem == menuItems1![2] {
-                    if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
+                    toUpdate = "duration"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                }
+
+                nmrCalc!.updateParameter("size", in: "acquisition", to: x, and: toUpdate) { error in
+                    if (error != nil) {
+                        self.warnings("Unable to comply.", message: error!)
                     }
                 }
                 
