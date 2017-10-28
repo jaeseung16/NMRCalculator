@@ -189,6 +189,22 @@ class NMRCalc {
         case .ernstAngle:
             return evaluate_ernstparameter(name)
         }
+    }
+}
+
+// MARK: - Convenience methods
+extension NMRCalc {
+    func updateParameter(_ name: String, in category: String, to value: Double, and name2: String, completionHandler: @escaping (_ error: String?) -> Void) {
+        guard setParameter(name, in: category, to: value) else {
+            completionHandler("The value is out of range.")
+            return
+        }
         
+        guard evaluateParameter(name2, in: category) else {
+            completionHandler("Cannot update \(name2).")
+            return
+        }
+        
+        completionHandler(nil)
     }
 }

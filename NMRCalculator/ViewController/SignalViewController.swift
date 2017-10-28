@@ -194,12 +194,20 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        func toggleCellState(_ cell: SignalTableViewCell, _ state: Bool) {
+            cell.itemValue.isEnabled = state
+            cell.itemValue.textColor = state ? .black : .gray
+            cell.itemValue.text = cell.itemValue.text // Without this, textColor is not being updated.
+            cell.itemLabel.textColor = state ? .black : .gray
+        }
         
         if selectedItem == nil {
             selectedItem = indexPath
             tableView.selectRow(at: selectedItem!, animated: true, scrollPosition: UITableViewScrollPosition.none)
             if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
                 fixedItem = cell.itemLabel.text
+                toggleCellState(cell, false)
+                
                 switch (selectedItem! as NSIndexPath).section {
                 case 0:
                     cell.itemLabel.text = "☒ " + menuItems1![(selectedItem! as NSIndexPath).row]
@@ -208,15 +216,12 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
                 default:
                     break
                 }
-                cell.itemLabel.textColor = UIColor.gray
-                cell.itemValue.isEnabled = false
-                cell.itemValue.textColor = UIColor.gray
             }
         } else {
             if indexPath == selectedItem! {
-                
                 tableView.deselectRow(at: indexPath, animated: true)
                 if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
+                    toggleCellState(cell, true)
                     switch (selectedItem! as NSIndexPath).section {
                     case 0:
                         cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
@@ -225,16 +230,13 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
                     default:
                         break
                     }
-                    cell.itemLabel.textColor = UIColor.black
-                    cell.itemValue.isEnabled = true
-                    cell.itemValue.textColor = UIColor.black
                 }
-                
                 selectedItem = nil
                 fixedItem = nil
             } else {
                 tableView.deselectRow(at: selectedItem!, animated: true)
                 if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
+                    toggleCellState(cell, true)
                     switch (selectedItem! as NSIndexPath).section {
                     case 0:
                         cell.itemLabel.text = menuItems1![(selectedItem! as NSIndexPath).row]
@@ -243,14 +245,12 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
                     default:
                         break
                     }
-                    cell.itemLabel.textColor = UIColor.black
-                    cell.itemValue.isEnabled = true
-                    cell.itemValue.textColor = UIColor.black
                 }
                 
                 selectedItem = indexPath
                 tableView.selectRow(at: selectedItem!, animated: true, scrollPosition: UITableViewScrollPosition.none)
                 if let cell = tableView.cellForRow(at: selectedItem!) as? SignalTableViewCell {
+                    toggleCellState(cell, false)
                     fixedItem = cell.itemLabel.text
                     switch (selectedItem! as NSIndexPath).section {
                     case 0:
@@ -260,9 +260,6 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
                     default:
                         break
                     }
-                    cell.itemLabel.textColor = UIColor.gray
-                    cell.itemValue.isEnabled = false
-                    cell.itemValue.textColor = UIColor.gray
                 }
             }
         }

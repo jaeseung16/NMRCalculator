@@ -26,7 +26,6 @@ struct NMRSpectrum {
     }
     
     mutating func setSpectrum(parameter name: String, to value: Double) -> Bool {
-        
         guard let parameter = parameters(rawValue: name) else { return false }
         
         switch parameter {
@@ -44,7 +43,6 @@ struct NMRSpectrum {
         }
         
         return true
-        
     }
     
     mutating func updateParameter(name: String) -> Bool {
