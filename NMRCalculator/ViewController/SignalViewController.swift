@@ -56,7 +56,7 @@ class SignalViewController: UIViewController {
             return
         }
         
-        update_textfields()
+        updateTextFields()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -93,7 +93,7 @@ class SignalViewController: UIViewController {
     }
     
     // MARK: Methods to update textfields
-    func update_textfields() {
+    func updateTextFields() {
         if let acq = nmrCalc!.acqNMR {
             itemValues1 = [ String(acq.size), (acq.duration/1_000.0).format(".3"), acq.dwell.format(".3") ]
             
@@ -424,7 +424,7 @@ extension SignalViewController: UITextFieldDelegate {
             textField.text = textbeforeediting
         }
         
-        update_textfields()
+        updateTextFields()
         activeField = nil
     }
 }
