@@ -120,9 +120,9 @@ class PulseViewController: UIViewController {
     
     // MARK: Method to update textfields
     func updateTextFields() {
-        if let pulse = nmrCalc!.pulseNMR[0] {
-            itemValues1 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
-            
+        updateItemValues()
+        
+        if let _ = nmrCalc!.pulseNMR[0] {
             for k in 0..<valueTextField1.count {
                 if let value = itemValues1?[k] {
                     valueTextField1[k].text = value
@@ -130,9 +130,7 @@ class PulseViewController: UIViewController {
             }
         }
         
-        if let pulse = nmrCalc!.pulseNMR[1] {
-            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc!.relativepower)?.format(".5"))! ]
-            
+        if let _ = nmrCalc!.pulseNMR[1] {
             for k in 0..<valueTextField2.count {
                 if let value = itemValues2?[k] {
                     valueTextField2[k].text = value
@@ -140,14 +138,26 @@ class PulseViewController: UIViewController {
             }
         }
         
-        if let calc = nmrCalc {
-            itemValues3 = [(calc.repetitionTime)!.format(".3"),(calc.relaxationTime)!.format(".3"), ((calc.angleErnst)!*180.0/Double.pi).format(".4") ]
-            
+        if let _ = nmrCalc {
             for k in 0..<valueTextField3.count {
                 if let value = itemValues3?[k] {
                     valueTextField3[k].text = value
                 }
             }
+        }
+    }
+    
+    func updateItemValues() {
+        if let pulse = nmrCalc!.pulseNMR[0] {
+            itemValues1 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
+        }
+        
+        if let pulse = nmrCalc!.pulseNMR[1] {
+            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc!.relativepower)?.format(".5"))! ]
+        }
+        
+        if let calc = nmrCalc {
+            itemValues3 = [(calc.repetitionTime)!.format(".3"),(calc.relaxationTime)!.format(".3"), ((calc.angleErnst)!*180.0/Double.pi).format(".4") ]
         }
     }
     
