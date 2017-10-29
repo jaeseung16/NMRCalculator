@@ -94,38 +94,28 @@ class SignalViewController: UIViewController {
     
     // MARK: Methods to update textfields
     func updateTextFields() {
-        if let acq = nmrCalc!.acqNMR {
-            itemValues1 = [ String(acq.size), (acq.duration/1_000.0).format(".3"), acq.dwell.format(".3") ]
-            
+        updateItemValues()
+        
+        if let _ = nmrCalc!.acqNMR {
             for k in 0..<valueTextField1.count {
-                switch k {
-                case 0:
-                    valueTextField1[k].text = "\(acq.size)"
-                case 1:
-                    valueTextField1[k].text = (acq.duration/1_000.0).format(".3")
-                case 2:
-                    valueTextField1[k].text = acq.dwell.format(".3")
-                default:
-                    break
-                }
+                valueTextField1[k].text = itemValues1![k]
             }
         }
         
-        if let spec = nmrCalc!.specNMR {
-            itemValues2 = [ String(spec.size), (spec.width).format(".3"), (spec.resolution).format(".3") ]
-        
+        if let _ = nmrCalc!.specNMR {
             for k in 0..<valueTextField2.count {
-                switch k {
-                case 0:
-                    valueTextField2[k].text = String(spec.size)
-                case 1:
-                    valueTextField2[k].text = spec.width.format(".3")
-                case 2:
-                    valueTextField2[k].text = spec.resolution.format(".3")
-                default:
-                    break
-                }
+                valueTextField2[k].text = itemValues2![k]
             }
+        }
+    }
+    
+    func updateItemValues() {
+        if let acq = nmrCalc!.acqNMR {
+            itemValues1 = [ "\(acq.size)", (acq.duration/1_000.0).format(".3"), acq.dwell.format(".3") ]
+        }
+        
+        if let spec = nmrCalc!.specNMR {
+            itemValues2 = [ "\(spec.size)", (spec.width).format(".3"), (spec.resolution).format(".3") ]
         }
     }
     
