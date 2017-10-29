@@ -79,7 +79,7 @@ class PulseViewController: UIViewController {
             return
         }
         
-        update_textfields()
+        updateTextFields()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -106,7 +106,7 @@ class PulseViewController: UIViewController {
     
     @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
         PulseTableView.contentInset = contentInsets
         PulseTableView.scrollIndicatorInsets = contentInsets
@@ -119,7 +119,7 @@ class PulseViewController: UIViewController {
     }
     
     // MARK: Method to update textfields
-    func update_textfields() {
+    func updateTextFields() {
         if let pulse = nmrCalc!.pulseNMR[0] {
             itemValues1 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
             
@@ -160,8 +160,6 @@ class PulseViewController: UIViewController {
     }
    
 }
-
-
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
@@ -224,107 +222,57 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath != indexForRelativePower {
-            if selectedItem == nil {
-                
-                selectedItem = indexPath
-                tableView.selectRow(at: selectedItem!, animated: true, scrollPosition: UITableViewScrollPosition.none)
-                if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
-                    fixedItem = cell.itemLabel.text
-                    switch (selectedItem! as NSIndexPath).section {
-                    case 0:
-                        cell.itemLabel.text = "☒ " + menuItems1[(selectedItem! as NSIndexPath).row]
-                    case 1:
-                        cell.itemLabel.text = "☒ " + menuItems2[(selectedItem! as NSIndexPath).row]
-                    case 2:
-                        cell.itemLabel.text = "☒ " + menuItems3[(selectedItem! as NSIndexPath).row]
-                    default:
-                        break
-                    }
-                    cell.itemLabel.textColor = UIColor.gray
-                    cell.itemValue.isEnabled = false
-                    cell.itemValue.textColor = UIColor.gray
-                }
-            } else {
-                if indexPath == selectedItem! {
-                    
-                    tableView.deselectRow(at: indexPath, animated: true)
-                    if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
-                        switch (selectedItem! as NSIndexPath).section {
-                        case 0:
-                            cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
-                        case 1:
-                            cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
-                        case 2:
-                            cell.itemLabel.text = menuItems3[(selectedItem! as NSIndexPath).row]
-                        default:
-                            break
-                        }
-                        cell.itemLabel.textColor = UIColor.black
-                        cell.itemValue.isEnabled = true
-                        cell.itemValue.textColor = UIColor.black
-                    }
-                    
-                    selectedItem = nil
-                    fixedItem = nil
-                } else {
-                    tableView.deselectRow(at: selectedItem!, animated: true)
-                    if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
-                        switch (selectedItem! as NSIndexPath).section {
-                        case 0:
-                            cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
-                        case 1:
-                            cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
-                        case 2:
-                            cell.itemLabel.text = menuItems3[(selectedItem! as NSIndexPath).row]
-                        default:
-                            break
-                        }
-                        cell.itemLabel.textColor = UIColor.black
-                        cell.itemValue.isEnabled = true
-                        cell.itemValue.textColor = UIColor.black
-                    }
-                    
-                    selectedItem = indexPath
-                    tableView.selectRow(at: selectedItem!, animated: true, scrollPosition: UITableViewScrollPosition.none)
-                    if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
-                        fixedItem = cell.itemLabel.text
-                        switch (selectedItem! as NSIndexPath).section {
-                        case 0:
-                            cell.itemLabel.text = "☒ " + menuItems1[(selectedItem! as NSIndexPath).row]
-                        case 1:
-                            cell.itemLabel.text = "☒ " + menuItems2[(selectedItem! as NSIndexPath).row]
-                        case 2:
-                            cell.itemLabel.text = "☒ " + menuItems3[(selectedItem! as NSIndexPath).row]
-                        default:
-                            break
-                        }
-                        cell.itemLabel.textColor = UIColor.gray
-                        cell.itemValue.isEnabled = false
-                        cell.itemValue.textColor = UIColor.gray
-                    }
-                }
-            }
-        } else if selectedItem != nil && fixedItem != nil {
-            tableView.deselectRow(at: indexPath, animated: true)
-            if let cell = tableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
-                switch (selectedItem! as NSIndexPath).section {
-                case 0:
-                    cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
-                case 1:
-                    cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
-                case 2:
-                    cell.itemLabel.text = menuItems3[(selectedItem! as NSIndexPath).row]
-                default:
-                    break
-                }
-                cell.itemLabel.textColor = UIColor.black
-                cell.itemValue.isEnabled = true
-                cell.itemValue.textColor = UIColor.black
+        func toggleCellState(_ selectedItem: IndexPath, _ state: Bool) {
+            guard let cell = tableView.cellForRow(at: selectedItem) as? PulseTableViewCell else {
+                return
             }
             
-            selectedItem = nil
-            fixedItem = nil
+            fixedItem = state ? nil : cell.itemLabel.text
+            
+            switch (selectedItem as NSIndexPath).section {
+            case 0:
+                if state {
+                    cell.itemLabel.text = menuItems1[(selectedItem as NSIndexPath).row]
+                } else {
+                    cell.itemLabel.text = "☒ " + menuItems1[(selectedItem as NSIndexPath).row]
+                }
+            case 1:
+                if state {
+                    cell.itemLabel.text = menuItems2[(selectedItem as NSIndexPath).row]
+                } else {
+                    cell.itemLabel.text = "☒ " + menuItems2[(selectedItem as NSIndexPath).row]
+                }
+            case 2:
+                if state {
+                    cell.itemLabel.text = menuItems3[(selectedItem as NSIndexPath).row]
+                } else {
+                    cell.itemLabel.text = "☒ " + menuItems3[(selectedItem as NSIndexPath).row]
+                }
+            default:
+                break
+            }
+            cell.itemValue.isEnabled = state
+            cell.itemValue.textColor = state ? .black : .gray
+            cell.itemValue.text = cell.itemValue.text // Without this, textColor is not being updated.
+            cell.itemLabel.textColor = state ? .black : .gray
+        }
+        
+        if let item = selectedItem {
+            if indexPath == item {
+                //tableView.deselectRow(at: indexPath, animated: true)
+                toggleCellState(indexPath, true)
+                selectedItem = nil
+            } else {
+                //tableView.deselectRow(at: item, animated: true)
+                toggleCellState(item, true)
+                //tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.none)
+                toggleCellState(indexPath, false)
+                selectedItem = indexPath
+            }
+        } else {
+            //tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.none)
+            toggleCellState(indexPath, false)
+            selectedItem = indexPath
         }
     }
 }
@@ -650,7 +598,7 @@ extension PulseViewController: UITextFieldDelegate {
             warnings("Unable to comply.", message: "Cannot compare the powers.")
         }
         
-        update_textfields()
+        updateTextFields()
         activeField = nil
     }
     

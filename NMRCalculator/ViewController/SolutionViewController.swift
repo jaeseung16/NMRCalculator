@@ -24,7 +24,7 @@ class SolutionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        update_textfields()
+        updateTextFields()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -47,7 +47,7 @@ class SolutionViewController: UIViewController {
     
     @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
         SolutionTableView.contentInset = contentInsets
         SolutionTableView.scrollIndicatorInsets = contentInsets
@@ -62,7 +62,7 @@ class SolutionViewController: UIViewController {
 
 // MARK: - Methods custom to SolutionViewController
 extension SolutionViewController {
-    func update_textfields() {
+    func updateTextFields() {
         updateItemValues()
         
         // copy itemValues into valueTextField
@@ -167,6 +167,6 @@ extension SolutionViewController: UITextFieldDelegate {
             textField.text = textbeforeediting
         }
         
-        update_textfields()
+        updateTextFields()
     }
 }

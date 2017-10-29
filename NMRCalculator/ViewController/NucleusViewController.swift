@@ -68,7 +68,7 @@ class NucleusViewController: UIViewController {
         
         self.menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
         
-        update_textfields()
+        updateTextFields()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -102,7 +102,7 @@ class NucleusViewController: UIViewController {
     }
     
     // MARK: Update textfields
-    func update_textfields() {
+    func updateTextFields() {
         if let larmor = nmrCalc?.larmorNMR {
             self.itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
             
@@ -139,7 +139,7 @@ class NucleusViewController: UIViewController {
     
     @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let pickerSize = NucleusPicker.frame
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height - pickerSize.height, 0.0)
         NucleusTableView.contentInset = contentInsets
@@ -220,7 +220,7 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
         let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
         
-        update_textfields()
+        updateTextFields()
     }
 }
 
@@ -336,7 +336,7 @@ extension NucleusViewController: UITextFieldDelegate {
             textField.text = textbeforeediting
         }
         
-        update_textfields()
+        updateTextFields()
         
         activeField = nil
     }

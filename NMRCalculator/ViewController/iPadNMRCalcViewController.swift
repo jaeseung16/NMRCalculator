@@ -56,7 +56,7 @@ class iPadNMRCalcViewController: UIViewController {
         
         self.menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
         
-        update_textfields()
+        updateTextFields()
 
     }
     
@@ -79,7 +79,7 @@ class iPadNMRCalcViewController: UIViewController {
     
     @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
         
         iPadNMRCalcTable.contentInset = contentInsets
@@ -117,7 +117,7 @@ class iPadNMRCalcViewController: UIViewController {
     }
 
     // MARK: Method to update textfields
-    func update_textfields() {
+    func updateTextFields() {
         if let larmor = nmrCalc?.larmorNMR {
             
             itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
@@ -224,7 +224,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
         let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
         let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
         
-        update_textfields()
+        updateTextFields()
     }
 }
 
@@ -335,7 +335,7 @@ extension iPadNMRCalcViewController: UITextFieldDelegate {
             textField.text = textbeforeediting
         }
         
-        update_textfields()
+        updateTextFields()
         activeField = nil
     }
 }
