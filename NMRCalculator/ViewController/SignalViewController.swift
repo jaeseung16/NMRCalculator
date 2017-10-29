@@ -79,7 +79,7 @@ class SignalViewController: UIViewController {
     @objc func keyboardDidShow(_ notification: Notification) {
 
         let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
         SignalTableView.contentInset = contentInsets
         SignalTableView.scrollIndicatorInsets = contentInsets
@@ -210,9 +210,9 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             case 1:
                 if state {
-                    cell.itemLabel.text = menuItems1![(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = menuItems2![(selectedItem as NSIndexPath).row]
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems1![(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = "☒ " + menuItems2![(selectedItem as NSIndexPath).row]
                 }
             default:
                 break
@@ -225,17 +225,17 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let item = selectedItem {
             if indexPath == item {
-                tableView.deselectRow(at: indexPath, animated: true)
+                //tableView.deselectRow(at: indexPath, animated: true)
                 toggleCellState(indexPath, true)
                 selectedItem = nil
             } else {
-                tableView.deselectRow(at: item, animated: true)
+                //tableView.deselectRow(at: item, animated: true)
                 toggleCellState(item, true)
                 toggleCellState(indexPath, false)
                 selectedItem = indexPath
             }
         } else {
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.none)
+            //tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.none)
             toggleCellState(indexPath, false)
             selectedItem = indexPath
         }
@@ -256,176 +256,153 @@ extension SignalViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if let x = Double(textField.text!) {
-            var toUpdate = ""
+        activeField = nil
+        
+        guard let x = Double(textField.text!) else {
+            warnings("Unable to comply.", message: "The input was not a number.")
+            textField.text = textbeforeediting
+            return
+        }
+
+        var firstParameter = ""
+        var secondParameter = ""
+        var category = ""
+        var value = x
+        
+        switch textField {
+        case valueTextField1[0]: // Textfield for the size of FID
+            firstParameter = "size"
+            category = "acquisition"
             
-            switch textField {
-            case valueTextField1[0]: // Textfield for the size of FID
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    nmrCalc!.updateParameter("size", in: "acquisition", to: x, and: "duration") { error in
-                        if (error != nil) {
-                            self.warnings("Unable to comply.", message: error!)
-                            textField.text = self.textbeforeediting
-                        }
-                    }
-                    break
-                }
-
-                if fixedItem == menuItems1![1] {
-                    toUpdate = "dwell"
-                } else if fixedItem == menuItems1![2] {
-                    toUpdate = "duration"
-                } else {
-                    self.warnings("Unable to comply.", message: "Something is wrong.")
-                }
-
-                nmrCalc!.updateParameter("size", in: "acquisition", to: x, and: toUpdate) { error in
-                    if (error != nil) {
-                        self.warnings("Unable to comply.", message: error!)
-                    }
-                }
-                
-            case valueTextField1[1]: // Textfield for aquisition duration
-                guard nmrCalc!.setParameter("duration", in: "acquisition", to: x * 1_000.0) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    } else if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems1![0] {
-                    if nmrCalc!.evaluateParameter("dwell", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the dwell time.")
-                    }
-                } else if fixedItem == menuItems1![2] {
-                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    }
-                }
-                
-            case valueTextField1[2]: // Textfield for dwell time
-                guard nmrCalc!.setParameter("dwell", in: "acquisition", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    } else if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems1![0] {
-                    if nmrCalc!.evaluateParameter("duration", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    }
-                } else if fixedItem == menuItems1![1] {
-                    if nmrCalc!.evaluateParameter("size", in: "acquisition") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    }
-                }
-                
-            case valueTextField2[0]: // Textfield for the size of spectrum
-                guard nmrCalc!.setParameter("size", in: "spectrum", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the resolution.")
-                    } else if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems2![1] {
-                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the resolution.")
-                    }
-                } else if fixedItem == menuItems2![2] {
-                    if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
-                    }
-                }
-                
-            case valueTextField2[1]: // Textfield for spectral width
-                guard nmrCalc!.setParameter("width", in: "spectrum", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the resolution.")
-                    } else if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems2![0] {
-                    if nmrCalc!.evaluateParameter("resolution", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the resolution.")
-                    }
-                } else if fixedItem == menuItems2![2] {
-                    if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    }
-                }
-                
-            case valueTextField2[2]: // Textfield for frequency resolution
-                guard nmrCalc!.setParameter("resolution", in: "spectrum", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
-                    } else if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems2![0] {
-                    if nmrCalc!.evaluateParameter("width", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the spectral width.")
-                    }
-                } else if fixedItem == menuItems2![1] {
-                    if nmrCalc!.evaluateParameter("size", in: "spectrum") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the number of data points.")
-                    }
-                }
-                
-            default:
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                secondParameter = "duration"
                 break
             }
             
-        } else {
-            warnings("Unable to comply.", message: "The input was not a number.")
+            if fixedItem == menuItems1![1] {
+                secondParameter = "dwell"
+            } else if fixedItem == menuItems1![2] {
+                secondParameter = "duration"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField1[1]: // Textfield for aquisition duration
+            value = x * 1_000
+            firstParameter = "duration"
+            category = "acquisition"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                secondParameter = "size"
+                break
+            }
+            
+            if fixedItem == menuItems1![0] {
+                secondParameter = "dwell"
+            } else if fixedItem == menuItems1![2] {
+                secondParameter = "size"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField1[2]: // Textfield for dwell time
+            value = x
+            firstParameter = "dwell"
+            category = "acquisition"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                secondParameter = "size"
+                break
+            }
+            
+            if fixedItem == menuItems1![0] {
+                secondParameter = "duration"
+            } else if fixedItem == menuItems1![1] {
+                secondParameter = "size"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField2[0]: // Textfield for the size of spectrum
+            value = x
+            firstParameter = "size"
+            category = "spectrum"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                secondParameter = "resolution"
+                break
+            }
+            
+            if fixedItem == menuItems2![1] {
+                secondParameter = "resolution"
+            } else if fixedItem == menuItems2![2] {
+                secondParameter = "width"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField2[1]: // Textfield for spectral width
+            value = x
+            firstParameter = "width"
+            category = "spectrum"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                secondParameter = "resolution"
+                break
+            }
+            
+            if fixedItem == menuItems2![0] {
+                secondParameter = "resolution"
+            } else if fixedItem == menuItems2![2] {
+                secondParameter = "size"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField2[2]: // Textfield for frequency resolution
+            value = x
+            firstParameter = "resolution"
+            category = "spectrum"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                secondParameter = "width"
+                break
+            }
+            
+            if fixedItem == menuItems2![0] {
+                secondParameter = "width"
+            } else if fixedItem == menuItems2![1] {
+                secondParameter = "size"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        default:
+            warnings("Unable to comply.", message: "The value is out of range.")
             textField.text = textbeforeediting
+            return
+        }
+
+        nmrCalc!.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+                textField.text = self.textbeforeediting
+            }
         }
         
         updateTextFields()
-        activeField = nil
     }
 }
 
