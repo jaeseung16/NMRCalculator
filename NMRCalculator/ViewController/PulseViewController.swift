@@ -302,306 +302,214 @@ extension PulseViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if let x = Double(textField.text!) {
-            switch textField {
-            case valueTextField1[0]: // Textfield for the duration of the 1st pulse
-                guard nmrCalc!.setParameter("duration", in: "pulse1", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems1[1] {
-                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    }
-                } else if fixedItem == menuItems1[2] {
-                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                }
-                
-            case valueTextField1[1]: // Textfield for the flip angle of the 1st pulse
-                guard nmrCalc!.setParameter("flipangle", in: "pulse1", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems1[2] {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    }
-                } else if fixedItem == menuItems1[0] {
-                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    }
-                }
-                
-            case valueTextField1[2]: // Textfield for the RF amplitude of the 1st pulse
-                guard nmrCalc!.setParameter("amplitude", in: "pulse1", to: x/1_000.0) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems1[1] {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    }
-                } else if fixedItem == menuItems1[0] {
-                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse1") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                }
-                
-            case valueTextField2[0]: // Textfield for the duration of the second pulse
-                guard nmrCalc!.setParameter("duration", in: "pulse2", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems2[1] {
-                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    }
-                } else if fixedItem == menuItems2[2] {
-                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                }
-                
-            case valueTextField2[1]: // Textfield for the flip angle of the second pulse
-                guard nmrCalc!.setParameter("flipangle", in: "pulse2", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems2[2] {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    }
-                } else if fixedItem == menuItems2[0] {
-                    if nmrCalc!.evaluateParameter("amplitude", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the amplitude.")
-                    }
-                }
-                
-            case valueTextField2[2]: // Textfield for the RF amplitude of the second pulse
-                guard nmrCalc!.setParameter("amplitude", in: "pulse2", to: x/1_000.0) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                    break
-                }
-                
-                if fixedItem == menuItems2[1] {
-                    if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                    }
-                } else if fixedItem == menuItems2[0] {
-                    if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
-                        warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                    }
-                }
-                
-            case valueTextField2[3]: // Textfield for the relative power
-                // nmrCalc!.set_relativepower(x)
-                nmrCalc!.relativepower = x
-                
-                let amp0 = nmrCalc!.pulseNMR[0]!.amplitude
-                
-                if nmrCalc!.setParameter("amplitude", in: "pulse2", to: pow(10.0, 1.0 * x / 20.0) * amp0 ) == false {
-                    warnings("Unable to comply.", message: "Cannot calculate the amplitude of the second pulse.")
-                }
-                
-                if nmrCalc!.evaluateParameter("duration", in: "pulse2") == false {
-                    warnings("Unable to comply.", message: "Cannot calculate the duration.")
-                } else if nmrCalc!.evaluateParameter("flipangle", in: "pulse2") == false {
-                    warnings("Unable to comply.", message: "Cannot calculate the flip angle.")
-                }
-                
-                
-                if fixedItem != nil && selectedItem != nil {
-                    PulseTableView.deselectRow(at: selectedItem!, animated: true)
-                    if let cell = PulseTableView.cellForRow(at: selectedItem!) as? PulseTableViewCell {
-                        switch (selectedItem! as NSIndexPath).section {
-                        case 0:
-                            cell.itemLabel.text = menuItems1[(selectedItem! as NSIndexPath).row]
-                        case 1:
-                            cell.itemLabel.text = menuItems2[(selectedItem! as NSIndexPath).row]
-                        default:
-                            break
-                        }
-                        cell.itemLabel.textColor = UIColor.black
-                        cell.itemValue.isEnabled = true
-                        cell.itemValue.textColor = UIColor.black
-                    }
-                    
-                    selectedItem = nil
-                    fixedItem = nil
-                }
-                
-            case valueTextField3[0]:
-                guard nmrCalc!.setParameter("repetition", in: "ernstAngle", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
-                        guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle")  else {
-                            warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                            break
-                        }
-                        break
-                    }
-                    break
-                }
-                
-                switch fixedItem! {
-                case menuItems3[1]:
-                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
-                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                        break
-                    }
-                case menuItems3[2]:
-                    guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle") else {
-                        warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
-                        break
-                    }
-                default:
-                    break
-                }
-                
-            case valueTextField3[1]:
-                guard nmrCalc!.setParameter("relaxation", in: "ernstAngle", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
-                        guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle")  else {
-                            warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                            break
-                        }
-                        break
-                    }
-                    break
-                }
-                
-                switch fixedItem! {
-                case menuItems3[0]:
-                    guard nmrCalc!.evaluateParameter("angle", in: "ernstAngle") else {
-                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                        break
-                    }
-                case menuItems3[2]:
-                    guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle") else {
-                        warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
-                        break
-                    }
-                default:
-                    break
-                }
-                
-            case valueTextField3[2]:
-                guard nmrCalc!.setParameter("angle", in: "ernstAngle", to: x * Double.pi / 180.0) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    break
-                }
-                
-                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle") else {
-                        guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle")  else {
-                            warnings("Unable to comply.", message: "Cannot calculate the relaxation time.")
-                            break
-                        }
-                        break
-                    }
-                    break
-                }
-                
-                switch fixedItem! {
-                case menuItems3[0]:
-                    guard nmrCalc!.evaluateParameter("relaxation", in: "ernstAngle") else {
-                        warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
-                        break
-                    }
-                case menuItems3[1]:
-                    guard nmrCalc!.evaluateParameter("repetition", in: "ernstAngle") else {
-                        warnings("Unable to comply.", message: "Cannot calculate the relaxtion time.")
-                        break
-                    }
-                default:
-                    break
-                }
-                
-            default:
+        activeField = nil
+        
+        guard let x = Double(textField.text!) else {
+            warnings("Unable to comply.", message: "The input was not a number.")
+            textField.text = textbeforeediting
+            return
+        }
+        
+        var firstParameter = ""
+        var secondParameter = ""
+        var category = ""
+        var value = x
+        
+        switch textField {
+        case valueTextField1[0]:
+            firstParameter = "duration"
+            category = "pulse1"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                secondParameter = "amplitude"
                 break
             }
             
-        } else {
+            if fixedItem == menuItems1[1] {
+                secondParameter = "amplitude"
+            } else if fixedItem == menuItems1[2] {
+                secondParameter = "flipangle"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField1[1]:
+            firstParameter = "flipangle"
+            category = "pulse1"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                secondParameter = "duration"
+                break
+            }
+            
+            if fixedItem == menuItems1[2] {
+                secondParameter = "duration"
+            } else if fixedItem == menuItems1[0] {
+                secondParameter = "amplitude"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField1[2]:
+            firstParameter = "amplitude"
+            category = "pulse1"
+            value = x / 1_000
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                secondParameter = "duration"
+                break
+            }
+            
+            if fixedItem == menuItems1[1] {
+                secondParameter = "duration"
+            } else if fixedItem == menuItems1[0] {
+                secondParameter = "flipangle"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField2[0]:
+            firstParameter = "duration"
+            category = "pulse2"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                secondParameter = "amplitude"
+                break
+            }
+            
+            if fixedItem == menuItems2[1] {
+                secondParameter = "amplitude"
+            } else if fixedItem == menuItems2[2] {
+                secondParameter = "flipangle"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField2[1]:
+            firstParameter = "flipangle"
+            category = "pulse2"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                secondParameter = "duration"
+                break
+            }
+            
+            if fixedItem == menuItems2[2] {
+                secondParameter = "duration"
+            } else if fixedItem == menuItems2[0] {
+                secondParameter = "amplitude"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField2[2]:
+            firstParameter = "amplitude"
+            category = "pulse2"
+            value = x / 1_000
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                secondParameter = "duration"
+                break
+            }
+            
+            if fixedItem == menuItems2[1] {
+                secondParameter = "duration"
+            } else if fixedItem == menuItems2[0] {
+                secondParameter = "flipangle"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField2[3]:
+            nmrCalc!.relativepower = x
+            let amp0 = nmrCalc!.pulseNMR[0]!.amplitude
+            value = pow(10.0, 1.0 * x / 20.0) * amp0
+
+            firstParameter = "amplitude"
+            category = "pulse2"
+            secondParameter = "duration"
+            
+        case valueTextField3[0]:
+            firstParameter = "repetition"
+            category = "ernstAngle"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
+                secondParameter = "angle"
+                break
+            }
+            
+            if fixedItem == menuItems3[1] {
+                secondParameter = "angle"
+            } else if fixedItem == menuItems3[2] {
+                secondParameter = "relaxation"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField3[1]:
+            firstParameter = "relaxation"
+            category = "ernstAngle"
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
+                secondParameter = "angle"
+                break
+            }
+            
+            if fixedItem == menuItems3[0] {
+                secondParameter = "angle"
+            } else if fixedItem == menuItems3[2] {
+                secondParameter = "repetition"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        case valueTextField3[2]:
+            firstParameter = "angle"
+            category = "ernstAngle"
+            value = x * Double.pi / 180.0
+            
+            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
+                secondParameter = "repetition"
+                break
+            }
+            
+            if fixedItem == menuItems3[0] {
+                secondParameter = "relaxation"
+            } else if fixedItem == menuItems3[1] {
+                secondParameter = "repetition"
+            } else {
+                self.warnings("Unable to comply.", message: "Something is wrong.")
+                textField.text = textbeforeediting
+                return
+            }
+            
+        default:
+            warnings("Unable to comply.", message: "The value is out of range.")
             textField.text = textbeforeediting
+            return
+        }
+        
+        nmrCalc!.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+                textField.text = self.textbeforeediting
+            }
         }
         
         if nmrCalc!.calculate_dB() == false {
@@ -609,7 +517,6 @@ extension PulseViewController: UITextFieldDelegate {
         }
         
         updateTextFields()
-        activeField = nil
     }
     
 }

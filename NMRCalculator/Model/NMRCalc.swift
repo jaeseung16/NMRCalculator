@@ -53,7 +53,6 @@ class NMRCalc {
 
     
     func calculate_dB() -> Bool {
-        
         if let amp1 = pulseNMR[0]?.amplitude {
             if let amp2 = pulseNMR[1]?.amplitude {
                 relativepower = 20.0 * log10( abs(amp2 / amp1) )
@@ -97,7 +96,6 @@ class NMRCalc {
     }
     
     func evaluate_ernstparameter(_ name: String) -> Bool {
-        
         if let ernst = ernst_parameters(rawValue: name) {
             switch ernst {
             case .repetition:
