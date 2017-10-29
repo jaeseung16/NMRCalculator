@@ -285,60 +285,40 @@ extension NucleusViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if let x = Double(textField.text!) {
-            switch textField {
-            case valueTextField[0]: // Textfield for larmor frequency
-                guard nmrCalc!.setParameter("larmor", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[1]: // Textfield for external magnetic field
-                guard nmrCalc!.setParameter("field", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[2]: // Textfield for proton's larmor frequency
-                guard nmrCalc!.setParameter("proton", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[3]: // Textfield for electron's larmor frequency
-                guard nmrCalc!.setParameter("electron", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                
-            default:
-                break
-            }
-            
-        } else {
+        activeField = nil
+        
+        guard let x = Double(textField.text!) else {
+            warnings("Unable to comply.", message: "The input was not a number.")
             textField.text = textbeforeediting
+            return
+        }
+        
+        var firstParameter = ""
+        let value = x
+        
+        switch textField {
+        case valueTextField[0]:
+            firstParameter = "larmor"
+        case valueTextField[1]:
+            firstParameter = "field"
+        case valueTextField[2]:
+            firstParameter = "proton"
+        case valueTextField[3]:
+            firstParameter = "electron"
+        default:
+            warnings("Unable to comply.", message: "The value is out of range.")
+            textField.text = textbeforeediting
+            return
+        }
+        
+        nmrCalc!.updateLarmor(firstParameter, to: value) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+                textField.text = self.textbeforeediting
+            }
         }
         
         updateTextFields()
-        
-        activeField = nil
     }
 }
 
