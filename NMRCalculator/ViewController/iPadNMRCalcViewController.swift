@@ -101,7 +101,6 @@ class iPadNMRCalcViewController: UIViewController {
     // MARK: Method to initialize the nuclues table
     func readtable() -> [String]? {
         if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
-            
             do {
                 let table = try String(contentsOfFile: path, encoding: String.Encoding.utf8).components(separatedBy: "\n")
                 
@@ -118,35 +117,26 @@ class iPadNMRCalcViewController: UIViewController {
 
     // MARK: Method to update textfields
     func updateTextFields() {
-        if let larmor = nmrCalc?.larmorNMR {
-            
-            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
-            
+        updateItemValues()
+        
+        if let _ = nmrCalc?.larmorNMR {
             for k in 0..<valueTextField.count {
-                switch k {
-                case 0:
-                    valueTextField[k].text = larmor.frequencyLarmor.format(".4")
-                    
-                case 1:
-                    valueTextField[k].text = larmor.fieldExternal.format(".4")
-                    
-                case 2:
-                    valueTextField[k].text = larmor.frequencyProton.format(".4")
-                    
-                case 3:
-                    valueTextField[k].text = larmor.frequencyElectron.format(".4")
-                    
-                default:
-                    break
-                }
+                valueTextField[k].text = itemValues![k]
             }
         }
-            
-        if let name = nmrCalc!.nucleus?.nameNucleus {
-            nucleusName.text = name
+        
+        if let nucleus = nmrCalc?.nucleus {
+            nucleusName.text = nucleus.nameNucleus
         }
     }
     
+    func updateItemValues() {
+        if let larmor = nmrCalc?.larmorNMR {
+            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
+        }
+    }
+    
+    // MARK: IBActions
     @IBAction func searchwebButtonDown(_ sender: UIButton) {
         var queryString = "https://www.google.com/search?q="
         queryString += nucleusName.text!
@@ -187,15 +177,6 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        /*        if let items = nucleusTable?[row].componentsSeparatedByString(" ") {
-         if let label = view as! UILabel! {
-         return label
-         } else {
-         let label = UILabel()
-         label.text = items[1]
-         return label
-         }*/
-        
         guard let items = nucleusTable?[row] else {
             let label = UILabel()
             label.text = ""
@@ -216,13 +197,16 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
         nmrCalc!.nucleus = nucleus!
         nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
         
-        if nmrCalc!.setParameter("field", in: "resonance", to: Double(valueTextField[1].text!)!) == false {
-            warnings("Unable to comply.", message: "The value is out of range.")
+        guard let value = Double(valueTextField[1].text!) else {
+            warnings("Unable to comply.", message: "The input should be a number.")
+            return
         }
         
-        let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-        let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-        let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+        nmrCalc!.updateLarmor("field", to: value) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+            }
+        }
         
         updateTextFields()
     }
@@ -239,15 +223,16 @@ extension iPadNMRCalcViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NMRParametersTableViewCell
         
         cell.itemLabel.text = menuItems![(indexPath as NSIndexPath).row]
         cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
-        valueTextField.append(cell.itemValue)
+        
+        if valueTextField.count < 4 {
+            valueTextField.append(cell.itemValue)
+        }
         
         return cell
-        
     }
 }
 
@@ -257,10 +242,7 @@ extension iPadNMRCalcViewController: UITextFieldDelegate {
         let selected = NucleusPicker.selectedRow(inComponent: 0)
         
         if selected == -1 {
-            let alert = UIAlertController(title: "Unable to comply.", message: "Select a nucleus.", preferredStyle: .alert)
-            let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(ok)
-            present(alert, animated: true, completion: nil)
+            warnings("Unable to comply.", message: "Select a nucleus.")
             return false
         } else {
             NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
@@ -285,57 +267,39 @@ extension iPadNMRCalcViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if let x = Double(textField.text!) {
-            switch textField {
-            case valueTextField[0]: // Textfield for larmor frequency
-                guard nmrCalc!.setParameter("larmor", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[1]: // Textfield for external magnetic field
-                guard nmrCalc!.setParameter("field", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[2]: // Textfield for proton's larmor frequency
-                guard nmrCalc!.setParameter("proton", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-                
-            case valueTextField[3]: // Textfield for electron's larmor frequency
-                guard nmrCalc!.setParameter("electron", in: "resonance", to: x) else {
-                    warnings("Unable to comply.", message: "The value is out of range.")
-                    textField.text = textbeforeediting
-                    return
-                }
-                
-                let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-                let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-                
-            default:
-                break
-            }
-        } else {
+        activeField = nil
+        
+        guard let x = Double(textField.text!) else {
+            warnings("Unable to comply.", message: "The input was not a number.")
             textField.text = textbeforeediting
+            return
+        }
+        
+        var firstParameter = ""
+        let value = x
+        
+        switch textField {
+        case valueTextField[0]:
+            firstParameter = "larmor"
+        case valueTextField[1]:
+            firstParameter = "field"
+        case valueTextField[2]:
+            firstParameter = "proton"
+        case valueTextField[3]:
+            firstParameter = "electron"
+        default:
+            warnings("Unable to comply.", message: "The value is out of range.")
+            textField.text = textbeforeediting
+            return
+        }
+        
+        nmrCalc!.updateLarmor(firstParameter, to: value) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+                textField.text = self.textbeforeediting
+            }
         }
         
         updateTextFields()
-        activeField = nil
     }
 }

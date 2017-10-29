@@ -103,31 +103,22 @@ class NucleusViewController: UIViewController {
     
     // MARK: Update textfields
     func updateTextFields() {
-        if let larmor = nmrCalc?.larmorNMR {
-            self.itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
-            
+        updateItemValues()
+        
+        if let _ = nmrCalc?.larmorNMR {
             for k in 0..<valueTextField.count {
-                switch k {
-                case 0:
-                    valueTextField[k].text = larmor.frequencyLarmor.format(".4")
-                    
-                case 1:
-                    valueTextField[k].text = larmor.fieldExternal.format(".4")
-                    
-                case 2:
-                    valueTextField[k].text = larmor.frequencyProton.format(".4")
-                    
-                case 3:
-                    valueTextField[k].text = larmor.frequencyElectron.format(".4")
-                    
-                default:
-                    break
-                }
+                valueTextField[k].text = itemValues![k]
             }
         }
         
         if let nucleus = nmrCalc?.nucleus {
             nucleusName.text = nucleus.nameNucleus
+        }
+    }
+    
+    func updateItemValues() {
+        if let larmor = nmrCalc?.larmorNMR {
+            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
         }
     }
     
@@ -152,6 +143,7 @@ class NucleusViewController: UIViewController {
         NucleusTableView.scrollIndicatorInsets = contentInsets
     }
     
+    // MARK: IBActions
     @IBAction func searchwebButtonDown(_ sender: UIButton) {
         var queryString = "https://www.google.com/search?q="
         queryString += nucleusName.text!
@@ -212,13 +204,16 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         nmrCalc!.nucleus = nucleus!
         nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
         
-        if nmrCalc!.setParameter("field", in: "resonance", to: Double(valueTextField[1].text!)!) == false {
-            warnings("Unable to comply.", message: "The value is out of range.")
+        guard let value = Double(valueTextField[1].text!) else {
+            warnings("Unable to comply.", message: "The input should be a number.")
+            return
         }
         
-        let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-        let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-        let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
+        nmrCalc!.updateLarmor("field", to: value) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+            }
+        }
         
         updateTextFields()
     }
@@ -239,7 +234,10 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.itemLabel.text = menuItems![(indexPath as NSIndexPath).row]
         cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
-        valueTextField.append(cell.itemValue)
+        
+        if valueTextField.count < 4 {
+            valueTextField.append(cell.itemValue)
+        }
         
         return cell
     }
@@ -252,13 +250,8 @@ extension NucleusViewController: UITextFieldDelegate {
         let selected = NucleusPicker.selectedRow(inComponent: 0)
         
         if selected == -1 {
-            let alert = UIAlertController(title: "Unable to comply.", message: "Select a nucleus.", preferredStyle: .alert)
-            let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(ok)
-            present(alert, animated: true, completion: nil)
-            
+            warnings("Unable to comply.", message: "Select a nucleus.")
             return false
-            
         } else {
             NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
             nucleus = NMRNucleus(identifier: nucleusTable![selected])
