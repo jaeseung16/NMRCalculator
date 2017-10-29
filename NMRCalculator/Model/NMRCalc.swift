@@ -205,4 +205,40 @@ extension NMRCalc {
         
         completionHandler(nil)
     }
+    
+    func updateLarmor(_ name: String, to value: Double, completionHandler: @escaping (_ error: String?) -> Void) {
+        let category = "resonance"
+        
+        guard setParameter(name, in: category, to: value) else {
+            completionHandler("The value is out of range.")
+            return
+        }
+        
+        switch name {
+        case "larmor":
+            guard evaluateParameter("proton", in: category), evaluateParameter("electron", in: category) else {
+                completionHandler("Cannot update the proton and electron resonance frequencies.")
+                return
+            }
+        case "field":
+            guard evaluateParameter("larmor", in: category), evaluateParameter("proton", in: category), evaluateParameter("electron", in: category) else {
+                completionHandler("Cannot update the proton and electron resonance frequencies.")
+                return
+            }
+        case "proton":
+            guard evaluateParameter("larmor", in: category), evaluateParameter("electron", in: category) else {
+                completionHandler("Cannot update the proton and electron resonance frequencies.")
+                return
+            }
+        case "electron":
+            guard evaluateParameter("larmor", in: category), evaluateParameter("proton", in: category) else {
+                completionHandler("Cannot update the proton and electron resonance frequencies.")
+                return
+            }
+        default:
+            completionHandler("Something is wrong.")
+        }
+        
+        completionHandler(nil)
+    }
 }

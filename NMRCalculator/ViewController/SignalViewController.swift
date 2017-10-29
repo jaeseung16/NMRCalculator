@@ -215,17 +215,14 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let item = selectedItem {
             if indexPath == item {
-                //tableView.deselectRow(at: indexPath, animated: true)
                 toggleCellState(indexPath, true)
                 selectedItem = nil
             } else {
-                //tableView.deselectRow(at: item, animated: true)
                 toggleCellState(item, true)
                 toggleCellState(indexPath, false)
                 selectedItem = indexPath
             }
         } else {
-            //tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.none)
             toggleCellState(indexPath, false)
             selectedItem = indexPath
         }
