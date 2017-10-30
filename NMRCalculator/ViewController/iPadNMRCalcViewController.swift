@@ -10,15 +10,22 @@ import UIKit
 
 class iPadNMRCalcViewController: UIViewController {
     // MARK: - Properties
+    // Outlets
     @IBOutlet weak var iPadNMRCalcTable: UITableView!
     @IBOutlet weak var NucleusPicker: UIPickerView!
     @IBOutlet weak var nucleusName: UILabel!
     
+    // Constants
+    let menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
+    let numberofColumn = 1
+    
+    // Variables
+    var itemValues = Array(repeating: String(), count: 4)
+    var valueTextField = Array(repeating: UITextField(), count: 4)
+    
     var nucleusTable: [String]?
     var nucleus: NMRNucleus?
     var proton: NMRNucleus?
-    
-    let numberofColumn = 1
     
     var nmrCalc: NMRCalc?
     var activeField: UITextField?
@@ -26,39 +33,14 @@ class iPadNMRCalcViewController: UIViewController {
     
     var sections: [String]?
     
-    var menuItems: [String]?
-    var itemValues: [String]?
-    var valueTextField = [UITextField]()
-    
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        
-        self.nucleusTable = readtable()
-        
-        proton = NMRNucleus(identifier: nucleusTable![0])
-        nucleus = NMRNucleus(identifier: nucleusTable![0])
-        
-        nmrCalc = NMRCalc(nucleus: nucleus!)
-        
-        guard nmrCalc!.setParameter("field", in: "resonance", to: 1.0) else {
-            warnings("Unable to comply.", message: "The value is out of range.")
-            return
-        }
-        
-        let _ = nmrCalc!.evaluateParameter("larmor", in: "resonance")
-        let _ = nmrCalc!.evaluateParameter("proton", in: "resonance")
-        let _ = nmrCalc!.evaluateParameter("electron", in: "resonance")
-        
-        self.sections = [nmrCalc!.nucleus!.nameNucleus]
-        
-        self.menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
-        
-        updateTextFields()
 
+        initializeView()
     }
+    
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -98,20 +80,35 @@ class iPadNMRCalcViewController: UIViewController {
         iPadNMRCalcTable.scrollIndicatorInsets = contentInsets
     }
 
-    // MARK: Method to initialize the nuclues table
+    // MARK: Method to initialize the view
+    func initializeView() {
+        nucleusTable = readtable()
+        
+        proton = NMRNucleus(identifier: nucleusTable![0])
+        nucleus = NMRNucleus(identifier: nucleusTable![0])
+        
+        nmrCalc = NMRCalc(nucleus: nucleus!)
+        
+        nmrCalc!.updateLarmor("field", to: 1.0) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+            }
+        }
+        
+        sections = [nmrCalc!.nucleus!.nameNucleus]
+        updateTextFields()
+    }
+    
     func readtable() -> [String]? {
         if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
             do {
                 let table = try String(contentsOfFile: path, encoding: String.Encoding.utf8).components(separatedBy: "\n")
-                
                 return table
-                
             } catch {
                 print("Error: Cannot read the table.")
                 return nil
             }
         }
-        
         return nil
     }
 
@@ -121,7 +118,7 @@ class iPadNMRCalcViewController: UIViewController {
         
         if let _ = nmrCalc?.larmorNMR {
             for k in 0..<valueTextField.count {
-                valueTextField[k].text = itemValues![k]
+                valueTextField[k].text = itemValues[k]
             }
         }
         
@@ -219,18 +216,15 @@ extension iPadNMRCalcViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItems!.count
+        return menuItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NMRParametersTableViewCell
         
-        cell.itemLabel.text = menuItems![(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues![(indexPath as NSIndexPath).row]
-        
-        if valueTextField.count < 4 {
-            valueTextField.append(cell.itemValue)
-        }
+        cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
+        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
+        valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
         
         return cell
     }
