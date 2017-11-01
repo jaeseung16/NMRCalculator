@@ -33,3 +33,4 @@ Info
 History
 - Version 1.0 / Aug 24, 2016
 - Version 1.1 / Sep 28, 2016
+- Version 1.2 / Nov 1, 2017
