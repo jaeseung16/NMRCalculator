@@ -10,30 +10,34 @@ import UIKit
 
 class PulseViewController: UIViewController {
     // MARK: - Properties
-
-    // IBOutlets
+    // Outlets
     @IBOutlet weak var PulseTableView: UITableView!
+    
+    // Constants
+    let sections = ["1st Pulse", "2nd Pulse", "Ernst Angle"]
     
     let menuItems1 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz"]
     let menuItems2 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz", "RF power relative to 1st (dB)"]
     let menuItems3 = [ "Repetition Time (sec)", "Relaxation Time (sec)", "Ernst Angle (˚)" ]
     
-    var itemValues1: [String]?
-    var itemValues2: [String]?
-    var itemValues3: [String]?
+    let indexForRelativePower = IndexPath(row: 3, section: 1)
     
-    let sections = ["1st Pulse", "2nd Pulse", "Ernst Angle"]
+    // Variables
+    var itemValues1 = Array(repeating: String(), count: 3)
+    var itemValues2 = Array(repeating: String(), count: 4)
+    var itemValues3 = Array(repeating: String(), count: 3)
+    
     var valueTextField1 = Array(repeating: UITextField(), count: 3)
     var valueTextField2 = Array(repeating: UITextField(), count: 4)
     var valueTextField3 = Array(repeating: UITextField(), count: 3)
     
     var nmrCalc: NMRCalc?
+    
     var activeField: UITextField?
     var textbeforeediting: String?
     
     var selectedItem: IndexPath?
     var fixedItem: String?
-    let indexForRelativePower = IndexPath(row: 3, section: 1)
     
     // MARK: - Methods
     override func viewDidLoad() {
@@ -46,6 +50,46 @@ class PulseViewController: UIViewController {
             nmrCalc = tabbarviewcontroller.nmrCalc
         }
         
+        initializeView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        unsubscribeFromKeyboardNotifications()
+        super.viewWillDisappear(animated)
+    }
+    
+    // MARK: - Methods for Keyboard
+    func subscribeToKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func unsubscribeFromKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc func keyboardDidShow(_ notification: Notification) {
+        let info = (notification as NSNotification).userInfo!
+        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
+        PulseTableView.contentInset = contentInsets
+        PulseTableView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        let contentInsets = UIEdgeInsets.zero
+        PulseTableView.contentInset = contentInsets
+        PulseTableView.scrollIndicatorInsets = contentInsets
+    }
+    
+    // MARK: Method to initialize the view
+    func initializeView() {
         var pulse1 = NMRPulse()
         let _ = pulse1.setParameter(parameter: "duration", to: 10.0)
         let _ = pulse1.setParameter(parameter: "flipangle", to: 90.0)
@@ -82,67 +126,24 @@ class PulseViewController: UIViewController {
         updateTextFields()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        subscribeToKeyboardNotifications()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        unsubscribeFromKeyboardNotifications()
-        super.viewWillDisappear(animated)
-    }
-    
-
-    // MARK: - Methods for Keyboard
-    func subscribeToKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    func unsubscribeFromKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    @objc func keyboardDidShow(_ notification: Notification) {
-        let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
-        PulseTableView.contentInset = contentInsets
-        PulseTableView.scrollIndicatorInsets = contentInsets
-    }
-    
-    @objc func keyboardWillHide(_ notification: Notification) {
-        let contentInsets = UIEdgeInsets.zero
-        PulseTableView.contentInset = contentInsets
-        PulseTableView.scrollIndicatorInsets = contentInsets
-    }
-    
-    // MARK: Method to update textfields
     func updateTextFields() {
         updateItemValues()
         
         if let _ = nmrCalc!.pulseNMR[0] {
             for k in 0..<valueTextField1.count {
-                if let value = itemValues1?[k] {
-                    valueTextField1[k].text = value
-                }
+                    valueTextField1[k].text = itemValues1[k]
             }
         }
         
         if let _ = nmrCalc!.pulseNMR[1] {
             for k in 0..<valueTextField2.count {
-                if let value = itemValues2?[k] {
-                    valueTextField2[k].text = value
-                }
+                    valueTextField2[k].text = itemValues2[k]
             }
         }
         
         if let _ = nmrCalc {
             for k in 0..<valueTextField3.count {
-                if let value = itemValues3?[k] {
-                    valueTextField3[k].text = value
-                }
+                    valueTextField3[k].text = itemValues3[k]
             }
         }
     }
@@ -199,15 +200,15 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
         switch (indexPath as NSIndexPath).section {
         case 0:
             labeltext = menuItems1[(indexPath as NSIndexPath).row]
-            valuetext = itemValues1![(indexPath as NSIndexPath).row]
+            valuetext = itemValues1[(indexPath as NSIndexPath).row]
             valueTextField1[(indexPath as NSIndexPath).row] = cell.itemValue
         case 1:
             labeltext = menuItems2[(indexPath as NSIndexPath).row]
-            valuetext = itemValues2![(indexPath as NSIndexPath).row]
+            valuetext = itemValues2[(indexPath as NSIndexPath).row]
             valueTextField2[(indexPath as NSIndexPath).row] = cell.itemValue
         case 2:
             labeltext = menuItems3[(indexPath as NSIndexPath).row]
-            valuetext = itemValues3![(indexPath as NSIndexPath).row]
+            valuetext = itemValues3[(indexPath as NSIndexPath).row]
             valueTextField3[(indexPath as NSIndexPath).row] = cell.itemValue
         default:
             labeltext = nil

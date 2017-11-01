@@ -26,7 +26,6 @@ struct NMRPulse {
     }
     
     mutating func setParameter(parameter name: String, to value: Double) -> Bool {
-        
         guard let parameter = parameters(rawValue: name) else { return false }
         
         switch parameter {
@@ -45,7 +44,6 @@ struct NMRPulse {
     }
     
     mutating func updateParameter(name: String) -> Bool {
-        
         guard let parameter = parameters(rawValue: name) else { return false }
         
         switch parameter {
@@ -62,7 +60,6 @@ struct NMRPulse {
             
         case .offset:
             break
-            
         }
         
         return true
@@ -70,11 +67,8 @@ struct NMRPulse {
     
     func describe() -> String {
         let string1 = "Pulse duration = \(self.duration) μs"
-        
         let string2 = "Flip angle = \(self.flipangle)˚"
-        
         let string3 = "ɷ₁/2π = \(self.amplitude) kHz"
-        
         let string4 = "Frequency offset = \(self.offset) Hz"
         
         return string1 + "\n" + string2 + "\n" + string3 + "\n" + string4

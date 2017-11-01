@@ -9,18 +9,23 @@
 import UIKit
 
 class SignalViewController: UIViewController {
-    
+    // MARK: - Properties
+    // Outlets
     @IBOutlet weak var SignalTableView: UITableView!
     
-    var menuItems1: [String]?
-    var menuItems2: [String]?
-    var itemValues1: [String]?
-    var itemValues2: [String]?
-    var sections: [String]?
-    var valueTextField1 = [UITextField]()
-    var valueTextField2 = [UITextField]()
+    // Constants
+    let sections = ["Time domain", "Frequency domain"]
+    let menuItems1 = [ "Number of data points", "Acquisition duration (sec)", "Dwell time (μs)"]
+    let menuItems2 = [ "Number of data points", "Spectral width (kHz)", "Frequency resolution (Hz)"]
+    
+    var itemValues1 = Array(repeating: String(), count: 3)
+    var itemValues2 = Array(repeating: String(), count: 3)
+    
+    var valueTextField1 = Array(repeating: UITextField(), count: 3)
+    var valueTextField2 = Array(repeating: UITextField(), count: 3)
     
     var nmrCalc: NMRCalc?
+    
     var activeField: UITextField?
     var textbeforeediting: String?
     
@@ -30,33 +35,7 @@ class SignalViewController: UIViewController {
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        menuItems1 = [ "Number of data points", "Acquisition duration (sec)", "Dwell time (μs)"]
-        menuItems2 = [ "Number of data points", "Spectral width (kHz)", "Frequency resolution (Hz)"]
-        sections = ["Time domain", "Frequency domain"]
-        
-        if  UIDevice.current.userInterfaceIdiom == .phone {
-            let tabbarviewcontroller = self.tabBarController as! NMRCalcTabBarController
-            nmrCalc = tabbarviewcontroller.nmrCalc
-        }
-        
-        guard nmrCalc!.setParameter("size", in: "acquisition", to: 1000.0),
-            nmrCalc!.setParameter("duration", in: "acquisition", to: 10.0),
-            nmrCalc!.evaluateParameter("dwell", in: "acquisition")
-        else {
-            warnings("Unable to comply.", message: "The value is out of range.")
-            return
-        }
-        
-        guard nmrCalc!.setParameter("size", in: "spectrum", to: 1000.0),
-            nmrCalc!.setParameter("width", in: "spectrum", to: 1.0),
-            nmrCalc!.evaluateParameter("resolution", in: "spectrum")
-        else {
-            warnings("Unable to comply.", message: "The value is out of range.")
-            return
-        }
-        
-        updateTextFields()
+        initializeView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -77,13 +56,11 @@ class SignalViewController: UIViewController {
     }
     
     @objc func keyboardDidShow(_ notification: Notification) {
-
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
         SignalTableView.contentInset = contentInsets
         SignalTableView.scrollIndicatorInsets = contentInsets
-        
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
@@ -92,19 +69,44 @@ class SignalViewController: UIViewController {
         SignalTableView.scrollIndicatorInsets = contentInsets
     }
     
-    // MARK: Methods to update textfields
+    // MARK: Methods to initialize the view
+    func initializeView() {
+        if  UIDevice.current.userInterfaceIdiom == .phone {
+            let tabbarviewcontroller = self.tabBarController as! NMRCalcTabBarController
+            nmrCalc = tabbarviewcontroller.nmrCalc
+        }
+        
+        guard nmrCalc!.setParameter("size", in: "acquisition", to: 1000.0),
+            nmrCalc!.setParameter("duration", in: "acquisition", to: 10.0),
+            nmrCalc!.evaluateParameter("dwell", in: "acquisition")
+            else {
+                warnings("Unable to comply.", message: "The value is out of range.")
+                return
+        }
+        
+        guard nmrCalc!.setParameter("size", in: "spectrum", to: 1000.0),
+            nmrCalc!.setParameter("width", in: "spectrum", to: 1.0),
+            nmrCalc!.evaluateParameter("resolution", in: "spectrum")
+            else {
+                warnings("Unable to comply.", message: "The value is out of range.")
+                return
+        }
+        
+        updateTextFields()
+    }
+    
     func updateTextFields() {
         updateItemValues()
         
         if let _ = nmrCalc!.acqNMR {
             for k in 0..<valueTextField1.count {
-                valueTextField1[k].text = itemValues1![k]
+                valueTextField1[k].text = itemValues1[k]
             }
         }
         
         if let _ = nmrCalc!.specNMR {
             for k in 0..<valueTextField2.count {
-                valueTextField2[k].text = itemValues2![k]
+                valueTextField2[k].text = itemValues2[k]
             }
         }
     }
@@ -132,15 +134,15 @@ class SignalViewController: UIViewController {
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sections!.count
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return menuItems1!.count
+            return menuItems1.count
         case 1:
-            return menuItems2!.count
+            return menuItems2.count
         default:
             return 0
         }
@@ -154,13 +156,13 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         
         switch (indexPath as NSIndexPath).section {
         case 0:
-            labeltext = menuItems1![(indexPath as NSIndexPath).row]
-            valuetext = itemValues1![(indexPath as NSIndexPath).row]
-            valueTextField1.append(cell.itemValue)
+            labeltext = menuItems1[(indexPath as NSIndexPath).row]
+            valuetext = itemValues1[(indexPath as NSIndexPath).row]
+            valueTextField1[(indexPath as NSIndexPath).row] = cell.itemValue
         case 1:
-            labeltext = menuItems2![(indexPath as NSIndexPath).row]
-            valuetext = itemValues2![(indexPath as NSIndexPath).row]
-            valueTextField2.append(cell.itemValue)
+            labeltext = menuItems2[(indexPath as NSIndexPath).row]
+            valuetext = itemValues2[(indexPath as NSIndexPath).row]
+            valueTextField2[(indexPath as NSIndexPath).row] = cell.itemValue
         default:
             labeltext = nil
         }
@@ -174,7 +176,7 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SignalTableViewHeader") as! SignalHeaderTableViewCell
         
-        cell.signalHeaderLabel.text = sections![section]
+        cell.signalHeaderLabel.text = sections[section]
         
         return cell
     }
@@ -194,15 +196,15 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
             switch (selectedItem as NSIndexPath).section {
             case 0:
                 if state {
-                    cell.itemLabel.text = menuItems1![(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = menuItems1[(selectedItem as NSIndexPath).row]
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems1![(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = "☒ " + menuItems1[(selectedItem as NSIndexPath).row]
                 }
             case 1:
                 if state {
-                    cell.itemLabel.text = menuItems2![(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = menuItems2[(selectedItem as NSIndexPath).row]
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems2![(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = "☒ " + menuItems2[(selectedItem as NSIndexPath).row]
                 }
             default:
                 break
@@ -266,9 +268,9 @@ extension SignalViewController: UITextFieldDelegate {
                 break
             }
             
-            if fixedItem == menuItems1![1] {
+            if fixedItem == menuItems1[1] {
                 secondParameter = "dwell"
-            } else if fixedItem == menuItems1![2] {
+            } else if fixedItem == menuItems1[2] {
                 secondParameter = "duration"
             } else {
                 self.warnings("Unable to comply.", message: "Something is wrong.")
@@ -286,9 +288,9 @@ extension SignalViewController: UITextFieldDelegate {
                 break
             }
             
-            if fixedItem == menuItems1![0] {
+            if fixedItem == menuItems1[0] {
                 secondParameter = "dwell"
-            } else if fixedItem == menuItems1![2] {
+            } else if fixedItem == menuItems1[2] {
                 secondParameter = "size"
             } else {
                 self.warnings("Unable to comply.", message: "Something is wrong.")
@@ -306,9 +308,9 @@ extension SignalViewController: UITextFieldDelegate {
                 break
             }
             
-            if fixedItem == menuItems1![0] {
+            if fixedItem == menuItems1[0] {
                 secondParameter = "duration"
-            } else if fixedItem == menuItems1![1] {
+            } else if fixedItem == menuItems1[1] {
                 secondParameter = "size"
             } else {
                 self.warnings("Unable to comply.", message: "Something is wrong.")
@@ -326,9 +328,9 @@ extension SignalViewController: UITextFieldDelegate {
                 break
             }
             
-            if fixedItem == menuItems2![1] {
+            if fixedItem == menuItems2[1] {
                 secondParameter = "resolution"
-            } else if fixedItem == menuItems2![2] {
+            } else if fixedItem == menuItems2[2] {
                 secondParameter = "width"
             } else {
                 self.warnings("Unable to comply.", message: "Something is wrong.")
@@ -346,9 +348,9 @@ extension SignalViewController: UITextFieldDelegate {
                 break
             }
             
-            if fixedItem == menuItems2![0] {
+            if fixedItem == menuItems2[0] {
                 secondParameter = "resolution"
-            } else if fixedItem == menuItems2![2] {
+            } else if fixedItem == menuItems2[2] {
                 secondParameter = "size"
             } else {
                 self.warnings("Unable to comply.", message: "Something is wrong.")
@@ -366,9 +368,9 @@ extension SignalViewController: UITextFieldDelegate {
                 break
             }
             
-            if fixedItem == menuItems2![0] {
+            if fixedItem == menuItems2[0] {
                 secondParameter = "width"
-            } else if fixedItem == menuItems2![1] {
+            } else if fixedItem == menuItems2[1] {
                 secondParameter = "size"
             } else {
                 self.warnings("Unable to comply.", message: "Something is wrong.")

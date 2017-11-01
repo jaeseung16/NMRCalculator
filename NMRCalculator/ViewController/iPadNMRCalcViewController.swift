@@ -26,21 +26,16 @@ class iPadNMRCalcViewController: UIViewController {
     var nucleusTable: [String]?
     var nucleus: NMRNucleus?
     var proton: NMRNucleus?
-    
     var nmrCalc: NMRCalc?
+    
     var activeField: UITextField?
     var textbeforeediting: String?
-    
-    var sections: [String]?
     
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-
         initializeView()
     }
-    
-    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -94,8 +89,7 @@ class iPadNMRCalcViewController: UIViewController {
                 self.warnings("Unable to comply.", message: error!)
             }
         }
-        
-        sections = [nmrCalc!.nucleus!.nameNucleus]
+
         updateTextFields()
     }
     
