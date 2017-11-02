@@ -38,7 +38,7 @@ class ChemCalc {
     }
 
     // MARK: - Methods to set parameter
-    func setParameter(_ name: String, to value: String) -> Bool {
+    func set(parameter name: String, to value: String) -> Bool {
         guard let category = chemCategory(rawValue: name) else { return false }
         
         switch category {
@@ -51,7 +51,7 @@ class ChemCalc {
         return true
     }
     
-    func setParameter(_ name: String, to value: Double) -> Bool {
+    func set(parameter name: String, to value: Double) -> Bool {
         guard let category = chemCategory(rawValue: name) else { return false }
         
         if value > 0 {
@@ -78,7 +78,7 @@ class ChemCalc {
     }
     
     // MARK: - Methods to update parameters
-    func updateParameter(_ name: String, flag: Bool = true) -> Bool {
+    func update(parameter name: String, flag: Bool = true) -> Bool {
         guard let category = chemCategory(rawValue: name) else { return false }
         
         switch category {
@@ -107,17 +107,17 @@ class ChemCalc {
     
     // MARK: - Convenience Methods
     func updateMolecularWeight(to value: Double, completionHandler: ((_ error: String?) -> Void) ) {
-        guard setParameter("molecularWeight", to: value) else {
+        guard set(parameter: "molecularWeight", to: value) else {
             completionHandler("The value is out of range.")
             return
         }
         
-        guard updateParameter("molSolute") else {
+        guard update(parameter: "molSolute") else {
             completionHandler("Cannot calculate the amount in mol.")
             return
         }
         
-        guard updateParameter("molConcentration") else {
+        guard update(parameter: "molConcentration") else {
             completionHandler("Cannot calculate the concentration in mM.")
             return
         }
@@ -127,22 +127,22 @@ class ChemCalc {
     }
     
     func updateMolConcentration(to value: Double, completionHandler: ((_ error: String?) -> Void)) {
-        guard setParameter("molConcentration", to: value) else {
+        guard set(parameter: "molConcentration", to: value) else {
             completionHandler("The value is out of range.")
             return
         }
         
-        guard updateParameter("molSolute", flag: false) else {
+        guard update(parameter: "molSolute", flag: false) else {
             completionHandler("Cannot calculate the amount in mol.")
             return
         }
         
-        guard updateParameter("gramSolute") else {
+        guard update(parameter: "gramSolute") else {
             completionHandler("Cannot calculate the amount in mg.")
             return
         }
         
-        guard updateParameter("wtConcentration") else {
+        guard update(parameter: "wtConcentration") else {
             completionHandler("Cannot calculate the concentration in wt%.")
             return
         }
@@ -152,22 +152,22 @@ class ChemCalc {
     }
     
     func updateWtConcentration(to value: Double, completionHandler: ((_ error: String?) -> Void)) {
-        guard setParameter("wtConcentration", to: value) else {
+        guard set(parameter: "wtConcentration", to: value) else {
             completionHandler("The value is out of range.")
             return
         }
         
-        guard updateParameter("gramSolute", flag: false) else {
+        guard update(parameter: "gramSolute", flag: false) else {
             completionHandler("Cannot calculate the amount in mg.")
             return
         }
         
-        guard updateParameter("molSolute") else {
+        guard update(parameter: "molSolute") else {
             completionHandler("Cannot calculate the amount in mol.")
             return
         }
         
-        guard updateParameter("molConcentration") else {
+        guard update(parameter: "molConcentration") else {
             completionHandler("Cannot calculate the concentration in mM.")
             return
         }
@@ -177,22 +177,22 @@ class ChemCalc {
     }
     
     func updateGramSolute(to value: Double, completionHandler: ((_ error: String?) -> Void)) {
-        guard setParameter("gramSolute", to: value) else {
+        guard set(parameter: "gramSolute", to: value) else {
             completionHandler("The value is out of range.")
             return
         }
         
-        guard updateParameter("molSolute") else {
+        guard update(parameter: "molSolute") else {
             completionHandler("Cannot calculate the amount in mol.")
             return
         }
         
-        guard updateParameter("molConcentration") else {
+        guard update(parameter: "molConcentration") else {
             completionHandler("Cannot calculate the concentration in mM.")
             return
         }
         
-        guard updateParameter("wtConcentration") else {
+        guard update(parameter: "wtConcentration") else {
             completionHandler("Cannot calculate the concentration in wt%.")
             return
         }
@@ -202,17 +202,17 @@ class ChemCalc {
     }
     
     func updateAmountSolvent(to value: Double, completionHandler: ((_ error: String?) -> Void)) {
-        guard setParameter("amountSolvent", to: value) else {
+        guard set(parameter: "amountSolvent", to: value) else {
             completionHandler("The value is out of range.")
             return
         }
         
-        guard updateParameter("molConcentration") else {
+        guard update(parameter: "molConcentration") else {
             completionHandler("Cannot calculate the concentration in mM.")
             return
         }
         
-        guard updateParameter("wtConcentration") else {
+        guard updater(parameter: "wtConcentration") else {
             completionHandler("Cannot calculate the concentration in wt%.")
             return
         }
