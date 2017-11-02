@@ -9,9 +9,22 @@
 import Foundation
 
 class NMRCalc {
+    // MARK: Shared Instance
+    static let shared: NMRCalc = {
+        let instance = NMRCalc()
+        instance.larmorNMR = NMRLarmor()
+        instance.acqNMR = NMRfid()
+        instance.specNMR = NMRSpectrum()
+        instance.pulseNMR = [NMRPulse]()
+        return instance
+    }()
     
-    // MARK: Properties
+    // MARK: - Properties
+    // MARK: Constants
+    let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
+    let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
     
+    // MARK: Variables
     var nucleus: NMRNucleus?
     
     var larmorNMR: NMRLarmor?
@@ -31,16 +44,12 @@ class NMRCalc {
         }
     }
     
-    let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
-    let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
-    
-    // MARK: Methods
-    
+    // MARK: - Methods
     init() {
+        larmorNMR = NMRLarmor()
         acqNMR = NMRfid()
         specNMR = NMRSpectrum()
         pulseNMR = [NMRPulse]()
-        larmorNMR = NMRLarmor()
     }
     
     convenience init(nucleus: NMRNucleus) {
@@ -50,8 +59,6 @@ class NMRCalc {
     }
     
     // MARK: Setting parameters for pulses
-
-    
     func calculate_dB() -> Bool {
         if let amp1 = pulseNMR[0]?.amplitude {
             if let amp2 = pulseNMR[1]?.amplitude {
@@ -66,7 +73,6 @@ class NMRCalc {
     }
     
     // MARK: Ernst angle
-    
     enum ernst_parameters: String {
         case repetition
         case relaxation
@@ -120,7 +126,6 @@ class NMRCalc {
     }
     
     // MARK:
-    
     enum calcCategory: String {
         case resonance
         case acquisition
