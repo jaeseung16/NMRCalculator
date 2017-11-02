@@ -9,69 +9,62 @@
 import Foundation
 
 struct NMRPulse {
-    var duration = 0.0 // pulse duration in μs
-    var flipangle = 0.0 // flip angle in degree
-    public var amplitude = 0.0 // RF amplitude in kHz
-    var offset = 0.0 // frequency offset in Hz
+    var duration: Double = 10.0 // pulse duration in μs
+    var flipangle: Double = 90.0 // flip angle in degree
+    var amplitude: Double // RF amplitude in kHz
     
-    enum parameters: String {
+    enum Parameter: String {
         case duration
         case flipangle
         case amplitude
-        case offset
     }
     
     init() {
-        
+        amplitude = ( flipangle / duration ) * ( 1000.0 / 360.0 )
     }
     
-    mutating func setParameter(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+    mutating func set(parameter name: String, to value: Double) -> Bool {
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .amplitude:
-            self.amplitude = value
+            amplitude = value
+            
         case .duration:
             guard value >= 0 else { return false }
-            self.duration = value
+            duration = value
+            
         case .flipangle:
-            self.flipangle = value
-        case .offset:
-            self.offset = value
+            flipangle = value
         }
         
         return true
     }
     
-    mutating func updateParameter(name: String) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+    mutating func update(parameter name: String) -> Bool {
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .duration:
-            guard (self.amplitude != 0) else { return false }
-            self.duration = ( self.flipangle / self.amplitude ) * ( 1000.0 / 360.0 )
+            guard (amplitude != 0) else { return false }
+            duration = ( flipangle / amplitude ) * ( 1000.0 / 360.0 )
             
         case .amplitude:
-            guard (self.duration != 0) else { return false }
-            self.amplitude = ( self.flipangle / self.duration ) * ( 1000.0 / 360.0 )
+            guard (duration != 0) else { return false }
+            amplitude = ( flipangle / duration ) * ( 1000.0 / 360.0 )
             
         case .flipangle:
-            self.flipangle = ( self.duration * self.amplitude ) * ( 360.0 / 1000.0 )
-            
-        case .offset:
-            break
+            flipangle = ( duration * amplitude ) * ( 360.0 / 1000.0 )
         }
         
         return true
     }
     
     func describe() -> String {
-        let string1 = "Pulse duration = \(self.duration) μs"
-        let string2 = "Flip angle = \(self.flipangle)˚"
-        let string3 = "ɷ₁/2π = \(self.amplitude) kHz"
-        let string4 = "Frequency offset = \(self.offset) Hz"
-        
-        return string1 + "\n" + string2 + "\n" + string3 + "\n" + string4
+        let string1 = "Pulse duration = \(duration) μs"
+        let string2 = "Flip angle = \(flipangle)˚"
+        let string3 = "ɷ₁/2π = \(amplitude) kHz"
+        return string1 + "\n" + string2 + "\n" + string3
     }
     
 }

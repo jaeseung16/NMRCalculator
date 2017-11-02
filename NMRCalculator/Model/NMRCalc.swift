@@ -145,19 +145,19 @@ class NMRCalc {
             
         case .acquisition:
             guard acqNMR != nil else { return false }
-            return acqNMR!.setFID(parameter: name, to: value)
+            return acqNMR!.set(parameter: name, to: value)
             
         case .spectrum:
             guard specNMR != nil else { return false }
-            return specNMR!.setSpectrum(parameter: name, to: value)
+            return specNMR!.set(parameter: name, to: value)
             
         case .pulse1:
             guard pulseNMR[0] != nil else { return false }
-            return pulseNMR[0]!.setParameter(parameter: name, to: value)
+            return pulseNMR[0]!.set(parameter: name, to: value)
             
         case .pulse2:
             guard pulseNMR[1] != nil else { return false }
-            return pulseNMR[1]!.setParameter(parameter: name, to: value)
+            return pulseNMR[1]!.set(parameter: name, to: value)
             
         case .ernstAngle:
             return set_ernstparameter(name, to: value)
@@ -175,19 +175,19 @@ class NMRCalc {
             
         case .acquisition:
             guard acqNMR != nil else { return false }
-            return acqNMR!.updateParameters(name: name)
+            return acqNMR!.update(parameter: name)
             
         case .spectrum:
             guard specNMR != nil else { return false }
-            return specNMR!.updateParameter(name: name)
+            return specNMR!.update(parameter: name)
             
         case .pulse1:
             guard pulseNMR[0] != nil else { return false }
-            return pulseNMR[0]!.updateParameter(name: name)
+            return pulseNMR[0]!.update(parameter: name)
             
         case .pulse2:
             guard pulseNMR[1] != nil else { return false }
-            return pulseNMR[1]!.updateParameter(name: name)
+            return pulseNMR[1]!.update(parameter: name)
             
         case .ernstAngle:
             return evaluate_ernstparameter(name)
