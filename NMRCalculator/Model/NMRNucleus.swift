@@ -40,7 +40,7 @@ struct NMRNucleus {
     init(identifier: String) {
         let items = identifier.components(separatedBy: " ")
         
-        identifier = items[0]
+        self.identifier = items[0]
         nameNucleus = items[1]
         atomicNumber = items[2]
         atomicWeight = items[3]

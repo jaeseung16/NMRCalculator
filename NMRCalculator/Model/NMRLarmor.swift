@@ -9,13 +9,16 @@
 import Foundation
 
 struct NMRLarmor {
+    // MARK: Properties
+    // Constants
     let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
     let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
     
-    var frequencyLarmor: Double = 0.0
-    var fieldExternal: Double = 0.0
-    var frequencyProton: Double = 0.0
-    var frequencyElectron: Double = 0.0
+    // Variables
+    var frequencyLarmor: Double // in MHz
+    var fieldExternal: Double = 1.0 // in T
+    var frequencyProton: Double // in MHz
+    var frequencyElectron: Double // in GHz
     
     var nucleus: NMRNucleus
     
@@ -26,62 +29,67 @@ struct NMRLarmor {
         case electron
     }
     
+    // MARK: - Methods
+    // The default nucleus is proton.
     init() {
         self.nucleus = NMRNucleus()
+        frequencyLarmor = fieldExternal * nucleus.γ
+        frequencyProton = fieldExternal * gammaProton
+        frequencyElectron = fieldExternal * gammaElectron
     }
     
     init(nucleus: NMRNucleus) {
         self.nucleus = nucleus
+        frequencyLarmor = fieldExternal * nucleus.γ
+        frequencyProton = fieldExternal * gammaProton
+        frequencyElectron = fieldExternal * gammaElectron
     }
     
-    mutating func setParameter(parameter name: String, to value: Double) -> Bool {
+    mutating func set(parameter name: String, to value: Double) -> Bool {
         guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .field:
-            self.fieldExternal = value
+            fieldExternal = value
         case .larmor:
-            self.frequencyLarmor = value
-            self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
+            frequencyLarmor = value
+            fieldExternal = frequencyLarmor / nucleus.γ
         case .proton:
             self.frequencyProton = value
-            self.fieldExternal = self.frequencyProton / self.gammaProton
+            fieldExternal = frequencyProton / gammaProton
         case .electron:
-            self.frequencyElectron = value
-            self.fieldExternal = self.frequencyElectron / self.gammaElectron
+            frequencyElectron = value
+            fieldExternal = frequencyElectron / gammaElectron
         }
         
         return true
     }
     
-    mutating func updateParameter(name: String) -> Bool {
-        
+    mutating func update(parameter name: String) -> Bool {
         guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .field:
-            self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
+            fieldExternal = frequencyLarmor / nucleus.γ
 
         case .larmor:
-            self.frequencyLarmor = self.fieldExternal * self.nucleus.γ
+            frequencyLarmor = fieldExternal * nucleus.γ
             
         case .proton:
-            self.frequencyProton = self.fieldExternal * self.gammaProton
+            frequencyProton = fieldExternal * gammaProton
             
         case .electron:
-            self.frequencyElectron = self.fieldExternal * self.gammaElectron
+            frequencyElectron = fieldExternal * gammaElectron
         }
         
         return true
     }
     
     public func describe() -> String {
-        let string1 = "External field = \(self.fieldExternal) T"
-        let string2 = "Larmor Frequency = \(self.frequencyLarmor) MHz"
-        let string3 = "Larmor Frequency of Proton = \(self.frequencyProton) MHz"
-        let string4 = "Larmor Frequency of Electron = \(self.frequencyElectron) MHz"
-        
+        let string1 = "External field = \(fieldExternal) T"
+        let string2 = "Larmor Frequency = \(frequencyLarmor) MHz"
+        let string3 = "Larmor Frequency of Proton = \(frequencyProton) MHz"
+        let string4 = "Larmor Frequency of Electron = \(frequencyElectron) GHz"
         return string1 + "\n" + string2 + "\n" + string3 + "\n" + string4
     }
-    
 }

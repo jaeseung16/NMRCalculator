@@ -91,14 +91,14 @@ class PulseViewController: UIViewController {
     // MARK: Method to initialize the view
     func initializeView() {
         var pulse1 = NMRPulse()
-        let _ = pulse1.setParameter(parameter: "duration", to: 10.0)
-        let _ = pulse1.setParameter(parameter: "flipangle", to: 90.0)
-        let _ = pulse1.updateParameter(name: "amplitude")
+        let _ = pulse1.set(parameter: "duration", to: 10.0)
+        let _ = pulse1.set(parameter: "flipangle", to: 90.0)
+        let _ = pulse1.update(parameter: "amplitude")
         
         var pulse2 = NMRPulse()
-        let _ = pulse2.setParameter(parameter: "amplitude", to: 0.1)
-        let _ = pulse2.setParameter(parameter: "flipangle", to: 360.0)
-        let _ = pulse2.updateParameter(name: "duration")
+        let _ = pulse2.set(parameter: "amplitude", to: 0.1)
+        let _ = pulse2.set(parameter: "flipangle", to: 360.0)
+        let _ = pulse2.update(parameter: "duration")
         
         nmrCalc!.pulseNMR.append(pulse1)
         nmrCalc!.pulseNMR.append(pulse2)

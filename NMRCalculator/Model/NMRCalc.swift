@@ -141,7 +141,7 @@ class NMRCalc {
         switch category {
         case .resonance:
             guard larmorNMR != nil else { return false }
-            return larmorNMR!.setParameter(parameter: name, to: value)
+            return larmorNMR!.set(parameter: name, to: value)
             
         case .acquisition:
             guard acqNMR != nil else { return false }
@@ -171,7 +171,7 @@ class NMRCalc {
         switch category {
         case .resonance:
             guard larmorNMR != nil else { return false }
-            return larmorNMR!.updateParameter(name: name)
+            return larmorNMR!.update(parameter: name)
             
         case .acquisition:
             guard acqNMR != nil else { return false }
