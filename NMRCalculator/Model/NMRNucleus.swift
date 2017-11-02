@@ -9,6 +9,7 @@
 import Foundation
 
 struct NMRNucleus {
+    // MARK: Properties
     var identifier: String
     var nameNucleus: String
     var atomicNumber: String
@@ -24,37 +25,34 @@ struct NMRNucleus {
         }
     }
     
+    // MARK: - Methods
     init() {
-        self.identifier = "1H"
-        self.nameNucleus = "Proton"
-        self.atomicNumber = "1"
-        self.atomicWeight = "1"
-        self.symbolNucleus = "H"
-        self.naturalAbundance = "99.9885"
-        self.nuclearSpin = "1/2"
-        self.gyromagneticRatio = String( 26.7522128 / 2.0 / Double.pi * 10.0 )
+        identifier = "1H"
+        nameNucleus = "Proton"
+        atomicNumber = "1"
+        atomicWeight = "1"
+        symbolNucleus = "H"
+        naturalAbundance = "99.9885"
+        nuclearSpin = "1/2"
+        gyromagneticRatio = String( 26.7522128 / 2.0 / Double.pi * 10.0 )
     }
     
     init(identifier: String) {
         let items = identifier.components(separatedBy: " ")
         
-        self.identifier = items[0]
-        self.nameNucleus = items[1]
-        self.atomicNumber = items[2]
-        self.atomicWeight = items[3]
-        self.symbolNucleus = items[4]
-        self.naturalAbundance = items[5]
-        self.nuclearSpin = items[6]
-        self.gyromagneticRatio = String( Double(items[7])! / 2.0 / Double.pi * 10.0 )
+        identifier = items[0]
+        nameNucleus = items[1]
+        atomicNumber = items[2]
+        atomicWeight = items[3]
+        symbolNucleus = items[4]
+        naturalAbundance = items[5]
+        nuclearSpin = items[6]
+        gyromagneticRatio = String( Double(items[7])! / 2.0 / Double.pi * 10.0 )
     }
     
     func describe() -> String {
-        
         let string1 = "Nucleus: \(nameNucleus)"
-        
-        
         let string2 = "gyromagneticratio = \(γ) MHz/T"
-        
         return string1 + "\n" + string2
     }
     
