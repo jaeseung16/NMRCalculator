@@ -14,7 +14,7 @@ struct NMRErnstAngle {
     var relaxationTime: Double = 1.0 // Logitudinal Relaxation Time (T1) in sec
     var angleErnst: Double
     
-    enum Parameters: String {
+    enum Parameter: String {
         case repetition
         case relaxation
         case angleErnst
@@ -26,7 +26,7 @@ struct NMRErnstAngle {
     }
     
     mutating func set(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameters(rawValue: name) else { return false }
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .repetition:
@@ -41,7 +41,7 @@ struct NMRErnstAngle {
     }
     
     mutating func update(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameters(rawValue: name) else { return false }
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .repetition:

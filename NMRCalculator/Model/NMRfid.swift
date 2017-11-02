@@ -14,7 +14,7 @@ struct NMRfid {
     var duration: Double = 10.0 // duration in ms
     var dwell: Double // dwell time in μs
     
-    enum Parameters: String {
+    enum Parameter: String {
         case size
         case duration
         case dwell
@@ -26,7 +26,7 @@ struct NMRfid {
     }
     
     mutating func set(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameters(rawValue: name) else { return false }
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .size:
@@ -47,7 +47,7 @@ struct NMRfid {
     }
     
     mutating func update(parameter name: String) -> Bool {
-        guard let parameter = Parameters(rawValue: name) else { return false }
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .size:
