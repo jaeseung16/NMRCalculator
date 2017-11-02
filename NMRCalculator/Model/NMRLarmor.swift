@@ -19,7 +19,7 @@ struct NMRLarmor {
     
     var nucleus: NMRNucleus
     
-    enum parameters: String {
+    enum Parameter: String {
         case field
         case larmor
         case proton
@@ -35,8 +35,7 @@ struct NMRLarmor {
     }
     
     mutating func setParameter(parameter name: String, to value: Double) -> Bool {
-        
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .field:
@@ -57,7 +56,7 @@ struct NMRLarmor {
     
     mutating func updateParameter(name: String) -> Bool {
         
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameter(rawValue: name) else { return false }
         
         switch parameter {
         case .field:
@@ -78,11 +77,8 @@ struct NMRLarmor {
     
     public func describe() -> String {
         let string1 = "External field = \(self.fieldExternal) T"
-        
         let string2 = "Larmor Frequency = \(self.frequencyLarmor) MHz"
-        
         let string3 = "Larmor Frequency of Proton = \(self.frequencyProton) MHz"
-        
         let string4 = "Larmor Frequency of Electron = \(self.frequencyElectron) MHz"
         
         return string1 + "\n" + string2 + "\n" + string3 + "\n" + string4
