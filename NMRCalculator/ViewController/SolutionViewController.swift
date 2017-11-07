@@ -64,8 +64,7 @@ class SolutionViewController: UIViewController {
 extension SolutionViewController {
     func updateTextFields() {
         updateItemValues()
-        
-        // copy itemValues into valueTextField
+
         for k in 0..<valueTextField.count {
             valueTextField[k].text = itemValues[k]
         }
@@ -126,7 +125,7 @@ extension SolutionViewController: UITextFieldDelegate {
         guard let text = textField.text else { return }
         
         if textField == ChemName {
-            let _ = chemCalc.setParameter("chemical", to: text)
+            let _ = chemCalc.set(parameter: "chemical", to: text)
         } else if let value = Double(text) {
             switch textField {
             case valueTextField[0]: // Textfield for molecular weight

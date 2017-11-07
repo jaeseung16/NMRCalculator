@@ -212,7 +212,7 @@ class ChemCalc {
             return
         }
         
-        guard updater(parameter: "wtConcentration") else {
+        guard update(parameter: "wtConcentration") else {
             completionHandler("Cannot calculate the concentration in wt%.")
             return
         }
