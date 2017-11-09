@@ -127,12 +127,21 @@ class NucleusViewController: UIViewController {
     }
     
     // MARK: IBActions
-    @IBAction func searchwebButtonDown(_ sender: UIBarButtonItem) {
-        var queryString = "https://www.google.com/search?q="
-        queryString += nucleusName.text!
-        queryString += "&oe=utf-8&ie=utf-8"
+    @IBAction func searchWebButtonDown(_ sender: UIBarButtonItem) {
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "www.google.com"
+        component.path = "/search"
+        component.queryItems = [URLQueryItem]()
         
-        let url : URL = URL(string: queryString)!
+        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "q", value: nucleusName.text!) )
+        
+        guard let url = component.url else {
+            warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
+            return
+        }
         
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
