@@ -9,8 +9,8 @@
 import UIKit
 
 class SolutionViewController: UIViewController {
-    
-
+    // MARK: Properties
+    // Outlets
     @IBOutlet weak var SolutionTableView: UITableView!
     @IBOutlet weak var ChemName: UITextField!
     
@@ -22,6 +22,7 @@ class SolutionViewController: UIViewController {
     var chemCalc = ChemCalc()
     var textbeforeediting: String?
     
+    // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTextFields()
@@ -38,12 +39,11 @@ class SolutionViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // MARK: Keyboard
     func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-    
-    // MARK: Keyboard
     
     @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
@@ -57,6 +57,29 @@ class SolutionViewController: UIViewController {
         let contentInsets = UIEdgeInsets.zero
         SolutionTableView.contentInset = contentInsets
         SolutionTableView.scrollIndicatorInsets = contentInsets
+    }
+    
+    // MARK: IBActions
+    
+    @IBAction func searchWebButtonDown(_ sender: UIBarButtonItem) {
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "www.google.com"
+        component.path = "/search"
+        component.queryItems = [URLQueryItem]()
+        
+        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "q", value: ChemName.text!) )
+        
+        guard let url = component.url else {
+            warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
+            return
+        }
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
 }
 

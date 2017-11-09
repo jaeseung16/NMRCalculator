@@ -127,7 +127,7 @@ class NucleusViewController: UIViewController {
     }
     
     // MARK: IBActions
-    @IBAction func searchwebButtonDown(_ sender: UIButton) {
+    @IBAction func searchwebButtonDown(_ sender: UIBarButtonItem) {
         var queryString = "https://www.google.com/search?q="
         queryString += nucleusName.text!
         queryString += "&oe=utf-8&ie=utf-8"
