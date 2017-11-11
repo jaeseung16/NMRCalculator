@@ -31,7 +31,7 @@ class PulseViewController: UIViewController {
     var valueTextField2 = Array(repeating: UITextField(), count: 4)
     var valueTextField3 = Array(repeating: UITextField(), count: 3)
     
-    var nmrCalc: NMRCalc?
+    var nmrCalc = NMRCalc.shared
     
     var activeField: UITextField?
     var textbeforeediting: String?
@@ -42,14 +42,6 @@ class PulseViewController: UIViewController {
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        
-        if  UIDevice.current.userInterfaceIdiom == .phone {
-            let tabbarviewcontroller = self.tabBarController as! NMRCalcTabBarController
-            nmrCalc = tabbarviewcontroller.nmrCalc
-        }
-        
         initializeView()
     }
     
@@ -100,25 +92,25 @@ class PulseViewController: UIViewController {
         let _ = pulse2.set(parameter: "flipangle", to: 360.0)
         let _ = pulse2.update(parameter: "duration")
         
-        nmrCalc!.pulseNMR.append(pulse1)
-        nmrCalc!.pulseNMR.append(pulse2)
+        nmrCalc.pulseNMR.append(pulse1)
+        nmrCalc.pulseNMR.append(pulse2)
         
-        guard nmrCalc!.calculate_dB() else {
+        guard nmrCalc.calculate_dB() else {
             warnings("Unable to comply.", message: "Cannot compare the powers.")
             return
         }
         
-        guard nmrCalc!.set_ernstparameter("repetition", to: 1.0) else {
+        guard nmrCalc.set_ernstparameter("repetition", to: 1.0) else {
             warnings("Unable to comply.", message: "Cannot initialize the repetition time.")
             return
         }
         
-        guard nmrCalc!.set_ernstparameter("relaxation", to: 1.0) else {
+        guard nmrCalc.set_ernstparameter("relaxation", to: 1.0) else {
             warnings("Unable to comply.", message: "Cannot initialize the relaxation time.")
             return
         }
         
-        guard nmrCalc!.evaluate_ernstparameter("angle") else {
+        guard nmrCalc.evaluate_ernstparameter("angle") else {
             warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
             return
         }
@@ -129,37 +121,33 @@ class PulseViewController: UIViewController {
     func updateTextFields() {
         updateItemValues()
         
-        if let _ = nmrCalc!.pulseNMR[0] {
+        if let _ = nmrCalc.pulseNMR[0] {
             for k in 0..<valueTextField1.count {
                     valueTextField1[k].text = itemValues1[k]
             }
         }
         
-        if let _ = nmrCalc!.pulseNMR[1] {
+        if let _ = nmrCalc.pulseNMR[1] {
             for k in 0..<valueTextField2.count {
                     valueTextField2[k].text = itemValues2[k]
             }
         }
         
-        if let _ = nmrCalc {
-            for k in 0..<valueTextField3.count {
-                    valueTextField3[k].text = itemValues3[k]
-            }
+        for k in 0..<valueTextField3.count {
+            valueTextField3[k].text = itemValues3[k]
         }
     }
     
     func updateItemValues() {
-        if let pulse = nmrCalc!.pulseNMR[0] {
+        if let pulse = nmrCalc.pulseNMR[0] {
             itemValues1 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
         }
         
-        if let pulse = nmrCalc!.pulseNMR[1] {
-            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc!.relativepower)?.format(".5"))! ]
+        if let pulse = nmrCalc.pulseNMR[1] {
+            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc.relativepower)?.format(".5"))! ]
         }
         
-        if let calc = nmrCalc {
-            itemValues3 = [(calc.repetitionTime)!.format(".3"),(calc.relaxationTime)!.format(".3"), ((calc.angleErnst)!*180.0/Double.pi).format(".4") ]
-        }
+        itemValues3 = [(nmrCalc.repetitionTime)!.format(".3"),(nmrCalc.relaxationTime)!.format(".3"), ((nmrCalc.angleErnst)!*180.0/Double.pi).format(".4") ]
     }
     
     // MARK: Warning messages
@@ -438,8 +426,8 @@ extension PulseViewController: UITextFieldDelegate {
             }
             
         case valueTextField2[3]:
-            nmrCalc!.relativepower = x
-            let amp0 = nmrCalc!.pulseNMR[0]!.amplitude
+            nmrCalc.relativepower = x
+            let amp0 = nmrCalc.pulseNMR[0]!.amplitude
             value = pow(10.0, 1.0 * x / 20.0) * amp0
 
             firstParameter = "amplitude"
@@ -510,14 +498,14 @@ extension PulseViewController: UITextFieldDelegate {
             return
         }
         
-        nmrCalc!.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
+        nmrCalc.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
                 textField.text = self.textbeforeediting
             }
         }
         
-        if nmrCalc!.calculate_dB() == false {
+        if nmrCalc.calculate_dB() == false {
             warnings("Unable to comply.", message: "Cannot compare the powers.")
         }
         

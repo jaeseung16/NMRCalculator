@@ -24,7 +24,7 @@ class SignalViewController: UIViewController {
     var valueTextField1 = Array(repeating: UITextField(), count: 3)
     var valueTextField2 = Array(repeating: UITextField(), count: 3)
     
-    var nmrCalc: NMRCalc?
+    var nmrCalc = NMRCalc.shared
     
     var activeField: UITextField?
     var textbeforeediting: String?
@@ -71,22 +71,17 @@ class SignalViewController: UIViewController {
     
     // MARK: Methods to initialize the view
     func initializeView() {
-        if  UIDevice.current.userInterfaceIdiom == .phone {
-            let tabbarviewcontroller = self.tabBarController as! NMRCalcTabBarController
-            nmrCalc = tabbarviewcontroller.nmrCalc
-        }
-        
-        guard nmrCalc!.setParameter("size", in: "acquisition", to: 1000.0),
-            nmrCalc!.setParameter("duration", in: "acquisition", to: 10.0),
-            nmrCalc!.evaluateParameter("dwell", in: "acquisition")
+        guard nmrCalc.setParameter("size", in: "acquisition", to: 1000.0),
+            nmrCalc.setParameter("duration", in: "acquisition", to: 10.0),
+            nmrCalc.evaluateParameter("dwell", in: "acquisition")
             else {
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
         }
         
-        guard nmrCalc!.setParameter("size", in: "spectrum", to: 1000.0),
-            nmrCalc!.setParameter("width", in: "spectrum", to: 1.0),
-            nmrCalc!.evaluateParameter("resolution", in: "spectrum")
+        guard nmrCalc.setParameter("size", in: "spectrum", to: 1000.0),
+            nmrCalc.setParameter("width", in: "spectrum", to: 1.0),
+            nmrCalc.evaluateParameter("resolution", in: "spectrum")
             else {
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
@@ -98,13 +93,13 @@ class SignalViewController: UIViewController {
     func updateTextFields() {
         updateItemValues()
         
-        if let _ = nmrCalc!.acqNMR {
+        if let _ = nmrCalc.acqNMR {
             for k in 0..<valueTextField1.count {
                 valueTextField1[k].text = itemValues1[k]
             }
         }
         
-        if let _ = nmrCalc!.specNMR {
+        if let _ = nmrCalc.specNMR {
             for k in 0..<valueTextField2.count {
                 valueTextField2[k].text = itemValues2[k]
             }
@@ -112,11 +107,11 @@ class SignalViewController: UIViewController {
     }
     
     func updateItemValues() {
-        if let acq = nmrCalc!.acqNMR {
+        if let acq = nmrCalc.acqNMR {
             itemValues1 = [ "\(acq.size)", (acq.duration/1_000.0).format(".3"), acq.dwell.format(".3") ]
         }
         
-        if let spec = nmrCalc!.specNMR {
+        if let spec = nmrCalc.specNMR {
             itemValues2 = [ "\(spec.size)", (spec.width).format(".3"), (spec.resolution).format(".3") ]
         }
     }
@@ -384,7 +379,7 @@ extension SignalViewController: UITextFieldDelegate {
             return
         }
 
-        nmrCalc!.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
+        nmrCalc.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
                 textField.text = self.textbeforeediting
