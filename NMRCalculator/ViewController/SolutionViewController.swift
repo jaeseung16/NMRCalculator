@@ -25,6 +25,35 @@ class SolutionViewController: UIViewController {
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let name = UserDefaults.standard.object(forKey: "ChemName") as? String {
+            ChemName.text = name
+        } else {
+            UserDefaults.standard.set(ChemName.text!, forKey: "ChemName")
+        }
+        
+        if let molecularWeight = UserDefaults.standard.object(forKey: "MolecularWeight") as? Double {
+            chemCalc.molecularWeight = molecularWeight
+        } else {
+            UserDefaults.standard.set(chemCalc.molecularWeight, forKey: "MolecularWeight")
+        }
+        
+        if let amountSolvent = UserDefaults.standard.object(forKey: "AmountSolvent") as? Double {
+            chemCalc.amountSolvent = amountSolvent
+        } else {
+             UserDefaults.standard.set(chemCalc.amountSolvent, forKey: "AmountSolvent")
+        }
+        
+        if let gramSolute = UserDefaults.standard.object(forKey: "GramSolute") as? Double {
+            chemCalc.updateGramSolute(to: gramSolute) { (error) in
+                if (error != nil) {
+                    warnings("Unable to comply", message: error!)
+                }
+            }
+        } else {
+            UserDefaults.standard.set(chemCalc.gramSolute, forKey: "GramSolute")
+        }
+        
         updateTextFields()
     }
     
@@ -60,7 +89,6 @@ class SolutionViewController: UIViewController {
     }
     
     // MARK: IBActions
-    
     @IBAction func searchWebButtonDown(_ sender: UIBarButtonItem) {
         var component = URLComponents()
         component.scheme = "https"
@@ -149,6 +177,7 @@ extension SolutionViewController: UITextFieldDelegate {
         
         if textField == ChemName {
             let _ = chemCalc.set(parameter: "chemical", to: text)
+            UserDefaults.standard.set(ChemName.text!, forKey: "ChemName")
         } else if let value = Double(text) {
             switch textField {
             case valueTextField[0]: // Textfield for molecular weight
@@ -189,6 +218,9 @@ extension SolutionViewController: UITextFieldDelegate {
             textField.text = textbeforeediting
         }
         
+        UserDefaults.standard.set(chemCalc.molecularWeight, forKey: "MolecularWeight")
+        UserDefaults.standard.set(chemCalc.amountSolvent, forKey: "AmountSolvent")
+        UserDefaults.standard.set(chemCalc.gramSolute, forKey: "GramSolute")
         updateTextFields()
     }
 }

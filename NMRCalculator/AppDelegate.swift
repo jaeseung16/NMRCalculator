@@ -10,11 +10,19 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    // MARK: Properties
     var window: UIWindow?
 
-
+    // MARK: Methods
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        return true
+    }
+    
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        print("Check First Launch")
+        checkIfFirstLaunch()
         return true
     }
 
@@ -40,6 +48,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+}
 
+extension AppDelegate {
+    func checkIfFirstLaunch() {
+        if UserDefaults.standard.bool(forKey: "HasLaunchedBefore") {
+            print("Not First launch")
+        } else {
+            UserDefaults.standard.set(true, forKey: "HasLaunchedBefore")
+            UserDefaults.standard.synchronize()
+        }
+    }
 }
 

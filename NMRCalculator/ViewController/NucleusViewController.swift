@@ -32,7 +32,7 @@ class NucleusViewController: UIViewController {
     var nucleusTable: [String]?
     var nucleus: NMRNucleus?
     var proton: NMRNucleus?
-    var nmrCalc: NMRCalc?
+    var nmrCalc = NMRCalc.shared
     
     var activeField: UITextField?
     var textbeforeediting: String?
@@ -58,11 +58,19 @@ class NucleusViewController: UIViewController {
         nucleusTable = readtable()
         
         proton = NMRNucleus(identifier: nucleusTable![0])
-        nucleus = NMRNucleus(identifier: nucleusTable![0])
         
+        if let index = UserDefaults.standard.object(forKey: "Nucleus") as? Int {
+            nucleus = NMRNucleus(identifier: nucleusTable![index])
+            NucleusPicker.selectRow(index, inComponent: 0, animated: true)
+        } else {
+            nucleus = NMRNucleus(identifier: nucleusTable![0])
+            NucleusPicker.selectRow(0, inComponent: 0, animated: true)
+            UserDefaults.standard.set(0, forKey: "Nucleus")
+        }
+
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
-        nmrCalc!.updateLarmor("field", to: 1.0) { error in
+        nmrCalc.updateLarmor("field", to: 1.0) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
             }
@@ -88,19 +96,19 @@ class NucleusViewController: UIViewController {
     func updateTextFields() {
         updateItemValues()
         
-        if let _ = nmrCalc?.larmorNMR {
+        if let _ = nmrCalc.larmorNMR {
             for k in 0..<valueTextField.count {
                 valueTextField[k].text = itemValues[k]
             }
         }
         
-        if let nucleus = nmrCalc?.nucleus {
+        if let nucleus = nmrCalc.nucleus {
             nucleusName.text = nucleus.nameNucleus
         }
     }
     
     func updateItemValues() {
-        if let larmor = nmrCalc?.larmorNMR {
+        if let larmor = nmrCalc.larmorNMR {
             itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
         }
     }
@@ -193,20 +201,21 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         nucleus = NMRNucleus(identifier: nucleusTable![row])
-        nmrCalc!.nucleus = nucleus!
-        nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
+        nmrCalc.nucleus = nucleus!
+        nmrCalc.larmorNMR = NMRLarmor(nucleus: nucleus!)
         
         guard let value = Double(valueTextField[1].text!) else {
             warnings("Unable to comply.", message: "The input should be a number.")
             return
         }
         
-        nmrCalc!.updateLarmor("field", to: value) { error in
+        nmrCalc.updateLarmor("field", to: value) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
             }
         }
         
+        UserDefaults.standard.set(row, forKey: "Nucleus")
         updateTextFields()
     }
 }
@@ -244,8 +253,8 @@ extension NucleusViewController: UITextFieldDelegate {
         } else {
             NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
             nucleus = NMRNucleus(identifier: nucleusTable![selected])
-            nmrCalc!.nucleus = nucleus
-            nucleusName.text = nmrCalc!.nucleus!.nameNucleus
+            nmrCalc.nucleus = nucleus
+            nucleusName.text = nmrCalc.nucleus!.nameNucleus
             
             return true
         }
@@ -293,7 +302,7 @@ extension NucleusViewController: UITextFieldDelegate {
             return
         }
         
-        nmrCalc!.updateLarmor(firstParameter, to: value) { error in
+        nmrCalc.updateLarmor(firstParameter, to: value) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
                 textField.text = self.textbeforeediting
