@@ -80,7 +80,15 @@ class iPadNMRCalcViewController: UIViewController {
         nucleusTable = readtable()
         
         proton = NMRNucleus(identifier: nucleusTable![0])
-        nucleus = NMRNucleus(identifier: nucleusTable![0])
+        
+        if let index = UserDefaults.standard.object(forKey: "Nucleus") as? Int {
+            nucleus = NMRNucleus(identifier: nucleusTable![index])
+            NucleusPicker.selectRow(index, inComponent: 0, animated: true)
+        } else {
+            nucleus = NMRNucleus(identifier: nucleusTable![0])
+            NucleusPicker.selectRow(0, inComponent: 0, animated: true)
+            UserDefaults.standard.set(0, forKey: "Nucleus")
+        }
         
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
@@ -199,6 +207,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
             }
         }
         
+        UserDefaults.standard.set(row, forKey: "Nucleus")
         updateTextFields()
     }
 }

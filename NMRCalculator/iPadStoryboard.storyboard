@@ -146,7 +146,7 @@
             </objects>
             <point key="canvasLocation" x="-556" y="149"/>
         </scene>
-        <!--Calc Master View Controller-->
+        <!--NMR Calculator-->
         <scene sceneID="rBD-7l-KFj">
             <objects>
                 <tableViewController clearsSelectionOnViewWillAppear="NO" id="ONM-gr-85D" customClass="NMRCalcMasterViewController" customModule="NMRCalculator" customModuleProvider="target" sceneMemberID="viewController">
@@ -188,7 +188,7 @@
                             <outlet property="delegate" destination="ONM-gr-85D" id="V9M-mu-mCG"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="dGB-jv-LQI"/>
+                    <navigationItem key="navigationItem" title="NMR Calculator" id="dGB-jv-LQI"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E9U-qO-djH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

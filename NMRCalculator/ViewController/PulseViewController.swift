@@ -83,13 +83,39 @@ class PulseViewController: UIViewController {
     // MARK: Method to initialize the view
     func initializeView() {
         var pulse1 = NMRPulse()
-        let _ = pulse1.set(parameter: "duration", to: 10.0)
-        let _ = pulse1.set(parameter: "flipangle", to: 90.0)
+        
+        if let duration = UserDefaults.standard.object(forKey: "Duration1") as? Double {
+            let _ = pulse1.set(parameter: "duration", to: duration)
+        } else {
+            let _ = pulse1.set(parameter: "duration", to: 10.0)
+            UserDefaults.standard.set(10.0, forKey: "Duration1")
+        }
+        
+        if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle1") as? Double {
+            let _ = pulse1.set(parameter: "flipangle", to: flipAngle)
+        } else {
+            let _ = pulse1.set(parameter: "flipangle", to: 90.0)
+            UserDefaults.standard.set(90.0, forKey: "FlipAngle1")
+        }
+   
         let _ = pulse1.update(parameter: "amplitude")
         
         var pulse2 = NMRPulse()
-        let _ = pulse2.set(parameter: "amplitude", to: 0.1)
-        let _ = pulse2.set(parameter: "flipangle", to: 360.0)
+        
+        if let amplitude = UserDefaults.standard.object(forKey: "Amplitude2") as? Double {
+            let _ = pulse2.set(parameter: "amplitude", to: amplitude)
+        } else {
+            let _ = pulse2.set(parameter: "amplitude", to: 0.1)
+            UserDefaults.standard.set(0.1, forKey: "Amplitude2")
+        }
+        
+        if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle2") as? Double {
+            let _ = pulse2.set(parameter: "flipangle", to: flipAngle)
+        } else {
+            let _ = pulse2.set(parameter: "flipangle", to: 360.0)
+            UserDefaults.standard.set(360.0, forKey: "FlipAngle2")
+        }
+        
         let _ = pulse2.update(parameter: "duration")
         
         nmrCalc.pulseNMR.append(pulse1)
@@ -123,28 +149,35 @@ class PulseViewController: UIViewController {
         
         if let _ = nmrCalc.pulseNMR[0] {
             for k in 0..<valueTextField1.count {
-                    valueTextField1[k].text = itemValues1[k]
+                valueTextField1[k].text = itemValues1[k]
             }
         }
         
         if let _ = nmrCalc.pulseNMR[1] {
             for k in 0..<valueTextField2.count {
-                    valueTextField2[k].text = itemValues2[k]
+                valueTextField2[k].text = itemValues2[k]
             }
         }
         
         for k in 0..<valueTextField3.count {
             valueTextField3[k].text = itemValues3[k]
         }
+        
     }
     
     func updateItemValues() {
         if let pulse = nmrCalc.pulseNMR[0] {
             itemValues1 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
+            
+            UserDefaults.standard.set(pulse.duration, forKey: "Duration1")
+            UserDefaults.standard.set(pulse.flipangle, forKey: "FlipAngle1")
         }
         
         if let pulse = nmrCalc.pulseNMR[1] {
             itemValues2 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc.relativepower)?.format(".5"))! ]
+            
+            UserDefaults.standard.set(pulse.amplitude, forKey: "Amplitude2")
+            UserDefaults.standard.set(pulse.flipangle, forKey: "FlipAngle2")
         }
         
         itemValues3 = [(nmrCalc.repetitionTime)!.format(".3"),(nmrCalc.relaxationTime)!.format(".3"), ((nmrCalc.angleErnst)!*180.0/Double.pi).format(".4") ]

@@ -26,7 +26,7 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iby-mo-Fji">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
-                                    <navigationItem title="NMR Calculator" id="SHu-pQ-ZLU">
+                                    <navigationItem title="Nucleus" id="SHu-pQ-ZLU">
                                         <barButtonItem key="rightBarButtonItem" systemItem="search" id="WhZ-3T-s17">
                                             <connections>
                                                 <action selector="searchWebButtonDown:" destination="9pv-A4-QxB" id="IUV-NH-RCp"/>
@@ -156,7 +156,7 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iRu-iB-24P">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
-                                    <navigationItem title="NMR Calculator" id="ecP-53-Ge2"/>
+                                    <navigationItem title="Signal" id="ecP-53-Ge2"/>
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GX2-SG-U6G">
@@ -288,7 +288,7 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qbH-WS-4hQ">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
-                                    <navigationItem title="NMR Calculator" id="U7t-Ie-5xy"/>
+                                    <navigationItem title="RF Pulse" id="U7t-Ie-5xy"/>
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AIm-ze-eVc">
@@ -420,7 +420,7 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ctB-jI-hXW">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
-                                    <navigationItem title="NMR Calculator" id="wsf-e3-sUW">
+                                    <navigationItem title="Solution" id="wsf-e3-sUW">
                                         <barButtonItem key="rightBarButtonItem" systemItem="search" id="5yy-48-EH8">
                                             <connections>
                                                 <action selector="searchWebButtonDown:" destination="OFa-kn-WXf" id="Yk8-CP-Wa6"/>
@@ -555,7 +555,7 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C9i-dr-BFQ">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
-                                    <navigationItem title="NMR Calculator" id="kVS-Ad-qg9"/>
+                                    <navigationItem title="Information" id="kVS-Ad-qg9"/>
                                 </items>
                             </navigationBar>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="3E5-mk-0Jz">
