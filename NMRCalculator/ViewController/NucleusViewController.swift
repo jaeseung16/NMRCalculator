@@ -70,10 +70,19 @@ class NucleusViewController: UIViewController {
 
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
-        nmrCalc.updateLarmor("field", to: 1.0) { error in
-            if (error != nil) {
-                self.warnings("Unable to comply.", message: error!)
+        if let field = UserDefaults.standard.object(forKey: "B0") as? Double {
+            nmrCalc.updateLarmor("field", to: field) { error in
+                if (error != nil) {
+                    self.warnings("Unable to comply.", message: error!)
+                }
             }
+        } else {
+            nmrCalc.updateLarmor("field", to: 1.0) { error in
+                if (error != nil) {
+                    self.warnings("Unable to comply.", message: error!)
+                }
+            }
+            UserDefaults.standard.set(1.0, forKey: "B0")
         }
         
         updateTextFields()
@@ -110,6 +119,8 @@ class NucleusViewController: UIViewController {
     func updateItemValues() {
         if let larmor = nmrCalc.larmorNMR {
             itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
+            
+            UserDefaults.standard.set(larmor.fieldExternal, forKey: "B0")
         }
     }
     
