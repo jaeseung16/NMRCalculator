@@ -3,7 +3,7 @@
 You may clone or download the source from the GitHub [repository](https://github.com/jaeseung16/NMRCalculator). Or
 install the app from the App Store: https://itunes.apple.com/us/app/id1146296877
 
-The app is written in Swift 4 and compiled in Xcode 9.2.
+The app is tested with `Swift 4` and `Xcode 9.2`.
 
 ## Description
 
