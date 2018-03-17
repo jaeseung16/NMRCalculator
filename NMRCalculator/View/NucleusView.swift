@@ -20,10 +20,6 @@ import UIKit
     override init(frame: CGRect){
         super.init(frame: frame)
         self.commonInit()
-    
-/*        let rotate = CGAffineTransformMakeRotation(CGFloat(M_PI/2))
-        self.transform = rotate */
-
     }
     
     convenience init(frame: CGRect, nucleus: NMRNucleus){

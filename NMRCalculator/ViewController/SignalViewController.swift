@@ -164,6 +164,8 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.itemLabel.text = labeltext
         cell.itemValue.text = valuetext
+        cell.sectionName = sections[indexPath.section]
+        cell.delegate = self
         
         return cell
     }
@@ -226,6 +228,7 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+/*
 // MARK: - UITextFieldDelegate
 extension SignalViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -383,6 +386,59 @@ extension SignalViewController: UITextFieldDelegate {
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
                 textField.text = self.textbeforeediting
+            }
+        }
+        
+        updateTextFields()
+    }
+}
+*/
+extension SignalViewController: SignalTableViewCellDelegate {
+    func didEndEditing(_ cell: SignalTableViewCell, for cellLabel: UILabel, newValue: Double?, error: String?) {
+        guard error == nil else {
+            warnings("Unable to comply.", message: "The input was not a number.")
+            return
+        }
+        
+        guard let value = newValue else {
+            return
+        }
+        
+        var firstParameter = ""
+        var secondParameter = ""
+        var category = ""
+        
+        switch cell.sectionName! {
+        case sections[0]:
+            switch cellLabel.text! {
+            case "Dwell time (μs)": // Textfield for the size of FID
+                firstParameter = "dwell"
+                category = "acquisition"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                    secondParameter = "size"
+                    break
+                }
+                
+                if fixedItem == menuItems1[0] {
+                    secondParameter = "duration"
+                } else if fixedItem == menuItems1[1] {
+                    secondParameter = "size"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+            default:
+                warnings("Unable to comply.", message: "The value is out of range.")
+                return
+            }
+        default:
+            return
+        }
+        
+        nmrCalc.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
             }
         }
         

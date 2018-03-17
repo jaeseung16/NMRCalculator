@@ -9,8 +9,6 @@
 import UIKit
 
 class SolutionTableViewCell: UITableViewCell {
-    
-
     @IBOutlet weak var itemLabel: UILabel!
     @IBOutlet weak var itemValue: UITextField!
     

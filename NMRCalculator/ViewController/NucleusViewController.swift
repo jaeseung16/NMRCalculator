@@ -22,7 +22,10 @@ class NucleusViewController: UIViewController {
     @IBOutlet weak var nucleusName: UILabel!
     
     // Constants
-    let menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
+    let menuItems = ["Larmor Frequency (MHz)",
+                     "External Magnetic Field (Tesla)",
+                     "Proton's Larmor Frequency (MHz)",
+                     "Electron's Larmor Frequency (GHz)"]
     let numberofColumn = 1
     
     // Variables
