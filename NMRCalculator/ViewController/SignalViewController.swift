@@ -11,23 +11,18 @@ import UIKit
 class SignalViewController: UIViewController {
     // MARK: - Properties
     // Outlets
-    @IBOutlet weak var SignalTableView: UITableView!
+    @IBOutlet weak var signalTableView: UITableView!
     
     // Constants
     let sections = ["Time domain", "Frequency domain"]
     let menuItems1 = [ "Number of data points", "Acquisition duration (sec)", "Dwell time (μs)"]
     let menuItems2 = [ "Number of data points", "Spectral width (kHz)", "Frequency resolution (Hz)"]
     
-    var itemValues1 = Array(repeating: String(), count: 3)
-    var itemValues2 = Array(repeating: String(), count: 3)
-    
-    var valueTextField1 = Array(repeating: UITextField(), count: 3)
-    var valueTextField2 = Array(repeating: UITextField(), count: 3)
-    
+    // Variables
     var nmrCalc = NMRCalc.shared
     
-    var activeField: UITextField?
-    var textbeforeediting: String?
+    var itemValues1 = Array(repeating: String(), count: 3)
+    var itemValues2 = Array(repeating: String(), count: 3)
     
     var selectedItem: IndexPath?
     var fixedItem: String?
@@ -59,14 +54,14 @@ class SignalViewController: UIViewController {
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
-        SignalTableView.contentInset = contentInsets
-        SignalTableView.scrollIndicatorInsets = contentInsets
+        signalTableView.contentInset = contentInsets
+        signalTableView.scrollIndicatorInsets = contentInsets
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
-        SignalTableView.contentInset = contentInsets
-        SignalTableView.scrollIndicatorInsets = contentInsets
+        signalTableView.contentInset = contentInsets
+        signalTableView.scrollIndicatorInsets = contentInsets
     }
     
     // MARK: Methods to initialize the view
@@ -92,18 +87,7 @@ class SignalViewController: UIViewController {
     
     func updateTextFields() {
         updateItemValues()
-        
-        if let _ = nmrCalc.acqNMR {
-            for k in 0..<valueTextField1.count {
-                valueTextField1[k].text = itemValues1[k]
-            }
-        }
-        
-        if let _ = nmrCalc.specNMR {
-            for k in 0..<valueTextField2.count {
-                valueTextField2[k].text = itemValues2[k]
-            }
-        }
+        signalTableView.reloadData()
     }
     
     func updateItemValues() {
@@ -153,11 +137,9 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         case 0:
             labeltext = menuItems1[(indexPath as NSIndexPath).row]
             valuetext = itemValues1[(indexPath as NSIndexPath).row]
-            valueTextField1[(indexPath as NSIndexPath).row] = cell.itemValue
         case 1:
             labeltext = menuItems2[(indexPath as NSIndexPath).row]
             valuetext = itemValues2[(indexPath as NSIndexPath).row]
-            valueTextField2[(indexPath as NSIndexPath).row] = cell.itemValue
         default:
             labeltext = nil
         }
@@ -263,9 +245,10 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 } else if fixedItem == menuItems1[2] {
                     secondParameter = "duration"
                 } else {
-                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
+                
             case menuItems1[1]: // Textfield for aquisition duration
                 value = value * 1_000
                 firstParameter = "duration"
@@ -280,9 +263,10 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 } else if fixedItem == menuItems1[2] {
                     secondParameter = "size"
                 } else {
-                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
+                
             case menuItems1[2]: // Textfield for dwell time
                 firstParameter = "dwell"
                 
@@ -296,9 +280,10 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 } else if fixedItem == menuItems1[1] {
                     secondParameter = "size"
                 } else {
-                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
+                
             default:
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
@@ -320,7 +305,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 } else if fixedItem == menuItems2[2] {
                     secondParameter = "width"
                 } else {
-                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
@@ -337,7 +322,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 } else if fixedItem == menuItems2[2] {
                     secondParameter = "size"
                 } else {
-                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
@@ -354,7 +339,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 } else if fixedItem == menuItems2[1] {
                     secondParameter = "size"
                 } else {
-                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
@@ -364,6 +349,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
             }
         
         default:
+            warnings("Unable to comply.", message: "The value is out of range.")
             return
         }
         
