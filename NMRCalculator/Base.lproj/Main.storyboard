@@ -398,7 +398,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="RF Pulse" image="Icon_Pulse_unselected" selectedImage="Icon_Pulse" id="lkB-ob-0lL"/>
                     <connections>
-                        <outlet property="PulseTableView" destination="AIm-ze-eVc" id="QCB-Hp-69v"/>
+                        <outlet property="pulseTableView" destination="AIm-ze-eVc" id="5k2-kl-gtj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aia-L8-lvE" userLabel="First Responder" sceneMemberID="firstResponder"/>

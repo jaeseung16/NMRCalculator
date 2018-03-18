@@ -11,7 +11,7 @@ import UIKit
 class PulseViewController: UIViewController {
     // MARK: - Properties
     // Outlets
-    @IBOutlet weak var PulseTableView: UITableView!
+    @IBOutlet weak var pulseTableView: UITableView!
     
     // Constants
     let sections = ["1st Pulse", "2nd Pulse", "Ernst Angle"]
@@ -63,14 +63,14 @@ class PulseViewController: UIViewController {
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
-        PulseTableView.contentInset = contentInsets
-        PulseTableView.scrollIndicatorInsets = contentInsets
+        pulseTableView.contentInset = contentInsets
+        pulseTableView.scrollIndicatorInsets = contentInsets
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
-        PulseTableView.contentInset = contentInsets
-        PulseTableView.scrollIndicatorInsets = contentInsets
+        pulseTableView.contentInset = contentInsets
+        pulseTableView.scrollIndicatorInsets = contentInsets
     }
     
     // MARK: Method to initialize the view
@@ -140,7 +140,7 @@ class PulseViewController: UIViewController {
     func updateTextFields() {
         updateItemValues()
         
-        PulseTableView.reloadData()
+        pulseTableView.reloadData()
     }
     
     func updateItemValues() {
