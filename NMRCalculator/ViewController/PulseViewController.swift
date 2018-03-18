@@ -27,14 +27,7 @@ class PulseViewController: UIViewController {
     var itemValues2 = Array(repeating: String(), count: 4)
     var itemValues3 = Array(repeating: String(), count: 3)
     
-    var valueTextField1 = Array(repeating: UITextField(), count: 3)
-    var valueTextField2 = Array(repeating: UITextField(), count: 4)
-    var valueTextField3 = Array(repeating: UITextField(), count: 3)
-    
     var nmrCalc = NMRCalc.shared
-    
-    var activeField: UITextField?
-    var textbeforeediting: String?
     
     var selectedItem: IndexPath?
     var fixedItem: String?
@@ -147,22 +140,7 @@ class PulseViewController: UIViewController {
     func updateTextFields() {
         updateItemValues()
         
-        if let _ = nmrCalc.pulseNMR[0] {
-            for k in 0..<valueTextField1.count {
-                valueTextField1[k].text = itemValues1[k]
-            }
-        }
-        
-        if let _ = nmrCalc.pulseNMR[1] {
-            for k in 0..<valueTextField2.count {
-                valueTextField2[k].text = itemValues2[k]
-            }
-        }
-        
-        for k in 0..<valueTextField3.count {
-            valueTextField3[k].text = itemValues3[k]
-        }
-        
+        PulseTableView.reloadData()
     }
     
     func updateItemValues() {
@@ -222,21 +200,20 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
         case 0:
             labeltext = menuItems1[(indexPath as NSIndexPath).row]
             valuetext = itemValues1[(indexPath as NSIndexPath).row]
-            valueTextField1[(indexPath as NSIndexPath).row] = cell.itemValue
         case 1:
             labeltext = menuItems2[(indexPath as NSIndexPath).row]
             valuetext = itemValues2[(indexPath as NSIndexPath).row]
-            valueTextField2[(indexPath as NSIndexPath).row] = cell.itemValue
         case 2:
             labeltext = menuItems3[(indexPath as NSIndexPath).row]
             valuetext = itemValues3[(indexPath as NSIndexPath).row]
-            valueTextField3[(indexPath as NSIndexPath).row] = cell.itemValue
         default:
             labeltext = nil
         }
         
         cell.itemLabel.text = labeltext
         cell.itemValue.text = valuetext
+        cell.sectionLabel = sections[indexPath.section]
+        cell.delegate = self
         
         return cell
     }
@@ -313,228 +290,223 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension PulseViewController: UITextFieldDelegate {
-    // MARK: UITextFieldDelegate
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        activeField = textField
-        textbeforeediting = textField.text
-        textField.text = nil
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        activeField = nil
-        
-        guard let x = Double(textField.text!) else {
+// MARK: - PulseTableViewCellDelegate
+extension PulseViewController: PulseTableViewCellDelegate {
+    func didEndEditing(_ cell: PulseTableViewCell, for cellLabel: UILabel, newValue: Double?, error: String?) {
+        guard error == nil else {
             warnings("Unable to comply.", message: "The input was not a number.")
-            textField.text = textbeforeediting
+            return
+        }
+        
+        guard let newValue = newValue else {
             return
         }
         
         var firstParameter = ""
         var secondParameter = ""
         var category = ""
-        var value = x
+        var value = newValue
         
-        switch textField {
-        case valueTextField1[0]:
-            firstParameter = "duration"
+        switch cell.sectionLabel! {
+        case sections[0]:
             category = "pulse1"
             
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                secondParameter = "amplitude"
-                break
-            }
-            
-            if fixedItem == menuItems1[1] {
-                secondParameter = "amplitude"
-            } else if fixedItem == menuItems1[2] {
-                secondParameter = "flipangle"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
+            switch cellLabel.text! {
+            case menuItems1[0]:
+                firstParameter = "duration"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                    secondParameter = "amplitude"
+                    break
+                }
+                
+                if fixedItem == menuItems1[1] {
+                    secondParameter = "amplitude"
+                } else if fixedItem == menuItems1[2] {
+                    secondParameter = "flipangle"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems1[1]:
+                firstParameter = "flipangle"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                    secondParameter = "duration"
+                    break
+                }
+                
+                if fixedItem == menuItems1[2] {
+                    secondParameter = "duration"
+                } else if fixedItem == menuItems1[0] {
+                    secondParameter = "amplitude"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems1[2]:
+                firstParameter = "amplitude"
+                value = value / 1_000
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                    secondParameter = "duration"
+                    break
+                }
+                
+                if fixedItem == menuItems1[1] {
+                    secondParameter = "duration"
+                } else if fixedItem == menuItems1[0] {
+                    secondParameter = "flipangle"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            default:
+                warnings("Unable to comply.", message: "The value is out of range.")
                 return
             }
             
-        case valueTextField1[1]:
-            firstParameter = "flipangle"
-            category = "pulse1"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                secondParameter = "duration"
-                break
-            }
-            
-            if fixedItem == menuItems1[2] {
-                secondParameter = "duration"
-            } else if fixedItem == menuItems1[0] {
-                secondParameter = "amplitude"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField1[2]:
-            firstParameter = "amplitude"
-            category = "pulse1"
-            value = x / 1_000
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                secondParameter = "duration"
-                break
-            }
-            
-            if fixedItem == menuItems1[1] {
-                secondParameter = "duration"
-            } else if fixedItem == menuItems1[0] {
-                secondParameter = "flipangle"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField2[0]:
-            firstParameter = "duration"
+        case sections[1]:
             category = "pulse2"
             
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                secondParameter = "amplitude"
-                break
-            }
-            
-            if fixedItem == menuItems2[1] {
-                secondParameter = "amplitude"
-            } else if fixedItem == menuItems2[2] {
-                secondParameter = "flipangle"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
+            switch cellLabel.text! {
+            case menuItems2[0]:
+                firstParameter = "duration"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                    secondParameter = "amplitude"
+                    break
+                }
+                
+                if fixedItem == menuItems2[1] {
+                    secondParameter = "amplitude"
+                } else if fixedItem == menuItems2[2] {
+                    secondParameter = "flipangle"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems2[1]:
+                firstParameter = "flipangle"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                    secondParameter = "duration"
+                    break
+                }
+                
+                if fixedItem == menuItems2[2] {
+                    secondParameter = "duration"
+                } else if fixedItem == menuItems2[0] {
+                    secondParameter = "amplitude"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems2[2]:
+                firstParameter = "amplitude"
+                value = value / 1_000
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                    secondParameter = "duration"
+                    break
+                }
+                
+                if fixedItem == menuItems2[1] {
+                    secondParameter = "duration"
+                } else if fixedItem == menuItems2[0] {
+                    secondParameter = "flipangle"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems2[3]:
+                nmrCalc.relativepower = value
+                let amp0 = nmrCalc.pulseNMR[0]!.amplitude
+                value = pow(10.0, 1.0 * value / 20.0) * amp0
+                
+                firstParameter = "amplitude"
+                category = "pulse2"
+                secondParameter = "duration"
+                
+            default:
+                warnings("Unable to comply.", message: "The value is out of range.")
                 return
             }
-            
-        case valueTextField2[1]:
-            firstParameter = "flipangle"
-            category = "pulse2"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                secondParameter = "duration"
-                break
-            }
-            
-            if fixedItem == menuItems2[2] {
-                secondParameter = "duration"
-            } else if fixedItem == menuItems2[0] {
-                secondParameter = "amplitude"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField2[2]:
-            firstParameter = "amplitude"
-            category = "pulse2"
-            value = x / 1_000
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                secondParameter = "duration"
-                break
-            }
-            
-            if fixedItem == menuItems2[1] {
-                secondParameter = "duration"
-            } else if fixedItem == menuItems2[0] {
-                secondParameter = "flipangle"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField2[3]:
-            nmrCalc.relativepower = x
-            let amp0 = nmrCalc.pulseNMR[0]!.amplitude
-            value = pow(10.0, 1.0 * x / 20.0) * amp0
-
-            firstParameter = "amplitude"
-            category = "pulse2"
-            secondParameter = "duration"
-            
-        case valueTextField3[0]:
-            firstParameter = "repetition"
+        case sections[2]:
             category = "ernstAngle"
             
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                secondParameter = "angle"
-                break
-            }
-            
-            if fixedItem == menuItems3[1] {
-                secondParameter = "angle"
-            } else if fixedItem == menuItems3[2] {
-                secondParameter = "relaxation"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField3[1]:
-            firstParameter = "relaxation"
-            category = "ernstAngle"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                secondParameter = "angle"
-                break
-            }
-            
-            if fixedItem == menuItems3[0] {
-                secondParameter = "angle"
-            } else if fixedItem == menuItems3[2] {
-                secondParameter = "repetition"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField3[2]:
-            firstParameter = "angle"
-            category = "ernstAngle"
-            value = x * Double.pi / 180.0
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                secondParameter = "repetition"
-                break
-            }
-            
-            if fixedItem == menuItems3[0] {
-                secondParameter = "relaxation"
-            } else if fixedItem == menuItems3[1] {
-                secondParameter = "repetition"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
+            switch cellLabel.text! {
+            case menuItems3[0]:
+                firstParameter = "repetition"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
+                    secondParameter = "angle"
+                    break
+                }
+                
+                if fixedItem == menuItems3[1] {
+                    secondParameter = "angle"
+                } else if fixedItem == menuItems3[2] {
+                    secondParameter = "relaxation"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems3[1]:
+                firstParameter = "relaxation"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
+                    secondParameter = "angle"
+                    break
+                }
+                
+                if fixedItem == menuItems3[0] {
+                    secondParameter = "angle"
+                } else if fixedItem == menuItems3[2] {
+                    secondParameter = "repetition"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems3[2]:
+                firstParameter = "angle"
+                value = value * Double.pi / 180.0
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
+                    secondParameter = "repetition"
+                    break
+                }
+                
+                if fixedItem == menuItems3[0] {
+                    secondParameter = "relaxation"
+                } else if fixedItem == menuItems3[1] {
+                    secondParameter = "repetition"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            default:
+                warnings("Unable to comply.", message: "The value is out of range.")
                 return
             }
             
         default:
             warnings("Unable to comply.", message: "The value is out of range.")
-            textField.text = textbeforeediting
             return
         }
         
         nmrCalc.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
-                textField.text = self.textbeforeediting
             }
         }
         
@@ -544,5 +516,6 @@ extension PulseViewController: UITextFieldDelegate {
         
         updateTextFields()
     }
+    
     
 }
