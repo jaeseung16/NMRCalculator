@@ -164,7 +164,7 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.itemLabel.text = labeltext
         cell.itemValue.text = valuetext
-        cell.sectionName = sections[indexPath.section]
+        cell.sectionLabel = sections[indexPath.section]
         cell.delegate = self
         
         return cell
@@ -228,171 +228,7 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-/*
-// MARK: - UITextFieldDelegate
-extension SignalViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        activeField = textField
-        textbeforeediting = textField.text
-        textField.text = nil
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        activeField = nil
-        
-        guard let x = Double(textField.text!) else {
-            warnings("Unable to comply.", message: "The input was not a number.")
-            textField.text = textbeforeediting
-            return
-        }
-
-        var firstParameter = ""
-        var secondParameter = ""
-        var category = ""
-        var value = x
-        
-        switch textField {
-        case valueTextField1[0]: // Textfield for the size of FID
-            firstParameter = "size"
-            category = "acquisition"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                secondParameter = "duration"
-                break
-            }
-            
-            if fixedItem == menuItems1[1] {
-                secondParameter = "dwell"
-            } else if fixedItem == menuItems1[2] {
-                secondParameter = "duration"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField1[1]: // Textfield for aquisition duration
-            value = x * 1_000
-            firstParameter = "duration"
-            category = "acquisition"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                secondParameter = "size"
-                break
-            }
-            
-            if fixedItem == menuItems1[0] {
-                secondParameter = "dwell"
-            } else if fixedItem == menuItems1[2] {
-                secondParameter = "size"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField1[2]: // Textfield for dwell time
-            value = x
-            firstParameter = "dwell"
-            category = "acquisition"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
-                secondParameter = "size"
-                break
-            }
-            
-            if fixedItem == menuItems1[0] {
-                secondParameter = "duration"
-            } else if fixedItem == menuItems1[1] {
-                secondParameter = "size"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField2[0]: // Textfield for the size of spectrum
-            value = x
-            firstParameter = "size"
-            category = "spectrum"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                secondParameter = "resolution"
-                break
-            }
-            
-            if fixedItem == menuItems2[1] {
-                secondParameter = "resolution"
-            } else if fixedItem == menuItems2[2] {
-                secondParameter = "width"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField2[1]: // Textfield for spectral width
-            value = x
-            firstParameter = "width"
-            category = "spectrum"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                secondParameter = "resolution"
-                break
-            }
-            
-            if fixedItem == menuItems2[0] {
-                secondParameter = "resolution"
-            } else if fixedItem == menuItems2[2] {
-                secondParameter = "size"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        case valueTextField2[2]: // Textfield for frequency resolution
-            value = x
-            firstParameter = "resolution"
-            category = "spectrum"
-            
-            guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
-                secondParameter = "width"
-                break
-            }
-            
-            if fixedItem == menuItems2[0] {
-                secondParameter = "width"
-            } else if fixedItem == menuItems2[1] {
-                secondParameter = "size"
-            } else {
-                self.warnings("Unable to comply.", message: "Something is wrong.")
-                textField.text = textbeforeediting
-                return
-            }
-            
-        default:
-            warnings("Unable to comply.", message: "The value is out of range.")
-            textField.text = textbeforeediting
-            return
-        }
-
-        nmrCalc.updateParameter(firstParameter, in: category, to: value, and: secondParameter) { error in
-            if (error != nil) {
-                self.warnings("Unable to comply.", message: error!)
-                textField.text = self.textbeforeediting
-            }
-        }
-        
-        updateTextFields()
-    }
-}
-*/
+// MARK: - SignalTableViewCellDelegate
 extension SignalViewController: SignalTableViewCellDelegate {
     func didEndEditing(_ cell: SignalTableViewCell, for cellLabel: UILabel, newValue: Double?, error: String?) {
         guard error == nil else {
@@ -400,20 +236,55 @@ extension SignalViewController: SignalTableViewCellDelegate {
             return
         }
         
-        guard let value = newValue else {
+        guard let newValue = newValue else {
             return
         }
         
         var firstParameter = ""
         var secondParameter = ""
         var category = ""
+        var value = newValue
         
-        switch cell.sectionName! {
+        switch cell.sectionLabel! {
         case sections[0]:
+            category = "acquisition"
+            
             switch cellLabel.text! {
-            case "Dwell time (μs)": // Textfield for the size of FID
+            case menuItems1[0]: // Textfield for the size of FID
+                firstParameter = "size"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                    secondParameter = "duration"
+                    break
+                }
+                
+                if fixedItem == menuItems1[1] {
+                    secondParameter = "dwell"
+                } else if fixedItem == menuItems1[2] {
+                    secondParameter = "duration"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+            case menuItems1[1]: // Textfield for aquisition duration
+                value = value * 1_000
+                firstParameter = "duration"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
+                    secondParameter = "size"
+                    break
+                }
+                
+                if fixedItem == menuItems1[0] {
+                    secondParameter = "dwell"
+                } else if fixedItem == menuItems1[2] {
+                    secondParameter = "size"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+            case menuItems1[2]: // Textfield for dwell time
                 firstParameter = "dwell"
-                category = "acquisition"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
                     secondParameter = "size"
@@ -432,6 +303,66 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
             }
+        case sections[1]:
+            category = "spectrum"
+            
+            switch cellLabel.text! {
+            case menuItems2[0]: // Textfield for the size of spectrum
+                firstParameter = "size"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                    secondParameter = "resolution"
+                    break
+                }
+                
+                if fixedItem == menuItems2[1] {
+                    secondParameter = "resolution"
+                } else if fixedItem == menuItems2[2] {
+                    secondParameter = "width"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems2[1]: // Textfield for spectral width
+                firstParameter = "width"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                    secondParameter = "resolution"
+                    break
+                }
+                
+                if fixedItem == menuItems2[0] {
+                    secondParameter = "resolution"
+                } else if fixedItem == menuItems2[2] {
+                    secondParameter = "size"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            case menuItems2[2]: // Textfield for frequency resolution
+                firstParameter = "resolution"
+                
+                guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
+                    secondParameter = "width"
+                    break
+                }
+                
+                if fixedItem == menuItems2[0] {
+                    secondParameter = "width"
+                } else if fixedItem == menuItems2[1] {
+                    secondParameter = "size"
+                } else {
+                    self.warnings("Unable to comply.", message: "Something is wrong.")
+                    return
+                }
+                
+            default:
+                warnings("Unable to comply.", message: "The value is out of range.")
+                return
+            }
+        
         default:
             return
         }

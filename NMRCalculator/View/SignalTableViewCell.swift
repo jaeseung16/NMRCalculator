@@ -19,7 +19,7 @@ class SignalTableViewCell: UITableViewCell {
     @IBOutlet weak var itemValue: UITextField!
     
     // Variables
-    var sectionName: String?
+    var sectionLabel: String?
     var textBeforeEditing: String?
     
     weak var delegate: SignalTableViewCellDelegate?
