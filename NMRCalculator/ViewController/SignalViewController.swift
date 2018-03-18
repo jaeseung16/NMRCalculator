@@ -86,11 +86,6 @@ class SignalViewController: UIViewController {
     }
     
     func updateTextFields() {
-        updateItemValues()
-        signalTableView.reloadData()
-    }
-    
-    func updateItemValues() {
         if let acq = nmrCalc.acqNMR {
             itemValues1 = [ "\(acq.size)", (acq.duration/1_000.0).format(".3"), acq.dwell.format(".3") ]
         }
@@ -98,6 +93,8 @@ class SignalViewController: UIViewController {
         if let spec = nmrCalc.specNMR {
             itemValues2 = [ "\(spec.size)", (spec.width).format(".3"), (spec.resolution).format(".3") ]
         }
+        
+        signalTableView.reloadData()
     }
     
     // MARK: Warning messages
