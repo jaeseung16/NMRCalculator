@@ -1,7 +1,9 @@
 # NMRCalculator
 
 You may clone or download the source from the GitHub [repository](https://github.com/jaeseung16/NMRCalculator). Or
-install the app from the App Store: https://itunes.apple.com/us/app/id1146296877
+install the app from the App Store.
+
+[<img src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg">](https://itunes.apple.com/us/app/nmr-calculator/id1146296877?mt=8)
 
 The app is tested with `Swift 4` and `Xcode 9.2`.
 
