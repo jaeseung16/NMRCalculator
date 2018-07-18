@@ -174,7 +174,7 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
             return label
         }
         
-        if let label = view as! NucleusView! {
+        if let label = view as! NucleusView {
             return label
         } else {
             let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: NMRNucleus(identifier: items))

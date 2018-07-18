@@ -198,22 +198,22 @@ extension NMRCalc {
         
         switch name {
         case "larmor":
-            guard evaluate(parameter: "proton", in: category), evaluateParameter("electron", in: category) else {
+            guard evaluate(parameter: "proton", in: category), evaluate(parameter: "electron", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
         case "field":
-            guard evaluate(parameter: "larmor", in: category), evaluateParameter("proton", in: category), evaluate(parameter: "electron", in: category) else {
+            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "proton", in: category), evaluate(parameter: "electron", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
         case "proton":
-            guard evaluate(parameter: "larmor", in: category), evaluateParameter("electron", in: category) else {
+            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "electron", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
         case "electron":
-            guard evaluate(parameter: "larmor", in: category), evaluateParameter("proton", in: category) else {
+            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "proton", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
