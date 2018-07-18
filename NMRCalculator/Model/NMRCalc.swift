@@ -23,9 +23,6 @@ class NMRCalc {
     var relaxationTime: Double?
     var angleErnst: Double?
     
-    let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
-    let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
-    
     // MARK:- enum
     enum ernst_parameters: String {
         case repetition
