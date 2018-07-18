@@ -9,6 +9,9 @@
 import Foundation
 
 struct NMRNucleus {
+    // Properties
+    static let protonGyromagneticRatio = 26.7522128 / 2.0 / Double.pi * 10.0
+    
     var identifier: String
     var nameNucleus: String
     var atomicNumber: String
@@ -24,6 +27,7 @@ struct NMRNucleus {
         }
     }
     
+    // MARK:- Methods
     init() {
         self.identifier = "1H"
         self.nameNucleus = "Proton"
@@ -49,13 +53,9 @@ struct NMRNucleus {
     }
     
     func describe() -> String {
-        
         let string1 = "Nucleus: \(nameNucleus)"
-        
-        
         let string2 = "gyromagneticratio = \(γ) MHz/T"
         
         return string1 + "\n" + string2
     }
-    
 }
