@@ -10,8 +10,6 @@ import Foundation
 
 struct NMRNucleus {
     // Properties
-    static let protonGyromagneticRatio = 26.7522128 / 2.0 / Double.pi * 10.0
-    
     var identifier: String
     var nameNucleus: String
     var atomicNumber: String
