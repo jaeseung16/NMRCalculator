@@ -9,9 +9,12 @@
 import Foundation
 
 struct NMRLarmor {
+    // Properties
+    // Constants
     let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
     let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
     
+    // Variables
     var frequencyLarmor: Double = 0.0
     var fieldExternal: Double = 0.0
     var frequencyProton: Double = 0.0
@@ -26,6 +29,7 @@ struct NMRLarmor {
         case electron
     }
     
+    // MARK:- Methods
     init() {
         self.nucleus = NMRNucleus()
     }
@@ -34,8 +38,7 @@ struct NMRLarmor {
         self.nucleus = nucleus
     }
     
-    mutating func setParameter(parameter name: String, to value: Double) -> Bool {
-        
+    mutating func setParameter(_ name: String, to value: Double) -> Bool {
         guard let parameter = parameters(rawValue: name) else { return false }
         
         switch parameter {
@@ -55,20 +58,16 @@ struct NMRLarmor {
         return true
     }
     
-    mutating func updateParameter(name: String) -> Bool {
-        
+    mutating func update(parameter name: String) -> Bool {
         guard let parameter = parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .field:
             self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
-
         case .larmor:
             self.frequencyLarmor = self.fieldExternal * self.nucleus.γ
-            
         case .proton:
             self.frequencyProton = self.fieldExternal * self.gammaProton
-            
         case .electron:
             self.frequencyElectron = self.fieldExternal * self.gammaElectron
         }
@@ -78,11 +77,8 @@ struct NMRLarmor {
     
     public func describe() -> String {
         let string1 = "External field = \(self.fieldExternal) T"
-        
         let string2 = "Larmor Frequency = \(self.frequencyLarmor) MHz"
-        
         let string3 = "Larmor Frequency of Proton = \(self.frequencyProton) MHz"
-        
         let string4 = "Larmor Frequency of Electron = \(self.frequencyElectron) MHz"
         
         return string1 + "\n" + string2 + "\n" + string3 + "\n" + string4
