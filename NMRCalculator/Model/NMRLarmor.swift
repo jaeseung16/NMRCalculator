@@ -34,7 +34,6 @@ struct NMRLarmor {
     // MARK:- Methods
     init() {
         self.nucleus = NMRNucleus()
-        let _ = self.setParameter("field", to: 1.0)
     }
     
     init(nucleus: NMRNucleus) {

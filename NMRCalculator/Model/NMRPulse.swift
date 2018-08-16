@@ -9,24 +9,27 @@
 import Foundation
 
 struct NMRPulse {
-    var duration = 0.0 // pulse duration in μs
-    var flipangle = 0.0 // flip angle in degree
-    public var amplitude = 0.0 // RF amplitude in kHz
-    var offset = 0.0 // frequency offset in Hz
+    // MARK:- Properties
+    // Variables
+    var duration = 0.0          // pulse duration in μs
+    var flipangle = 0.0         // flip angle in degree
+    public var amplitude = 0.0  // RF amplitude in kHz
+    var offset = 0.0            // frequency offset in Hz
     
-    enum parameters: String {
+    // MARK:- Enumeration
+    enum Parameters: String {
         case duration
         case flipangle
         case amplitude
         case offset
     }
     
+    // MARK:- Methods
     init() {
-        
     }
     
     mutating func setParameter(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .amplitude:
@@ -44,7 +47,7 @@ struct NMRPulse {
     }
     
     mutating func updateParameter(name: String) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .duration:
