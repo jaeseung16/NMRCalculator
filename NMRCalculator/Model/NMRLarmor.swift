@@ -49,13 +49,16 @@ struct NMRLarmor {
             self.fieldExternal = value
         case .larmor:
             self.frequencyLarmor = value
-            self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
+            //self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
+            self.fieldExternal = self.externalField(γ: self.nucleus.γ, at: self.frequencyLarmor)
         case .proton:
             self.frequencyProton = value
-            self.fieldExternal = self.frequencyProton / self.gammaProton
+            // self.fieldExternal = self.frequencyProton / self.gammaProton
+            self.fieldExternal = self.externalField(γ: self.gammaProton, at: self.frequencyProton)
         case .electron:
             self.frequencyElectron = value
-            self.fieldExternal = self.frequencyElectron / self.gammaElectron
+            // self.fieldExternal = self.frequencyElectron / self.gammaElectron
+            self.fieldExternal = self.externalField(γ: self.gammaElectron, at: self.frequencyElectron)
         }
         
         return true
@@ -66,7 +69,8 @@ struct NMRLarmor {
         
         switch parameter {
         case .field:
-            self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
+            // self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
+            self.fieldExternal = self.externalField(γ: self.nucleus.γ, at: self.frequencyLarmor)
         case .larmor:
             //self.frequencyLarmor = self.fieldExternal * self.nucleus.γ
             self.frequencyLarmor = self.larmorFrequency(γ: self.nucleus.γ, at: self.fieldExternal)
@@ -80,8 +84,13 @@ struct NMRLarmor {
         return true
     }
     
+    // Convinience Methods
     mutating func larmorFrequency(γ: Double, at fieldExternal: Double) -> Double {
         return fieldExternal * γ
+    }
+    
+    mutating func externalField(γ: Double, at frequency: Double) -> Double {
+        return frequency / γ
     }
     
     public func describe() -> String {
