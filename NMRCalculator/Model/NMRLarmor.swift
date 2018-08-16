@@ -9,7 +9,7 @@
 import Foundation
 
 struct NMRLarmor {
-    // Properties
+    // MARK:- Properties
     // Constants
     let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
     let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
@@ -22,7 +22,9 @@ struct NMRLarmor {
     
     var nucleus: NMRNucleus
     
-    enum parameters: String {
+    
+    // MARK: - Enumeration
+    enum Parameters: String {
         case field
         case larmor
         case proton
@@ -32,6 +34,7 @@ struct NMRLarmor {
     // MARK:- Methods
     init() {
         self.nucleus = NMRNucleus()
+        let _ = self.setParameter("field", to: 1.0)
     }
     
     init(nucleus: NMRNucleus) {
@@ -39,7 +42,7 @@ struct NMRLarmor {
     }
     
     mutating func setParameter(_ name: String, to value: Double) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .field:
@@ -59,20 +62,26 @@ struct NMRLarmor {
     }
     
     mutating func update(parameter name: String) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .field:
             self.fieldExternal = self.frequencyLarmor / self.nucleus.γ
         case .larmor:
-            self.frequencyLarmor = self.fieldExternal * self.nucleus.γ
+            //self.frequencyLarmor = self.fieldExternal * self.nucleus.γ
+            self.frequencyLarmor = self.larmorFrequency(γ: self.nucleus.γ, at: self.fieldExternal)
         case .proton:
-            self.frequencyProton = self.fieldExternal * self.gammaProton
+            // self.frequencyProton = self.fieldExternal * self.gammaProton
+            self.frequencyProton = self.larmorFrequency(γ: self.gammaProton, at: self.fieldExternal)
         case .electron:
-            self.frequencyElectron = self.fieldExternal * self.gammaElectron
+            self.frequencyElectron = self.larmorFrequency(γ: self.gammaElectron, at: self.fieldExternal)
         }
         
         return true
+    }
+    
+    mutating func larmorFrequency(γ: Double, at fieldExternal: Double) -> Double {
+        return fieldExternal * γ
     }
     
     public func describe() -> String {
