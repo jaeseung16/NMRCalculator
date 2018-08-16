@@ -9,24 +9,27 @@
 import Foundation
 
 struct NMRSpectrum {
-    var size: UInt = 1000 // number of data points
-    var width: Double = 1.0 // spectral width in kHz
-    var resolution: Double = 1.0 // spectral resolution in Hz
+    // MARK:- Properties
+    // Variables
+    var size: UInt = 1000           // number of data points
+    var width: Double = 1.0         // spectral width in kHz
+    var resolution: Double = 1.0    // spectral resolution in Hz
     //    var real: [Double] // real part
     //    var imag: [Double] // imaginary part
     
-    enum parameters: String {
+    // MARK:- Enumeration
+    enum Parameters: String {
         case size
         case width
         case resolution
     }
     
+    // MARK:- Methods
     init() {
-        
     }
     
     mutating func setSpectrum(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .size:
@@ -46,7 +49,7 @@ struct NMRSpectrum {
     }
     
     mutating func updateParameter(name: String) -> Bool {
-        guard let parameter = parameters(rawValue: name) else { return false }
+        guard let parameter = Parameters(rawValue: name) else { return false }
         
         switch parameter {
         case .size:
