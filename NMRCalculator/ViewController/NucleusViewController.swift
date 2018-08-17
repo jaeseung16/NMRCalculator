@@ -191,9 +191,9 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        nucleus = NMRNucleus(identifier: nucleusTable![row])
+        nucleus = nuclei[row]
         nmrCalc!.nucleus = nucleus!
-        nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
+        nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!) // Why do I need this?
         
         guard let value = Double(valueTextField[1].text!) else {
             warnings("Unable to comply.", message: "The input should be a number.")
