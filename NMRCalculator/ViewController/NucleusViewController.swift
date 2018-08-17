@@ -32,9 +32,10 @@ class NucleusViewController: UIViewController {
     var nucleusTable: [String]?
     var nuclei = [NMRNucleus]()
     var nucleus: NMRNucleus?
-    var proton: NMRNucleus?
+    //var proton: NMRNucleus?
     var nmrCalc: NMRCalc?
     
+    var indexForNuclei = 0
     var activeField: UITextField?
     var textbeforeediting: String?
     
@@ -46,7 +47,6 @@ class NucleusViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //initializeView()
         registerForKeyboardNotifications()
     }
     
@@ -62,16 +62,16 @@ class NucleusViewController: UIViewController {
         
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
         print(identifier)
-        
         for k in 0..<(nucleusTable!.count - 1) {
             nuclei.append(NMRNucleus(identifier: nucleusTable![k]))
             if nucleusTable![k].contains(identifier) {
                 nucleus = nuclei[k]
-                //NucleusPicker.selectedRow(inComponent: k)
+                //indexForNuclei = k
+                NucleusPicker.selectRow(k, inComponent: numberofColumn-1, animated: true)
             }
         }
         
-        proton = NMRNucleus(identifier: nucleusTable![0])
+        //proton = NMRNucleus()
 
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
