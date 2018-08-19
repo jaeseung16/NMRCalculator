@@ -29,10 +29,8 @@ class NucleusViewController: UIViewController {
     var itemValues = Array(repeating: String(), count: 4)
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
-    var nucleusTable: [String]?
-    var nuclei = [NMRNucleus]()
+    let periodicTable = NMRPeriodicTable.shared
     var nucleus: NMRNucleus?
-    //var proton: NMRNucleus?
     var nmrCalc: NMRCalc?
     
     var indexForNuclei = 0
@@ -58,21 +56,16 @@ class NucleusViewController: UIViewController {
     
     // MARK:- Initialize the nuclues table
     func initializeView() {
-        nucleusTable = readtable()
-        
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
         print(identifier)
-        for k in 0..<(nucleusTable!.count - 1) {
-            nuclei.append(NMRNucleus(identifier: nucleusTable![k]))
-            if nucleusTable![k].contains(identifier) {
-                nucleus = nuclei[k]
-                //indexForNuclei = k
+        
+        for k in 0..<(periodicTable.nuclei.count - 1) {
+            if periodicTable.nuclei[k].identifier == identifier {
+                nucleus = periodicTable.nuclei[k]
                 NucleusPicker.selectRow(k, inComponent: numberofColumn-1, animated: true)
             }
         }
         
-        //proton = NMRNucleus()
-
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
         nmrCalc!.updateLarmor("field", to: 1.0) { error in
@@ -170,7 +163,7 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return nuclei.count
+        return periodicTable.nuclei.count
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -183,14 +176,14 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         guard let nucleusView = view as? NucleusView else {
-            return NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: nuclei[row])
+            return NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: periodicTable.nuclei[row])
         }
         
         return nucleusView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        nucleus = nuclei[row]
+        nucleus = periodicTable.nuclei[row]
         nmrCalc!.nucleus = nucleus!
         nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!) // Why do I need this?
         
@@ -233,17 +226,16 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - UITextFieldDelegate
 extension NucleusViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        let selected = NucleusPicker.selectedRow(inComponent: 0)
+        let selected = NucleusPicker.selectedRow(inComponent: numberofColumn-1)
         
         if selected == -1 {
             warnings("Unable to comply.", message: "Select a nucleus.")
             return false
         } else {
-            NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
-            nucleus = NMRNucleus(identifier: nucleusTable![selected])
+            NucleusPicker.selectRow(selected, inComponent: numberofColumn-1, animated: true)
+            nucleus = periodicTable.nuclei[selected]
             nmrCalc!.nucleus = nucleus
             nucleusName.text = nmrCalc!.nucleus!.nameNucleus
-            
             return true
         }
     }
