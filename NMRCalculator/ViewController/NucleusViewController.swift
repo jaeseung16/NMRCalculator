@@ -182,7 +182,6 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        
         guard let nucleusView = view as? NucleusView else {
             return NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: nuclei[row])
         }

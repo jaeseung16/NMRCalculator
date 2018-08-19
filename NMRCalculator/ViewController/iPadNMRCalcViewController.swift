@@ -24,8 +24,8 @@ class iPadNMRCalcViewController: UIViewController {
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
     var nucleusTable: [String]?
+    var nuclei = [NMRNucleus]()
     var nucleus: NMRNucleus?
-    var proton: NMRNucleus?
     var nmrCalc: NMRCalc?
     
     var activeField: UITextField?
@@ -79,8 +79,16 @@ class iPadNMRCalcViewController: UIViewController {
     func initializeView() {
         nucleusTable = readtable()
         
-        proton = NMRNucleus(identifier: nucleusTable![0])
-        nucleus = NMRNucleus(identifier: nucleusTable![0])
+        let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
+        print(identifier)
+        
+        for k in 0..<(nucleusTable!.count - 1) {
+            nuclei.append(NMRNucleus(identifier: nucleusTable![k]))
+            if nucleusTable![k].contains(identifier) {
+                nucleus = nuclei[k]
+                NucleusPicker.selectRow(k, inComponent: numberofColumn-1, animated: true)
+            }
+        }
         
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
@@ -156,7 +164,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return (nucleusTable?.count)!
+        return nuclei.count
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -168,19 +176,11 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        guard let items = nucleusTable?[row] else {
-            let label = UILabel()
-            label.text = ""
-            return label
+        guard let nucleusView = view as? NucleusView else {
+            return NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: nuclei[row])
         }
         
-        if let label = view as! NucleusView! {
-            return label
-        } else {
-            
-            let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 420.0, height: 140.0), nucleus: NMRNucleus(identifier: items))
-            return label
-        }
+        return nucleusView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
