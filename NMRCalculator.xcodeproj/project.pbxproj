@@ -42,6 +42,7 @@
 		0BF022DA1D63BAFB00EA75F2 /* SignalHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF022D91D63BAFB00EA75F2 /* SignalHeaderTableViewCell.swift */; };
 		0BF022DC1D63C11000EA75F2 /* NucleusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF022DB1D63C11000EA75F2 /* NucleusTableViewCell.swift */; };
 		0BFEB1281D0CA8FE00F37F1B /* NMRNucleus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */; };
+		90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		0BF022D91D63BAFB00EA75F2 /* SignalHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		0BF022DB1D63C11000EA75F2 /* NucleusTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NucleusTableViewCell.swift; sourceTree = "<group>"; };
 		0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NMRNucleus.swift; sourceTree = "<group>"; };
+		90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRPeriodicTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 				0B03D2D71D7A2E8F008AF186 /* NMRPulse.swift */,
 				0B03D2D91D7A361C008AF186 /* NMRSpectrum.swift */,
 				0B5D35831F7C7474004F70BF /* NMRSignalCalc.swift */,
+				90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				0B5D35841F7C7474004F70BF /* NMRSignalCalc.swift in Sources */,
 				0B5BC4CC1D12010F00BF168B /* NucleusView.swift in Sources */,
 				0B9A1D891D402FF40007372F /* NMRCalcTabBarController.swift in Sources */,
+				90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */,
 				0B5339921D5FF92400089DF3 /* PulseTableViewCell.swift in Sources */,
 				0B5339861D5FC9DF00089DF3 /* NMRCalcMasterItems.swift in Sources */,
 				0B52037E1F251EAA00DCCD1C /* NMRLarmor.swift in Sources */,
