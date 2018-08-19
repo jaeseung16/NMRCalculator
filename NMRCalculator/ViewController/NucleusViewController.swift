@@ -77,19 +77,6 @@ class NucleusViewController: UIViewController {
         updateTextFields()
     }
     
-    func readtable() -> [String]? {
-        if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
-            do {
-                let table = try String(contentsOfFile: path, encoding: String.Encoding.utf8).components(separatedBy: "\n")
-                return table
-            } catch {
-                print("Error: Cannot read the table.")
-                return nil
-            }
-        }
-        return nil
-    }
-    
     // MARK:- Update textfields
     func updateTextFields() {
         updateItemValues()
@@ -227,7 +214,7 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
 extension NucleusViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         let selected = NucleusPicker.selectedRow(inComponent: numberofColumn-1)
-        
+
         if selected == -1 {
             warnings("Unable to comply.", message: "Select a nucleus.")
             return false
@@ -236,6 +223,7 @@ extension NucleusViewController: UITextFieldDelegate {
             nucleus = periodicTable.nuclei[selected]
             nmrCalc!.nucleus = nucleus
             nucleusName.text = nmrCalc!.nucleus!.nameNucleus
+            nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!) 
             return true
         }
     }
