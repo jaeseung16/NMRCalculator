@@ -182,7 +182,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
             return label
         }
         
-        if let label = view as! NucleusView! {
+        if let label = view as! NucleusView? {
             return label
         } else {
             
