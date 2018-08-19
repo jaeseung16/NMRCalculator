@@ -85,6 +85,15 @@ struct NMRLarmor {
         return true
     }
     
+    // Convinience Methods
+    mutating func larmorFrequency(γ: Double, at fieldExternal: Double) -> Double {
+        return fieldExternal * γ
+    }
+    
+    mutating func externalField(γ: Double, at frequency: Double) -> Double {
+        return frequency / γ
+    }
+    
     public func describe() -> String {
         let string1 = "External field = \(fieldExternal) T"
         let string2 = "Larmor Frequency = \(frequencyLarmor) MHz"

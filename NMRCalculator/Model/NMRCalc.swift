@@ -38,10 +38,11 @@ class NMRCalc {
     var relaxationTime: Double?
     var angleErnst: Double?
     
-    var gyromagneticratio: Double? {
-        get {
-            return nucleus?.γ
-        }
+    // MARK:- enum
+    enum ernst_parameters: String {
+        case repetition
+        case relaxation
+        case angle
     }
     
     // MARK: - Methods
@@ -165,7 +166,7 @@ class NMRCalc {
         
     }
     
-    func evaluateParameter(_ name: String, in category: String) -> Bool {
+    func evaluate(parameter name: String, in category: String) -> Bool {
         guard let category = calcCategory(rawValue: category) else { return false }
         
         switch category {
@@ -203,7 +204,7 @@ extension NMRCalc {
             return
         }
         
-        guard evaluateParameter(name2, in: category) else {
+        guard evaluate(parameter: name2, in: category) else {
             completionHandler("Cannot update \(name2).")
             return
         }
@@ -221,22 +222,22 @@ extension NMRCalc {
         
         switch name {
         case "larmor":
-            guard evaluateParameter("proton", in: category), evaluateParameter("electron", in: category) else {
+            guard evaluate(parameter: "proton", in: category), evaluate(parameter: "electron", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
         case "field":
-            guard evaluateParameter("larmor", in: category), evaluateParameter("proton", in: category), evaluateParameter("electron", in: category) else {
+            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "proton", in: category), evaluate(parameter: "electron", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
         case "proton":
-            guard evaluateParameter("larmor", in: category), evaluateParameter("electron", in: category) else {
+            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "electron", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
         case "electron":
-            guard evaluateParameter("larmor", in: category), evaluateParameter("proton", in: category) else {
+            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "proton", in: category) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }

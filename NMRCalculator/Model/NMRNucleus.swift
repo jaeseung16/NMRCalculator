@@ -55,5 +55,4 @@ struct NMRNucleus {
         let string2 = "gyromagneticratio = \(γ) MHz/T"
         return string1 + "\n" + string2
     }
-    
 }

@@ -19,6 +19,7 @@ struct NMRPulse {
         case amplitude
     }
     
+    // MARK:- Methods
     init() {
         amplitude = ( flipangle / duration ) * ( 1000.0 / 360.0 )
     }

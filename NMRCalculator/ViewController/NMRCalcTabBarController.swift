@@ -9,9 +9,10 @@
 import UIKit
 
 class NMRCalcTabBarController: UITabBarController {
-    
+    // Properties
     var nmrCalc = NMRCalc()
 
+    // MARK:- Methods
     override func viewDidLoad() {
         super.viewDidLoad()
     }

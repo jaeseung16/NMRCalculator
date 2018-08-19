@@ -33,13 +33,16 @@ class NucleusViewController: UIViewController {
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
     var nucleusTable: [String]?
+    var nuclei = [NMRNucleus]()
     var nucleus: NMRNucleus?
     var proton: NMRNucleus?
     var nmrCalc = NMRCalc.shared
     
+    var indexForNuclei = 0
     var activeField: UITextField?
     var textbeforeediting: String?
     
+    // MARK:- Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         initializeView()
@@ -56,7 +59,7 @@ class NucleusViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    // MARK: Initialize the nuclues table
+    // MARK:- Initialize the nuclues table
     func initializeView() {
         nucleusTable = readtable()
         
@@ -104,7 +107,7 @@ class NucleusViewController: UIViewController {
         return nil
     }
     
-    // MARK: Update textfields
+    // MARK:- Update textfields
     func updateTextFields() {
         updateItemValues()
         
@@ -117,6 +120,8 @@ class NucleusViewController: UIViewController {
         if let nucleus = nmrCalc.nucleus {
             nucleusName.text = nucleus.nameNucleus
         }
+        
+        UserDefaults.standard.setValue(nucleus?.identifier, forKey: "Nucleus")
     }
     
     func updateItemValues() {
@@ -127,7 +132,7 @@ class NucleusViewController: UIViewController {
         }
     }
     
-    // MARK: Methods for Keyboard
+    // MARK:- Methods for Keyboard
     func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -171,7 +176,6 @@ class NucleusViewController: UIViewController {
     }
     
     // MARK: Warning messages
-    
     func warnings(_ title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -187,7 +191,7 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return (nucleusTable?.count)!
+        return nuclei.count
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -199,11 +203,6 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        guard let items = nucleusTable?[row] else {
-            let label = UILabel()
-            label.text = ""
-            return label
-        }
         
         if let label = view as! NucleusView? {
             return label
@@ -211,6 +210,8 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
             let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: NMRNucleus(identifier: items))
             return label
         }
+        
+        return nucleusView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -258,7 +259,6 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - UITextFieldDelegate
 extension NucleusViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        
         let selected = NucleusPicker.selectedRow(inComponent: 0)
         
         if selected == -1 {
