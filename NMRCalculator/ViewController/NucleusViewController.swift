@@ -45,7 +45,6 @@ class NucleusViewController: UIViewController {
         }
         
         periodicTable = tabBarController.periodicTable
-        
         initializeView()
     }
 
@@ -65,15 +64,11 @@ class NucleusViewController: UIViewController {
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
         print(identifier)
         
-        // Do I need to use dictionary to improve the search speed?
-        if let row = periodicTable.nucleiDictionary[identifier] {
-            nucleus = periodicTable.nuclei[row]
-            NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
-        } else {
-            nucleus = periodicTable.nuclei[0]
-            NucleusPicker.selectRow(0, inComponent: numberofColumn-1, animated: true)
-        }
+        let row = periodicTable.nucleiDictionary[identifier] ?? 0
         
+        nucleus = periodicTable.nuclei[row]
+        NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
+
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
         nmrCalc!.updateLarmor("field", to: 1.0) { error in
@@ -209,10 +204,11 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
+        let row = indexPath.row
         
-        cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
-        valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
+        cell.itemLabel.text = menuItems[row]
+        cell.itemValue.text = itemValues[row]
+        valueTextField[row] = cell.itemValue
         
         return cell
     }
