@@ -9,10 +9,11 @@
 import UIKit
 
 class SignalTableViewCell: UITableViewCell {
-
+    // Properties
     @IBOutlet weak var itemLabel: UILabel!
     @IBOutlet weak var itemValue: UITextField!
     
+    // MRAK:- Methods
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,7 +21,6 @@ class SignalTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
 }

@@ -9,10 +9,11 @@
 import UIKit
 
 class NMRParametersTableViewCell: UITableViewCell {
-
+    // Properties
     @IBOutlet weak var itemLabel: UILabel!
     @IBOutlet weak var itemValue: UITextField!
     
+    // MARK:- Methods
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,7 +21,6 @@ class NMRParametersTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
         // Configure the view for the selected state
     }
 }

@@ -10,9 +10,10 @@
 import UIKit
 
 class NMRCalcMasterItems: UITableViewCell {
-    
+    // Properties
     @IBOutlet weak var menuItems: UILabel!
     
+    // MARK:- Methods
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,7 +21,6 @@ class NMRCalcMasterItems: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
         // Configure the view for the selected state
     }
 }
