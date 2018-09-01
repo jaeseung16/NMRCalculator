@@ -12,6 +12,7 @@ class NMRPeriodicTable {
     // MARK: - Properties
     static let shared = NMRPeriodicTable()
     var nuclei = [NMRNucleus]()
+    var nucleiDictionary = [String: Int]()
     
     // MARK: - Methods
     private init() {
@@ -20,7 +21,9 @@ class NMRPeriodicTable {
         }
         
         for k in 0..<(nucleusTable.count - 1) {
-            nuclei.append(NMRNucleus(identifier: nucleusTable[k]))
+            let nucleus = NMRNucleus(identifier: nucleusTable[k])
+            nuclei.append(nucleus)
+            nucleiDictionary[nucleus.identifier] = k
         }
     }
     
