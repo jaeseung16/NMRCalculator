@@ -29,17 +29,23 @@ class NucleusViewController: UIViewController {
     var itemValues = Array(repeating: String(), count: 4)
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
-    let periodicTable = NMRPeriodicTable.shared
+    var periodicTable: NMRPeriodicTable!
     var nucleus: NMRNucleus?
     var nmrCalc: NMRCalc?
     
-    var indexForNuclei = 0
     var activeField: UITextField?
     var textbeforeediting: String?
     
     // MARK:- Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        guard let tabBarController = self.tabBarController as? NMRCalcTabBarController else {
+            return
+        }
+        
+        periodicTable = tabBarController.periodicTable
+        
         initializeView()
     }
 
@@ -58,6 +64,8 @@ class NucleusViewController: UIViewController {
     func initializeView() {
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
         print(identifier)
+        
+        // Do I need to use dictionary to improve the search speed?
         
         for k in 0..<(periodicTable.nuclei.count - 1) {
             if periodicTable.nuclei[k].identifier == identifier {

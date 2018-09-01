@@ -15,6 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        let periodicTable = NMRPeriodicTable.shared
+        print("\(periodicTable)")
+        if let rootViewController = window?.rootViewController as? NMRCalcTabBarController {
+            rootViewController.periodicTable = periodicTable
+        } else if let rootViewController = window?.rootViewController as? IPadSplitViewController {
+            rootViewController.periodicTable = periodicTable
+        }
+        
         return true
     }
 

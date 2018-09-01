@@ -22,7 +22,6 @@ struct NMRLarmor {
     
     var nucleus: NMRNucleus
     
-    
     // MARK: - Enumeration
     enum Parameters: String {
         case field
