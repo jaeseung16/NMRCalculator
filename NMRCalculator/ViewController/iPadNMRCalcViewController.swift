@@ -23,7 +23,7 @@ class iPadNMRCalcViewController: UIViewController {
     var itemValues = Array(repeating: String(), count: 4)
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
-    let periodicTable = NMRPeriodicTable.shared
+    var periodicTable: NMRPeriodicTable!
     var nucleus: NMRNucleus?
     var nmrCalc: NMRCalc?
     
@@ -33,6 +33,12 @@ class iPadNMRCalcViewController: UIViewController {
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        guard let splitViewController = self.splitViewController as? IPadSplitViewController else {
+            return
+        }
+        
+        periodicTable = splitViewController.periodicTable
         initializeView()
     }
     
@@ -79,13 +85,11 @@ class iPadNMRCalcViewController: UIViewController {
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
         print(identifier)
         
-        for k in 0..<(periodicTable.nuclei.count - 1) {
-            if periodicTable.nuclei[k].identifier == identifier {
-                nucleus = periodicTable.nuclei[k]
-                NucleusPicker.selectRow(k, inComponent: numberofColumn-1, animated: true)
-            }
-        }
+        let row = periodicTable.nucleiDictionary[identifier] ?? 0
         
+        nucleus = periodicTable.nuclei[row]
+        NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
+
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
         nmrCalc!.updateLarmor("field", to: 1.0) { error in
