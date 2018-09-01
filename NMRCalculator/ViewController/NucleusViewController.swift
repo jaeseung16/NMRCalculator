@@ -66,12 +66,12 @@ class NucleusViewController: UIViewController {
         print(identifier)
         
         // Do I need to use dictionary to improve the search speed?
-        
-        for k in 0..<(periodicTable.nuclei.count - 1) {
-            if periodicTable.nuclei[k].identifier == identifier {
-                nucleus = periodicTable.nuclei[k]
-                NucleusPicker.selectRow(k, inComponent: numberofColumn-1, animated: true)
-            }
+        if let row = periodicTable.nucleiDictionary[identifier] {
+            nucleus = periodicTable.nuclei[row]
+            NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
+        } else {
+            nucleus = periodicTable.nuclei[0]
+            NucleusPicker.selectRow(0, inComponent: numberofColumn-1, animated: true)
         }
         
         nmrCalc = NMRCalc(nucleus: nucleus!)
