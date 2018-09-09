@@ -13,7 +13,7 @@ protocol PulseTableViewCellDelegate: AnyObject {
 }
 
 class PulseTableViewCell: UITableViewCell {
-    // MARK: - Properties
+    // Properties
     @IBOutlet weak var itemLabel: UILabel!
     @IBOutlet weak var itemValue: UITextField!
     

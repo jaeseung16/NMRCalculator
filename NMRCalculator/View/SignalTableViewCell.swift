@@ -13,8 +13,7 @@ protocol SignalTableViewCellDelegate: AnyObject {
 }
 
 class SignalTableViewCell: UITableViewCell {
-
-    // MARK: - Properties
+    // Properties
     @IBOutlet weak var itemLabel: UILabel!
     @IBOutlet weak var itemValue: UITextField!
     
@@ -24,6 +23,7 @@ class SignalTableViewCell: UITableViewCell {
     
     weak var delegate: SignalTableViewCellDelegate?
     
+    // MRAK:- Methods
     override func awakeFromNib() {
         super.awakeFromNib()
         itemValue.delegate = self

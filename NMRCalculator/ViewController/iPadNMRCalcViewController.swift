@@ -83,18 +83,9 @@ class iPadNMRCalcViewController: UIViewController {
     // MARK: Method to initialize the view
     func initializeView() {
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
-        print(identifier)
+        print("id: \(identifier)")
         
-        proton = NMRNucleus(identifier: nucleusTable![0])
-        
-        if let index = UserDefaults.standard.object(forKey: "Nucleus") as? Int {
-            nucleus = NMRNucleus(identifier: nucleusTable![index])
-            NucleusPicker.selectRow(index, inComponent: 0, animated: true)
-        } else {
-            nucleus = NMRNucleus(identifier: nucleusTable![0])
-            NucleusPicker.selectRow(0, inComponent: 0, animated: true)
-            UserDefaults.standard.set(0, forKey: "Nucleus")
-        }
+        let row = periodicTable.nucleiDictionary[identifier] ?? 0
         
         nucleus = periodicTable.nuclei[row]
         NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
@@ -136,6 +127,8 @@ class iPadNMRCalcViewController: UIViewController {
         if let nucleus = nmrCalc?.nucleus {
             nucleusName.text = nucleus.nameNucleus
         }
+        
+        UserDefaults.standard.setValue(nucleus?.identifier, forKey: "Nucleus")
     }
     
     func updateItemValues() {
@@ -189,13 +182,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
             return NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: periodicTable.nuclei[row])
         }
         
-        if let label = view as! NucleusView? {
-            return label
-        } else {
-            
-            let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 420.0, height: 140.0), nucleus: NMRNucleus(identifier: items))
-            return label
-        }
+        return nucleusView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -213,8 +200,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
                 self.warnings("Unable to comply.", message: error!)
             }
         }
-        
-        UserDefaults.standard.set(row, forKey: "Nucleus")
+
         updateTextFields()
     }
 }

@@ -9,8 +9,7 @@
 import UIKit
 
 class PulseHeaderTableViewCell: UITableViewCell {
-    // MARK: - Properties
-    
+    // Properties
     @IBOutlet weak var pulseHeaderLabel: UILabel!
     
     // MARK:- Methods

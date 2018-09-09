@@ -19,11 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         let periodicTable = NMRPeriodicTable.shared
-        print("\(periodicTable)")
         if let rootViewController = window?.rootViewController as? NMRCalcTabBarController {
             rootViewController.periodicTable = periodicTable
+            print("iPhone")
         } else if let rootViewController = window?.rootViewController as? IPadSplitViewController {
             rootViewController.periodicTable = periodicTable
+            print("iPad")
         }
         
         return true

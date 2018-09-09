@@ -73,13 +73,6 @@ class NMRCalc {
         }
     }
     
-    // MARK: Ernst angle
-    enum ernst_parameters: String {
-        case repetition
-        case relaxation
-        case angle
-    }
-    
     func set_ernstparameter(_ name: String, to value: Double) -> Bool {
         if value > 0 {
             if let ernst = ernst_parameters(rawValue: name) {
