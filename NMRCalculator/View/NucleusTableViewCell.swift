@@ -9,19 +9,16 @@
 import UIKit
 
 class NucleusTableViewCell: UITableViewCell {
-
+    // Properties
     @IBOutlet weak var itemLabel: UILabel!
     @IBOutlet weak var itemValue: UITextField!
     
+    // MARK:- Methods
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
-
 }

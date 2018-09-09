@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable class NucleusView: UIView {
-    
+    // Properties
     @IBOutlet var NucleusUIView: UIView!
     
     @IBOutlet weak var symbol: UILabel!
@@ -17,6 +17,7 @@ import UIKit
     @IBOutlet weak var spin: UILabel!
     @IBOutlet weak var gamma: UILabel!
     
+    // MARK:- Methods
     override init(frame: CGRect){
         super.init(frame: frame)
         self.commonInit()
@@ -62,14 +63,6 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
-    
     fileprivate func commonInit() {
         Bundle.main.loadNibNamed("NucleusView", owner: self, options: nil)
         guard let content = NucleusUIView else { return }
@@ -77,5 +70,4 @@ import UIKit
         content.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         self.addSubview(content)
     }
-
 }

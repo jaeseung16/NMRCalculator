@@ -210,10 +210,10 @@
             </objects>
             <point key="canvasLocation" x="-556" y="-507"/>
         </scene>
-        <!--Split View Controller-->
+        <!--iPad Split View Controller-->
         <scene sceneID="LOD-Gg-nZC">
             <objects>
-                <splitViewController id="1dR-7C-1Er" sceneMemberID="viewController">
+                <splitViewController id="1dR-7C-1Er" customClass="IPadSplitViewController" customModule="NMRCalculator" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="eCl-uq-r4K" kind="relationship" relationship="masterViewController" id="Xu6-EO-kXd"/>
                         <segue destination="gNc-cn-1JD" kind="relationship" relationship="detailViewController" id="YAz-6i-azI"/>

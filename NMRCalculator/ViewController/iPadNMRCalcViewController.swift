@@ -23,9 +23,8 @@ class iPadNMRCalcViewController: UIViewController {
     var itemValues = Array(repeating: String(), count: 4)
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
-    var nucleusTable: [String]?
+    var periodicTable: NMRPeriodicTable!
     var nucleus: NMRNucleus?
-    var proton: NMRNucleus?
     var nmrCalc: NMRCalc?
     
     var activeField: UITextField?
@@ -34,6 +33,12 @@ class iPadNMRCalcViewController: UIViewController {
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        guard let splitViewController = self.splitViewController as? IPadSplitViewController else {
+            return
+        }
+        
+        periodicTable = splitViewController.periodicTable
         initializeView()
     }
     
@@ -77,7 +82,8 @@ class iPadNMRCalcViewController: UIViewController {
 
     // MARK: Method to initialize the view
     func initializeView() {
-        nucleusTable = readtable()
+        let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
+        print(identifier)
         
         proton = NMRNucleus(identifier: nucleusTable![0])
         
@@ -90,6 +96,9 @@ class iPadNMRCalcViewController: UIViewController {
             UserDefaults.standard.set(0, forKey: "Nucleus")
         }
         
+        nucleus = periodicTable.nuclei[row]
+        NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
+
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
         nmrCalc!.updateLarmor("field", to: 1.0) { error in
@@ -164,7 +173,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return (nucleusTable?.count)!
+        return periodicTable.nuclei.count
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -176,10 +185,8 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        guard let items = nucleusTable?[row] else {
-            let label = UILabel()
-            label.text = ""
-            return label
+        guard let nucleusView = view as? NucleusView else {
+            return NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: periodicTable.nuclei[row])
         }
         
         if let label = view as! NucleusView? {
@@ -192,7 +199,7 @@ extension iPadNMRCalcViewController: UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        nucleus = NMRNucleus(identifier: nucleusTable![row])
+        nucleus = periodicTable.nuclei[row]
         nmrCalc!.nucleus = nucleus!
         nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
         
@@ -243,9 +250,10 @@ extension iPadNMRCalcViewController: UITextFieldDelegate {
             return false
         } else {
             NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
-            nucleus = NMRNucleus(identifier: nucleusTable![selected])
+            nucleus = periodicTable.nuclei[selected]
             nmrCalc!.nucleus = nucleus!
             nucleusName.text = nmrCalc!.nucleus!.nameNucleus
+            nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!) 
             return true
         }
     }

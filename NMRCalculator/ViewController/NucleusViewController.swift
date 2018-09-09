@@ -32,19 +32,23 @@ class NucleusViewController: UIViewController {
     var itemValues = Array(repeating: String(), count: 4)
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
-    var nucleusTable: [String]?
-    var nuclei = [NMRNucleus]()
+    var periodicTable: NMRPeriodicTable!
     var nucleus: NMRNucleus?
     var proton: NMRNucleus?
     var nmrCalc = NMRCalc.shared
     
-    var indexForNuclei = 0
     var activeField: UITextField?
     var textbeforeediting: String?
     
     // MARK:- Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        guard let tabBarController = self.tabBarController as? NMRCalcTabBarController else {
+            return
+        }
+        
+        periodicTable = tabBarController.periodicTable
         initializeView()
     }
 
@@ -92,19 +96,6 @@ class NucleusViewController: UIViewController {
         }
         
         updateTextFields()
-    }
-    
-    func readtable() -> [String]? {
-        if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
-            do {
-                let table = try String(contentsOfFile: path, encoding: String.Encoding.utf8).components(separatedBy: "\n")
-                return table
-            } catch {
-                print("Error: Cannot read the table.")
-                return nil
-            }
-        }
-        return nil
     }
     
     // MARK:- Update textfields
@@ -191,7 +182,7 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return nuclei.count
+        return periodicTable.nuclei.count
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -245,10 +236,11 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
+        let row = indexPath.row
         
-        cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
-        valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
+        cell.itemLabel.text = menuItems[row]
+        cell.itemValue.text = itemValues[row]
+        valueTextField[row] = cell.itemValue
         
         return cell
     }
@@ -257,8 +249,8 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - UITextFieldDelegate
 extension NucleusViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        let selected = NucleusPicker.selectedRow(inComponent: 0)
-        
+        let selected = NucleusPicker.selectedRow(inComponent: numberofColumn-1)
+
         if selected == -1 {
             warnings("Unable to comply.", message: "Select a nucleus.")
             return false

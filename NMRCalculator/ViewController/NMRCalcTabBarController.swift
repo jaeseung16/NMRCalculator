@@ -11,6 +11,7 @@ import UIKit
 class NMRCalcTabBarController: UITabBarController {
     // Properties
     var nmrCalc = NMRCalc()
+    var periodicTable: NMRPeriodicTable!
 
     // MARK:- Methods
     override func viewDidLoad() {
