@@ -207,11 +207,9 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         if let label = view as! NucleusView? {
             return label
         } else {
-            let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: NMRNucleus(identifier: items))
+            let label = NucleusView(frame: CGRect(x: 0, y: 0, width: 270.0, height: 90.0), nucleus: NMRNucleus(identifier: nuclei[row].identifier))
             return label
         }
-        
-        return nucleusView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
