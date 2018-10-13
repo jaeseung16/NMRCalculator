@@ -38,13 +38,6 @@ class NMRCalc {
     var relaxationTime: Double?
     var angleErnst: Double?
     
-    // MARK:- enum
-    enum ernst_parameters: String {
-        case repetition
-        case relaxation
-        case angle
-    }
-    
     // MARK: - Methods
     init() {
         larmorNMR = NMRLarmor()
@@ -117,16 +110,6 @@ class NMRCalc {
         }
         
         return false
-    }
-    
-    // MARK:
-    enum calcCategory: String {
-        case resonance
-        case acquisition
-        case spectrum
-        case pulse1
-        case pulse2
-        case ernstAngle
     }
     
     func setParameter(_ name: String, in category: String, to value: Double) -> Bool {
