@@ -67,39 +67,39 @@ class SignalViewController: UIViewController {
     // MARK: Methods to initialize the view
     func initializeView() {
         if let size = UserDefaults.standard.object(forKey: "SizeInAcquisition") as? Double {
-            let _ = nmrCalc.setParameter("size", in: "acquisition", to: size)
+            let _ = nmrCalc.setParameter("size", in: .acquisition, to: size)
         } else {
-            let _ = nmrCalc.setParameter("size", in: "acquisition", to: 1000.0)
+            let _ = nmrCalc.setParameter("size", in: .acquisition, to: 1000.0)
             UserDefaults.standard.set(1000.0, forKey: "SizeInAcquisition")
         }
         
         if let duration = UserDefaults.standard.object(forKey: "DurationInAcquisition") as? Double {
-            let _ = nmrCalc.setParameter("duration", in: "acquisition", to: duration)
+            let _ = nmrCalc.setParameter("duration", in: .acquisition, to: duration)
         } else {
-            let _ = nmrCalc.setParameter("duration", in: "acquisition", to: 10.0)
+            let _ = nmrCalc.setParameter("duration", in: .acquisition, to: 10.0)
             UserDefaults.standard.set(10.0, forKey: "DurationInAcquisition")
         }
         
-        guard nmrCalc.evaluateParameter("dwell", in: "acquisition") else {
+        guard nmrCalc.evaluate(parameter: "dwell", in: .acquisition) else {
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
         }
         
         if let size = UserDefaults.standard.object(forKey: "SizeInSpectrum") as? Double {
-            let _ = nmrCalc.setParameter("size", in: "spectrum", to: size)
+            let _ = nmrCalc.setParameter("size", in: .spectrum, to: size)
         } else {
-            let _ = nmrCalc.setParameter("size", in: "spectrum", to: 1000.0)
+            let _ = nmrCalc.setParameter("size", in: .spectrum, to: 1000.0)
             UserDefaults.standard.set(1000.0, forKey: "SizeInSpectrum")
         }
         
         if let width = UserDefaults.standard.object(forKey: "WidthInSpectrum") as? Double {
-            let _ = nmrCalc.setParameter("width", in: "spectrum", to: width)
+            let _ = nmrCalc.setParameter("width", in: .spectrum, to: width)
         } else {
-            let _ = nmrCalc.setParameter("width", in: "spectrum", to: 1.0)
+            let _ = nmrCalc.setParameter("width", in: .spectrum, to: 1.0)
             UserDefaults.standard.set(1.0, forKey: "WidthInSpectrum")
         }
         
-        guard nmrCalc.evaluateParameter("resolution", in: "spectrum") else {
+        guard nmrCalc.evaluate(parameter: "resolution", in: .spectrum) else {
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
         }
@@ -249,12 +249,12 @@ extension SignalViewController: SignalTableViewCellDelegate {
         
         var firstParameter = ""
         var secondParameter = ""
-        var category = ""
+        var category: NMRCalc.Category
         var value = newValue
         
         switch cell.sectionLabel! {
         case sections[0]:
-            category = "acquisition"
+            category = .acquisition
             
             switch cellLabel.text! {
             case menuItems1[0]: // Textfield for the size of FID
@@ -314,7 +314,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
                 return
             }
         case sections[1]:
-            category = "spectrum"
+            category = .spectrum
             
             switch cellLabel.text! {
             case menuItems2[0]: // Textfield for the size of spectrum

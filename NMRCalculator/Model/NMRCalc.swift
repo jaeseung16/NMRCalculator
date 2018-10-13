@@ -66,44 +66,18 @@ class NMRCalc {
         }
     }
     
-    func set_ernstparameter(_ name: String, to value: Double) -> Bool {
+    func setErnstParameter(_ name: Ernst, to value: Double) -> Bool {
         if value > 0 {
-            if let ernst = ernst_parameters(rawValue: name) {
-                switch ernst {
-                case .repetition:
-                    repetitionTime = value
-                    return true
-                case .relaxation:
-                    relaxationTime = value
-                    return true
-                case .angle:
-                    if value <= Double.pi / 2.0 {
-                        angleErnst = value
-                        return true
-                    }
-                }
-            }
-        }
-        
-        return false
-    }
-    
-    func evaluate_ernstparameter(_ name: String) -> Bool {
-        if let ernst = ernst_parameters(rawValue: name) {
-            switch ernst {
+            switch name {
             case .repetition:
-                if relaxationTime != nil && angleErnst != nil {
-                    repetitionTime = -1.0 * relaxationTime! * log( cos(angleErnst!) )
-                    return true
-                }
+                repetitionTime = value
+                return true
             case .relaxation:
-                if repetitionTime != nil && angleErnst != nil {
-                    relaxationTime = -1.0 * repetitionTime! / log( cos(angleErnst!) )
-                    return true
-                }
+                relaxationTime = value
+                return true
             case .angle:
-                if relaxationTime != nil && repetitionTime != nil {
-                    angleErnst = acos(exp(-1.0 * repetitionTime! / relaxationTime! ))
+                if value <= Double.pi / 2.0 {
+                    angleErnst = value
                     return true
                 }
             }
@@ -112,9 +86,29 @@ class NMRCalc {
         return false
     }
     
-    func setParameter(_ name: String, in category: String, to value: Double) -> Bool {
-        guard let category = calcCategory(rawValue: category) else { return false }
+    func evaluateErnstParameter(_ name: Ernst) -> Bool {
+        switch name {
+        case .repetition:
+            if relaxationTime != nil && angleErnst != nil {
+                repetitionTime = -1.0 * relaxationTime! * log( cos(angleErnst!) )
+                return true
+            }
+        case .relaxation:
+            if repetitionTime != nil && angleErnst != nil {
+                relaxationTime = -1.0 * repetitionTime! / log( cos(angleErnst!) )
+                return true
+            }
+        case .angle:
+            if relaxationTime != nil && repetitionTime != nil {
+                angleErnst = acos(exp(-1.0 * repetitionTime! / relaxationTime! ))
+                return true
+            }
+        }
         
+        return false
+    }
+    
+    func setParameter(_ name: String, in category: Category, to value: Double) -> Bool {
         switch category {
         case .resonance:
             guard larmorNMR != nil else { return false }
@@ -137,14 +131,13 @@ class NMRCalc {
             return pulseNMR[1]!.set(parameter: name, to: value)
             
         case .ernstAngle:
-            return set_ernstparameter(name, to: value)
+            guard let name = Ernst(rawValue: name) else { return false }
+            return setErnstParameter(name, to: value)
         }
         
     }
     
-    func evaluate(parameter name: String, in category: String) -> Bool {
-        guard let category = calcCategory(rawValue: category) else { return false }
-        
+    func evaluate(parameter name: String, in category: Category) -> Bool {
         switch category {
         case .resonance:
             guard larmorNMR != nil else { return false }
@@ -167,19 +160,15 @@ class NMRCalc {
             return pulseNMR[1]!.update(parameter: name)
             
         case .ernstAngle:
-            return evaluate_ernstparameter(name)
+            guard let name = Ernst(rawValue: name) else { return false }
+            return evaluateErnstParameter(name)
         }
     }
 }
 
 // MARK: - Convenience methods
 extension NMRCalc {
-    func updateParameter(_ name: String, in category: String, to value: Double, and name2: String, completionHandler: @escaping (_ error: String?) -> Void) {
-        guard setParameter(name, in: category, to: value) else {
-            completionHandler("The value is out of range.")
-            return
-        }
-        
+    func updateParameter(_ name: String, in category: Category, to value: Double, and name2: String, completionHandler: @escaping (_ error: String?) -> Void) {
         guard evaluate(parameter: name2, in: category) else {
             completionHandler("Cannot update \(name2).")
             return
@@ -189,7 +178,7 @@ extension NMRCalc {
     }
     
     func updateLarmor(_ name: String, to value: Double, completionHandler: @escaping (_ error: String?) -> Void) {
-        let category = "resonance"
+        let category = Category.resonance
         
         guard setParameter(name, in: category, to: value) else {
             completionHandler("The value is out of range.")

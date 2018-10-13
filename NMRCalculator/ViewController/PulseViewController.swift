@@ -119,17 +119,17 @@ class PulseViewController: UIViewController {
             return
         }
         
-        guard nmrCalc.set_ernstparameter("repetition", to: 1.0) else {
+        guard nmrCalc.setErnstParameter(.repetition, to: 1.0) else {
             warnings("Unable to comply.", message: "Cannot initialize the repetition time.")
             return
         }
         
-        guard nmrCalc.set_ernstparameter("relaxation", to: 1.0) else {
+        guard nmrCalc.setErnstParameter(.relaxation, to: 1.0) else {
             warnings("Unable to comply.", message: "Cannot initialize the relaxation time.")
             return
         }
         
-        guard nmrCalc.evaluate_ernstparameter("angle") else {
+        guard nmrCalc.evaluateErnstParameter(.angle) else {
             warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
             return
         }
@@ -304,12 +304,12 @@ extension PulseViewController: PulseTableViewCellDelegate {
         
         var firstParameter = ""
         var secondParameter = ""
-        var category = ""
+        var category: NMRCalc.Category
         var value = newValue
         
         switch cell.sectionLabel! {
         case sections[0]:
-            category = "pulse1"
+            category = .pulse1
             
             switch cellLabel.text! {
             case menuItems1[0]:
@@ -370,7 +370,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
             }
             
         case sections[1]:
-            category = "pulse2"
+            category = .pulse2
             
             switch cellLabel.text! {
             case menuItems2[0]:
@@ -431,7 +431,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 value = pow(10.0, 1.0 * value / 20.0) * amp0
                 
                 firstParameter = "amplitude"
-                category = "pulse2"
+                category = .pulse2
                 secondParameter = "duration"
                 
             default:
@@ -439,7 +439,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 return
             }
         case sections[2]:
-            category = "ernstAngle"
+            category = .ernstAngle
             
             switch cellLabel.text! {
             case menuItems3[0]:
