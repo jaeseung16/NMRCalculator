@@ -9,7 +9,7 @@
 import Foundation
 
 extension NMRCalc {
-    enum calcCategory: String {
+    enum Category: String {
         case resonance
         case acquisition
         case spectrum
@@ -17,7 +17,7 @@ extension NMRCalc {
         case pulse2
         case ernstAngle
     }
-    enum ernst_parameters: String {
+    enum Ernst: String {
         case repetition
         case relaxation
         case angle
