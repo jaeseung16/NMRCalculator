@@ -10,18 +10,18 @@ import Foundation
 
 struct NMRPulse {
     var duration: Double = 10.0 // pulse duration in μs
-    var flipangle: Double = 90.0 // flip angle in degree
+    var flipAngle: Double = 90.0 // flip angle in degree
     var amplitude: Double // RF amplitude in kHz
     
     enum Parameter: String {
         case duration
-        case flipangle
+        case flipAngle
         case amplitude
     }
     
     // MARK:- Methods
     init() {
-        amplitude = ( flipangle / duration ) * ( 1000.0 / 360.0 )
+        amplitude = ( flipAngle / duration ) * ( 1000.0 / 360.0 )
     }
     
     mutating func set(parameter name: String, to value: Double) -> Bool {
@@ -35,8 +35,8 @@ struct NMRPulse {
             guard value >= 0 else { return false }
             duration = value
             
-        case .flipangle:
-            flipangle = value
+        case .flipAngle:
+            flipAngle = value
         }
         
         return true
@@ -48,22 +48,34 @@ struct NMRPulse {
         switch parameter {
         case .duration:
             guard (amplitude != 0) else { return false }
-            duration = ( flipangle / amplitude ) * ( 1000.0 / 360.0 )
+            duration = pulseDuration(with: flipAngle / 360.0, at: amplitude / 1000.0)
             
         case .amplitude:
             guard (duration != 0) else { return false }
-            amplitude = ( flipangle / duration ) * ( 1000.0 / 360.0 )
+            amplitude = pulseAmplitude(with: flipAngle / 360.0, for: duration) * 1000.0
             
-        case .flipangle:
-            flipangle = ( duration * amplitude ) * ( 360.0 / 1000.0 )
+        case .flipAngle:
+            flipAngle = rotationAngle(at: amplitude / 1000.0, for: duration) * 360.0
         }
         
         return true
     }
     
+    mutating func rotationAngle(at amplitude: Double, for duration: Double) -> Double {
+        return amplitude * duration
+    }
+    
+    mutating func pulseAmplitude(with rotationAngle: Double, for duration: Double) -> Double {
+        return rotationAngle / duration
+    }
+    
+    mutating func pulseDuration(with rotationAngle: Double, at amplitude: Double) -> Double {
+        return rotationAngle / amplitude
+    }
+    
     func describe() -> String {
         let string1 = "Pulse duration = \(duration) μs"
-        let string2 = "Flip angle = \(flipangle)˚"
+        let string2 = "Flip angle = \(flipAngle)˚"
         let string3 = "ɷ₁/2π = \(amplitude) kHz"
         return string1 + "\n" + string2 + "\n" + string3
     }

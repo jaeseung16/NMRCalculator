@@ -145,17 +145,17 @@ class PulseViewController: UIViewController {
     
     func updateItemValues() {
         if let pulse = nmrCalc.pulseNMR[0] {
-            itemValues1 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
+            itemValues1 = [(pulse.duration).format(".5"),(pulse.flipAngle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
             
             UserDefaults.standard.set(pulse.duration, forKey: "Duration1")
-            UserDefaults.standard.set(pulse.flipangle, forKey: "FlipAngle1")
+            UserDefaults.standard.set(pulse.flipAngle, forKey: "FlipAngle1")
         }
         
         if let pulse = nmrCalc.pulseNMR[1] {
-            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipangle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc.relativepower)?.format(".5"))! ]
+            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipAngle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc.relativepower)?.format(".5"))! ]
             
             UserDefaults.standard.set(pulse.amplitude, forKey: "Amplitude2")
-            UserDefaults.standard.set(pulse.flipangle, forKey: "FlipAngle2")
+            UserDefaults.standard.set(pulse.flipAngle, forKey: "FlipAngle2")
         }
         
         itemValues3 = [(nmrCalc.repetitionTime)!.format(".3"),(nmrCalc.relaxationTime)!.format(".3"), ((nmrCalc.angleErnst)!*180.0/Double.pi).format(".4") ]
