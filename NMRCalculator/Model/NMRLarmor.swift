@@ -45,41 +45,37 @@ struct NMRLarmor {
         frequencyElectron = fieldExternal * gammaElectron
     }
     
-    mutating func set(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameter(rawValue: name) else { return false }
-        
-        switch parameter {
+    mutating func set(parameter name: Parameter, to value: Double) -> Bool {
+        switch name {
         case .field:
             fieldExternal = value
         case .larmor:
             frequencyLarmor = value
-            fieldExternal = frequencyLarmor / nucleus.γ
+            fieldExternal = externalField(γ: nucleus.γ, at:frequencyLarmor)
         case .proton:
             self.frequencyProton = value
-            fieldExternal = frequencyProton / gammaProton
+            fieldExternal = externalField(γ: gammaProton, at: frequencyProton)
         case .electron:
             frequencyElectron = value
-            fieldExternal = frequencyElectron / gammaElectron
+            fieldExternal = externalField(γ: gammaElectron, at: frequencyProton)
         }
         
         return true
     }
     
-    mutating func update(parameter name: String) -> Bool {
-        guard let parameter = Parameter(rawValue: name) else { return false }
-        
-        switch parameter {
+    mutating func update(parameter name: Parameter) -> Bool {
+        switch name {
         case .field:
-            fieldExternal = frequencyLarmor / nucleus.γ
+            fieldExternal = externalField(γ: nucleus.γ, at: frequencyLarmor)
 
         case .larmor:
-            frequencyLarmor = fieldExternal * nucleus.γ
+            frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
             
         case .proton:
-            frequencyProton = fieldExternal * gammaProton
+            frequencyProton = larmorFrequency(γ: gammaProton, at: fieldExternal)
             
         case .electron:
-            frequencyElectron = fieldExternal * gammaElectron
+            frequencyElectron = larmorFrequency(γ: gammaElectron, at: fieldExternal)
         }
         
         return true
