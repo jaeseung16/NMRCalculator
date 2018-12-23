@@ -42,10 +42,8 @@ struct NMRPulse {
         return true
     }
     
-    mutating func update(parameter name: String) -> Bool {
-        guard let parameter = Parameter(rawValue: name) else { return false }
-        
-        switch parameter {
+    mutating func update(parameter name: Parameter) -> Bool {
+        switch name {
         case .duration:
             guard (amplitude != 0) else { return false }
             duration = pulseDuration(with: flipAngle / 360.0, at: amplitude / 1000.0)

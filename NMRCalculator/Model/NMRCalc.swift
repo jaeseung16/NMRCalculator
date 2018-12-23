@@ -162,11 +162,11 @@ class NMRCalc {
             
         case .pulse1:
             guard pulseNMR[0] != nil else { return false }
-            return pulseNMR[0]!.update(parameter: name)
+            return pulseNMR[0]!.update(parameter: NMRPulse.Parameter(rawValue: name)!)
             
         case .pulse2:
             guard pulseNMR[1] != nil else { return false }
-            return pulseNMR[1]!.update(parameter: name)
+            return pulseNMR[1]!.update(parameter: NMRPulse.Parameter(rawValue: name)!)
             
         case .ernstAngle:
             guard let ernstAngle = NMRErnstAngle.Parameter(rawValue: name) else { return false }
@@ -178,7 +178,7 @@ class NMRCalc {
 // MARK: - Convenience methods
 extension NMRCalc {
     func updateParameter(_ name: String, in category: NMRCalcCategory, to value: Double, and name2: String, completionHandler: @escaping (_ error: String?) -> Void) {
-        guard evaluate(parameter: name2, in: category) else {
+        guard setParameter(name, in: category, to: value), evaluate(parameter: name2, in: category) else {
             completionHandler("Cannot update \(name2).")
             return
         }

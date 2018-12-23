@@ -91,7 +91,7 @@ class PulseViewController: UIViewController {
             UserDefaults.standard.set(90.0, forKey: "FlipAngle1")
         }
    
-        let _ = pulse1.update(parameter: "amplitude")
+        let _ = pulse1.update(parameter: NMRPulse.Parameter.amplitude)
         
         var pulse2 = NMRPulse()
         
@@ -109,7 +109,7 @@ class PulseViewController: UIViewController {
             UserDefaults.standard.set(360.0, forKey: "FlipAngle2")
         }
         
-        let _ = pulse2.update(parameter: "duration")
+        let _ = pulse2.update(parameter: NMRPulse.Parameter.duration)
         
         nmrCalc.pulseNMR.append(pulse1)
         nmrCalc.pulseNMR.append(pulse2)
@@ -323,14 +323,14 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 if fixedItem == menuItems1[1] {
                     secondParameter = "amplitude"
                 } else if fixedItem == menuItems1[2] {
-                    secondParameter = "flipangle"
+                    secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
             case menuItems1[1]:
-                firstParameter = "flipangle"
+                firstParameter = "flipAngle"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
                     secondParameter = "duration"
@@ -358,7 +358,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 if fixedItem == menuItems1[1] {
                     secondParameter = "duration"
                 } else if fixedItem == menuItems1[0] {
-                    secondParameter = "flipangle"
+                    secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
@@ -384,14 +384,14 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 if fixedItem == menuItems2[1] {
                     secondParameter = "amplitude"
                 } else if fixedItem == menuItems2[2] {
-                    secondParameter = "flipangle"
+                    secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
             case menuItems2[1]:
-                firstParameter = "flipangle"
+                firstParameter = "flipAngle"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
                     secondParameter = "duration"
@@ -419,7 +419,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 if fixedItem == menuItems2[1] {
                     secondParameter = "duration"
                 } else if fixedItem == menuItems2[0] {
-                    secondParameter = "flipangle"
+                    secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
