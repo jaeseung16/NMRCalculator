@@ -129,7 +129,7 @@ class PulseViewController: UIViewController {
             return
         }
         
-        guard nmrCalc.evaluateErnstParameter(.angle) else {
+        guard nmrCalc.evaluateErnstParameter(.angleErnst) else {
             warnings("Unable to comply.", message: "Cannot calculate the Ernst angle.")
             return
         }
@@ -304,7 +304,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
         
         var firstParameter = ""
         var secondParameter = ""
-        var category: NMRCalc.Category
+        var category: NMRCalc.NMRCalcCategory
         var value = newValue
         
         switch cell.sectionLabel! {

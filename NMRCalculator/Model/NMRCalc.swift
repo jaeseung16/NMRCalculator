@@ -38,6 +38,15 @@ class NMRCalc {
     var relaxationTime: Double?
     var angleErnst: Double?
     
+    enum NMRCalcCategory {
+        case resonance;
+        case acquisition;
+        case spectrum;
+        case pulse1;
+        case pulse2;
+        case ernstAngle;
+    }
+    
     // MARK: - Methods
     init() {
         larmorNMR = NMRLarmor()
@@ -66,7 +75,7 @@ class NMRCalc {
         }
     }
     
-    func setErnstParameter(_ name: Ernst, to value: Double) -> Bool {
+    func setErnstParameter(_ name: NMRErnstAngle.Parameter, to value: Double) -> Bool {
         if value > 0 {
             switch name {
             case .repetition:
@@ -75,7 +84,7 @@ class NMRCalc {
             case .relaxation:
                 relaxationTime = value
                 return true
-            case .angle:
+            case .angleErnst:
                 if value <= Double.pi / 2.0 {
                     angleErnst = value
                     return true
@@ -86,7 +95,7 @@ class NMRCalc {
         return false
     }
     
-    func evaluateErnstParameter(_ name: Ernst) -> Bool {
+    func evaluateErnstParameter(_ name: NMRErnstAngle.Parameter) -> Bool {
         switch name {
         case .repetition:
             if relaxationTime != nil && angleErnst != nil {
@@ -98,7 +107,7 @@ class NMRCalc {
                 relaxationTime = -1.0 * repetitionTime! / log( cos(angleErnst!) )
                 return true
             }
-        case .angle:
+        case .angleErnst:
             if relaxationTime != nil && repetitionTime != nil {
                 angleErnst = acos(exp(-1.0 * repetitionTime! / relaxationTime! ))
                 return true
@@ -108,7 +117,7 @@ class NMRCalc {
         return false
     }
     
-    func setParameter(_ name: String, in category: Category, to value: Double) -> Bool {
+    func setParameter(_ name: String, in category: NMRCalcCategory, to value: Double) -> Bool {
         switch category {
         case .resonance:
             guard larmorNMR != nil else { return false }
@@ -131,13 +140,13 @@ class NMRCalc {
             return pulseNMR[1]!.set(parameter: name, to: value)
             
         case .ernstAngle:
-            guard let name = Ernst(rawValue: name) else { return false }
+            guard let name = NMRErnstAngle.Parameter(rawValue: name) else { return false }
             return setErnstParameter(name, to: value)
         }
         
     }
     
-    func evaluate(parameter name: String, in category: Category) -> Bool {
+    func evaluate(parameter name: String, in category: NMRCalcCategory) -> Bool {
         switch category {
         case .resonance:
             guard larmorNMR != nil else { return false }
@@ -160,15 +169,15 @@ class NMRCalc {
             return pulseNMR[1]!.update(parameter: name)
             
         case .ernstAngle:
-            guard let name = Ernst(rawValue: name) else { return false }
-            return evaluateErnstParameter(name)
+            guard let ernstAngle = NMRErnstAngle.Parameter(rawValue: name) else { return false }
+            return evaluateErnstParameter(ernstAngle)
         }
     }
 }
 
 // MARK: - Convenience methods
 extension NMRCalc {
-    func updateParameter(_ name: String, in category: Category, to value: Double, and name2: String, completionHandler: @escaping (_ error: String?) -> Void) {
+    func updateParameter(_ name: String, in category: NMRCalcCategory, to value: Double, and name2: String, completionHandler: @escaping (_ error: String?) -> Void) {
         guard evaluate(parameter: name2, in: category) else {
             completionHandler("Cannot update \(name2).")
             return
@@ -178,7 +187,7 @@ extension NMRCalc {
     }
     
     func updateLarmor(_ name: String, to value: Double, completionHandler: @escaping (_ error: String?) -> Void) {
-        let category = Category.resonance
+        let category = NMRCalcCategory.resonance
         
         guard setParameter(name, in: category, to: value) else {
             completionHandler("The value is out of range.")

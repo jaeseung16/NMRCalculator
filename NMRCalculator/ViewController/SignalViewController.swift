@@ -80,7 +80,7 @@ class SignalViewController: UIViewController {
             UserDefaults.standard.set(10.0, forKey: "DurationInAcquisition")
         }
         
-        guard nmrCalc.evaluate(parameter: "dwell", in: "acquisition") else {
+        guard nmrCalc.evaluate(parameter: "dwell", in: .acquisition) else {
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
         }
@@ -99,7 +99,7 @@ class SignalViewController: UIViewController {
             UserDefaults.standard.set(1.0, forKey: "WidthInSpectrum")
         }
         
-        guard nmrCalc.evaluate(parameter: "resolution", in: "spectrum") else {
+        guard nmrCalc.evaluate(parameter: "resolution", in: .spectrum) else {
                 warnings("Unable to comply.", message: "The value is out of range.")
                 return
         }
@@ -249,7 +249,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
         
         var firstParameter = ""
         var secondParameter = ""
-        var category: NMRCalc.Category
+        var category: NMRCalc.NMRCalcCategory
         var value = newValue
         
         switch cell.sectionLabel! {
