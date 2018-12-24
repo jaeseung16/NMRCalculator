@@ -104,11 +104,11 @@ class NMRCalc {
             return specNMR!.set(parameter: name, to: value)
             
         case .pulse1:
-            guard pulseNMR[0] != nil else { return false }
+            guard pulseNMR[0] != nil, let name = NMRPulse.Parameter(rawValue: name) else { return false }
             return pulseNMR[0]!.set(parameter: name, to: value)
             
         case .pulse2:
-            guard pulseNMR[1] != nil else { return false }
+            guard pulseNMR[1] != nil, let name = NMRPulse.Parameter(rawValue: name) else { return false }
             return pulseNMR[1]!.set(parameter: name, to: value)
             
         case .ernstAngle:

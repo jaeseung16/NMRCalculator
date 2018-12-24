@@ -78,16 +78,16 @@ class PulseViewController: UIViewController {
         var pulse1 = NMRPulse()
         
         if let duration = UserDefaults.standard.object(forKey: "Duration1") as? Double {
-            let _ = pulse1.set(parameter: "duration", to: duration)
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.duration, to: duration)
         } else {
-            let _ = pulse1.set(parameter: "duration", to: 10.0)
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.duration, to: 10.0)
             UserDefaults.standard.set(10.0, forKey: "Duration1")
         }
         
         if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle1") as? Double {
-            let _ = pulse1.set(parameter: "flipangle", to: flipAngle)
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.flipAngle, to: flipAngle)
         } else {
-            let _ = pulse1.set(parameter: "flipangle", to: 90.0)
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.flipAngle, to: 90.0)
             UserDefaults.standard.set(90.0, forKey: "FlipAngle1")
         }
    
@@ -96,16 +96,16 @@ class PulseViewController: UIViewController {
         var pulse2 = NMRPulse()
         
         if let amplitude = UserDefaults.standard.object(forKey: "Amplitude2") as? Double {
-            let _ = pulse2.set(parameter: "amplitude", to: amplitude)
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.amplitude, to: amplitude)
         } else {
-            let _ = pulse2.set(parameter: "amplitude", to: 0.1)
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.amplitude, to: 0.1)
             UserDefaults.standard.set(0.1, forKey: "Amplitude2")
         }
         
         if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle2") as? Double {
-            let _ = pulse2.set(parameter: "flipangle", to: flipAngle)
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.flipAngle, to: flipAngle)
         } else {
-            let _ = pulse2.set(parameter: "flipangle", to: 360.0)
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.flipAngle, to: 360.0)
             UserDefaults.standard.set(360.0, forKey: "FlipAngle2")
         }
         
