@@ -176,7 +176,7 @@ extension SolutionViewController: UITextFieldDelegate {
         guard let text = textField.text else { return }
         
         if textField == ChemName {
-            let _ = chemCalc.set(parameter: "chemical", to: text)
+            let _ = chemCalc.set(parameter: .chemical, to: text)
             UserDefaults.standard.set(ChemName.text!, forKey: "ChemName")
         } else if let value = Double(text) {
             switch textField {
