@@ -24,10 +24,8 @@ struct NMRPulse {
         amplitude = ( flipAngle / duration ) * ( 1000.0 / 360.0 )
     }
     
-    mutating func set(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameter(rawValue: name) else { return false }
-        
-        switch parameter {
+    mutating func set(parameter name: Parameter, to value: Double) -> Bool {
+        switch name {
         case .amplitude:
             amplitude = value
             
