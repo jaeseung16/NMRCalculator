@@ -100,7 +100,7 @@ class NMRCalc {
             return acqNMR!.set(parameter: name, to: value)
             
         case .spectrum:
-            guard specNMR != nil else { return false }
+            guard specNMR != nil, let name = NMRSpectrum.Parameters(rawValue: name) else { return false }
             return specNMR!.set(parameter: name, to: value)
             
         case .pulse1:
@@ -129,7 +129,7 @@ class NMRCalc {
             return acqNMR!.update(parameter: name)
             
         case .spectrum:
-            guard specNMR != nil else { return false }
+            guard specNMR != nil, let name = NMRSpectrum.Parameters(rawValue: name) else { return false }
             return specNMR!.update(parameter: name)
             
         case .pulse1:
