@@ -14,7 +14,7 @@ struct NMRSpectrum {
     var width: Double = 1.0 // spectral width in kHz
     var resolution: Double // spectral resolution in Hz
     
-    enum Parameters: String {
+    enum Parameter: String {
         case size
         case width
         case resolution
@@ -25,7 +25,7 @@ struct NMRSpectrum {
         resolution = 1000.0 * width / Double(size)
     }
     
-    mutating func set(parameter name: Parameters, to value: Double) -> Bool {
+    mutating func set(parameter name: Parameter, to value: Double) -> Bool {
         guard value > 0 else {
             return false
         }
@@ -45,7 +45,7 @@ struct NMRSpectrum {
         return true
     }
     
-    mutating func update(parameter name: Parameters) -> Bool {
+    mutating func update(parameter name: Parameter) -> Bool {
         switch name {
         case .size:
             guard self.resolution > 0 else { return false }
