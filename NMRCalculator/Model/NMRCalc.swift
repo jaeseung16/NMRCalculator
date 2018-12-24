@@ -31,6 +31,7 @@ class NMRCalc {
     var acqNMR: NMRfid?
     var specNMR: NMRSpectrum?
     var pulseNMR: [NMRPulse?]
+    var ernstAngle: NMRErnstAngle?
     
     var relativepower: Double?
     
@@ -53,6 +54,7 @@ class NMRCalc {
         acqNMR = NMRfid()
         specNMR = NMRSpectrum()
         pulseNMR = [NMRPulse]()
+        ernstAngle = NMRErnstAngle()
     }
     
     convenience init(nucleus: NMRNucleus) {
@@ -77,44 +79,14 @@ class NMRCalc {
     
     func setErnstParameter(_ name: NMRErnstAngle.Parameter, to value: Double) -> Bool {
         if value > 0 {
-            switch name {
-            case .repetition:
-                repetitionTime = value
-                return true
-            case .relaxation:
-                relaxationTime = value
-                return true
-            case .angleErnst:
-                if value <= Double.pi / 2.0 {
-                    angleErnst = value
-                    return true
-                }
-            }
+            return ernstAngle?.set(parameter: name, to: value) ?? false
         }
         
         return false
     }
     
     func evaluateErnstParameter(_ name: NMRErnstAngle.Parameter) -> Bool {
-        switch name {
-        case .repetition:
-            if relaxationTime != nil && angleErnst != nil {
-                repetitionTime = -1.0 * relaxationTime! * log( cos(angleErnst!) )
-                return true
-            }
-        case .relaxation:
-            if repetitionTime != nil && angleErnst != nil {
-                relaxationTime = -1.0 * repetitionTime! / log( cos(angleErnst!) )
-                return true
-            }
-        case .angleErnst:
-            if relaxationTime != nil && repetitionTime != nil {
-                angleErnst = acos(exp(-1.0 * repetitionTime! / relaxationTime! ))
-                return true
-            }
-        }
-        
-        return false
+        return ernstAngle?.update(parameter: name) ?? false
     }
     
     func setParameter(_ name: String, in category: NMRCalcCategory, to value: Double) -> Bool {

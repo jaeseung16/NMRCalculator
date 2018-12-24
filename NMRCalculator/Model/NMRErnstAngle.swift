@@ -25,10 +25,8 @@ struct NMRErnstAngle {
         angleErnst = acos( exp(-1.0 * repetitionTime / relaxationTime) )
     }
     
-    mutating func set(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameter(rawValue: name) else { return false }
-        
-        switch parameter {
+    mutating func set(parameter name: Parameter, to value: Double) -> Bool {
+        switch name {
         case .repetition:
             repetitionTime = value
         case .relaxation:
@@ -40,10 +38,8 @@ struct NMRErnstAngle {
         return true
     }
     
-    mutating func update(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameter(rawValue: name) else { return false }
-        
-        switch parameter {
+    mutating func update(parameter name: Parameter) -> Bool {
+        switch name {
         case .repetition:
             repetitionTime = -1.0 * relaxationTime * log( cos(angleErnst) )
         case .relaxation:

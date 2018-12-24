@@ -158,7 +158,7 @@ class PulseViewController: UIViewController {
             UserDefaults.standard.set(pulse.flipAngle, forKey: "FlipAngle2")
         }
         
-        itemValues3 = [(nmrCalc.repetitionTime)!.format(".3"),(nmrCalc.relaxationTime)!.format(".3"), ((nmrCalc.angleErnst)!*180.0/Double.pi).format(".4") ]
+        itemValues3 = [(nmrCalc.ernstAngle?.repetitionTime)!.format(".3"),(nmrCalc.ernstAngle?.relaxationTime)!.format(".3"), ((nmrCalc.ernstAngle?.angleErnst)!*180.0/Double.pi).format(".4") ]
     }
     
     // MARK: Warning messages
@@ -446,12 +446,12 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 firstParameter = "repetition"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    secondParameter = "angle"
+                    secondParameter = "angleErnst"
                     break
                 }
                 
                 if fixedItem == menuItems3[1] {
-                    secondParameter = "angle"
+                    secondParameter = "angleErnst"
                 } else if fixedItem == menuItems3[2] {
                     secondParameter = "relaxation"
                 } else {
@@ -463,12 +463,12 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 firstParameter = "relaxation"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
-                    secondParameter = "angle"
+                    secondParameter = "angleErnst"
                     break
                 }
                 
                 if fixedItem == menuItems3[0] {
-                    secondParameter = "angle"
+                    secondParameter = "angleErnst"
                 } else if fixedItem == menuItems3[2] {
                     secondParameter = "repetition"
                 } else {
@@ -477,7 +477,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
                 }
                 
             case menuItems3[2]:
-                firstParameter = "angle"
+                firstParameter = "angleErnst"
                 value = value * Double.pi / 180.0
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
