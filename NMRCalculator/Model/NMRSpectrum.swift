@@ -25,30 +25,28 @@ struct NMRSpectrum {
         resolution = 1000.0 * width / Double(size)
     }
     
-    mutating func set(parameter name: String, to value: Double) -> Bool {
-        guard let parameter = Parameters(rawValue: name) else { return false }
+    mutating func set(parameter name: Parameters, to value: Double) -> Bool {
+        guard value > 0 else {
+            return false
+        }
         
-        switch parameter {
+        switch name {
         case .size:
-            guard ( value <= Double( UInt.max ) ) && ( value > Double( UInt.min ) ) else { return false }
+            guard value <= Double( UInt.max ) else { return false }
             size = UInt(value)
             
         case .width:
-            guard value > 0 else { return false }
             width = value
             
         case .resolution:
-            guard value > 0 else { return false }
             resolution = value
         }
         
         return true
     }
     
-    mutating func update(parameter name: String) -> Bool {
-        guard let parameter = Parameters(rawValue: name) else { return false }
-        
-        switch parameter {
+    mutating func update(parameter name: Parameters) -> Bool {
+        switch name {
         case .size:
             guard self.resolution > 0 else { return false }
             size = UInt( 1000.0 * width / resolution )
