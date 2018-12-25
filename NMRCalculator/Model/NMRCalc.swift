@@ -194,3 +194,19 @@ extension NMRCalc {
         completionHandler(nil)
     }
 }
+
+// MARK:- Methods to access
+extension NMRCalc {
+    func getLarmor() -> [NMRLarmor.Parameter : Double]? {
+        guard let larmor = larmorNMR else {
+            return nil
+        }
+        
+        let dict = [NMRLarmor.Parameter.larmor : larmor.frequencyLarmor,
+                    NMRLarmor.Parameter.field : larmor.fieldExternal,
+                    NMRLarmor.Parameter.proton : larmor.frequencyProton,
+                    NMRLarmor.Parameter.electron : larmor.frequencyElectron]
+        
+        return dict
+    }
+}

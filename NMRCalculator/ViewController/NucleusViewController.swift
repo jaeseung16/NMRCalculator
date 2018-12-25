@@ -74,7 +74,8 @@ class NucleusViewController: UIViewController {
 
         nmrCalc = NMRCalc(nucleus: nucleus!)
         
-        nmrCalc!.updateLarmor("field", to: 1.0) { error in
+        let externalField = UserDefaults.standard.string(forKey: "B0") ?? "1.0"
+        nmrCalc!.updateLarmor("field", to: Double(externalField)!) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
             }
@@ -101,11 +102,16 @@ class NucleusViewController: UIViewController {
     }
     
     func updateItemValues() {
-        if let larmor = nmrCalc?.larmorNMR {
-            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
-            
-            UserDefaults.standard.set(larmor.fieldExternal, forKey: "B0")
+        guard let itemValuesDict = nmrCalc?.getLarmor() else {
+            return
         }
+    
+        itemValues[0] = itemValuesDict[.larmor]!.format(".4")
+        itemValues[1] = itemValuesDict[.field]!.format(".4")
+        itemValues[2] = itemValuesDict[.proton]!.format(".4")
+        itemValues[3] = itemValuesDict[.electron]!.format(".4")
+        
+        UserDefaults.standard.set(itemValues[1], forKey: "B0")
     }
     
     // MARK:- Methods for Keyboard
