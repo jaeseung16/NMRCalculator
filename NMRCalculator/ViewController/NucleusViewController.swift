@@ -28,8 +28,18 @@ class NucleusViewController: UIViewController {
                      "Electron's Larmor Frequency (GHz)"]
     let numberofColumn = 1
     
+    enum Menu: Int {
+        case larmorFrequency
+        case externalMagneticField
+        case protonLarmorFrequency
+        case electronLarmorFrequency
+    }
+    
     // Variables
-    var itemValues = Array(repeating: String(), count: 4)
+    var itemValues: [Menu: String] = [.larmorFrequency: "",
+                                     .externalMagneticField: "",
+                                     .protonLarmorFrequency: "",
+                                     .electronLarmorFrequency: ""]
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
     var periodicTable: NMRPeriodicTable!
@@ -68,7 +78,6 @@ class NucleusViewController: UIViewController {
         print("id: \(identifier)")
         
         let row = periodicTable.nucleiDictionary[identifier] ?? 0
-        
         nucleus = periodicTable.nuclei[row]
         NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
 
@@ -90,7 +99,7 @@ class NucleusViewController: UIViewController {
         
         if let _ = nmrCalc?.larmorNMR {
             for k in 0..<valueTextField.count {
-                valueTextField[k].text = itemValues[k]
+                valueTextField[k].text = itemValues[Menu(rawValue: k)!]
             }
         }
         
@@ -106,12 +115,12 @@ class NucleusViewController: UIViewController {
             return
         }
     
-        itemValues[0] = itemValuesDict[.larmor]!.format(".4")
-        itemValues[1] = itemValuesDict[.field]!.format(".4")
-        itemValues[2] = itemValuesDict[.proton]!.format(".4")
-        itemValues[3] = itemValuesDict[.electron]!.format(".4")
+        itemValues[.larmorFrequency] = itemValuesDict[.larmor]!.format(".4")
+        itemValues[.externalMagneticField] = itemValuesDict[.field]!.format(".4")
+        itemValues[.protonLarmorFrequency] = itemValuesDict[.proton]!.format(".4")
+        itemValues[.electronLarmorFrequency] = itemValuesDict[.electron]!.format(".4")
         
-        UserDefaults.standard.set(itemValues[1], forKey: "B0")
+        UserDefaults.standard.set(itemValues[.externalMagneticField], forKey: "B0")
     }
     
     // MARK:- Methods for Keyboard
@@ -227,7 +236,7 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
         let row = indexPath.row
         
         cell.itemLabel.text = menuItems[row]
-        cell.itemValue.text = itemValues[row]
+        cell.itemValue.text = itemValues[Menu(rawValue: row)!]
         valueTextField[row] = cell.itemValue
         
         return cell
