@@ -22,9 +22,13 @@ class PulseViewController: UIViewController {
     
     let indexForRelativePower = IndexPath(row: 3, section: 1)
     
+    enum PulseMenu: Int {
+        case duration, flipAngle, amplitude, dB
+    }
+    
     // Variables
-    var itemValues1 = Array(repeating: String(), count: 3)
-    var itemValues2 = Array(repeating: String(), count: 4)
+    var itemValues1: [PulseMenu: String] = [.duration: "10", .flipAngle: "90", .amplitude: "25000"]
+    var itemValues2: [PulseMenu: String] = [.duration: "10000", .flipAngle: "360", .amplitude: "100", .dB: "-47.959"]
     var itemValues3 = Array(repeating: String(), count: 3)
     
     var nmrCalc = NMRCalc.shared
@@ -144,18 +148,23 @@ class PulseViewController: UIViewController {
     }
     
     func updateItemValues() {
-        if let pulse = nmrCalc.pulseNMR[0] {
-            itemValues1 = [(pulse.duration).format(".5"),(pulse.flipAngle).format(".4"), ((pulse.amplitude)*1_000).format(".6") ]
+        if let pulse = nmrCalc.getPulse(index: 0) {
+            itemValues1[.duration] = pulse[.duration]!.format(".5")
+            itemValues1[.flipAngle] = pulse[.flipAngle]!.format(".4")
+            itemValues1[.amplitude] = (pulse[.amplitude]! * 1_000).format(".6")
             
-            UserDefaults.standard.set(pulse.duration, forKey: "Duration1")
-            UserDefaults.standard.set(pulse.flipAngle, forKey: "FlipAngle1")
+            UserDefaults.standard.set(pulse[.duration], forKey: "Duration1")
+            UserDefaults.standard.set(pulse[.flipAngle], forKey: "FlipAngle1")
         }
         
-        if let pulse = nmrCalc.pulseNMR[1] {
-            itemValues2 = [(pulse.duration).format(".5"),(pulse.flipAngle).format(".4"), ((pulse.amplitude)*1_000).format(".6"), ((nmrCalc.relativepower)?.format(".5"))! ]
+        if let pulse = nmrCalc.getPulse(index: 1) {
+            itemValues2[.duration] = pulse[.duration]!.format(".5")
+            itemValues2[.flipAngle] = pulse[.flipAngle]!.format(".4")
+            itemValues2[.amplitude] = (pulse[.amplitude]! * 1_000).format(".6")
+            itemValues2[.dB] = ((nmrCalc.relativepower)?.format(".5"))!
             
-            UserDefaults.standard.set(pulse.amplitude, forKey: "Amplitude2")
-            UserDefaults.standard.set(pulse.flipAngle, forKey: "FlipAngle2")
+            UserDefaults.standard.set(pulse[.amplitude], forKey: "Amplitude2")
+            UserDefaults.standard.set(pulse[.flipAngle], forKey: "FlipAngle2")
         }
         
         itemValues3 = [(nmrCalc.ernstAngle?.repetitionTime)!.format(".3"),(nmrCalc.ernstAngle?.relaxationTime)!.format(".3"), ((nmrCalc.ernstAngle?.angleErnst)!*180.0/Double.pi).format(".4") ]
@@ -196,16 +205,17 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
         var labeltext: String?
         var valuetext: String?
         
+        let row = (indexPath as NSIndexPath).row
         switch (indexPath as NSIndexPath).section {
         case 0:
-            labeltext = menuItems1[(indexPath as NSIndexPath).row]
-            valuetext = itemValues1[(indexPath as NSIndexPath).row]
+            labeltext = menuItems1[row]
+            valuetext = itemValues1[PulseMenu(rawValue: row)!]
         case 1:
-            labeltext = menuItems2[(indexPath as NSIndexPath).row]
-            valuetext = itemValues2[(indexPath as NSIndexPath).row]
+            labeltext = menuItems2[row]
+            valuetext = itemValues2[PulseMenu(rawValue: row)!]
         case 2:
-            labeltext = menuItems3[(indexPath as NSIndexPath).row]
-            valuetext = itemValues3[(indexPath as NSIndexPath).row]
+            labeltext = menuItems3[row]
+            valuetext = itemValues3[row]
         default:
             labeltext = nil
         }

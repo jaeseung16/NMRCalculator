@@ -233,4 +233,16 @@ extension NMRCalc {
         
         return dict
     }
+    
+    func getPulse(index: Int) -> [NMRPulse.Parameter : Double]? {
+        guard let pulseNMR = pulseNMR[index] else {
+            return nil
+        }
+        
+        let dict = [NMRPulse.Parameter.duration: pulseNMR.duration,
+                    NMRPulse.Parameter.flipAngle: pulseNMR.flipAngle,
+                    NMRPulse.Parameter.amplitude: pulseNMR.amplitude]
+        
+        return dict
+    }
 }
