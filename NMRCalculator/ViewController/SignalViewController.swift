@@ -22,11 +22,15 @@ class SignalViewController: UIViewController {
         case size, duration, dwell
     }
     
+    enum Menu2: Int {
+        case size, width,resolution
+    }
+    
     // Variables
     var nmrCalc = NMRCalc.shared
     
     var itemValues1: [Menu1: String] = [.size: "1000.0", .duration: "0.01", .dwell: "10.0"]
-    var itemValues2 = Array(repeating: String(), count: 3)
+    var itemValues2: [Menu2: String] = [.size: "1000.0", .width: "1.0", .resolution: "1.0"]
     
     var selectedItem: IndexPath?
     var fixedItem: String?
@@ -121,11 +125,13 @@ class SignalViewController: UIViewController {
             UserDefaults.standard.set(acqDict[.duration], forKey: "DurationInAcquisition")
         }
         
-        if let spec = nmrCalc.specNMR {
-            itemValues2 = [ "\(spec.size)", (spec.width).format(".3"), (spec.resolution).format(".3") ]
+        if let spec = nmrCalc.getSpec() {
+            itemValues2[.size] = "\(spec[.size]!)"
+            itemValues2[.width] = spec[.width]!.format(".3")
+            itemValues2[.resolution] = spec[.resolution]!.format(".3")
             
-            UserDefaults.standard.set(spec.size, forKey: "SizeInSpectrum")
-            UserDefaults.standard.set(spec.width, forKey: "WidthInSpectrum")
+            UserDefaults.standard.set(spec[.size], forKey: "SizeInSpectrum")
+            UserDefaults.standard.set(spec[.width], forKey: "WidthInSpectrum")
         }
         
         signalTableView.reloadData()
@@ -170,8 +176,8 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
             labeltext = menuItems1[row]
             valuetext = itemValues1[Menu1(rawValue: row)!]
         case 1:
-            labeltext = menuItems2[(indexPath as NSIndexPath).row]
-            valuetext = itemValues2[(indexPath as NSIndexPath).row]
+            labeltext = menuItems2[row]
+            valuetext = itemValues2[Menu2(rawValue: row)!]
         default:
             labeltext = nil
         }
