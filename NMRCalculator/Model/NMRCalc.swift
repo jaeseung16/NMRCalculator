@@ -202,10 +202,22 @@ extension NMRCalc {
             return nil
         }
         
-        let dict = [NMRLarmor.Parameter.larmor : larmor.frequencyLarmor,
-                    NMRLarmor.Parameter.field : larmor.fieldExternal,
-                    NMRLarmor.Parameter.proton : larmor.frequencyProton,
-                    NMRLarmor.Parameter.electron : larmor.frequencyElectron]
+        let dict = [NMRLarmor.Parameter.larmor: larmor.frequencyLarmor,
+                    NMRLarmor.Parameter.field: larmor.fieldExternal,
+                    NMRLarmor.Parameter.proton: larmor.frequencyProton,
+                    NMRLarmor.Parameter.electron: larmor.frequencyElectron]
+        
+        return dict
+    }
+    
+    func getAcq() -> [NMRfid.Parameter : Double]? {
+        guard let acqNMR = acqNMR else {
+            return nil
+        }
+        
+        let dict = [NMRfid.Parameter.size: Double(acqNMR.size),
+                    NMRfid.Parameter.duration: acqNMR.duration,
+                    NMRfid.Parameter.dwell: acqNMR.dwell]
         
         return dict
     }
