@@ -18,10 +18,14 @@ class SignalViewController: UIViewController {
     let menuItems1 = [ "Number of data points", "Acquisition duration (sec)", "Dwell time (μs)"]
     let menuItems2 = [ "Number of data points", "Spectral width (kHz)", "Frequency resolution (Hz)"]
     
+    enum Menu1: Int {
+        case size, duration, dwell
+    }
+    
     // Variables
     var nmrCalc = NMRCalc.shared
     
-    var itemValues1 = Array(repeating: String(), count: 3)
+    var itemValues1: [Menu1: String] = [.size: "1000.0", .duration: "0.01", .dwell: "10.0"]
     var itemValues2 = Array(repeating: String(), count: 3)
     
     var selectedItem: IndexPath?
@@ -108,11 +112,13 @@ class SignalViewController: UIViewController {
     }
     
     func updateTextFields() {
-        if let acq = nmrCalc.acqNMR {
-            itemValues1 = [ "\(acq.size)", (acq.duration/1_000.0).format(".3"), acq.dwell.format(".3") ]
+        if let acqDict = nmrCalc.getAcq() {
+            itemValues1[.size] = "\(String(describing: acqDict[.size]))"
+            itemValues1[.duration] = (acqDict[.duration]! / 1_000.0).format(".3")
+            itemValues1[.dwell] = acqDict[.dwell]!.format(".3")
             
-            UserDefaults.standard.set(acq.size, forKey: "SizeInAcquisition")
-            UserDefaults.standard.set(acq.duration, forKey: "DurationInAcquisition")
+            UserDefaults.standard.set(acqDict[.size], forKey: "SizeInAcquisition")
+            UserDefaults.standard.set(acqDict[.duration], forKey: "DurationInAcquisition")
         }
         
         if let spec = nmrCalc.specNMR {
@@ -158,10 +164,11 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         var labeltext: String?
         var valuetext: String?
         
+        let row = (indexPath as NSIndexPath).row
         switch (indexPath as NSIndexPath).section {
         case 0:
-            labeltext = menuItems1[(indexPath as NSIndexPath).row]
-            valuetext = itemValues1[(indexPath as NSIndexPath).row]
+            labeltext = menuItems1[row]
+            valuetext = itemValues1[Menu1(rawValue: row)!]
         case 1:
             labeltext = menuItems2[(indexPath as NSIndexPath).row]
             valuetext = itemValues2[(indexPath as NSIndexPath).row]
