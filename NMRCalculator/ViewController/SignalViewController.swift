@@ -113,7 +113,7 @@ class SignalViewController: UIViewController {
     
     func updateTextFields() {
         if let acqDict = nmrCalc.getAcq() {
-            itemValues1[.size] = "\(String(describing: acqDict[.size]))"
+            itemValues1[.size] = "\(acqDict[.size]!)"
             itemValues1[.duration] = (acqDict[.duration]! / 1_000.0).format(".3")
             itemValues1[.dwell] = acqDict[.dwell]!.format(".3")
             
