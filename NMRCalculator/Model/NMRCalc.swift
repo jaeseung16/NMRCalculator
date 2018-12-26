@@ -245,4 +245,17 @@ extension NMRCalc {
         
         return dict
     }
+    
+    func getErnstAngle() -> [NMRErnstAngle.Parameter : Double]? {
+        guard let ernstAngle = ernstAngle else {
+            return nil
+        }
+        
+        let dict = [NMRErnstAngle.Parameter.repetition: ernstAngle.repetitionTime,
+                    NMRErnstAngle.Parameter.relaxation: ernstAngle.relaxationTime,
+                    NMRErnstAngle.Parameter.angleErnst: ernstAngle.angleErnst]
+        
+        return dict
+    }
+    
 }

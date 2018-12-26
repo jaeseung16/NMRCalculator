@@ -26,10 +26,14 @@ class PulseViewController: UIViewController {
         case duration, flipAngle, amplitude, dB
     }
     
+    enum ErnstAngleMenu: Int {
+        case repetition, relaxation, angleErnst
+    }
+    
     // Variables
     var itemValues1: [PulseMenu: String] = [.duration: "10", .flipAngle: "90", .amplitude: "25000"]
     var itemValues2: [PulseMenu: String] = [.duration: "10000", .flipAngle: "360", .amplitude: "100", .dB: "-47.959"]
-    var itemValues3 = Array(repeating: String(), count: 3)
+    var itemValues3: [ErnstAngleMenu: String] = [.repetition: "1", .relaxation: "1", .angleErnst: "68.42"]
     
     var nmrCalc = NMRCalc.shared
     
@@ -167,7 +171,12 @@ class PulseViewController: UIViewController {
             UserDefaults.standard.set(pulse[.flipAngle], forKey: "FlipAngle2")
         }
         
-        itemValues3 = [(nmrCalc.ernstAngle?.repetitionTime)!.format(".3"),(nmrCalc.ernstAngle?.relaxationTime)!.format(".3"), ((nmrCalc.ernstAngle?.angleErnst)!*180.0/Double.pi).format(".4") ]
+        if let ernstAngle = nmrCalc.getErnstAngle() {
+            itemValues3[.repetition] = ernstAngle[.repetition]!.format(".3")
+            itemValues3[.relaxation] = ernstAngle[.relaxation]!.format(".3")
+            itemValues3[.angleErnst] = (ernstAngle[.angleErnst]! * 180.0 / Double.pi).format(".4")
+        }
+
     }
     
     // MARK: Warning messages
@@ -215,7 +224,7 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
             valuetext = itemValues2[PulseMenu(rawValue: row)!]
         case 2:
             labeltext = menuItems3[row]
-            valuetext = itemValues3[row]
+            valuetext = itemValues3[ErnstAngleMenu(rawValue: row)!]
         default:
             labeltext = nil
         }
