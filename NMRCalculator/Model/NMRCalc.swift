@@ -221,4 +221,16 @@ extension NMRCalc {
         
         return dict
     }
+    
+    func getSpec() -> [NMRSpectrum.Parameter : Double]? {
+        guard let specNMR = specNMR else {
+            return nil
+        }
+        
+        let dict = [NMRSpectrum.Parameter.size: Double(specNMR.size),
+                    NMRSpectrum.Parameter.width: specNMR.width,
+                    NMRSpectrum.Parameter.resolution: specNMR.resolution]
+        
+        return dict
+    }
 }
