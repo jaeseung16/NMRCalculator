@@ -45,7 +45,7 @@ struct NMRLarmor {
         frequencyElectron = fieldExternal * NMRLarmor.gammaElectron
     }
     
-    mutating func set(parameter name: Parameter, to value: Double) -> Bool {
+    public mutating func set(parameter name: Parameter, to value: Double) -> Bool {
         switch name {
         case .field:
             fieldExternal = value
@@ -63,7 +63,7 @@ struct NMRLarmor {
         return true
     }
     
-    mutating func update(parameter name: Parameter) -> Bool {
+    public mutating func update(parameter name: Parameter) -> Bool {
         switch name {
         case .field:
             fieldExternal = externalField(γ: nucleus.γ, at: frequencyLarmor)
@@ -82,11 +82,11 @@ struct NMRLarmor {
     }
     
     // Convinience Methods
-    mutating func larmorFrequency(γ: Double, at fieldExternal: Double) -> Double {
+    private mutating func larmorFrequency(γ: Double, at fieldExternal: Double) -> Double {
         return fieldExternal * γ
     }
     
-    mutating func externalField(γ: Double, at frequency: Double) -> Double {
+    private mutating func externalField(γ: Double, at frequency: Double) -> Double {
         return frequency / γ
     }
     
