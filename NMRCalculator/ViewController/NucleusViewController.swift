@@ -21,19 +21,20 @@ class NucleusViewController: UIViewController {
     @IBOutlet weak var NucleusPicker: UIPickerView!
     @IBOutlet weak var nucleusName: UILabel!
     
-    // Constants
-    let menuItems = ["Larmor Frequency (MHz)",
-                     "External Magnetic Field (Tesla)",
-                     "Proton's Larmor Frequency (MHz)",
-                     "Electron's Larmor Frequency (GHz)"]
-    let numberofColumn = 1
-    
     enum Menu: Int {
         case larmorFrequency
         case externalMagneticField
         case protonLarmorFrequency
         case electronLarmorFrequency
     }
+    
+    // Constants
+    let menuItems: [Menu: String] = [.larmorFrequency: "Larmor Frequency (MHz)",
+                                     .externalMagneticField: "External Magnetic Field (Tesla)",
+                                     .protonLarmorFrequency: "Proton's Larmor Frequency (MHz)",
+                                     .electronLarmorFrequency:"Electron's Larmor Frequency (GHz)"]
+    
+    let numberofColumn = 1
     
     // Variables
     var itemValues: [Menu: String] = [.larmorFrequency: "",
@@ -235,7 +236,7 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
         let row = indexPath.row
         
-        cell.itemLabel.text = menuItems[row]
+        cell.itemLabel.text = menuItems[Menu(rawValue: row)!]
         cell.itemValue.text = itemValues[Menu(rawValue: row)!]
         valueTextField[row] = cell.itemValue
         
