@@ -80,9 +80,8 @@ class NucleusViewController: UIViewController {
         
         let row = periodicTable.nucleiDictionary[identifier] ?? 0
         nucleus = periodicTable.nuclei[row]
-        NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
-
         nmrCalc = NMRCalc(nucleus: nucleus!)
+        NucleusPicker.selectRow(row, inComponent: numberofColumn - 1, animated: true)
         
         let externalField = UserDefaults.standard.string(forKey: "B0") ?? "1.0"
         nmrCalc!.updateLarmor("field", to: Double(externalField)!) { error in

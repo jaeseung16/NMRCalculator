@@ -155,31 +155,34 @@ extension NMRCalc {
     }
     
     func updateLarmor(_ name: String, to value: Double, completionHandler: @escaping (_ error: String?) -> Void) {
-        let category = NMRCalcCategory.resonance
+        guard let parameter = NMRLarmor.Parameter(rawValue: name) else {
+            completionHandler("There is no parameter named (\name).")
+            return
+        }
         
-        guard setParameter(name, in: category, to: value) else {
+        guard larmorNMR!.set(parameter: parameter, to: value) else {
             completionHandler("The value is out of range.")
             return
         }
         
-        switch name {
-        case "larmor":
-            guard evaluate(parameter: "proton", in: category), evaluate(parameter: "electron", in: category) else {
+        switch parameter {
+        case .larmor:
+            guard larmorNMR!.update(parameter: .proton), larmorNMR!.update(parameter: .electron) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
-        case "field":
-            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "proton", in: category), evaluate(parameter: "electron", in: category) else {
+        case .field:
+            guard larmorNMR!.update(parameter: .larmor), larmorNMR!.update(parameter: .proton), larmorNMR!.update(parameter: .electron) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
-        case "proton":
-            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "electron", in: category) else {
+        case .proton:
+            guard larmorNMR!.update(parameter: .larmor), larmorNMR!.update(parameter: .electron) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
-        case "electron":
-            guard evaluate(parameter: "larmor", in: category), evaluate(parameter: "proton", in: category) else {
+        case .electron:
+            guard larmorNMR!.update(parameter: .larmor), larmorNMR!.update(parameter: .proton) else {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
