@@ -187,8 +187,6 @@ extension NMRCalc {
                 return
             }
         }
-        
-        completionHandler(nil)
     }
 }
 
