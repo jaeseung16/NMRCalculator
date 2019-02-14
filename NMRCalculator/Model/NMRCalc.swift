@@ -45,6 +45,7 @@ class NMRCalc {
     
     // MARK: - Methods
     init() {
+        nucleus = NMRNucleus()
         larmorNMR = NMRLarmor()
         acqNMR = NMRfid()
         specNMR = NMRSpectrum()
@@ -87,8 +88,8 @@ class NMRCalc {
     func setParameter(_ name: String, in category: NMRCalcCategory, to value: Double) -> Bool {
         switch category {
         case .resonance:
-            guard larmorNMR != nil else { return false }
-            return larmorNMR!.set(parameter: NMRLarmor.Parameter(rawValue: name)!, to: value)
+            guard larmorNMR != nil, let parameter = NMRLarmor.Parameter(rawValue: name) else { return false }
+            return larmorNMR!.set(parameter: parameter, to: value)
             
         case .acquisition:
             guard acqNMR != nil else { return false }
@@ -116,8 +117,8 @@ class NMRCalc {
     func evaluate(parameter name: String, in category: NMRCalcCategory) -> Bool {
         switch category {
         case .resonance:
-            guard larmorNMR != nil else { return false }
-            return larmorNMR!.update(parameter: NMRLarmor.Parameter(rawValue: name)!)
+            guard larmorNMR != nil, let parameter = NMRLarmor.Parameter(rawValue: name) else { return false }
+            return larmorNMR!.update(parameter: parameter)
             
         case .acquisition:
             guard acqNMR != nil else { return false }
