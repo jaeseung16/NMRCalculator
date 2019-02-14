@@ -186,8 +186,6 @@ extension NMRCalc {
                 completionHandler("Cannot update the proton and electron resonance frequencies.")
                 return
             }
-        default:
-            completionHandler("Something is wrong.")
         }
         
         completionHandler(nil)
