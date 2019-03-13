@@ -13,15 +13,6 @@ class PulseViewController: UIViewController {
     // Outlets
     @IBOutlet weak var pulseTableView: UITableView!
     
-    // Constants
-    let sections = ["1st Pulse", "2nd Pulse", "Ernst Angle"]
-    
-    let menuItems1 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz"]
-    let menuItems2 = [ "Pulse duration (μs)", "Flip angle (˚)", "RF Amplitude in Hz", "RF power relative to 1st (dB)"]
-    let menuItems3 = [ "Repetition Time (sec)", "Relaxation Time (sec)", "Ernst Angle (˚)" ]
-    
-    let indexForRelativePower = IndexPath(row: 3, section: 1)
-    
     enum PulseMenu: Int {
         case duration, flipAngle, amplitude, dB
     }
@@ -29,6 +20,21 @@ class PulseViewController: UIViewController {
     enum ErnstAngleMenu: Int {
         case repetition, relaxation, angleErnst
     }
+    
+    // Constants
+    let sections = ["1st Pulse", "2nd Pulse", "Ernst Angle"]
+    let indexForRelativePower = IndexPath(row: 3, section: 1)
+    
+    let menuItems1: [PulseMenu: String] = [.duration: "Pulse duration (μs)",
+                                           .flipAngle: "Flip angle (˚)",
+                                           .amplitude: "RF Amplitude in Hz"]
+    let menuItems2: [PulseMenu: String] = [.duration: "Pulse duration (μs)",
+                                           .flipAngle: "Flip angle (˚)",
+                                           .amplitude: "RF Amplitude in Hz",
+                                           .dB: "RF power relative to 1st (dB)"]
+    let menuItems3: [ErnstAngleMenu: String] = [.repetition: "Repetition Time (sec)",
+                                                .relaxation: "Relaxation Time (sec)",
+                                                .angleErnst: "Ernst Angle (˚)"]
     
     // Variables
     var itemValues1: [PulseMenu: String] = [.duration: "10", .flipAngle: "90", .amplitude: "25000"]
@@ -210,21 +216,24 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PulseTableCell", for: indexPath) as! PulseTableViewCell
+        let row = indexPath.row
         
         var labeltext: String?
         var valuetext: String?
         
-        let row = (indexPath as NSIndexPath).row
-        switch (indexPath as NSIndexPath).section {
+        switch indexPath.section {
         case 0:
-            labeltext = menuItems1[row]
-            valuetext = itemValues1[PulseMenu(rawValue: row)!]
+            let pulseMenu = PulseMenu(rawValue: row)!
+            labeltext = menuItems1[pulseMenu]
+            valuetext = itemValues1[pulseMenu]
         case 1:
-            labeltext = menuItems2[row]
-            valuetext = itemValues2[PulseMenu(rawValue: row)!]
+            let pulseMenu = PulseMenu(rawValue: row)!
+            labeltext = menuItems2[pulseMenu]
+            valuetext = itemValues2[pulseMenu]
         case 2:
-            labeltext = menuItems3[row]
-            valuetext = itemValues3[ErnstAngleMenu(rawValue: row)!]
+            let ernstAngleMenu = ErnstAngleMenu(rawValue: row)!
+            labeltext = menuItems3[ernstAngleMenu]
+            valuetext = itemValues3[ernstAngleMenu]
         default:
             labeltext = nil
         }
@@ -257,31 +266,44 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
             
             fixedItem = state ? nil : cell.itemLabel.text
             
-            switch (selectedItem as NSIndexPath).section {
+            let row = selectedItem.row;
+            
+            var labelText: String?
+            
+            switch selectedItem.section {
             case 0:
+                let pulseMenu = PulseMenu(rawValue: row)!
                 if state {
-                    cell.itemLabel.text = menuItems1[(selectedItem as NSIndexPath).row]
+                    labelText = menuItems1[pulseMenu]
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems1[(selectedItem as NSIndexPath).row]
+                    labelText = "☒ " + menuItems1[pulseMenu]!
                 }
             case 1:
+                let pulseMenu = PulseMenu(rawValue: row)!
                 if state {
-                    cell.itemLabel.text = menuItems2[(selectedItem as NSIndexPath).row]
+                    labelText = menuItems2[pulseMenu]
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems2[(selectedItem as NSIndexPath).row]
+                    labelText = "☒ " + menuItems2[pulseMenu]!
                 }
             case 2:
+                let ernstAngleMenu = ErnstAngleMenu(rawValue: row)!
                 if state {
-                    cell.itemLabel.text = menuItems3[(selectedItem as NSIndexPath).row]
+                    labelText = menuItems3[ernstAngleMenu]
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems3[(selectedItem as NSIndexPath).row]
+                    labelText = "☒ " + menuItems3[ernstAngleMenu]!
                 }
             default:
                 break
             }
+            
+            // update value
             cell.itemValue.isEnabled = state
             cell.itemValue.textColor = state ? .black : .gray
-            cell.itemValue.text = cell.itemValue.text // Without this, textColor is not being updated.
+            // Without this, textColor is not being updated.
+            cell.itemValue.text = cell.itemValue.text
+            
+            // update label
+            cell.itemLabel.text = labelText
             cell.itemLabel.textColor = state ? .black : .gray
         }
         
@@ -289,7 +311,7 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
             return
         }
         
-        guard cell.itemLabel.text != menuItems2[3] else {
+        guard cell.itemLabel.text != menuItems2[.dB] else {
             return
         }
         
@@ -331,7 +353,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
             category = .pulse1
             
             switch cellLabel.text! {
-            case menuItems1[0]:
+            case menuItems1[.duration]:
                 firstParameter = "duration"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
@@ -339,16 +361,16 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems1[1] {
+                if fixedItem == menuItems1[.flipAngle] {
                     secondParameter = "amplitude"
-                } else if fixedItem == menuItems1[2] {
+                } else if fixedItem == menuItems1[.amplitude] {
                     secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems1[1]:
+            case menuItems1[.flipAngle]:
                 firstParameter = "flipAngle"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
@@ -356,16 +378,16 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems1[2] {
+                if fixedItem == menuItems1[.amplitude] {
                     secondParameter = "duration"
-                } else if fixedItem == menuItems1[0] {
+                } else if fixedItem == menuItems1[.duration] {
                     secondParameter = "amplitude"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems1[2]:
+            case menuItems1[.amplitude]:
                 firstParameter = "amplitude"
                 value = value / 1_000
                 
@@ -374,9 +396,9 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems1[1] {
+                if fixedItem == menuItems1[.flipAngle] {
                     secondParameter = "duration"
-                } else if fixedItem == menuItems1[0] {
+                } else if fixedItem == menuItems1[.duration] {
                     secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
@@ -392,7 +414,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
             category = .pulse2
             
             switch cellLabel.text! {
-            case menuItems2[0]:
+            case menuItems2[.duration]:
                 firstParameter = "duration"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
@@ -400,16 +422,16 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems2[1] {
+                if fixedItem == menuItems2[.flipAngle] {
                     secondParameter = "amplitude"
-                } else if fixedItem == menuItems2[2] {
+                } else if fixedItem == menuItems2[.amplitude] {
                     secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems2[1]:
+            case menuItems2[.flipAngle]:
                 firstParameter = "flipAngle"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
@@ -417,16 +439,16 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems2[2] {
+                if fixedItem == menuItems2[.amplitude] {
                     secondParameter = "duration"
-                } else if fixedItem == menuItems2[0] {
+                } else if fixedItem == menuItems2[.duration] {
                     secondParameter = "amplitude"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems2[2]:
+            case menuItems2[.amplitude]:
                 firstParameter = "amplitude"
                 value = value / 1_000
                 
@@ -435,16 +457,16 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems2[1] {
+                if fixedItem == menuItems2[.flipAngle] {
                     secondParameter = "duration"
-                } else if fixedItem == menuItems2[0] {
+                } else if fixedItem == menuItems2[.duration] {
                     secondParameter = "flipAngle"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems2[3]:
+            case menuItems2[.dB]:
                 nmrCalc.relativepower = value
                 let amp0 = nmrCalc.pulseNMR[0]!.amplitude
                 value = pow(10.0, 1.0 * value / 20.0) * amp0
@@ -461,7 +483,7 @@ extension PulseViewController: PulseTableViewCellDelegate {
             category = .ernstAngle
             
             switch cellLabel.text! {
-            case menuItems3[0]:
+            case menuItems3[.repetition]:
                 firstParameter = "repetition"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
@@ -469,16 +491,16 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems3[1] {
+                if fixedItem == menuItems3[.relaxation] {
                     secondParameter = "angleErnst"
-                } else if fixedItem == menuItems3[2] {
+                } else if fixedItem == menuItems3[.angleErnst] {
                     secondParameter = "relaxation"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems3[1]:
+            case menuItems3[.relaxation]:
                 firstParameter = "relaxation"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 2 else {
@@ -486,16 +508,16 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems3[0] {
+                if fixedItem == menuItems3[.repetition] {
                     secondParameter = "angleErnst"
-                } else if fixedItem == menuItems3[2] {
+                } else if fixedItem == menuItems3[.angleErnst] {
                     secondParameter = "repetition"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems3[2]:
+            case menuItems3[.angleErnst]:
                 firstParameter = "angleErnst"
                 value = value * Double.pi / 180.0
                 
@@ -504,9 +526,9 @@ extension PulseViewController: PulseTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems3[0] {
+                if fixedItem == menuItems3[.repetition] {
                     secondParameter = "relaxation"
-                } else if fixedItem == menuItems3[1] {
+                } else if fixedItem == menuItems3[.relaxation] {
                     secondParameter = "repetition"
                 } else {
                     self.warnings("Unable to comply.", message: "Something is wrong.")
