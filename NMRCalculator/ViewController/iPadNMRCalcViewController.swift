@@ -35,6 +35,8 @@ class iPadNMRCalcViewController: UIViewController {
                                       .externalMagneticField: "",
                                       .protonLarmorFrequency: "",
                                       .electronLarmorFrequency: ""]
+    
+    // TODO: Try this in a different way
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
     var periodicTable: NMRPeriodicTable!
