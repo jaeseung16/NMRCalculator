@@ -66,66 +66,25 @@ class iPadNMRCalcViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-    
-    // MARK: - Methods for Keyboard
-    func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    @objc func keyboardDidShow(_ notification: Notification) {
-        let info = (notification as NSNotification).userInfo!
-        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
-        
-        iPadNMRCalcTable.contentInset = contentInsets
-        iPadNMRCalcTable.scrollIndicatorInsets = contentInsets
-     
-        var aRect = self.view.frame
-        aRect.size.height -= kbSize.height
-        if !aRect.contains(activeField!.frame.origin) {
-            iPadNMRCalcTable.scrollRectToVisible(activeField!.frame, animated: true)
-        }
-    }
-    
-    @objc func keyboardWillHide(_ notification: Notification) {
-        let contentInsets = UIEdgeInsets.zero
-        iPadNMRCalcTable.contentInset = contentInsets
-        iPadNMRCalcTable.scrollIndicatorInsets = contentInsets
-    }
 
-    // MARK: Method to initialize the view
+    // MARK:- Initialize the nuclues table
     func initializeView() {
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
         print("id: \(identifier)")
         
         let row = periodicTable.nucleiDictionary[identifier] ?? 0
-        
         nucleus = periodicTable.nuclei[row]
-        NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
-
         nmrCalc = NMRCalc(nucleus: nucleus!)
+        NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
         
-        nmrCalc!.updateLarmor("field", to: 1.0) { error in
+        let externalField = UserDefaults.standard.string(forKey: "B0") ?? "1.0"
+        nmrCalc!.updateLarmor("field", to: Double(externalField)!) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
             }
         }
 
         updateTextFields()
-    }
-    
-    func readtable() -> [String]? {
-        if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
-            do {
-                let table = try String(contentsOfFile: path, encoding: String.Encoding.utf8).components(separatedBy: "\n")
-                return table
-            } catch {
-                print("Error: Cannot read the table.")
-                return nil
-            }
-        }
-        return nil
     }
 
     // MARK: Method to update textfields
@@ -158,13 +117,49 @@ class iPadNMRCalcViewController: UIViewController {
         UserDefaults.standard.set(itemValues[.externalMagneticField], forKey: "B0")
     }
     
+    // MARK: - Methods for Keyboard
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc func keyboardDidShow(_ notification: Notification) {
+        let info = (notification as NSNotification).userInfo!
+        let kbSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
+        
+        iPadNMRCalcTable.contentInset = contentInsets
+        iPadNMRCalcTable.scrollIndicatorInsets = contentInsets
+        
+        var aRect = self.view.frame
+        aRect.size.height -= kbSize.height
+        if !aRect.contains(activeField!.frame.origin) {
+            iPadNMRCalcTable.scrollRectToVisible(activeField!.frame, animated: true)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        let contentInsets = UIEdgeInsets.zero
+        iPadNMRCalcTable.contentInset = contentInsets
+        iPadNMRCalcTable.scrollIndicatorInsets = contentInsets
+    }
+    
     // MARK: IBActions
     @IBAction func searchwebButtonDown(_ sender: UIButton) {
-        var queryString = "https://www.google.com/search?q="
-        queryString += nucleusName.text!
-        queryString += "&oe=utf-8&ie=utf-8"
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "www.google.com"
+        component.path = "/search"
+        component.queryItems = [URLQueryItem]()
         
-        let url : URL = URL(string: queryString)!
+        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "q", value: nucleusName.text!) )
+        
+        guard let url = component.url else {
+            warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
+            return
+        }
         
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
