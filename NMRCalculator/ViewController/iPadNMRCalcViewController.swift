@@ -15,12 +15,26 @@ class iPadNMRCalcViewController: UIViewController {
     @IBOutlet weak var NucleusPicker: UIPickerView!
     @IBOutlet weak var nucleusName: UILabel!
     
+    enum Menu: Int {
+        case larmorFrequency
+        case externalMagneticField
+        case protonLarmorFrequency
+        case electronLarmorFrequency
+    }
+    
     // Constants
-    let menuItems = ["Larmor Frequency (MHz)", "External Magnetic Field (Tesla)", "Proton's Larmor Frequency (MHz)", "Electron's Larmor Frequency (GHz)"]
+    let menuItems: [Menu: String] = [.larmorFrequency: "Larmor Frequency (MHz)",
+                                     .externalMagneticField: "External Magnetic Field (Tesla)",
+                                     .protonLarmorFrequency: "Proton's Larmor Frequency (MHz)",
+                                     .electronLarmorFrequency:"Electron's Larmor Frequency (GHz)"]
+    
     let numberofColumn = 1
     
     // Variables
-    var itemValues = Array(repeating: String(), count: 4)
+    var itemValues: [Menu: String] = [.larmorFrequency: "",
+                                      .externalMagneticField: "",
+                                      .protonLarmorFrequency: "",
+                                      .electronLarmorFrequency: ""]
     var valueTextField = Array(repeating: UITextField(), count: 4)
     
     var periodicTable: NMRPeriodicTable!
@@ -120,7 +134,7 @@ class iPadNMRCalcViewController: UIViewController {
         
         if let _ = nmrCalc?.larmorNMR {
             for k in 0..<valueTextField.count {
-                valueTextField[k].text = itemValues[k]
+                valueTextField[k].text = itemValues[Menu(rawValue: k)!]
             }
         }
         
@@ -132,9 +146,16 @@ class iPadNMRCalcViewController: UIViewController {
     }
     
     func updateItemValues() {
-        if let larmor = nmrCalc?.larmorNMR {
-            itemValues = [larmor.frequencyLarmor.format(".4"), larmor.fieldExternal.format(".4"), larmor.frequencyProton.format(".4"), larmor.frequencyElectron.format(".4")]
+        guard let itemValuesDict = nmrCalc?.getLarmor() else {
+            return
         }
+        
+        itemValues[.larmorFrequency] = itemValuesDict[.larmor]!.format(".4")
+        itemValues[.externalMagneticField] = itemValuesDict[.field]!.format(".4")
+        itemValues[.protonLarmorFrequency] = itemValuesDict[.proton]!.format(".4")
+        itemValues[.electronLarmorFrequency] = itemValuesDict[.electron]!.format(".4")
+        
+        UserDefaults.standard.set(itemValues[.externalMagneticField], forKey: "B0")
     }
     
     // MARK: IBActions
@@ -217,10 +238,11 @@ extension iPadNMRCalcViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NMRParametersTableViewCell
+        let row = indexPath.row
         
-        cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
-        valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
+        cell.itemLabel.text = menuItems[Menu(rawValue: row)!]
+        cell.itemValue.text = itemValues[Menu(rawValue: row)!]
+        valueTextField[row] = cell.itemValue
         
         return cell
     }
