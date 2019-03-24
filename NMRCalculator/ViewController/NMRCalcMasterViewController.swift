@@ -11,42 +11,41 @@ import UIKit
 class NMRCalcMasterViewController: UITableViewController {
 
     var nucleusVC: UIViewController?
-    // var signalVC: UIViewController?
-    // var pulseVC: UIViewController?
+    var signalVC: UIViewController?
+    var pulseVC: UIViewController?
     var solutionVC: UIViewController?
     var infoVC: UIViewController?
     
     var nmrCalc = NMRCalc()
     
-    let viewControllers = ["nucleus", "signalView", "pulseView", "solutionView", "infoView"]
-    let menuItems = ["Nucleus", "Signal", "RF Pulse", "Solution", "Info"]
+    enum Menu: Int {
+        case nucleus, signal, pulse, solution, info
+    }
+    
+    let viewControllers: [Menu: String] = [.nucleus: "nucleus",
+                                           .signal: "signalView",
+                                           .pulse: "pulseView",
+                                           .solution: "solutionView",
+                                           .info: "infoView"]
+    let menuItems: [Menu: String] = [.nucleus: "Nucleus",
+                                     .signal: "Signal",
+                                     .pulse: "RF Pulse",
+                                     .solution: "Solution",
+                                     .info: "Info"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        nucleusVC = UIStoryboard(name: "iPadStoryboard", bundle: nil).instantiateViewController(withIdentifier: viewControllers[.nucleus]!)
         
-        nucleusVC = UIStoryboard(name: "iPadStoryboard", bundle: nil).instantiateViewController(withIdentifier: "nucleus")
+        signalVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllers[.signal]!)
         
-        // signalVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signalView")
+        pulseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllers[.pulse]!)
         
-        // pulseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "pulseView")
+        solutionVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllers[.solution]!)
         
-        solutionVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "solutionView")
+        infoVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllers[.info]!)
         
-        infoVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "infoView")
-        
-        
-        // self.menuItems = menuItems
-        
-        // let firstIndexPath = IndexPath(row: 0, section: 0)
-        // self.tableView.selectRow(at: firstIndexPath, animated: true, scrollPosition: .top)
-        // self.tableView(self.tableView, didSelectRowAt: firstIndexPath)
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,48 +69,24 @@ class NMRCalcMasterViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MasterViewTableCell", for: indexPath) as! NMRCalcMasterItems
 
-        cell.menuItems.text = menuItems[(indexPath as NSIndexPath).row]
+        cell.menuItems.text = menuItems[Menu(rawValue: indexPath.row)!]
 
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewControllerIdentifier = viewControllers[(indexPath as NSIndexPath).row]
-        
-        switch (indexPath as NSIndexPath).row {
-        case 0:
+        switch Menu(rawValue: indexPath.row)! {
+        case .nucleus:
             self.showDetailViewController(nucleusVC!, sender: self)
-        case 1:
-            let signalVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllerIdentifier) as! SignalViewController
-            signalVC.nmrCalc = self.nmrCalc
-            self.showDetailViewController(signalVC, sender: self)
-        case 2:
-            let pulseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewControllerIdentifier) as! PulseViewController
-            pulseVC.nmrCalc = self.nmrCalc
-            self.showDetailViewController(pulseVC, sender: self)
-        case 3:
+        case .signal:
+            self.showDetailViewController(signalVC!, sender: self)
+        case .pulse:
+            self.showDetailViewController(pulseVC!, sender: self)
+        case .solution:
             self.showDetailViewController(solutionVC!, sender: self)
-        case 4:
-            self.showDetailViewController(infoVC!, sender: self)
-        default:
+        case .info:
             self.showDetailViewController(infoVC!, sender: self)
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-        if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow {
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! NMRCalcDetailViewController
-            }
-        }
-    }*/
- 
 
 }
