@@ -14,9 +14,24 @@ class SolutionViewController: UIViewController {
     @IBOutlet weak var SolutionTableView: UITableView!
     @IBOutlet weak var ChemName: UITextField!
     
-    let menuItems = ["Molecular weight (g/mol)", "Concentration (mM)", "Concentration (wt%)",
-                     "Mass of solute (mg)", "Mass (g) or volume (mL) of water"]
-    var itemValues = Array(repeating: String(), count: 5)
+    // Constants
+    enum Menu: Int {
+        case molecularWeight, concentration, concentrationWt, mass, volume
+    }
+    
+    let menuItems: [Menu: String] = [.molecularWeight: "Molecular weight (g/mol)",
+                                     .concentration: "Concentration (mM)",
+                                     .concentrationWt: "Concentration (wt%)",
+                                     .mass: "Mass of solute (mg)",
+                                     .volume: "Mass (g) or volume (mL) of water"]
+    
+    var itemValues: [Menu: String] = [.molecularWeight: String(),
+                                      .concentration: String(),
+                                      .concentrationWt: String(),
+                                      .mass: String(),
+                                      .volume: String()]
+    
+    // TODO: - Will remove this
     var valueTextField = Array(repeating: UITextField(), count: 5)
     
     var chemCalc = ChemCalc()
@@ -117,18 +132,18 @@ extension SolutionViewController {
         updateItemValues()
 
         for k in 0..<valueTextField.count {
-            valueTextField[k].text = itemValues[k]
+            valueTextField[k].text = itemValues[Menu(rawValue: k)!]
         }
         
         ChemName.text = chemCalc.chemicalName
     }
     
     func updateItemValues() {
-        itemValues[0] = chemCalc.molecularWeight.format(".5")
-        itemValues[1] = (chemCalc.molConcentration*1_000).format(".4")
-        itemValues[2] = (chemCalc.wtConcentration*100).format(".4")
-        itemValues[3] = (chemCalc.gramSolute*1_000).format(".5")
-        itemValues[4] = chemCalc.amountSolvent.format(".5")
+        itemValues[.molecularWeight] = chemCalc.molecularWeight.format(".5")
+        itemValues[.concentration] = (chemCalc.molConcentration*1_000).format(".4")
+        itemValues[.concentrationWt] = (chemCalc.wtConcentration*100).format(".4")
+        itemValues[.mass] = (chemCalc.gramSolute*1_000).format(".5")
+        itemValues[.volume] = chemCalc.amountSolvent.format(".5")
     }
     
     func warnings(_ title: String, message: String) {
@@ -152,8 +167,10 @@ extension SolutionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SolutionTableCell", for: indexPath) as! SolutionTableViewCell
         
-        cell.itemLabel.text = menuItems[(indexPath as NSIndexPath).row]
-        cell.itemValue.text = itemValues[(indexPath as NSIndexPath).row]
+        let menu = Menu(rawValue: indexPath.row)!
+        
+        cell.itemLabel.text = menuItems[menu]!
+        cell.itemValue.text = itemValues[menu]!
         valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
         
         return cell
