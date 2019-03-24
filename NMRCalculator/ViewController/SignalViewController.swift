@@ -14,23 +14,27 @@ class SignalViewController: UIViewController {
     @IBOutlet weak var signalTableView: UITableView!
     
     // Constants
-    let sections = ["Time domain", "Frequency domain"]
-    let menuItems1 = [ "Number of data points", "Acquisition duration (sec)", "Dwell time (μs)"]
-    let menuItems2 = [ "Number of data points", "Spectral width (kHz)", "Frequency resolution (Hz)"]
-    
-    enum Menu1: Int {
+    enum TimeMenu: Int {
         case size, duration, dwell
     }
     
-    enum Menu2: Int {
+    enum FrequencyMenu: Int {
         case size, width,resolution
     }
+
+    let sections = ["Time domain", "Frequency domain"]
+    let timeMenuItems: [TimeMenu: String] = [ .size: "Number of data points",
+                                              .duration: "Acquisition duration (sec)",
+                                              .dwell: "Dwell time (μs)"]
+    let frequencyMenuItems: [FrequencyMenu: String] = [ .size: "Number of data points",
+                                                        .width: "Spectral width (kHz)",
+                                                        .resolution: "Frequency resolution (Hz)"]
     
     // Variables
     var nmrCalc = NMRCalc.shared
     
-    var itemValues1: [Menu1: String] = [.size: "1000.0", .duration: "0.01", .dwell: "10.0"]
-    var itemValues2: [Menu2: String] = [.size: "1000.0", .width: "1.0", .resolution: "1.0"]
+    var timeMenuItemValues: [TimeMenu: String] = [.size: "1000.0", .duration: "0.01", .dwell: "10.0"]
+    var frequencyMenuItemValues: [FrequencyMenu: String] = [.size: "1000.0", .width: "1.0", .resolution: "1.0"]
     
     var selectedItem: IndexPath?
     var fixedItem: String?
@@ -117,18 +121,18 @@ class SignalViewController: UIViewController {
     
     func updateTextFields() {
         if let acqDict = nmrCalc.getAcq() {
-            itemValues1[.size] = "\(acqDict[.size]!)"
-            itemValues1[.duration] = (acqDict[.duration]! / 1_000.0).format(".3")
-            itemValues1[.dwell] = acqDict[.dwell]!.format(".3")
+            timeMenuItemValues[.size] = "\(acqDict[.size]!)"
+            timeMenuItemValues[.duration] = (acqDict[.duration]! / 1_000.0).format(".3")
+            timeMenuItemValues[.dwell] = acqDict[.dwell]!.format(".3")
             
             UserDefaults.standard.set(acqDict[.size], forKey: "SizeInAcquisition")
             UserDefaults.standard.set(acqDict[.duration], forKey: "DurationInAcquisition")
         }
         
         if let spec = nmrCalc.getSpec() {
-            itemValues2[.size] = "\(spec[.size]!)"
-            itemValues2[.width] = spec[.width]!.format(".3")
-            itemValues2[.resolution] = spec[.resolution]!.format(".3")
+            frequencyMenuItemValues[.size] = "\(spec[.size]!)"
+            frequencyMenuItemValues[.width] = spec[.width]!.format(".3")
+            frequencyMenuItemValues[.resolution] = spec[.resolution]!.format(".3")
             
             UserDefaults.standard.set(spec[.size], forKey: "SizeInSpectrum")
             UserDefaults.standard.set(spec[.width], forKey: "WidthInSpectrum")
@@ -156,9 +160,9 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return menuItems1.count
+            return timeMenuItems.count
         case 1:
-            return menuItems2.count
+            return frequencyMenuItems.count
         default:
             return 0
         }
@@ -173,11 +177,13 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
         let row = (indexPath as NSIndexPath).row
         switch (indexPath as NSIndexPath).section {
         case 0:
-            labeltext = menuItems1[row]
-            valuetext = itemValues1[Menu1(rawValue: row)!]
+            let menu = TimeMenu(rawValue: row)!
+            labeltext = timeMenuItems[menu]
+            valuetext = timeMenuItemValues[menu]
         case 1:
-            labeltext = menuItems2[row]
-            valuetext = itemValues2[Menu2(rawValue: row)!]
+            let menu = FrequencyMenu(rawValue: row)!
+            labeltext = frequencyMenuItems[menu]
+            valuetext = frequencyMenuItemValues[menu]
         default:
             labeltext = nil
         }
@@ -210,18 +216,20 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
             
             fixedItem = state ? nil : cell.itemLabel.text
             
-            switch (selectedItem as NSIndexPath).section {
+            switch selectedItem.section {
             case 0:
+                let menu = TimeMenu(rawValue: selectedItem.row)!
                 if state {
-                    cell.itemLabel.text = menuItems1[(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = timeMenuItems[menu]
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems1[(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = "☒ " + timeMenuItems[menu]!
                 }
             case 1:
+                let menu = FrequencyMenu(rawValue: selectedItem.row)!
                 if state {
-                    cell.itemLabel.text = menuItems2[(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = frequencyMenuItems[menu]!
                 } else {
-                    cell.itemLabel.text = "☒ " + menuItems2[(selectedItem as NSIndexPath).row]
+                    cell.itemLabel.text = "☒ " + frequencyMenuItems[menu]!
                 }
             default:
                 break
@@ -270,7 +278,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
             category = .acquisition
             
             switch cellLabel.text! {
-            case menuItems1[0]: // Textfield for the size of FID
+            case timeMenuItems[.size]: // Textfield for the size of FID
                 firstParameter = "size"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
@@ -278,16 +286,16 @@ extension SignalViewController: SignalTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems1[1] {
+                if fixedItem == timeMenuItems[.duration] {
                     secondParameter = "dwell"
-                } else if fixedItem == menuItems1[2] {
+                } else if fixedItem == timeMenuItems[.dwell] {
                     secondParameter = "duration"
                 } else {
                     warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems1[1]: // Textfield for aquisition duration
+            case timeMenuItems[.duration]: // Textfield for aquisition duration
                 value = value * 1_000
                 firstParameter = "duration"
                 
@@ -296,16 +304,16 @@ extension SignalViewController: SignalTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems1[0] {
+                if fixedItem == timeMenuItems[.size] {
                     secondParameter = "dwell"
-                } else if fixedItem == menuItems1[2] {
+                } else if fixedItem == timeMenuItems[.dwell] {
                     secondParameter = "size"
                 } else {
                     warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems1[2]: // Textfield for dwell time
+            case timeMenuItems[.dwell]: // Textfield for dwell time
                 firstParameter = "dwell"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 0 else {
@@ -313,9 +321,9 @@ extension SignalViewController: SignalTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems1[0] {
+                if fixedItem == timeMenuItems[.size] {
                     secondParameter = "duration"
-                } else if fixedItem == menuItems1[1] {
+                } else if fixedItem == timeMenuItems[.duration] {
                     secondParameter = "size"
                 } else {
                     warnings("Unable to comply.", message: "Something is wrong.")
@@ -330,7 +338,7 @@ extension SignalViewController: SignalTableViewCellDelegate {
             category = .spectrum
             
             switch cellLabel.text! {
-            case menuItems2[0]: // Textfield for the size of spectrum
+            case frequencyMenuItems[.size]: // Textfield for the size of spectrum
                 firstParameter = "size"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
@@ -338,16 +346,16 @@ extension SignalViewController: SignalTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems2[1] {
+                if fixedItem == frequencyMenuItems[.width] {
                     secondParameter = "resolution"
-                } else if fixedItem == menuItems2[2] {
+                } else if fixedItem == frequencyMenuItems[.resolution] {
                     secondParameter = "width"
                 } else {
                     warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems2[1]: // Textfield for spectral width
+            case frequencyMenuItems[.width]: // Textfield for spectral width
                 firstParameter = "width"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
@@ -355,16 +363,16 @@ extension SignalViewController: SignalTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems2[0] {
+                if fixedItem == frequencyMenuItems[.size] {
                     secondParameter = "resolution"
-                } else if fixedItem == menuItems2[2] {
+                } else if fixedItem == frequencyMenuItems[.resolution] {
                     secondParameter = "size"
                 } else {
                     warnings("Unable to comply.", message: "Something is wrong.")
                     return
                 }
                 
-            case menuItems2[2]: // Textfield for frequency resolution
+            case frequencyMenuItems[.resolution]: // Textfield for frequency resolution
                 firstParameter = "resolution"
                 
                 guard let fixed = selectedItem, (fixed as NSIndexPath).section == 1 else {
@@ -372,9 +380,9 @@ extension SignalViewController: SignalTableViewCellDelegate {
                     break
                 }
                 
-                if fixedItem == menuItems2[0] {
+                if fixedItem == frequencyMenuItems[.size] {
                     secondParameter = "width"
-                } else if fixedItem == menuItems2[1] {
+                } else if fixedItem == frequencyMenuItems[.width] {
                     secondParameter = "size"
                 } else {
                     warnings("Unable to comply.", message: "Something is wrong.")
