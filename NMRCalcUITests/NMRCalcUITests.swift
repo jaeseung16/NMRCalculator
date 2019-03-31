@@ -59,5 +59,25 @@ class NMRCalcUITests: XCTestCase {
         
         XCTAssertEqual(String(format: "%.2g", Double(larmorFrequency)!), String(format: "%.2g", Double(gyromagneticRatio)!))
     }
+    
+    func testSignal() {
+        let tabBarsQuery = app.tabBars
+        
+        tabBarsQuery.buttons["Nucleus"].tap()
+        XCTAssertTrue(app.navigationBars["Nucleus"].exists)
+        
+        tabBarsQuery.buttons["Signal"].tap()
+        XCTAssertTrue(app.navigationBars["Signal"].exists)
+        
+        tabBarsQuery.buttons["RF Pulse"].tap()
+        XCTAssertTrue(app.navigationBars["RF Pulse"].exists)
+        
+        tabBarsQuery.buttons["Solution"].tap()
+        XCTAssertTrue(app.navigationBars["Solution"].exists)
+        
+        tabBarsQuery.buttons["Info"].tap()
+        XCTAssertTrue(app.navigationBars["Information"].exists)
+        
+    }
 
 }
