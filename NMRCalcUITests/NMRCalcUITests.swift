@@ -60,7 +60,7 @@ class NMRCalcUITests: XCTestCase {
         XCTAssertEqual(String(format: "%.2g", Double(larmorFrequency)!), String(format: "%.2g", Double(gyromagneticRatio)!))
     }
     
-    func testSignal() {
+    func testTabBarButtons() {
         let tabBarsQuery = app.tabBars
         
         tabBarsQuery.buttons["Nucleus"].tap()
