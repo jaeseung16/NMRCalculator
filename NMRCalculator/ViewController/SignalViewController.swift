@@ -216,28 +216,19 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
             
             fixedItem = state ? nil : cell.itemLabel.text
             
+            var labelText = (state ? "" : "☒ ")
             switch selectedItem.section {
             case 0:
                 let menu = TimeMenu(rawValue: selectedItem.row)!
-                if state {
-                    cell.itemLabel.text = timeMenuItems[menu]
-                } else {
-                    cell.itemLabel.text = "☒ " + timeMenuItems[menu]!
-                }
+                labelText += timeMenuItems[menu]!
             case 1:
                 let menu = FrequencyMenu(rawValue: selectedItem.row)!
-                if state {
-                    cell.itemLabel.text = frequencyMenuItems[menu]!
-                } else {
-                    cell.itemLabel.text = "☒ " + frequencyMenuItems[menu]!
-                }
+                labelText += frequencyMenuItems[menu]!
             default:
                 break
             }
-            cell.itemValue.isEnabled = state
-            cell.itemValue.textColor = state ? .black : .gray
-            cell.itemValue.text = cell.itemValue.text // Without this, textColor is not being updated.
-            cell.itemLabel.textColor = state ? .black : .gray
+            
+            cell.update(state: state, labelText: labelText)
         }
         
         if let item = selectedItem {

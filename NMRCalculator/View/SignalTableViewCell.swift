@@ -32,6 +32,14 @@ class SignalTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
+    
+    func update(state: Bool, labelText: String) {
+        itemLabel.text = labelText
+        itemValue.isEnabled = state
+        itemValue.textColor = state ? .black : .gray
+        //itemValue.text = itemValue.text // Without this, textColor is not being updated.
+        itemLabel.textColor = state ? .black : .gray
+    }
 }
 
 extension SignalTableViewCell: UITextFieldDelegate {
