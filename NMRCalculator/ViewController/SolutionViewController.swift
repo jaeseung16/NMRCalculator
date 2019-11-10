@@ -41,24 +41,42 @@ class SolutionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        readOrSetUserDefaults()
+        updateTextFields()
+    }
+    
+    func readOrSetUserDefaults() {
+        readOrSetChemName()
+        readOrSetMolecularWeight()
+        readOrSetAmountSolvent()
+        readOrSetGramSolute()
+    }
+    
+    func readOrSetChemName() {
         if let name = UserDefaults.standard.object(forKey: "ChemName") as? String {
             chemicalNameTextField.text = name
         } else {
             UserDefaults.standard.set(chemicalNameTextField.text!, forKey: "ChemName")
         }
-        
+    }
+    
+    func readOrSetMolecularWeight() {
         if let molecularWeight = UserDefaults.standard.object(forKey: "MolecularWeight") as? Double {
             chemCalc.molecularWeight = molecularWeight
         } else {
             UserDefaults.standard.set(chemCalc.molecularWeight, forKey: "MolecularWeight")
         }
-        
+    }
+    
+    func readOrSetAmountSolvent() {
         if let amountSolvent = UserDefaults.standard.object(forKey: "AmountSolvent") as? Double {
             chemCalc.amountSolvent = amountSolvent
         } else {
              UserDefaults.standard.set(chemCalc.amountSolvent, forKey: "AmountSolvent")
         }
-        
+    }
+    
+    func readOrSetGramSolute() {
         if let gramSolute = UserDefaults.standard.object(forKey: "GramSolute") as? Double {
             chemCalc.updateGramSolute(to: gramSolute) { (error) in
                 if (error != nil) {
@@ -68,8 +86,6 @@ class SolutionViewController: UIViewController {
         } else {
             UserDefaults.standard.set(chemCalc.gramSolute, forKey: "GramSolute")
         }
-        
-        updateTextFields()
     }
     
     override func viewDidAppear(_ animated: Bool) {
