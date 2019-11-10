@@ -80,7 +80,7 @@ class SolutionViewController: UIViewController {
         if let gramSolute = UserDefaults.standard.object(forKey: "GramSolute") as? Double {
             chemCalc.updateGramSolute(to: gramSolute) { (error) in
                 if (error != nil) {
-                    warnings("Unable to comply", message: error!)
+                    showWarning("Unable to comply", message: error!)
                 }
             }
         } else {
@@ -122,7 +122,7 @@ class SolutionViewController: UIViewController {
     // MARK: IBActions
     @IBAction func searchWebButtonDown(_ sender: UIBarButtonItem) {
         guard let url = buildURL() else {
-            warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
+            showWarning("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
             return
         }
         
@@ -166,7 +166,7 @@ extension SolutionViewController {
         itemValues[.volume] = chemCalc.amountSolvent.format(".5")
     }
     
-    func warnings(_ title: String, message: String) {
+    func showWarning(_ title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(ok)
@@ -216,42 +216,9 @@ extension SolutionViewController: UITextFieldDelegate {
             let _ = chemCalc.set(parameter: .chemical, to: text)
             UserDefaults.standard.set(chemicalNameTextField.text!, forKey: "ChemName")
         } else if let value = Double(text) {
-            switch textField {
-            case valueTextField[0]: // Textfield for molecular weight
-                chemCalc.updateMolecularWeight(to: value, completionHandler: { (error) in
-                    if (error != nil) {
-                        warnings("Unable to comply", message: error!)
-                    }
-                })
-            case valueTextField[1]: // Textfield for concentration in mol
-                chemCalc.updateMolConcentration(to: value/1000.0, completionHandler: { (error) in
-                    if (error != nil) {
-                        warnings("Unable to comply", message: error!)
-                    }
-                })
-            case valueTextField[2]: // Textfield for concentration in wt%
-                chemCalc.updateWtConcentration(to: value/100.0, completionHandler: { (error) in
-                    if (error != nil) {
-                        warnings("Unable to comply", message: error!)
-                    }
-                })
-            case valueTextField[3]: // Textfield for amount of solute
-                chemCalc.updateGramSolute(to: value/1000.0, completionHandler: { (error) in
-                    if (error != nil) {
-                        warnings("Unable to comply", message: error!)
-                    }
-                })
-            case valueTextField[4]: // Textfield for amount of water
-                chemCalc.updateAmountSolvent(to: value, completionHandler: { (error) in
-                    if (error != nil) {
-                        warnings("Unable to comply", message: error!)
-                    }
-                })
-            default:
-                break
-            }
+            update(textField, with: value)
         } else {
-            warnings("Unable to comply.", message: "Please enter a positive number.")
+            showWarning("Unable to comply.", message: "Please enter a positive number.")
             textField.text = textbeforeediting
         }
         
@@ -259,6 +226,29 @@ extension SolutionViewController: UITextFieldDelegate {
         UserDefaults.standard.set(chemCalc.amountSolvent, forKey: "AmountSolvent")
         UserDefaults.standard.set(chemCalc.gramSolute, forKey: "GramSolute")
         updateTextFields()
+    }
+    
+    func update(_ textField: UITextField, with value: Double) {
+        func showWarningIfErrorOccured(_ error: String?) {
+            if (error != nil) {
+                showWarning("Unable to comply", message: error!)
+            }
+        }
+        
+        switch textField {
+        case valueTextField[0]: // Textfield for molecular weight
+            chemCalc.updateMolecularWeight(to: value, completionHandler: showWarningIfErrorOccured)
+        case valueTextField[1]: // Textfield for concentration in mol
+            chemCalc.updateMolConcentration(to: value/1000.0, completionHandler: showWarningIfErrorOccured)
+        case valueTextField[2]: // Textfield for concentration in wt%
+            chemCalc.updateWtConcentration(to: value/100.0, completionHandler: showWarningIfErrorOccured)
+        case valueTextField[3]: // Textfield for amount of solute
+            chemCalc.updateGramSolute(to: value/1000.0, completionHandler: showWarningIfErrorOccured)
+        case valueTextField[4]: // Textfield for amount of water
+            chemCalc.updateAmountSolvent(to: value, completionHandler: showWarningIfErrorOccured)
+        default:
+            break
+        }
     }
 }
 
