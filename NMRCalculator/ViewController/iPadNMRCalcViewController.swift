@@ -72,7 +72,6 @@ class iPadNMRCalcViewController: UIViewController {
     // MARK:- Initialize the nuclues table
     func initializeView() {
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
-        print("id: \(identifier)")
         
         let row = periodicTable.nucleiDictionary[identifier] ?? 0
         nucleus = periodicTable.nuclei[row]

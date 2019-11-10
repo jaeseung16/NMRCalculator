@@ -11,8 +11,8 @@ import UIKit
 class SolutionViewController: UIViewController {
     // MARK: Properties
     // Outlets
-    @IBOutlet weak var SolutionTableView: UITableView!
-    @IBOutlet weak var ChemName: UITextField!
+    @IBOutlet weak var solutionTableView: UITableView!
+    @IBOutlet weak var chemicalNameTextField: UITextField!
     
     // Constants
     enum Menu: Int {
@@ -42,9 +42,9 @@ class SolutionViewController: UIViewController {
         super.viewDidLoad()
         
         if let name = UserDefaults.standard.object(forKey: "ChemName") as? String {
-            ChemName.text = name
+            chemicalNameTextField.text = name
         } else {
-            UserDefaults.standard.set(ChemName.text!, forKey: "ChemName")
+            UserDefaults.standard.set(chemicalNameTextField.text!, forKey: "ChemName")
         }
         
         if let molecularWeight = UserDefaults.standard.object(forKey: "MolecularWeight") as? Double {
@@ -93,14 +93,14 @@ class SolutionViewController: UIViewController {
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let contentInsets = UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: kbSize.height, right: 0.0)
-        SolutionTableView.contentInset = contentInsets
-        SolutionTableView.scrollIndicatorInsets = contentInsets
+        solutionTableView.contentInset = contentInsets
+        solutionTableView.scrollIndicatorInsets = contentInsets
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
-        SolutionTableView.contentInset = contentInsets
-        SolutionTableView.scrollIndicatorInsets = contentInsets
+        solutionTableView.contentInset = contentInsets
+        solutionTableView.scrollIndicatorInsets = contentInsets
     }
     
     // MARK: IBActions
@@ -113,7 +113,7 @@ class SolutionViewController: UIViewController {
         
         component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
         component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
-        component.queryItems!.append( URLQueryItem(name: "q", value: ChemName.text!) )
+        component.queryItems!.append( URLQueryItem(name: "q", value: chemicalNameTextField.text!) )
         
         guard let url = component.url else {
             warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
@@ -135,7 +135,7 @@ extension SolutionViewController {
             valueTextField[k].text = itemValues[Menu(rawValue: k)!]
         }
         
-        ChemName.text = chemCalc.chemicalName
+        chemicalNameTextField.text = chemCalc.chemicalName
     }
     
     func updateItemValues() {
@@ -192,9 +192,9 @@ extension SolutionViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let text = textField.text else { return }
         
-        if textField == ChemName {
+        if textField == chemicalNameTextField {
             let _ = chemCalc.set(parameter: .chemical, to: text)
-            UserDefaults.standard.set(ChemName.text!, forKey: "ChemName")
+            UserDefaults.standard.set(chemicalNameTextField.text!, forKey: "ChemName")
         } else if let value = Double(text) {
             switch textField {
             case valueTextField[0]: // Textfield for molecular weight
