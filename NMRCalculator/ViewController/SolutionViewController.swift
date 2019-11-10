@@ -121,17 +121,7 @@ class SolutionViewController: UIViewController {
     
     // MARK: IBActions
     @IBAction func searchWebButtonDown(_ sender: UIBarButtonItem) {
-        var component = URLComponents()
-        component.scheme = "https"
-        component.host = "www.google.com"
-        component.path = "/search"
-        component.queryItems = [URLQueryItem]()
-        
-        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
-        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
-        component.queryItems!.append( URLQueryItem(name: "q", value: chemicalNameTextField.text!) )
-        
-        guard let url = component.url else {
+        guard let url = buildURL() else {
             warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
             return
         }
@@ -139,6 +129,20 @@ class SolutionViewController: UIViewController {
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
         }
+    }
+    
+    func buildURL() -> URL? {
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "www.google.com"
+        component.path = "/search"
+        
+        component.queryItems = [URLQueryItem]()
+        component.queryItems!.append(URLQueryItem(name: "oe", value: "utf-8"))
+        component.queryItems!.append(URLQueryItem(name: "ie", value: "utf-8"))
+        component.queryItems!.append(URLQueryItem(name: "q", value: chemicalNameTextField.text!))
+        
+        return component.url
     }
 }
 
