@@ -152,17 +152,7 @@ class NucleusViewController: UIViewController {
     
     // MARK: IBActions
     @IBAction func searchWebButtonDown(_ sender: UIBarButtonItem) {
-        var component = URLComponents()
-        component.scheme = "https"
-        component.host = "www.google.com"
-        component.path = "/search"
-        component.queryItems = [URLQueryItem]()
-        
-        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
-        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
-        component.queryItems!.append( URLQueryItem(name: "q", value: nucleusName.text!) )
-        
-        guard let url = component.url else {
+        guard let url = getSearchUrl() else {
             warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
             return
         }
@@ -170,6 +160,20 @@ class NucleusViewController: UIViewController {
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
+    }
+    
+    func getSearchUrl() -> URL? {
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "www.google.com"
+        component.path = "/search"
+        
+        component.queryItems = [URLQueryItem]()
+        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "q", value: nucleusName.text!) )
+        
+        return component.url
     }
     
     // MARK: Warning messages
