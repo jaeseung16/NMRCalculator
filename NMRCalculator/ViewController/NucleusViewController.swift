@@ -17,7 +17,7 @@ extension Double {
 class NucleusViewController: UIViewController {
     // MARK: Properties
     // Outlets
-    @IBOutlet weak var NucleusTableView: UITableView!
+    @IBOutlet weak var nucleusTableView: UITableView!
     @IBOutlet weak var nucleusPicker: UIPickerView!
     @IBOutlet weak var nucleusName: UILabel!
     
@@ -140,14 +140,14 @@ class NucleusViewController: UIViewController {
         let kbSize = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let pickerSize = nucleusPicker.frame
         let contentInsets = UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: kbSize.height - pickerSize.height, right: 0.0)
-        NucleusTableView.contentInset = contentInsets
-        NucleusTableView.scrollIndicatorInsets = contentInsets
+        nucleusTableView.contentInset = contentInsets
+        nucleusTableView.scrollIndicatorInsets = contentInsets
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
-        NucleusTableView.contentInset = contentInsets
-        NucleusTableView.scrollIndicatorInsets = contentInsets
+        nucleusTableView.contentInset = contentInsets
+        nucleusTableView.scrollIndicatorInsets = contentInsets
     }
     
     // MARK: IBActions
