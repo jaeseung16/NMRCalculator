@@ -21,4 +21,9 @@ class NucleusTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
+    
+    func setLabelAndValue(labelText: String?, valueText: String?) {
+        itemLabel.text = labelText
+        itemValue.text = valueText
+    }
 }

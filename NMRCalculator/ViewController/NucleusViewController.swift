@@ -242,11 +242,11 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
         let row = indexPath.row
         
-        cell.itemLabel.text = menuItems[Menu(rawValue: row)!]
-        cell.itemValue.text = itemValues[Menu(rawValue: row)!]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
+        cell.setLabelAndValue(labelText: menuItems[Menu(rawValue: row)!], valueText: itemValues[Menu(rawValue: row)!])
+        
         valueTextField[row] = cell.itemValue
         
         return cell
