@@ -10,22 +10,23 @@ import UIKit
 
 class InfoViewController: UIViewController {
     // MARK: - Properties
-    @IBOutlet weak var InfoTextView: UITextView!
+    @IBOutlet weak var infoTextView: UITextView!
     
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        InfoTextView.isScrollEnabled = false;
+        infoTextView.isScrollEnabled = false
+        infoTextView.backgroundColor = UIColor.white
         
         if let infotext = readInfo() {
-            InfoTextView.attributedText = infotext
+            infoTextView.attributedText = infotext
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        InfoTextView.isScrollEnabled = true;
+        infoTextView.isScrollEnabled = true
     }
 
     // MARK: Method to read text for information
