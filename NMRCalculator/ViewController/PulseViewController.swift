@@ -268,44 +268,23 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
             fixedItem = state ? nil : cell.itemLabel.text
             
             let row = selectedItem.row;
-            
-            var labelText: String?
+            var labelText = (state ? "" : "☒ ")
             
             switch selectedItem.section {
             case 0:
                 let pulseMenu = PulseMenu(rawValue: row)!
-                if state {
-                    labelText = menuItems1[pulseMenu]
-                } else {
-                    labelText = "☒ " + menuItems1[pulseMenu]!
-                }
+                labelText += menuItems1[pulseMenu]!
             case 1:
                 let pulseMenu = PulseMenu(rawValue: row)!
-                if state {
-                    labelText = menuItems2[pulseMenu]
-                } else {
-                    labelText = "☒ " + menuItems2[pulseMenu]!
-                }
+                labelText += menuItems2[pulseMenu]!
             case 2:
                 let ernstAngleMenu = ErnstAngleMenu(rawValue: row)!
-                if state {
-                    labelText = menuItems3[ernstAngleMenu]
-                } else {
-                    labelText = "☒ " + menuItems3[ernstAngleMenu]!
-                }
+                labelText += menuItems3[ernstAngleMenu]!
             default:
                 break
             }
             
-            // update value
-            cell.itemValue.isEnabled = state
-            cell.itemValue.textColor = state ? .black : .gray
-            // Without this, textColor is not being updated.
-            cell.itemValue.text = cell.itemValue.text
-            
-            // update label
-            cell.itemLabel.text = labelText
-            cell.itemLabel.textColor = state ? .black : .gray
+            cell.update(state: state, labelText: labelText)
         }
         
         guard let cell = tableView.cellForRow(at: indexPath) as? PulseTableViewCell else {
