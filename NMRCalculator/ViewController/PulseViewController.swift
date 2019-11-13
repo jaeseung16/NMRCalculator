@@ -89,6 +89,8 @@ class PulseViewController: UIViewController {
     
     // MARK: Method to initialize the view
     func initializeView() {
+        setupPulses()
+        
         guard nmrCalc.calculate_dB() else {
             warnings("Unable to comply.", message: "Cannot compare the powers.")
             return
