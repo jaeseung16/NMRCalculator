@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iby-mo-Fji">
-                                <rect key="frame" x="0.0" y="44" width="414" height="262.5"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -39,21 +39,19 @@
                                 </items>
                             </navigationBar>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="jmb-7h-Y8e">
-                                <rect key="frame" x="0.0" y="306.5" width="414" height="506.5"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T5I-gM-p50">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="35.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="2x5-pI-TAa">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="35.5"/>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="24"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="2x5-pI-TAa">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="45"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="EZX-9g-Nb4"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="24"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Tw-nr-2Hn">
-                                        <rect key="frame" x="0.0" y="35.5" width="414" height="235.5"/>
+                                        <rect key="frame" x="0.0" y="45" width="414" height="464"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <view key="tableFooterView" contentMode="scaleToFill" id="qE4-5H-TfI">
@@ -70,7 +68,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="eXw-Ic-BCP">
-                                                            <rect key="frame" x="263.5" y="3" width="135.5" height="34"/>
+                                                            <rect key="frame" x="263.66666666666669" y="3" width="135.33333333333331" height="34"/>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation" enablesReturnKeyAutomatically="YES"/>
@@ -79,7 +77,7 @@
                                                             </connections>
                                                         </textField>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V6Y-lC-FM0">
-                                                            <rect key="frame" x="15" y="11.5" width="240.5" height="17"/>
+                                                            <rect key="frame" x="14.999999999999986" y="11.666666666666664" width="240.66666666666663" height="17"/>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
@@ -107,7 +105,7 @@
                                         </connections>
                                     </tableView>
                                     <pickerView contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="XC0-nQ-oWm">
-                                        <rect key="frame" x="0.0" y="271" width="414" height="235.5"/>
+                                        <rect key="frame" x="0.0" y="509" width="414" height="216"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
@@ -116,10 +114,6 @@
                                         </connections>
                                     </pickerView>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstItem="2Tw-nr-2Hn" firstAttribute="height" secondItem="XC0-nQ-oWm" secondAttribute="height" id="6Mi-zo-UJd"/>
-                                    <constraint firstItem="T5I-gM-p50" firstAttribute="height" secondItem="2Tw-nr-2Hn" secondAttribute="height" multiplier="0.15" id="SCY-Fk-edJ"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -218,7 +212,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nup-FD-jAO">
-                                                    <rect key="frame" x="20" y="8.5" width="234" height="17"/>
+                                                    <rect key="frame" x="20.000000000000014" y="8.6666666666666643" width="234.33333333333337" height="17"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <nil key="highlightedColor"/>
@@ -227,7 +221,7 @@
                                                     </variation>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="BRB-cM-c9E">
-                                                    <rect key="frame" x="262" y="3" width="132" height="28"/>
+                                                    <rect key="frame" x="262.33333333333331" y="3" width="131.66666666666669" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="28" id="DM8-in-kpr"/>
                                                     </constraints>
@@ -351,7 +345,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="guF-e1-V8J">
-                                                    <rect key="frame" x="20" y="10" width="234" height="14.5"/>
+                                                    <rect key="frame" x="20.000000000000014" y="9.6666666666666679" width="234.33333333333337" height="14.666666666666668"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="highlightedColor"/>
@@ -360,7 +354,7 @@
                                                     </variation>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="N0S-Bt-KY8">
-                                                    <rect key="frame" x="262" y="3" width="132" height="28"/>
+                                                    <rect key="frame" x="262.33333333333331" y="3" width="131.66666666666669" height="28"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="28" id="4wf-Ot-9R0"/>
@@ -479,7 +473,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="aE0-42-9Uz">
-                                                            <rect key="frame" x="20" y="10" width="234" height="14.5"/>
+                                                            <rect key="frame" x="20.000000000000014" y="10" width="234.33333333333337" height="14.333333333333336"/>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="highlightedColor"/>
@@ -488,7 +482,7 @@
                                                             </variation>
                                                         </label>
                                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="VP4-bT-HAh">
-                                                            <rect key="frame" x="262" y="3" width="132" height="28"/>
+                                                            <rect key="frame" x="262.33333333333331" y="3" width="131.66666666666669" height="28"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="28" id="cHh-Eu-Xtd"/>
                                                             </constraints>
