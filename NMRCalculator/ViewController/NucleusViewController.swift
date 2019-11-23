@@ -42,9 +42,6 @@ class NucleusViewController: UIViewController {
                                      .protonLarmorFrequency: "",
                                      .electronLarmorFrequency: ""]
     
-    // TODO: Try this in a different way
-    var valueTextField = Array(repeating: UITextField(), count: 4)
-    
     var periodicTable: NMRPeriodicTable!
     var nucleus: NMRNucleus?
     var nmrCalc: NMRCalc?
@@ -103,17 +100,13 @@ class NucleusViewController: UIViewController {
     func updateTextFields() {
         updateItemValues()
         
-        if let _ = nmrCalc?.larmorNMR {
-            for k in 0..<valueTextField.count {
-                valueTextField[k].text = itemValues[Menu(rawValue: k)!]
-            }
-        }
-        
         if let nucleus = nmrCalc?.nucleus {
             nucleusName.text = nucleus.nameNucleus
         }
         
         UserDefaults.standard.setValue(nucleus?.identifier, forKey: "Nucleus")
+        
+        nucleusTableView.reloadData()
     }
     
     func updateItemValues() {
@@ -216,7 +209,7 @@ extension NucleusViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         nmrCalc!.nucleus = nucleus!
         nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!) // Why do I need this?
         
-        guard let value = Double(valueTextField[1].text!) else {
+        guard let value = Double(itemValues[.externalMagneticField]!) else {
             warnings("Unable to comply.", message: "The input should be a number.")
             return
         }
@@ -247,7 +240,6 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
         cell.setLabelAndValue(labelText: menuItems[Menu(rawValue: row)!], valueText: itemValues[Menu(rawValue: row)!])
         cell.delegate = self
-        valueTextField[row] = cell.itemValue
         
         return cell
     }
