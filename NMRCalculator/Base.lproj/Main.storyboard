@@ -51,6 +51,7 @@
                                         <rect key="frame" x="0.0" y="29" width="414" height="348"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <color key="sectionIndexBackgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <view key="tableFooterView" contentMode="scaleToFill" id="qE4-5H-TfI">
                                             <rect key="frame" x="0.0" y="96" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -90,6 +91,7 @@
                                                         <constraint firstItem="V6Y-lC-FM0" firstAttribute="centerY" secondItem="y7T-pA-zLZ" secondAttribute="centerY" id="xWJ-EE-uAd"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <connections>
                                                     <outlet property="itemLabel" destination="V6Y-lC-FM0" id="OP0-PV-vK8"/>
                                                     <outlet property="itemValue" destination="eXw-Ic-BCP" id="7lW-82-BBJ"/>
@@ -103,14 +105,15 @@
                                     </tableView>
                                     <pickerView contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="XC0-nQ-oWm">
                                         <rect key="frame" x="0.0" y="377" width="414" height="348"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="tintColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <connections>
                                             <outlet property="dataSource" destination="9pv-A4-QxB" id="62g-Z2-Muz"/>
                                             <outlet property="delegate" destination="9pv-A4-QxB" id="824-Af-Do1"/>
                                         </connections>
                                     </pickerView>
                                 </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstItem="2Tw-nr-2Hn" firstAttribute="height" secondItem="XC0-nQ-oWm" secondAttribute="height" id="6Mi-zo-UJd"/>
                                 </constraints>
