@@ -246,16 +246,24 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
         cell.setLabelAndValue(labelText: menuItems[Menu(rawValue: row)!], valueText: itemValues[Menu(rawValue: row)!])
-        
+        cell.delegate = self
         valueTextField[row] = cell.itemValue
         
         return cell
     }
 }
 
-// MARK: - UITextFieldDelegate
-extension NucleusViewController: UITextFieldDelegate {
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+// MARK: - NucluesTableViewCellDelegate
+extension NucleusViewController: NucleusTableViewCellDelegate {
+    func shouldReturn() {
+        nucleusPicker.isUserInteractionEnabled = true
+    }
+    
+    func didBeginEditing() {
+        nucleusPicker.isUserInteractionEnabled = false
+    }
+    
+    func shouldBeginEditing(_ textField: UITextField) -> Bool {
         let selected = nucleusPicker.selectedRow(inComponent: numberofColumn-1)
 
         if selected == -1 {
@@ -266,57 +274,47 @@ extension NucleusViewController: UITextFieldDelegate {
             nucleus = periodicTable.nuclei[selected]
             nmrCalc!.nucleus = nucleus
             nucleusName.text = nmrCalc!.nucleus!.nameNucleus
-            nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!) 
+            nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
             return true
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        nucleusPicker.isUserInteractionEnabled = true
-        
-        return true
-    }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        nucleusPicker.isUserInteractionEnabled = false
+    func didEndEditing(_ cell: NucleusTableViewCell, for cellLabel: UILabel, newValue: Double?, error: String?) {
+        func showWarningIfErrorOccured(_ error: String?) {
+            if (error != nil) {
+                warnings("Unable to comply", message: error!)
+            }
+        }
         
-        activeField = textField
-        textbeforeediting = textField.text
-        textField.text = nil
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        activeField = nil
-        
-        guard let x = Double(textField.text!) else {
+        guard error == nil else {
             warnings("Unable to comply.", message: "The input was not a number.")
-            textField.text = textbeforeediting
+            return
+        }
+        
+        guard let newValue = newValue else {
             return
         }
         
         var firstParameter = ""
-        let value = x
-        
-        switch textField {
-        case valueTextField[0]:
+        switch cellLabel.text! {
+        case menuItems[.larmorFrequency]:
             firstParameter = "larmor"
-        case valueTextField[1]:
+        case menuItems[.externalMagneticField]:
             firstParameter = "field"
-        case valueTextField[2]:
+        case menuItems[.protonLarmorFrequency]:
             firstParameter = "proton"
-        case valueTextField[3]:
+        case menuItems[.electronLarmorFrequency]:
             firstParameter = "electron"
         default:
             warnings("Unable to comply.", message: "The value is out of range.")
-            textField.text = textbeforeediting
             return
         }
         
-        nmrCalc!.updateLarmor(firstParameter, to: value) { error in
+        nmrCalc!.updateLarmor(firstParameter, to: newValue) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
-                textField.text = self.textbeforeediting
+                cell.itemValue.text = cell.textBeforeEditing
             }
         }
         
