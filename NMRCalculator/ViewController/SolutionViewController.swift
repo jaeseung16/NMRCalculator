@@ -31,9 +31,6 @@ class SolutionViewController: UIViewController {
                                       .mass: String(),
                                       .volume: String()]
     
-    // TODO: - Will remove this
-    var valueTextField = Array(repeating: UITextField(), count: 5)
-    
     var chemCalc = ChemCalc()
     var textbeforeediting: String?
     
@@ -150,12 +147,16 @@ class SolutionViewController: UIViewController {
 extension SolutionViewController {
     func updateTextFields() {
         updateItemValues()
-
-        for k in 0..<valueTextField.count {
-            valueTextField[k].text = itemValues[Menu(rawValue: k)!]
-        }
         
         chemicalNameTextField.text = chemCalc.chemicalName
+        
+        UserDefaults.standard.set(chemicalNameTextField.text!, forKey: "ChemName")
+        
+        UserDefaults.standard.set(chemCalc.molecularWeight, forKey: "MolecularWeight")
+        UserDefaults.standard.set(chemCalc.amountSolvent, forKey: "AmountSolvent")
+        UserDefaults.standard.set(chemCalc.gramSolute, forKey: "GramSolute")
+        
+        solutionTableView.reloadData()
     }
     
     func updateItemValues() {
@@ -191,7 +192,7 @@ extension SolutionViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.itemLabel.text = menuItems[menu]!
         cell.itemValue.text = itemValues[menu]!
-        valueTextField[(indexPath as NSIndexPath).row] = cell.itemValue
+        cell.delegate = self
         
         return cell
     }
@@ -203,51 +204,19 @@ extension SolutionViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
+
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textbeforeediting = textField.text
         textField.text = ""
     }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let text = textField.text else { return }
-        
+
         if textField == chemicalNameTextField {
             let _ = chemCalc.set(parameter: .chemical, to: text)
             UserDefaults.standard.set(chemicalNameTextField.text!, forKey: "ChemName")
-        } else if let value = Double(text) {
-            update(textField, with: value)
-        } else {
-            showWarning("Unable to comply.", message: "Please enter a positive number.")
-            textField.text = textbeforeediting
-        }
-        
-        UserDefaults.standard.set(chemCalc.molecularWeight, forKey: "MolecularWeight")
-        UserDefaults.standard.set(chemCalc.amountSolvent, forKey: "AmountSolvent")
-        UserDefaults.standard.set(chemCalc.gramSolute, forKey: "GramSolute")
-        updateTextFields()
-    }
-    
-    func update(_ textField: UITextField, with value: Double) {
-        func showWarningIfErrorOccured(_ error: String?) {
-            if (error != nil) {
-                showWarning("Unable to comply", message: error!)
-            }
-        }
-        
-        switch textField {
-        case valueTextField[0]: // Textfield for molecular weight
-            chemCalc.updateMolecularWeight(to: value, completionHandler: showWarningIfErrorOccured)
-        case valueTextField[1]: // Textfield for concentration in mol
-            chemCalc.updateMolConcentration(to: value/1000.0, completionHandler: showWarningIfErrorOccured)
-        case valueTextField[2]: // Textfield for concentration in wt%
-            chemCalc.updateWtConcentration(to: value/100.0, completionHandler: showWarningIfErrorOccured)
-        case valueTextField[3]: // Textfield for amount of solute
-            chemCalc.updateGramSolute(to: value/1000.0, completionHandler: showWarningIfErrorOccured)
-        case valueTextField[4]: // Textfield for amount of water
-            chemCalc.updateAmountSolvent(to: value, completionHandler: showWarningIfErrorOccured)
-        default:
-            break
+            updateTextFields()
         }
     }
 }
@@ -255,4 +224,47 @@ extension SolutionViewController: UITextFieldDelegate {
 // Helper function inserted by Swift 4.2 migrator.
 fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
 	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+}
+
+// MARK: - SolutionTableViewCellDelegate
+extension SolutionViewController: SolutionTableViewCellDelegate {
+    func didEndEditing(_ cell: SolutionTableViewCell, for cellLabel: UILabel, newValue: Double?, error: String?) {
+        func showWarningIfErrorOccured(_ error: String?) {
+            if (error != nil) {
+                showWarning("Unable to comply", message: error!)
+            }
+        }
+        
+        guard error == nil else {
+            showWarning("Unable to comply.", message: "The input was not a number.")
+            return
+        }
+        
+        guard let newValue = newValue else {
+            return
+        }
+        
+        switch cellLabel.text! {
+        case menuItems[.molecularWeight]:
+            chemCalc.updateMolecularWeight(to: newValue, completionHandler: showWarningIfErrorOccured)
+
+        case menuItems[.concentration]:
+            chemCalc.updateMolConcentration(to: newValue/1000.0, completionHandler: showWarningIfErrorOccured)
+            
+        case menuItems[.concentrationWt]:
+            chemCalc.updateWtConcentration(to: newValue/100.0, completionHandler: showWarningIfErrorOccured)
+            
+        case menuItems[.mass]:
+            chemCalc.updateGramSolute(to: newValue/1000.0, completionHandler: showWarningIfErrorOccured)
+            
+        case menuItems[.volume]:
+            chemCalc.updateAmountSolvent(to: newValue, completionHandler: showWarningIfErrorOccured)
+            
+        default:
+            showWarning("Unable to comply.", message: "The value is out of range.")
+            return
+        }
+        
+        updateTextFields()
+    }
 }
