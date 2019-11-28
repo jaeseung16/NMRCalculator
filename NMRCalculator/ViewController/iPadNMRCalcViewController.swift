@@ -12,7 +12,7 @@ class iPadNMRCalcViewController: UIViewController {
     // MARK: - Properties
     // Outlets
     @IBOutlet weak var iPadNMRCalcTable: UITableView!
-    @IBOutlet weak var NucleusPicker: UIPickerView!
+    @IBOutlet weak var nucleusPicker: UIPickerView!
     @IBOutlet weak var nucleusName: UILabel!
     
     enum Menu: Int {
@@ -76,7 +76,7 @@ class iPadNMRCalcViewController: UIViewController {
         let row = periodicTable.nucleiDictionary[identifier] ?? 0
         nucleus = periodicTable.nuclei[row]
         nmrCalc = NMRCalc(nucleus: nucleus!)
-        NucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
+        nucleusPicker.selectRow(row, inComponent: numberofColumn-1, animated: true)
         
         let externalField = UserDefaults.standard.string(forKey: "B0") ?? "1.0"
         nmrCalc!.updateLarmor("field", to: Double(externalField)!) { error in
@@ -247,13 +247,13 @@ extension iPadNMRCalcViewController: UITableViewDelegate, UITableViewDataSource 
 // MARK: - UITextFieldDelegate
 extension iPadNMRCalcViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        let selected = NucleusPicker.selectedRow(inComponent: 0)
+        let selected = nucleusPicker.selectedRow(inComponent: 0)
         
         if selected == -1 {
             warnings("Unable to comply.", message: "Select a nucleus.")
             return false
         } else {
-            NucleusPicker.selectRow(selected, inComponent: 0, animated: true)
+            nucleusPicker.selectRow(selected, inComponent: 0, animated: true)
             nucleus = periodicTable.nuclei[selected]
             nmrCalc!.nucleus = nucleus!
             nucleusName.text = nmrCalc!.nucleus!.nameNucleus
@@ -264,12 +264,12 @@ extension iPadNMRCalcViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        NucleusPicker.isUserInteractionEnabled = true
+        nucleusPicker.isUserInteractionEnabled = true
         return true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        NucleusPicker.isUserInteractionEnabled = false
+        nucleusPicker.isUserInteractionEnabled = false
         activeField = textField
         textbeforeediting = textField.text
         textField.text = nil
@@ -312,3 +312,73 @@ extension iPadNMRCalcViewController: UITextFieldDelegate {
         updateTextFields()
     }
 }
+
+// MARK: - NucluesTableViewCellDelegate
+extension iPadNMRCalcViewController: NucleusTableViewCellDelegate {
+    func shouldReturn() {
+        nucleusPicker.isUserInteractionEnabled = true
+    }
+    
+    func didBeginEditing() {
+        nucleusPicker.isUserInteractionEnabled = false
+    }
+    
+    func shouldBeginEditing(_ textField: UITextField) -> Bool {
+        let selected = nucleusPicker.selectedRow(inComponent: numberofColumn-1)
+
+        if selected == -1 {
+            warnings("Unable to comply.", message: "Select a nucleus.")
+            return false
+        } else {
+            nucleusPicker.selectRow(selected, inComponent: numberofColumn-1, animated: true)
+            nucleus = periodicTable.nuclei[selected]
+            nmrCalc!.nucleus = nucleus
+            nucleusName.text = nmrCalc!.nucleus!.nameNucleus
+            nmrCalc!.larmorNMR = NMRLarmor(nucleus: nucleus!)
+            return true
+        }
+    }
+    
+    
+    func didEndEditing(_ cell: NucleusTableViewCell, for cellLabel: UILabel, newValue: Double?, error: String?) {
+        func showWarningIfErrorOccured(_ error: String?) {
+            if (error != nil) {
+                warnings("Unable to comply", message: error!)
+            }
+        }
+        
+        guard error == nil else {
+            warnings("Unable to comply.", message: "The input was not a number.")
+            return
+        }
+        
+        guard let newValue = newValue else {
+            return
+        }
+        
+        var firstParameter = ""
+        switch cellLabel.text! {
+        case menuItems[.larmorFrequency]:
+            firstParameter = "larmor"
+        case menuItems[.externalMagneticField]:
+            firstParameter = "field"
+        case menuItems[.protonLarmorFrequency]:
+            firstParameter = "proton"
+        case menuItems[.electronLarmorFrequency]:
+            firstParameter = "electron"
+        default:
+            warnings("Unable to comply.", message: "The value is out of range.")
+            return
+        }
+        
+        nmrCalc!.updateLarmor(firstParameter, to: newValue) { error in
+            if (error != nil) {
+                self.warnings("Unable to comply.", message: error!)
+                cell.itemValue.text = cell.textBeforeEditing
+            }
+        }
+        
+        updateTextFields()
+    }
+}
+
