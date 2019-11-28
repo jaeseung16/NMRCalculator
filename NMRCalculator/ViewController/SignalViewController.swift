@@ -171,23 +171,23 @@ extension SignalViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SignalTableCell", for: indexPath) as! SignalTableViewCell
         
-        var labeltext: String?
+        var labeltext = cell.fixed ? "☒ " : ""
         var valuetext: String?
         
         let row = (indexPath as NSIndexPath).row
         switch (indexPath as NSIndexPath).section {
         case 0:
             let menu = TimeMenu(rawValue: row)!
-            labeltext = timeMenuItems[menu]
-            valuetext = timeMenuItemValues[menu]
+            labeltext += timeMenuItems[menu]!
+            valuetext = timeMenuItemValues[menu]!
         case 1:
             let menu = FrequencyMenu(rawValue: row)!
-            labeltext = frequencyMenuItems[menu]
+            labeltext += frequencyMenuItems[menu]!
             valuetext = frequencyMenuItemValues[menu]
         default:
-            labeltext = nil
+            labeltext += ""
         }
-        
+    
         cell.itemLabel.text = labeltext
         cell.itemValue.text = valuetext
         cell.sectionLabel = sections[indexPath.section]

@@ -20,6 +20,7 @@ class SignalTableViewCell: UITableViewCell {
     // Variables
     var sectionLabel: String?
     var textBeforeEditing: String?
+    var fixed = false
     
     weak var delegate: SignalTableViewCellDelegate?
     
@@ -34,6 +35,7 @@ class SignalTableViewCell: UITableViewCell {
     }
     
     func update(state: Bool, labelText: String) {
+        fixed = !state
         itemLabel.text = labelText
         itemValue.isEnabled = state
         if #available(iOS 13.0, *) {
@@ -41,7 +43,7 @@ class SignalTableViewCell: UITableViewCell {
             itemLabel.textColor = state ? .label : .secondaryLabel
         } else {
             // Fallback on earlier versions
-             itemLabel.textColor = state ? .black : .gray
+            itemLabel.textColor = state ? .black : .gray
             itemLabel.textColor = state ? .black : .gray
         }
     }
