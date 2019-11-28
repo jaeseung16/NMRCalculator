@@ -20,6 +20,7 @@ class PulseTableViewCell: UITableViewCell {
     // Variables
     var sectionLabel: String?
     var textBeforeEditing: String?
+    var fixed = false
     
     weak var delegate: PulseTableViewCellDelegate?
     
@@ -34,6 +35,7 @@ class PulseTableViewCell: UITableViewCell {
     }
     
     func update(state: Bool, labelText: String) {
+        fixed = !state
         itemLabel.text = labelText
         itemValue.isEnabled = state
         if #available(iOS 13.0, *) {

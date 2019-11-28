@@ -218,30 +218,36 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PulseTableCell", for: indexPath) as! PulseTableViewCell
         let row = indexPath.row
         
-        var labeltext: String?
+        var labeltext: String
         var valuetext: String?
         
         switch indexPath.section {
         case 0:
             let pulseMenu = PulseMenu(rawValue: row)!
-            labeltext = menuItems1[pulseMenu]
+            labeltext = menuItems1[pulseMenu]!
             valuetext = itemValues1[pulseMenu]
         case 1:
             let pulseMenu = PulseMenu(rawValue: row)!
-            labeltext = menuItems2[pulseMenu]
+            labeltext = menuItems2[pulseMenu]!
             valuetext = itemValues2[pulseMenu]
         case 2:
             let ernstAngleMenu = ErnstAngleMenu(rawValue: row)!
-            labeltext = menuItems3[ernstAngleMenu]
+            labeltext = menuItems3[ernstAngleMenu]!
             valuetext = itemValues3[ernstAngleMenu]
         default:
-            labeltext = nil
+            labeltext = ""
         }
         
-        cell.itemLabel.text = labeltext
+        let fixed = labeltext == fixedItem
+        
+        if (fixed) {
+            labeltext = "☒ " + labeltext
+        }
+        
         cell.itemValue.text = valuetext
         cell.sectionLabel = sections[indexPath.section]
         cell.delegate = self
+        cell.update(state: !fixed, labelText: labeltext)
         
         return cell
     }
