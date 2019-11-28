@@ -225,6 +225,7 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="BRB-cM-c9E">
                                                     <rect key="frame" x="262" y="3" width="132" height="28"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="28" id="DM8-in-kpr"/>
                                                     </constraints>

@@ -36,9 +36,14 @@ class SignalTableViewCell: UITableViewCell {
     func update(state: Bool, labelText: String) {
         itemLabel.text = labelText
         itemValue.isEnabled = state
-        itemValue.textColor = state ? .black : .gray
-        //itemValue.text = itemValue.text // Without this, textColor is not being updated.
-        itemLabel.textColor = state ? .black : .gray
+        if #available(iOS 13.0, *) {
+            itemValue.textColor = state ? .label : .secondaryLabel
+            itemLabel.textColor = state ? .label : .secondaryLabel
+        } else {
+            // Fallback on earlier versions
+             itemLabel.textColor = state ? .black : .gray
+            itemLabel.textColor = state ? .black : .gray
+        }
     }
 }
 
