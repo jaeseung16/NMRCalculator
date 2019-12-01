@@ -89,44 +89,7 @@ class PulseViewController: UIViewController {
     
     // MARK: Method to initialize the view
     func initializeView() {
-        var pulse1 = NMRPulse()
-        
-        if let duration = UserDefaults.standard.object(forKey: "Duration1") as? Double {
-            let _ = pulse1.set(parameter: NMRPulse.Parameter.duration, to: duration)
-        } else {
-            let _ = pulse1.set(parameter: NMRPulse.Parameter.duration, to: 10.0)
-            UserDefaults.standard.set(10.0, forKey: "Duration1")
-        }
-        
-        if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle1") as? Double {
-            let _ = pulse1.set(parameter: NMRPulse.Parameter.flipAngle, to: flipAngle)
-        } else {
-            let _ = pulse1.set(parameter: NMRPulse.Parameter.flipAngle, to: 90.0)
-            UserDefaults.standard.set(90.0, forKey: "FlipAngle1")
-        }
-   
-        let _ = pulse1.update(parameter: NMRPulse.Parameter.amplitude)
-        
-        var pulse2 = NMRPulse()
-        
-        if let amplitude = UserDefaults.standard.object(forKey: "Amplitude2") as? Double {
-            let _ = pulse2.set(parameter: NMRPulse.Parameter.amplitude, to: amplitude)
-        } else {
-            let _ = pulse2.set(parameter: NMRPulse.Parameter.amplitude, to: 0.1)
-            UserDefaults.standard.set(0.1, forKey: "Amplitude2")
-        }
-        
-        if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle2") as? Double {
-            let _ = pulse2.set(parameter: NMRPulse.Parameter.flipAngle, to: flipAngle)
-        } else {
-            let _ = pulse2.set(parameter: NMRPulse.Parameter.flipAngle, to: 360.0)
-            UserDefaults.standard.set(360.0, forKey: "FlipAngle2")
-        }
-        
-        let _ = pulse2.update(parameter: NMRPulse.Parameter.duration)
-        
-        nmrCalc.pulseNMR.append(pulse1)
-        nmrCalc.pulseNMR.append(pulse2)
+        setupPulses()
         
         guard nmrCalc.calculate_dB() else {
             warnings("Unable to comply.", message: "Cannot compare the powers.")
@@ -149,6 +112,47 @@ class PulseViewController: UIViewController {
         }
         
         updateTextFields()
+    }
+    
+    func setupPulses() {
+        var pulse1 = NMRPulse()
+        
+        if let duration = UserDefaults.standard.object(forKey: "Duration1") as? Double {
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.duration, to: duration)
+        } else {
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.duration, to: 10.0)
+            UserDefaults.standard.set(10.0, forKey: "Duration1")
+        }
+                      
+        if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle1") as? Double {
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.flipAngle, to: flipAngle)
+        } else {
+            let _ = pulse1.set(parameter: NMRPulse.Parameter.flipAngle, to: 90.0)
+            UserDefaults.standard.set(90.0, forKey: "FlipAngle1")
+        }
+
+        let _ = pulse1.update(parameter: NMRPulse.Parameter.amplitude)
+        
+        var pulse2 = NMRPulse()
+        
+        if let amplitude = UserDefaults.standard.object(forKey: "Amplitude2") as? Double {
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.amplitude, to: amplitude)
+        } else {
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.amplitude, to: 0.1)
+            UserDefaults.standard.set(0.1, forKey: "Amplitude2")
+        }
+                       
+        if let flipAngle = UserDefaults.standard.object(forKey: "FlipAngle2") as? Double {
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.flipAngle, to: flipAngle)
+        } else {
+            let _ = pulse2.set(parameter: NMRPulse.Parameter.flipAngle, to: 360.0)
+            UserDefaults.standard.set(360.0, forKey: "FlipAngle2")
+        }
+
+        let _ = pulse2.update(parameter: NMRPulse.Parameter.duration)
+
+        nmrCalc.pulseNMR.append(pulse1)
+        nmrCalc.pulseNMR.append(pulse2)
     }
     
     func updateTextFields() {
@@ -182,7 +186,6 @@ class PulseViewController: UIViewController {
             itemValues3[.relaxation] = ernstAngle[.relaxation]!.format(".3")
             itemValues3[.angleErnst] = (ernstAngle[.angleErnst]! * 180.0 / Double.pi).format(".4")
         }
-
     }
     
     // MARK: Warning messages
@@ -267,44 +270,23 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
             fixedItem = state ? nil : cell.itemLabel.text
             
             let row = selectedItem.row;
-            
-            var labelText: String?
+            var labelText = (state ? "" : "☒ ")
             
             switch selectedItem.section {
             case 0:
                 let pulseMenu = PulseMenu(rawValue: row)!
-                if state {
-                    labelText = menuItems1[pulseMenu]
-                } else {
-                    labelText = "☒ " + menuItems1[pulseMenu]!
-                }
+                labelText += menuItems1[pulseMenu]!
             case 1:
                 let pulseMenu = PulseMenu(rawValue: row)!
-                if state {
-                    labelText = menuItems2[pulseMenu]
-                } else {
-                    labelText = "☒ " + menuItems2[pulseMenu]!
-                }
+                labelText += menuItems2[pulseMenu]!
             case 2:
                 let ernstAngleMenu = ErnstAngleMenu(rawValue: row)!
-                if state {
-                    labelText = menuItems3[ernstAngleMenu]
-                } else {
-                    labelText = "☒ " + menuItems3[ernstAngleMenu]!
-                }
+                labelText += menuItems3[ernstAngleMenu]!
             default:
                 break
             }
             
-            // update value
-            cell.itemValue.isEnabled = state
-            cell.itemValue.textColor = state ? .black : .gray
-            // Without this, textColor is not being updated.
-            cell.itemValue.text = cell.itemValue.text
-            
-            // update label
-            cell.itemLabel.text = labelText
-            cell.itemLabel.textColor = state ? .black : .gray
+            cell.update(state: state, labelText: labelText)
         }
         
         guard let cell = tableView.cellForRow(at: indexPath) as? PulseTableViewCell else {

@@ -26,37 +26,44 @@ import UIKit
     convenience init(frame: CGRect, nucleus: NMRNucleus){
         self.init(frame: frame)
         
-        var fontsize = CGFloat(12.0)
+        let fontsize = setFontSize()
+   
+        symbol.attributedText = buildTextForSymbol(nucleus: nucleus, fontsize: fontsize)
         
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
-            fontsize = 18.0
-        }
-        
-        var character_attribute: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key(rawValue: NSAttributedString.Key.baselineOffset.rawValue) : fontsize as AnyObject, NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.bold)]
-
-        let textforweight = NSMutableAttributedString(string: nucleus.atomicWeight)
-        textforweight.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.atomicWeight.lengthOfBytes(using: String.Encoding.utf8)) )
-        
-        character_attribute[NSAttributedString.Key.baselineOffset] = 0 as AnyObject?
-        character_attribute[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 2.0 * fontsize, weight: UIFont.Weight.bold)
-
-        let textforname = NSMutableAttributedString(string: nucleus.symbolNucleus)
-        textforname.setAttributes(character_attribute, range: NSMakeRange(0, nucleus.symbolNucleus.lengthOfBytes(using: String.Encoding.utf8)) )
-        textforweight.append(textforname)
-        
-        symbol.attributedText = textforweight
-        
-        character_attribute[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.regular)
+        let attributesForOtherText = buildAttributesForOtherText(fontsize: fontsize)
         
         let abundance_text = "Natural Abundance: \(nucleus.naturalAbundance) %"
-       
-        abundance.attributedText = NSAttributedString(string: abundance_text, attributes: character_attribute)
+        abundance.attributedText = NSAttributedString(string: abundance_text, attributes: attributesForOtherText)
 
         let spin_text = "Nuclear Spin: \(nucleus.nuclearSpin)"
-        spin.attributedText = NSAttributedString(string: spin_text, attributes: character_attribute)
+        spin.attributedText = NSAttributedString(string: spin_text, attributes: attributesForOtherText)
         
         let gamma_text = "Gyromagnetic Ratio: \(Double(nucleus.gyromagneticRatio)!.format(".3")) MHz/T"
-        gamma.attributedText = NSAttributedString(string: gamma_text, attributes: character_attribute)
+        gamma.attributedText = NSAttributedString(string: gamma_text, attributes: attributesForOtherText)
+    }
+    
+    func setFontSize() -> CGFloat {
+        let fontsize = UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad ? 18.0 : 12.0
+        return CGFloat(fontsize)
+    }
+    
+    func buildTextForSymbol(nucleus: NMRNucleus, fontsize: CGFloat) -> NSAttributedString {
+        let characterAttributeForWeight = [NSAttributedString.Key.baselineOffset : fontsize as AnyObject,
+                                  NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.bold)]
+        let textForWeight = NSMutableAttributedString(string: nucleus.atomicWeight)
+        textForWeight.setAttributes(characterAttributeForWeight, range: NSMakeRange(0, nucleus.atomicWeight.lengthOfBytes(using: String.Encoding.utf8)) )
+        
+        let characterAttributeForName = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 2.0 * fontsize, weight: UIFont.Weight.bold)]
+        let textForName = NSMutableAttributedString(string: nucleus.symbolNucleus)
+        textForName.setAttributes(characterAttributeForName, range: NSMakeRange(0, nucleus.symbolNucleus.lengthOfBytes(using: String.Encoding.utf8)) )
+        
+        textForWeight.append(textForName)
+        return textForWeight
+    }
+    
+    func buildAttributesForOtherText(fontsize: CGFloat) -> [NSAttributedString.Key: AnyObject] {
+        let characterAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontsize, weight: UIFont.Weight.regular)]
+        return characterAttribute
     }
     
     required init?(coder aDecoder: NSCoder) {

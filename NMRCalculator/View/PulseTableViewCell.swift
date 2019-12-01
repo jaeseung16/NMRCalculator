@@ -32,6 +32,14 @@ class PulseTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
     }
+    
+    func update(state: Bool, labelText: String) {
+        itemLabel.text = labelText
+        itemValue.isEnabled = state
+        itemValue.textColor = state ? .black : .gray
+        //itemValue.text = itemValue.text // Without this, textColor is not being updated.
+        itemLabel.textColor = state ? .black : .gray
+    }
 }
 
 extension PulseTableViewCell: UITextFieldDelegate {

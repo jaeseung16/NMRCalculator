@@ -17,8 +17,8 @@ extension Double {
 class NucleusViewController: UIViewController {
     // MARK: Properties
     // Outlets
-    @IBOutlet weak var NucleusTableView: UITableView!
-    @IBOutlet weak var NucleusPicker: UIPickerView!
+    @IBOutlet weak var nucleusTableView: UITableView!
+    @IBOutlet weak var nucleusPicker: UIPickerView!
     @IBOutlet weak var nucleusName: UILabel!
     
     enum Menu: Int {
@@ -77,22 +77,26 @@ class NucleusViewController: UIViewController {
     
     // MARK:- Initialize the nuclues table
     func initializeView() {
+        selectNucleus()
+        setExternalField()
+        updateTextFields()
+    }
+    
+    func selectNucleus() {
         let identifier = UserDefaults.standard.string(forKey: "Nucleus") ?? "1H"
-        print("id: \(identifier)")
-        
         let row = periodicTable.nucleiDictionary[identifier] ?? 0
         nucleus = periodicTable.nuclei[row]
         nmrCalc = NMRCalc(nucleus: nucleus!)
-        NucleusPicker.selectRow(row, inComponent: numberofColumn - 1, animated: true)
-        
+        nucleusPicker.selectRow(row, inComponent: numberofColumn - 1, animated: true)
+    }
+    
+    func setExternalField() {
         let externalField = UserDefaults.standard.string(forKey: "B0") ?? "1.0"
         nmrCalc!.updateLarmor("field", to: Double(externalField)!) { error in
             if (error != nil) {
                 self.warnings("Unable to comply.", message: error!)
             }
         }
-        
-        updateTextFields()
     }
     
     // MARK:- Update textfields
@@ -134,38 +138,42 @@ class NucleusViewController: UIViewController {
     @objc func keyboardDidShow(_ notification: Notification) {
         let info = (notification as NSNotification).userInfo!
         let kbSize = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        let pickerSize = NucleusPicker.frame
+        let pickerSize = nucleusPicker.frame
         let contentInsets = UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: kbSize.height - pickerSize.height, right: 0.0)
-        NucleusTableView.contentInset = contentInsets
-        NucleusTableView.scrollIndicatorInsets = contentInsets
+        nucleusTableView.contentInset = contentInsets
+        nucleusTableView.scrollIndicatorInsets = contentInsets
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
-        NucleusTableView.contentInset = contentInsets
-        NucleusTableView.scrollIndicatorInsets = contentInsets
+        nucleusTableView.contentInset = contentInsets
+        nucleusTableView.scrollIndicatorInsets = contentInsets
     }
     
     // MARK: IBActions
     @IBAction func searchWebButtonDown(_ sender: UIBarButtonItem) {
-        var component = URLComponents()
-        component.scheme = "https"
-        component.host = "www.google.com"
-        component.path = "/search"
-        component.queryItems = [URLQueryItem]()
-        
-        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
-        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
-        component.queryItems!.append( URLQueryItem(name: "q", value: nucleusName.text!) )
-        
-        guard let url = component.url else {
+        guard let url = getSearchUrl() else {
             warnings("Unable to comply", message: "Cannot perform a search. Check the name of the chemical.")
             return
         }
         
         if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
+    }
+    
+    func getSearchUrl() -> URL? {
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "www.google.com"
+        component.path = "/search"
+        
+        component.queryItems = [URLQueryItem]()
+        component.queryItems!.append( URLQueryItem(name: "oe", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "ie", value: "utf-8") )
+        component.queryItems!.append( URLQueryItem(name: "q", value: nucleusName.text!) )
+        
+        return component.url
     }
     
     // MARK: Warning messages
@@ -234,11 +242,11 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
         let row = indexPath.row
         
-        cell.itemLabel.text = menuItems[Menu(rawValue: row)!]
-        cell.itemValue.text = itemValues[Menu(rawValue: row)!]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NucleusTableCell", for: indexPath) as! NucleusTableViewCell
+        cell.setLabelAndValue(labelText: menuItems[Menu(rawValue: row)!], valueText: itemValues[Menu(rawValue: row)!])
+        
         valueTextField[row] = cell.itemValue
         
         return cell
@@ -248,13 +256,13 @@ extension NucleusViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - UITextFieldDelegate
 extension NucleusViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        let selected = NucleusPicker.selectedRow(inComponent: numberofColumn-1)
+        let selected = nucleusPicker.selectedRow(inComponent: numberofColumn-1)
 
         if selected == -1 {
             warnings("Unable to comply.", message: "Select a nucleus.")
             return false
         } else {
-            NucleusPicker.selectRow(selected, inComponent: numberofColumn-1, animated: true)
+            nucleusPicker.selectRow(selected, inComponent: numberofColumn-1, animated: true)
             nucleus = periodicTable.nuclei[selected]
             nmrCalc!.nucleus = nucleus
             nucleusName.text = nmrCalc!.nucleus!.nameNucleus
@@ -265,13 +273,13 @@ extension NucleusViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        NucleusPicker.isUserInteractionEnabled = true
+        nucleusPicker.isUserInteractionEnabled = true
         
         return true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        NucleusPicker.isUserInteractionEnabled = false
+        nucleusPicker.isUserInteractionEnabled = false
         
         activeField = textField
         textbeforeediting = textField.text
@@ -314,10 +322,4 @@ extension NucleusViewController: UITextFieldDelegate {
         
         updateTextFields()
     }
-}
-
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }
