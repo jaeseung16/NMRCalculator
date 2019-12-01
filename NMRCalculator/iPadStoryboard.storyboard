@@ -23,7 +23,7 @@
                                 <rect key="frame" x="8" y="0.0" width="974.5" height="1004"/>
                                 <subviews>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="54E-06-NfV">
-                                        <rect key="frame" x="0.0" y="0.0" width="974.5" height="385.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="974.5" height="379.5"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <connections>
                                             <outlet property="dataSource" destination="gNc-cn-1JD" id="3fy-0t-s6H"/>
@@ -31,16 +31,16 @@
                                         </connections>
                                     </pickerView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="osV-tl-NPQ">
-                                        <rect key="frame" x="0.0" y="385.5" width="974.5" height="40"/>
+                                        <rect key="frame" x="0.0" y="379.5" width="974.5" height="55"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="HkD-BK-kHL">
-                                                <rect key="frame" x="0.0" y="0.0" width="749.5" height="40"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="749.5" height="55"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tmm-2s-vjm">
-                                                <rect key="frame" x="749.5" y="0.0" width="225" height="40"/>
+                                                <rect key="frame" x="749.5" y="0.0" width="225" height="55"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <state key="normal" title="Search Web">
@@ -54,13 +54,13 @@
                                         <constraints>
                                             <constraint firstItem="HkD-BK-kHL" firstAttribute="leading" secondItem="osV-tl-NPQ" secondAttribute="leading" id="8KJ-u5-QWg"/>
                                             <constraint firstAttribute="trailing" secondItem="tmm-2s-vjm" secondAttribute="trailing" id="8ar-Yh-FbS"/>
-                                            <constraint firstAttribute="height" constant="40" id="VHh-aT-RhF"/>
+                                            <constraint firstAttribute="height" constant="55" id="VHh-aT-RhF"/>
                                             <constraint firstItem="tmm-2s-vjm" firstAttribute="width" secondItem="HkD-BK-kHL" secondAttribute="width" multiplier="0.3" id="YeH-zR-YsG"/>
                                             <constraint firstItem="tmm-2s-vjm" firstAttribute="height" secondItem="HkD-BK-kHL" secondAttribute="height" id="vJP-mi-zTL"/>
                                         </constraints>
                                     </stackView>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="rma-p6-9pK">
-                                        <rect key="frame" x="0.0" y="425.5" width="974.5" height="578.5"/>
+                                        <rect key="frame" x="0.0" y="434.5" width="974.5" height="569.5"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <color key="sectionIndexColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
