@@ -238,7 +238,7 @@ extension PulseViewController: UITableViewDelegate, UITableViewDataSource {
             labeltext = ""
         }
         
-        let fixed = labeltext == fixedItem
+        let fixed = indexPath == selectedItem
         
         if (fixed) {
             labeltext = "☒ " + labeltext
