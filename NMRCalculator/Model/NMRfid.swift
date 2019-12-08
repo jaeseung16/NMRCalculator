@@ -10,6 +10,13 @@ import Foundation
 
 struct NMRfid {
     // MARK: Properties
+    let msToμs: Double = 1000.0
+    var μsToMs: Double {
+        get {
+            return 1.0 / msToμs
+        }
+    }
+    
     var size: UInt = 1000 // number of data points
     var duration: Double = 10.0 // duration in ms
     var dwell: Double // dwell time in μs
@@ -52,17 +59,26 @@ struct NMRfid {
         switch parameter {
         case .size:
             guard dwell > 0 else { return false }
-            size = UInt( 1000.0 * duration / dwell )
-            
+            calculateSize()
         case .duration:
-            duration = Double(size) * dwell / 1000.0
-            
+            calculateDuration()
         case .dwell:
             guard self.size > 0 else { return false }
-            dwell = 1000.0 * duration / Double(size)
+            calculateDwell()
         }
-        
         return true
+    }
+    
+    mutating func calculateSize() {
+        size = UInt( (duration * msToμs) / dwell )
+    }
+    
+    mutating func calculateDuration() {
+        duration = Double(size) * (dwell * μsToMs)
+    }
+    
+    mutating func calculateDwell() {
+        dwell = (duration * msToμs) / Double(size)
     }
     
     func describe() -> String {
