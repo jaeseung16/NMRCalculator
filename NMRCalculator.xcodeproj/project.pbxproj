@@ -43,10 +43,18 @@
 		90532BEC223D7C1E00379175 /* NMRCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90532BEB223D7C1E00379175 /* NMRCalcUITests.swift */; };
 		90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		9073F03B213B36F100406056 /* IPadSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9073F03A213B36F100406056 /* IPadSplitViewController.swift */; };
+		90E75279239DA575003D3A88 /* NMRCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E75278239DA575003D3A88 /* NMRCalcTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		90532BEE223D7C1E00379175 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B6ACEF71D08E87F00D7D342 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0B6ACEFE1D08E87F00D7D342;
+			remoteInfo = NMRCalculator;
+		};
+		90E7527B239DA575003D3A88 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B6ACEF71D08E87F00D7D342 /* Project object */;
 			proxyType = 1;
@@ -96,6 +104,9 @@
 		90532BED223D7C1E00379175 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRPeriodicTable.swift; sourceTree = "<group>"; };
 		9073F03A213B36F100406056 /* IPadSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadSplitViewController.swift; sourceTree = "<group>"; };
+		90E75276239DA575003D3A88 /* NMRCalcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NMRCalcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		90E75278239DA575003D3A88 /* NMRCalcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcTests.swift; sourceTree = "<group>"; };
+		90E7527A239DA575003D3A88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +118,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		90532BE6223D7C1E00379175 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90E75273239DA575003D3A88 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -178,6 +196,7 @@
 			children = (
 				0B6ACF011D08E88000D7D342 /* NMRCalculator */,
 				90532BEA223D7C1E00379175 /* NMRCalcUITests */,
+				90E75277239DA575003D3A88 /* NMRCalcTests */,
 				0B6ACF001D08E88000D7D342 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -187,6 +206,7 @@
 			children = (
 				0B6ACEFF1D08E88000D7D342 /* NMRCalculator.app */,
 				90532BE9223D7C1E00379175 /* NMRCalcUITests.xctest */,
+				90E75276239DA575003D3A88 /* NMRCalcTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -216,6 +236,15 @@
 				90532BED223D7C1E00379175 /* Info.plist */,
 			);
 			path = NMRCalcUITests;
+			sourceTree = "<group>";
+		};
+		90E75277239DA575003D3A88 /* NMRCalcTests */ = {
+			isa = PBXGroup;
+			children = (
+				90E75278239DA575003D3A88 /* NMRCalcTests.swift */,
+				90E7527A239DA575003D3A88 /* Info.plist */,
+			);
+			path = NMRCalcTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,13 +285,31 @@
 			productReference = 90532BE9223D7C1E00379175 /* NMRCalcUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		90E75275239DA575003D3A88 /* NMRCalcTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 90E7527F239DA576003D3A88 /* Build configuration list for PBXNativeTarget "NMRCalcTests" */;
+			buildPhases = (
+				90E75272239DA575003D3A88 /* Sources */,
+				90E75273239DA575003D3A88 /* Frameworks */,
+				90E75274239DA575003D3A88 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				90E7527C239DA575003D3A88 /* PBXTargetDependency */,
+			);
+			name = NMRCalcTests;
+			productName = NMRCalcTests;
+			productReference = 90E75276239DA575003D3A88 /* NMRCalcTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		0B6ACEF71D08E87F00D7D342 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 1120;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Jae-Seung Lee";
 				TargetAttributes = {
@@ -275,6 +322,10 @@
 					90532BE8223D7C1E00379175 = {
 						CreatedOnToolsVersion = 10.1;
 						LastSwiftMigration = 1020;
+						TestTargetID = 0B6ACEFE1D08E87F00D7D342;
+					};
+					90E75275239DA575003D3A88 = {
+						CreatedOnToolsVersion = 11.2.1;
 						TestTargetID = 0B6ACEFE1D08E87F00D7D342;
 					};
 				};
@@ -294,6 +345,7 @@
 			targets = (
 				0B6ACEFE1D08E87F00D7D342 /* NMRCalculator */,
 				90532BE8223D7C1E00379175 /* NMRCalcUITests */,
+				90E75275239DA575003D3A88 /* NMRCalcTests */,
 			);
 		};
 /* End PBXProject section */
@@ -314,6 +366,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		90532BE7223D7C1E00379175 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90E75274239DA575003D3A88 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -366,6 +425,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		90E75272239DA575003D3A88 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90E75279239DA575003D3A88 /* NMRCalcTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -373,6 +440,11 @@
 			isa = PBXTargetDependency;
 			target = 0B6ACEFE1D08E87F00D7D342 /* NMRCalculator */;
 			targetProxy = 90532BEE223D7C1E00379175 /* PBXContainerItemProxy */;
+		};
+		90E7527C239DA575003D3A88 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0B6ACEFE1D08E87F00D7D342 /* NMRCalculator */;
+			targetProxy = 90E7527B239DA575003D3A88 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -612,6 +684,64 @@
 			};
 			name = Release;
 		};
+		90E7527D239DA575003D3A88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RWVTTVMWBE;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = NMRCalcTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.NMRCalcTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NMRCalculator.app/NMRCalculator";
+			};
+			name = Debug;
+		};
+		90E7527E239DA575003D3A88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RWVTTVMWBE;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = NMRCalcTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.NMRCalcTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NMRCalculator.app/NMRCalculator";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -638,6 +768,15 @@
 			buildConfigurations = (
 				90532BF1223D7C1E00379175 /* Debug */,
 				90532BF2223D7C1E00379175 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		90E7527F239DA576003D3A88 /* Build configuration list for PBXNativeTarget "NMRCalcTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90E7527D239DA575003D3A88 /* Debug */,
+				90E7527E239DA575003D3A88 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
