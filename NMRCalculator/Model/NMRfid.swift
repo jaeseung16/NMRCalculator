@@ -29,7 +29,7 @@ struct NMRfid {
     
     // MARK: - Methods
     init() {
-        dwell = 1000.0 * duration / Double(size)
+        dwell = (duration * msToμs) / Double(size)
     }
     
     mutating func set(parameter name: String, to value: Double) -> Bool {
@@ -37,20 +37,24 @@ struct NMRfid {
         
         switch parameter {
         case .size:
-            guard ( value <= Double( UInt.max ) ) && ( value > Double( UInt.min ) ) else { return false }
+            guard canConvertToUInt(value) else { return false }
             size = UInt(value)
-            
         case .duration:
-            guard value > 0 else { return false }
+            guard isPositive(value) else { return false }
             duration = value
-            
         case .dwell:
-            guard value > 0 else { return false }
+            guard isPositive(value) else { return false }
             dwell = value
         }
-        
         return true
-        
+    }
+    
+    private func canConvertToUInt(_ value: Double) -> Bool {
+        return (value <= Double(UInt.max)) && (value > Double(UInt.min))
+    }
+    
+    private func isPositive(_ value: Double) -> Bool {
+        return value > 0
     }
     
     mutating func update(parameter name: String) -> Bool {
@@ -58,26 +62,24 @@ struct NMRfid {
         
         switch parameter {
         case .size:
-            guard dwell > 0 else { return false }
             calculateSize()
         case .duration:
             calculateDuration()
         case .dwell:
-            guard self.size > 0 else { return false }
             calculateDwell()
         }
         return true
     }
     
-    mutating func calculateSize() {
+    mutating private func calculateSize() {
         size = UInt( (duration * msToμs) / dwell )
     }
     
-    mutating func calculateDuration() {
+    mutating private func calculateDuration() {
         duration = Double(size) * (dwell * μsToMs)
     }
     
-    mutating func calculateDwell() {
+    mutating private func calculateDwell() {
         dwell = (duration * msToμs) / Double(size)
     }
     
@@ -87,5 +89,4 @@ struct NMRfid {
         let string3 = "Dwell time = \(dwell) μs"
         return string1 + "\n" + string2 + "\n" + string3
     }
-    
 }
