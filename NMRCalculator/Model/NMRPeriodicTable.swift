@@ -21,7 +21,7 @@ class NMRPeriodicTable {
         }
         
         for k in 0..<(nucleusTable.count - 1) {
-            let nucleus = NMRNucleus(identifier: nucleusTable[k])
+            let nucleus = NMRNucleus(fromString: nucleusTable[k])
             nuclei.append(nucleus)
             nucleiDictionary[nucleus.identifier] = k
         }
