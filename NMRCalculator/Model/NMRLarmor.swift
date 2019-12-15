@@ -15,12 +15,12 @@ struct NMRLarmor {
     static let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
     
     // Variables
+    var nucleus: NMRNucleus
+    
     var frequencyLarmor: Double // in MHz
     var fieldExternal: Double = 1.0 // in T
     var frequencyProton: Double // in MHz
     var frequencyElectron: Double // in GHz
-    
-    var nucleus: NMRNucleus
     
     enum Parameter: String {
         case field
@@ -53,7 +53,7 @@ struct NMRLarmor {
             frequencyLarmor = value
             fieldExternal = externalField(γ: nucleus.γ, at:frequencyLarmor)
         case .proton:
-            self.frequencyProton = value
+            frequencyProton = value
             fieldExternal = externalField(γ: NMRLarmor.gammaProton, at: frequencyProton)
         case .electron:
             frequencyElectron = value
@@ -67,17 +67,13 @@ struct NMRLarmor {
         switch name {
         case .field:
             fieldExternal = externalField(γ: nucleus.γ, at: frequencyLarmor)
-
         case .larmor:
             frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
-            
         case .proton:
             frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
-            
         case .electron:
             frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
         }
-        
         return true
     }
     

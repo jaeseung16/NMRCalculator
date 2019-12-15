@@ -43,6 +43,7 @@
 		90532BEC223D7C1E00379175 /* NMRCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90532BEB223D7C1E00379175 /* NMRCalcUITests.swift */; };
 		90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		9073F03B213B36F100406056 /* IPadSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9073F03A213B36F100406056 /* IPadSplitViewController.swift */; };
+		90CE4B0723A6D10600C59759 /* NMRLarmorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CE4B0623A6D10600C59759 /* NMRLarmorTests.swift */; };
 		90E75279239DA575003D3A88 /* NMRCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E75278239DA575003D3A88 /* NMRCalcTests.swift */; };
 		90E75281239DA78F003D3A88 /* NMRfidTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E75280239DA78F003D3A88 /* NMRfidTests.swift */; };
 /* End PBXBuildFile section */
@@ -105,6 +106,7 @@
 		90532BED223D7C1E00379175 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRPeriodicTable.swift; sourceTree = "<group>"; };
 		9073F03A213B36F100406056 /* IPadSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadSplitViewController.swift; sourceTree = "<group>"; };
+		90CE4B0623A6D10600C59759 /* NMRLarmorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NMRLarmorTests.swift; path = NMRCalcTests/NMRLarmorTests.swift; sourceTree = SOURCE_ROOT; };
 		90E75276239DA575003D3A88 /* NMRCalcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NMRCalcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		90E75278239DA575003D3A88 /* NMRCalcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcTests.swift; sourceTree = "<group>"; };
 		90E7527A239DA575003D3A88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 		90E75277239DA575003D3A88 /* NMRCalcTests */ = {
 			isa = PBXGroup;
 			children = (
+				90CE4B0623A6D10600C59759 /* NMRLarmorTests.swift */,
 				90E75280239DA78F003D3A88 /* NMRfidTests.swift */,
 				90E75278239DA575003D3A88 /* NMRCalcTests.swift */,
 				90E7527A239DA575003D3A88 /* Info.plist */,
@@ -434,6 +437,7 @@
 			files = (
 				90E75279239DA575003D3A88 /* NMRCalcTests.swift in Sources */,
 				90E75281239DA78F003D3A88 /* NMRfidTests.swift in Sources */,
+				90CE4B0723A6D10600C59759 /* NMRLarmorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
