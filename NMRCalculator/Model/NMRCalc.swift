@@ -158,7 +158,7 @@ extension NMRCalc {
             return
         }
         
-        guard larmorNMR!.update(afterSettingParameter: parameter, to: value) else {
+        guard larmorNMR!.update(parameter, to: value) else {
             completionHandler("The value is out of range.")
             return
         }

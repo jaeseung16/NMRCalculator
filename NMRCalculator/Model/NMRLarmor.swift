@@ -45,7 +45,7 @@ struct NMRLarmor {
         frequencyElectron = fieldExternal * NMRLarmor.gammaElectron
     }
     
-    public mutating func update(afterSettingParameter parameter: Parameter, to value: Double) -> Bool {
+    public mutating func update(_ parameter: Parameter, to value: Double) -> Bool {
         switch parameter {
         case .field:
             fieldExternal = value
