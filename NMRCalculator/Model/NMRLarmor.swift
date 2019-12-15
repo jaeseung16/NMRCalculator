@@ -45,35 +45,30 @@ struct NMRLarmor {
         frequencyElectron = fieldExternal * NMRLarmor.gammaElectron
     }
     
-    public mutating func set(parameter name: Parameter, to value: Double) -> Bool {
-        switch name {
+    public mutating func update(afterSettingParameter parameter: Parameter, to value: Double) -> Bool {
+        switch parameter {
         case .field:
             fieldExternal = value
+            frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
+            frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
+            frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
         case .larmor:
             frequencyLarmor = value
-            fieldExternal = externalField(γ: nucleus.γ, at:frequencyLarmor)
+            fieldExternal = externalField(γ: nucleus.γ, at: value)
+            frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
+            frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
         case .proton:
             frequencyProton = value
-            fieldExternal = externalField(γ: NMRLarmor.gammaProton, at: frequencyProton)
+            fieldExternal = externalField(γ: NMRLarmor.gammaProton, at: value)
+            frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
+            frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
         case .electron:
             frequencyElectron = value
-            fieldExternal = externalField(γ: NMRLarmor.gammaElectron, at: frequencyProton)
+            fieldExternal = externalField(γ: NMRLarmor.gammaElectron, at: value)
+            frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
+            frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
         }
         
-        return true
-    }
-    
-    public mutating func update(parameter name: Parameter) -> Bool {
-        switch name {
-        case .field:
-            fieldExternal = externalField(γ: nucleus.γ, at: frequencyLarmor)
-        case .larmor:
-            frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
-        case .proton:
-            frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
-        case .electron:
-            frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
-        }
         return true
     }
     

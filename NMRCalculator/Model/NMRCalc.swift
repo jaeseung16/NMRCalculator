@@ -88,8 +88,7 @@ class NMRCalc {
     func setParameter(_ name: String, in category: NMRCalcCategory, to value: Double) -> Bool {
         switch category {
         case .resonance:
-            guard larmorNMR != nil, let parameter = NMRLarmor.Parameter(rawValue: name) else { return false }
-            return larmorNMR!.set(parameter: parameter, to: value)
+            return false
             
         case .acquisition:
             guard acqNMR != nil else { return false }
@@ -117,8 +116,7 @@ class NMRCalc {
     func evaluate(parameter name: String, in category: NMRCalcCategory) -> Bool {
         switch category {
         case .resonance:
-            guard larmorNMR != nil, let parameter = NMRLarmor.Parameter(rawValue: name) else { return false }
-            return larmorNMR!.update(parameter: parameter)
+            return false
             
         case .acquisition:
             guard acqNMR != nil else { return false }
@@ -160,33 +158,11 @@ extension NMRCalc {
             return
         }
         
-        guard larmorNMR!.set(parameter: parameter, to: value) else {
+        guard larmorNMR!.update(afterSettingParameter: parameter, to: value) else {
             completionHandler("The value is out of range.")
             return
         }
-        
-        switch parameter {
-        case .larmor:
-            guard larmorNMR!.update(parameter: .proton), larmorNMR!.update(parameter: .electron) else {
-                completionHandler("Cannot update the proton and electron resonance frequencies.")
-                return
-            }
-        case .field:
-            guard larmorNMR!.update(parameter: .larmor), larmorNMR!.update(parameter: .proton), larmorNMR!.update(parameter: .electron) else {
-                completionHandler("Cannot update the proton and electron resonance frequencies.")
-                return
-            }
-        case .proton:
-            guard larmorNMR!.update(parameter: .larmor), larmorNMR!.update(parameter: .electron) else {
-                completionHandler("Cannot update the proton and electron resonance frequencies.")
-                return
-            }
-        case .electron:
-            guard larmorNMR!.update(parameter: .larmor), larmorNMR!.update(parameter: .proton) else {
-                completionHandler("Cannot update the proton and electron resonance frequencies.")
-                return
-            }
-        }
+
     }
 }
 

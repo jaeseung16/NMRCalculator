@@ -30,15 +30,10 @@ class NMRLarmorTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let parameterToSet = NMRLarmor.Parameter.field
         let externalField = -1.0
+
+        let succeedToSet = nmrLarmor.setAndUpdate(parameter: parameterToSet, to: externalField)
         
-        let parameterToUpdate = NMRLarmor.Parameter.larmor
-        
-        let succeedToSet = nmrLarmor.set(parameter: parameterToSet, to: externalField)
         XCTAssertEqual(succeedToSet, true, "Field can be any number in tesla")
-        
-        let succeedToUpdate = nmrLarmor.update(parameter: parameterToUpdate)
-        XCTAssertEqual(succeedToUpdate, true, "Larmor frequency should be updated")
-        
         XCTAssertEqual(nmrLarmor.frequencyLarmor, externalField * nmrLarmor.nucleus.γ)
     }
     
@@ -48,14 +43,9 @@ class NMRLarmorTests: XCTestCase {
         let parameterToSet = NMRLarmor.Parameter.proton
         let protonFrequency = 500.0
         
-        let parameterToUpdate = NMRLarmor.Parameter.larmor
+        let succeedToSet = nmrLarmor.setAndUpdate(parameter: parameterToSet, to: protonFrequency)
         
-        let succeedToSet = nmrLarmor.set(parameter: parameterToSet, to: protonFrequency)
         XCTAssertEqual(succeedToSet, true, "Proton frequency can be any number in MHz")
-        
-        let succeedToUpdate = nmrLarmor.update(parameter: parameterToUpdate)
-        XCTAssertEqual(succeedToUpdate, true, "Larmor frequency should be updated")
-        
         XCTAssertEqual(nmrLarmor.frequencyLarmor, protonFrequency / NMRLarmor.gammaProton * nmrLarmor.nucleus.γ)
     }
 
