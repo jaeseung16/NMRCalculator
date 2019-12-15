@@ -37,8 +37,8 @@ struct NMRNucleus {
         gyromagneticRatio = String( 26.7522128 / 2.0 / Double.pi * 10.0 )
     }
     
-    init(fromString: String) {
-        let items = fromString.components(separatedBy: " ")
+    init(string: String) {
+        let items = string.components(separatedBy: " ")
         
         identifier = items[0]
         nameNucleus = items[1]
