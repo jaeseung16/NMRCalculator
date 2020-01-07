@@ -37,6 +37,18 @@ class NMRLarmorTests: XCTestCase {
         XCTAssertEqual(nmrLarmor.frequencyLarmor, externalField * nmrLarmor.nucleus.γ)
     }
     
+    func testSetLarmorFrequencyAndUpdate() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let parameterToSet = NMRLarmor.Parameter.larmor
+        let larmorFrequency = 500.0
+        
+        let succeedToSet = nmrLarmor.update(parameterToSet, to: larmorFrequency)
+        
+        XCTAssertEqual(succeedToSet, true, "Proton frequency can be any number in MHz")
+        XCTAssertEqual(nmrLarmor.fieldExternal, larmorFrequency / nmrLarmor.nucleus.γ)
+    }
+    
     func testSetProtonFrequencyAndUpdate() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
