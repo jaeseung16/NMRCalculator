@@ -25,28 +25,40 @@ class NMRLarmorTests: XCTestCase {
         super.tearDown()
     }
 
-    func testNMRLarmorSetExternalFieldAndUpdate() {
+    func testSetExternalFieldAndUpdate() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let parameterToSet = NMRLarmor.Parameter.field
         let externalField = -1.0
 
-        let succeedToSet = nmrLarmor.setAndUpdate(parameter: parameterToSet, to: externalField)
+        let succeedToSet = nmrLarmor.update(parameterToSet, to: externalField)
         
         XCTAssertEqual(succeedToSet, true, "Field can be any number in tesla")
         XCTAssertEqual(nmrLarmor.frequencyLarmor, externalField * nmrLarmor.nucleus.γ)
     }
     
-    func testNMRLarmorSetProtonFrequencyAndUpdate() {
+    func testSetProtonFrequencyAndUpdate() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let parameterToSet = NMRLarmor.Parameter.proton
         let protonFrequency = 500.0
         
-        let succeedToSet = nmrLarmor.setAndUpdate(parameter: parameterToSet, to: protonFrequency)
+        let succeedToSet = nmrLarmor.update(parameterToSet, to: protonFrequency)
         
         XCTAssertEqual(succeedToSet, true, "Proton frequency can be any number in MHz")
         XCTAssertEqual(nmrLarmor.frequencyLarmor, protonFrequency / NMRLarmor.gammaProton * nmrLarmor.nucleus.γ)
+    }
+    
+    func testSetElectronFrequencyAndUpdate() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let parameterToSet = NMRLarmor.Parameter.electron
+        let electronFrequency = 100.0
+        
+        let succeedToSet = nmrLarmor.update(parameterToSet, to: electronFrequency)
+        
+        XCTAssertEqual(succeedToSet, true, "Proton frequency can be any number in MHz")
+        XCTAssertEqual(nmrLarmor.frequencyLarmor, electronFrequency / NMRLarmor.gammaElectron * nmrLarmor.nucleus.γ)
     }
 
     func testPerformanceExample() {
