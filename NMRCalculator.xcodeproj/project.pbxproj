@@ -57,6 +57,7 @@
 		90FFBA3E23CB8C56000A9BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA3D23CB8C56000A9BC9 /* Assets.xcassets */; };
 		90FFBA4123CB8C56000A9BC9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA4023CB8C56000A9BC9 /* Preview Assets.xcassets */; };
 		90FFBA4623CB8C56000A9BC9 /* WatchNMRCalculator.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 90FFBA2223CB8C52000A9BC9 /* WatchNMRCalculator.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		90FFBA4F23CB8FE4000A9BC9 /* NMRNucleus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -617,6 +618,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				90FFBA3623CB8C55000A9BC9 /* HostingController.swift in Sources */,
+				90FFBA4F23CB8FE4000A9BC9 /* NMRNucleus.swift in Sources */,
 				90FFBA3423CB8C55000A9BC9 /* ContentView.swift in Sources */,
 				90FFBA3A23CB8C55000A9BC9 /* NotificationController.swift in Sources */,
 				90FFBA3823CB8C55000A9BC9 /* ExtensionDelegate.swift in Sources */,
