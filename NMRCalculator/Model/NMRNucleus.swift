@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct NMRNucleus {
+struct NMRNucleus: Hashable {
     // MARK: Properties
     var identifier: String
     var nameNucleus: String
