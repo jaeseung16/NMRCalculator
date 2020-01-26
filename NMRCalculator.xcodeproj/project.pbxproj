@@ -49,6 +49,8 @@
 		90CE4B0723A6D10600C59759 /* NMRLarmorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CE4B0623A6D10600C59759 /* NMRLarmorTests.swift */; };
 		90E75279239DA575003D3A88 /* NMRCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E75278239DA575003D3A88 /* NMRCalcTests.swift */; };
 		90E75281239DA78F003D3A88 /* NMRfidTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E75280239DA78F003D3A88 /* NMRfidTests.swift */; };
+		90F1F86623DDE458004A144A /* ProtonFrequencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F1F86423DDE420004A144A /* ProtonFrequencyView.swift */; };
+		90F1F86823DDE588004A144A /* LarmorFrequencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F1F86723DDE588004A144A /* LarmorFrequencyView.swift */; };
 		90F318F723D3D44E00B85FBC /* WatchAtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* WatchAtomicElementView.swift */; };
 		90FFBA2623CB8C52000A9BC9 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA2423CB8C52000A9BC9 /* Interface.storyboard */; };
 		90FFBA2823CB8C55000A9BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA2723CB8C55000A9BC9 /* Assets.xcassets */; };
@@ -176,6 +178,8 @@
 		90E75278239DA575003D3A88 /* NMRCalcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcTests.swift; sourceTree = "<group>"; };
 		90E7527A239DA575003D3A88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90E75280239DA78F003D3A88 /* NMRfidTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRfidTests.swift; sourceTree = "<group>"; };
+		90F1F86423DDE420004A144A /* ProtonFrequencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonFrequencyView.swift; sourceTree = "<group>"; };
+		90F1F86723DDE588004A144A /* LarmorFrequencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LarmorFrequencyView.swift; sourceTree = "<group>"; };
 		90F318F623D3D44E00B85FBC /* WatchAtomicElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAtomicElementView.swift; sourceTree = "<group>"; };
 		90FFBA2223CB8C52000A9BC9 /* WatchNMRCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchNMRCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FFBA2523CB8C52000A9BC9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
@@ -362,6 +366,8 @@
 		90FFBA3223CB8C55000A9BC9 /* WatchNMRCalculator Extension */ = {
 			isa = PBXGroup;
 			children = (
+				90F1F86423DDE420004A144A /* ProtonFrequencyView.swift */,
+				90F1F86723DDE588004A144A /* LarmorFrequencyView.swift */,
 				90FFBA3323CB8C55000A9BC9 /* ContentView.swift */,
 				90FFBA3523CB8C55000A9BC9 /* HostingController.swift */,
 				90FFBA3723CB8C55000A9BC9 /* ExtensionDelegate.swift */,
@@ -658,10 +664,12 @@
 				90FFBA5823CBA90C000A9BC9 /* UserData.swift in Sources */,
 				90FFBA3A23CB8C55000A9BC9 /* NotificationController.swift in Sources */,
 				90B2A67E23CFFC5E00599931 /* Fraction.swift in Sources */,
+				90F1F86623DDE458004A144A /* ProtonFrequencyView.swift in Sources */,
 				90B2A67C23CFF59C00599931 /* WatchNuclearSpinView.swift in Sources */,
 				90FFBA5123CB9E70000A9BC9 /* NucleusList.swift in Sources */,
 				90FFBA3823CB8C55000A9BC9 /* ExtensionDelegate.swift in Sources */,
 				90FFBA3C23CB8C55000A9BC9 /* NotificationView.swift in Sources */,
+				90F1F86823DDE588004A144A /* LarmorFrequencyView.swift in Sources */,
 				90FFBA5423CBA289000A9BC9 /* NMRPeriodicTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
