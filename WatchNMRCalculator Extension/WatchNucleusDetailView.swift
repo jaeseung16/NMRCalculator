@@ -35,46 +35,44 @@ struct WatchNucleusDetailView: View {
                     Spacer()
                     
                     VStack(alignment: .trailing, spacing: 0) {
-                        Text("\(self.nucleus.nuclearSpin)")
-                        .font(.body)
-                        
+                        WatchNuclearSpinView(nucleus: self.nucleus)
+                            .font(.body)
+                                              
                         Text("\(self.nucleus.naturalAbundance)")
-                        .font(.body)
+                            .font(.body)
                     }
                     .padding(.trailing, 8)
                 }
-                .background(Color.green)
-            
-               
+                .foregroundColor(.green)
+                .frame(width: geometry.size.width, height: geometry.size.height * 0.33)
+                //.background(Color.green)
+                
                 LarmorFrequencyView(externalField: self.externalField,
                                     gyromatneticRatio: self.nucleus.γ)
+                    .foregroundColor(self.changingProtonFrequency ? .secondary : .primary)
                     .focusable(true) { _ in
                         self.changingProtonFrequency = false
-                }
-                .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 8))
-                .digitalCrownRotation(self.$userData.scrollAmount, from: 0.0, through: 10.0, by: 0.005, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: false)
-                .frame(width: geometry.size.width)
-                .border(Color.white, width: self.changingProtonFrequency ? 0 : 2)
-                
+                    }
+                .digitalCrownRotation(self.$userData.scrollAmount, from: 0.0, through: 10.0, by: 0.00001, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: false)
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.33)
                 
                 ProtonFrequencyView(protonFrquency: self.protonFrequency)
+                    .foregroundColor(self.changingProtonFrequency ? .primary : .secondary)
                     .focusable(true) { _ in
                         self.changingProtonFrequency = true
-                }
-                .digitalCrownRotation(self.$userData.scrollAmount, from: 0.0, through: 10.0, by: 0.0001, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: false)
-                .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 8))
-                .frame(width: geometry.size.width)
-                .border(Color.white, width: self.changingProtonFrequency ? 2 : 0)
+                    }
+                    .digitalCrownRotation(self.$userData.scrollAmount, from: 0.0, through: 10.0, by: 0.0000001, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: false)
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.33)
             }
-            .frame(width: geometry.size.width)
-            .background(Color.secondary)
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .background(Color.black)
         }
     }
 }
 
 struct WatchNucleusDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        return WatchNucleusDetailView(nucleus: UserData().nuclei[1])
+        return WatchNucleusDetailView(nucleus: UserData().nuclei[3])
             .environmentObject(UserData())
     }
 }

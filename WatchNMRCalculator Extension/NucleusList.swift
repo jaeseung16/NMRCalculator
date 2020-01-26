@@ -14,15 +14,19 @@ struct NucleusList<DetailView: View>: View {
     let detailViewProducer: (NMRNucleus) -> DetailView
     
     var body: some View {
-        List {
-            ForEach(userData.nuclei, id: \.self) { nucleus in
-                NavigationLink(destination:
-                    self.detailViewProducer(nucleus)
-                    .environmentObject(self.userData)) {
-                    WatchNucleusView(nucleus: nucleus)
+        GeometryReader { geometry in
+            List {
+                ForEach(self.userData.nuclei, id: \.self) { nucleus in
+                    NavigationLink(destination:
+                        self.detailViewProducer(nucleus)
+                        .environmentObject(self.userData)) {
+                        WatchNucleusView(nucleus: nucleus)
+                    }
                 }
+                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.6)
             }
-        }.listStyle(CarouselListStyle())
+            .listStyle(CarouselListStyle())
+        }
     }
 }
 

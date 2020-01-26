@@ -13,7 +13,7 @@ struct ProtonFrequencyView: View {
     private let frequencyFormat = "%6.4f"
     
     var body: some View {
-        VStack(alignment: .trailing, spacing: 0) {
+        VStack(alignment: .center, spacing: 0) {
             Text("Proton")
                 .font(.caption)
 
