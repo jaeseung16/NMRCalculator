@@ -11,7 +11,16 @@ import SwiftUI
 
 final class UserData: ObservableObject {
     @Published var nuclei = NMRPeriodicTable.shared.nuclei
-    @Published var scrollAmount = 1.0
+    @Published var scrollAmount = 10.0
+    @Published var focus = Focus.ExternalField
+    
+    static var γProton: Double {
+        return NMRPeriodicTable.shared.nuclei[0].γ
+    }
+    
+    enum Focus {
+        case ExternalField, ProtonFrequency
+    }
 }
 
 
