@@ -37,11 +37,3 @@ struct NucleusList_Previews: PreviewProvider {
             .environmentObject(userData)
     }
 }
-
-
-extension View {
-    func PrintData(nucleus: NMRNucleus) -> some View {
-        print("\(nucleus.atomicWeight)\t\(nucleus.symbolNucleus)\t\(nucleus.nuclearSpin)\t\(nucleus.γ)\t\(nucleus.naturalAbundance)")
-        return EmptyView()
-    }
-}
