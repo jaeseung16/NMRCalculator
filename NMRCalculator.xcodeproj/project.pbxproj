@@ -67,7 +67,6 @@
 		90FFBA5123CB9E70000A9BC9 /* NucleusList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5023CB9E70000A9BC9 /* NucleusList.swift */; };
 		90FFBA5323CBA11F000A9BC9 /* WatchNucleusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5223CBA11F000A9BC9 /* WatchNucleusView.swift */; };
 		90FFBA5423CBA289000A9BC9 /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
-		90FFBA5623CBA681000A9BC9 /* WatchNucleusTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5523CBA681000A9BC9 /* WatchNucleusTable.swift */; };
 		90FFBA5823CBA90C000A9BC9 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* UserData.swift */; };
 		90FFBA5A23CBAB45000A9BC9 /* WatchPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */; };
 		90FFBA5B23CBAB81000A9BC9 /* NMRFreqTable.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */; };
@@ -197,7 +196,6 @@
 		90FFBA4323CB8C56000A9BC9 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		90FFBA5023CB9E70000A9BC9 /* NucleusList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NucleusList.swift; sourceTree = "<group>"; };
 		90FFBA5223CBA11F000A9BC9 /* WatchNucleusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusView.swift; sourceTree = "<group>"; };
-		90FFBA5523CBA681000A9BC9 /* WatchNucleusTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusTable.swift; sourceTree = "<group>"; };
 		90FFBA5723CBA90C000A9BC9 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPeriodicTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -383,7 +381,6 @@
 				90B2A67D23CFFC5E00599931 /* Fraction.swift */,
 				90F318F623D3D44E00B85FBC /* WatchAtomicElementView.swift */,
 				90495A3623CEA4D2003F2FAA /* WatchNucleusDetailView.swift */,
-				90FFBA5523CBA681000A9BC9 /* WatchNucleusTable.swift */,
 				90FFBA5723CBA90C000A9BC9 /* UserData.swift */,
 				90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */,
 			);
@@ -657,7 +654,6 @@
 				90FFBA3623CB8C55000A9BC9 /* HostingController.swift in Sources */,
 				90FFBA4F23CB8FE4000A9BC9 /* NMRNucleus.swift in Sources */,
 				90FFBA5A23CBAB45000A9BC9 /* WatchPeriodicTable.swift in Sources */,
-				90FFBA5623CBA681000A9BC9 /* WatchNucleusTable.swift in Sources */,
 				90FFBA5323CBA11F000A9BC9 /* WatchNucleusView.swift in Sources */,
 				90FFBA3423CB8C55000A9BC9 /* ContentView.swift in Sources */,
 				90495A3723CEA4D2003F2FAA /* WatchNucleusDetailView.swift in Sources */,
