@@ -23,7 +23,7 @@ struct NucleusList<DetailView: View>: View {
                         WatchNucleusView(nucleus: nucleus)
                     }
                 }
-                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.6)
+                .frame(width: geometry.size.width * 0.88, height: geometry.size.height * 0.7)
             }
             .listStyle(CarouselListStyle())
         }
