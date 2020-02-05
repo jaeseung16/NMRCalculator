@@ -10,7 +10,6 @@ import SwiftUI
 
 struct WatchNuclearSpinView: View {
     let slash = "/"
-    
     let nucleus: NMRNucleus
     
     var fraction: Fraction {
@@ -18,9 +17,8 @@ struct WatchNuclearSpinView: View {
         var numerator: UInt
         var denominator: UInt = 1
 
-        if (isFraction(nucleus.nuclearSpin)) {
-            (numerator, denominator) = getNumeratorAndDenominator(nucleus.nuclearSpin)
-            
+        if (Fraction.isFraction(nucleus.nuclearSpin)) {
+            (numerator, denominator) = Fraction.getNumeratorAndDenominator(nucleus.nuclearSpin)
         } else {
             numerator = UInt(nucleus.nuclearSpin)!
         }
@@ -31,31 +29,8 @@ struct WatchNuclearSpinView: View {
     }
     
     var body: some View {
-        Text(fraction.presentWithSlash())
+        Text(fraction.inlineDescription)
             .font(.body)
-    }
-    
-    private func isFraction(_ fraction: String) -> Bool {
-        return fraction.contains(slash)
-    }
-    
-    private func getNumeratorAndDenominator(_ fraction: String) -> (UInt, UInt) {
-        var numerator: UInt
-        var denominator: UInt = 1
-        let invalidValue: UInt = UInt.max
-        
-        let fractionString = nucleus.nuclearSpin
-            .split(separator: Character(slash))
-            .map {substring in String(substring)}
-        
-        if (fractionString.count == 2) {
-            numerator = UInt(fractionString[0])!
-            denominator = UInt(fractionString[1])!
-        } else {
-            numerator = invalidValue
-        }
-        
-        return (numerator, denominator)
     }
 }
 
