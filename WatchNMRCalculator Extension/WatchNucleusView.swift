@@ -34,29 +34,26 @@ struct WatchNucleusView: View {
                         .font(.body)
                         .foregroundColor(Color.primary)
                     
-                    Text("MHz/T")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.secondary)
+                    self.generateDetailView(for: "\(String(format: "%.2f", abs(self.nucleus.γ)))", title: "MHz/T")
                     
-                    Text("\(String(format: "%.2f", abs(self.nucleus.γ)))")
-                        .font(.body)
-                        .foregroundColor(Color.primary)
-                    
-                    Text("NA")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.secondary)
-                    
-                    Text(self.nucleus.naturalAbundance)
-                        .font(.body)
-                        .foregroundColor(Color.primary)
+                    self.generateDetailView(for: self.nucleus.naturalAbundance, title: "NA")
                 }
                 .scaledToFill()
-                //.frame(width: geometry.size.width * 0.65)
             }
             .frame(width: geometry.size.width)
-            //.background(Color.black)
+        }
+    }
+    
+    private func generateDetailView(for item: String, title: String) -> some View {
+        VStack(alignment: .trailing) {
+            Text(title)
+            .font(.footnote)
+            .fontWeight(.semibold)
+            .foregroundColor(Color.secondary)
+            
+            Text(item)
+            .font(.body)
+            .foregroundColor(Color.primary)
         }
     }
 }
