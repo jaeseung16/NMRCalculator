@@ -19,6 +19,23 @@ struct Fraction {
         return (positive ? "" : "-") + "\(numerator)" + (denominator > 1 ? "/\(denominator)" : "")
     }
     
+    init(positive: Bool, numerator: UInt, denominator: UInt) {
+        self.positive = positive
+        self.numerator = numerator
+        self.denominator = denominator
+    }
+    
+    init(from input: String, isPositive: Bool) {
+        self.positive = isPositive
+        
+        if (Fraction.isFraction(input)) {
+            (self.numerator, self.denominator) = Fraction.getNumeratorAndDenominator(input)
+        } else {
+            self.numerator = UInt(input)!
+            self.denominator = 1
+        }
+    }
+    
     static func isFraction(_ fraction: String) -> Bool {
         return fraction.contains(slash)
     }
