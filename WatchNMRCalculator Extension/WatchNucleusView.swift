@@ -25,14 +25,7 @@ struct WatchNucleusView: View {
                 Spacer()
                 
                 VStack(alignment: .trailing) {
-                    Text("Nuclear Spin")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.secondary)
-                    
-                    WatchNuclearSpinView(nucleus: self.nucleus)
-                        .font(.body)
-                        .foregroundColor(Color.primary)
+                    self.generateDetailView(for: Fraction(from: self.nucleus.nuclearSpin, isPositive: self.nucleus.γ > 0).inlineDescription, title: "Nuclear Spin")
                     
                     self.generateDetailView(for: "\(String(format: "%.2f", abs(self.nucleus.γ)))", title: "MHz/T")
                     
