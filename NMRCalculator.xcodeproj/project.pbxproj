@@ -340,6 +340,20 @@
 			path = NMRCalcUITests;
 			sourceTree = "<group>";
 		};
+		90B8E84A23EF8C12004292B1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				90F1F86423DDE420004A144A /* ProtonFrequencyView.swift */,
+				90F1F86723DDE588004A144A /* LarmorFrequencyView.swift */,
+				90FFBA5223CBA11F000A9BC9 /* WatchNucleusView.swift */,
+				90F318F623D3D44E00B85FBC /* WatchAtomicElementView.swift */,
+				90495A3623CEA4D2003F2FAA /* WatchNucleusDetailView.swift */,
+				90B2A67B23CFF59C00599931 /* WatchNuclearSpinView.swift */,
+				90FFBA5023CB9E70000A9BC9 /* NucleusList.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		90E75277239DA575003D3A88 /* NMRCalcTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,8 +378,7 @@
 		90FFBA3223CB8C55000A9BC9 /* WatchNMRCalculator Extension */ = {
 			isa = PBXGroup;
 			children = (
-				90F1F86423DDE420004A144A /* ProtonFrequencyView.swift */,
-				90F1F86723DDE588004A144A /* LarmorFrequencyView.swift */,
+				90B8E84A23EF8C12004292B1 /* Views */,
 				90FFBA3323CB8C55000A9BC9 /* ContentView.swift */,
 				90FFBA3523CB8C55000A9BC9 /* HostingController.swift */,
 				90FFBA3723CB8C55000A9BC9 /* ExtensionDelegate.swift */,
@@ -375,12 +388,7 @@
 				90FFBA4223CB8C56000A9BC9 /* Info.plist */,
 				90FFBA4323CB8C56000A9BC9 /* PushNotificationPayload.apns */,
 				90FFBA3F23CB8C56000A9BC9 /* Preview Content */,
-				90FFBA5023CB9E70000A9BC9 /* NucleusList.swift */,
-				90FFBA5223CBA11F000A9BC9 /* WatchNucleusView.swift */,
-				90B2A67B23CFF59C00599931 /* WatchNuclearSpinView.swift */,
 				90B2A67D23CFFC5E00599931 /* Fraction.swift */,
-				90F318F623D3D44E00B85FBC /* WatchAtomicElementView.swift */,
-				90495A3623CEA4D2003F2FAA /* WatchNucleusDetailView.swift */,
 				90FFBA5723CBA90C000A9BC9 /* UserData.swift */,
 				90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */,
 			);
