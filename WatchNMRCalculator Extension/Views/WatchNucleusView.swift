@@ -25,34 +25,24 @@ struct WatchNucleusView: View {
                 Spacer()
                 
                 VStack(alignment: .trailing) {
-                    self.generateDetailView(for: Fraction(from: self.nucleus.nuclearSpin, isPositive: self.nucleus.γ > 0).inlineDescription, title: "Nuclear Spin")
+                    WatchNucleusInfoView(title: "Nuclear Spin",
+                                         item: Fraction(from: self.nucleus.nuclearSpin, isPositive: self.nucleus.γ > 0).inlineDescription)
                     
-                    self.generateDetailView(for: "\(String(format: "%.2f", abs(self.nucleus.γ)))", title: "MHz/T")
+                    WatchNucleusInfoView(title: "MHz/T",
+                                         item: "\(String(format: "%.2f", abs(self.nucleus.γ)))")
                     
-                    self.generateDetailView(for: self.nucleus.naturalAbundance, title: "NA")
+                    WatchNucleusInfoView(title: "NA",
+                                         item: self.nucleus.naturalAbundance)
                 }
                 .scaledToFill()
             }
             .frame(width: geometry.size.width)
         }
     }
-    
-    private func generateDetailView(for item: String, title: String) -> some View {
-        VStack(alignment: .trailing) {
-            Text(title)
-            .font(.footnote)
-            .fontWeight(.semibold)
-            .foregroundColor(Color.secondary)
-            
-            Text(item)
-            .font(.body)
-            .foregroundColor(Color.primary)
-        }
-    }
 }
 
 struct WatchNucleusView_Previews: PreviewProvider {
     static var previews: some View {
-        WatchNucleusView(nucleus: UserData().nuclei[16])
+        WatchNucleusView(nucleus: UserData().nuclei[9])
     }
 }
