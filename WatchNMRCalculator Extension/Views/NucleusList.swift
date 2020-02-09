@@ -21,7 +21,8 @@ struct NucleusList<DetailView: View>: View {
                         self.detailViewProducer(nucleus)
                         .environmentObject(self.userData)) {
                             WatchNucleusView(nucleus: nucleus)
-                    }.navigationBarTitle("NMR Calculator")
+                    }
+                    .navigationBarTitle("NMR Calculator")
                 }
                 .frame(width: geometry.size.width * 0.88, height: geometry.size.height * 0.7)
             }
