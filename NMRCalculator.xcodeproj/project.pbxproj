@@ -46,6 +46,7 @@
 		9073F03B213B36F100406056 /* IPadSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9073F03A213B36F100406056 /* IPadSplitViewController.swift */; };
 		90B2A67C23CFF59C00599931 /* WatchNuclearSpinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67B23CFF59C00599931 /* WatchNuclearSpinView.swift */; };
 		90B2A67E23CFFC5E00599931 /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
+		90B8E84C23EF8E39004292B1 /* WatchNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */; };
 		90CE4B0723A6D10600C59759 /* NMRLarmorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CE4B0623A6D10600C59759 /* NMRLarmorTests.swift */; };
 		90E75279239DA575003D3A88 /* NMRCalcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E75278239DA575003D3A88 /* NMRCalcTests.swift */; };
 		90E75281239DA78F003D3A88 /* NMRfidTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E75280239DA78F003D3A88 /* NMRfidTests.swift */; };
@@ -172,6 +173,7 @@
 		9073F03A213B36F100406056 /* IPadSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadSplitViewController.swift; sourceTree = "<group>"; };
 		90B2A67B23CFF59C00599931 /* WatchNuclearSpinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNuclearSpinView.swift; sourceTree = "<group>"; };
 		90B2A67D23CFFC5E00599931 /* Fraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fraction.swift; sourceTree = "<group>"; };
+		90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusInfoView.swift; sourceTree = "<group>"; };
 		90CE4B0623A6D10600C59759 /* NMRLarmorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NMRLarmorTests.swift; path = NMRCalcTests/NMRLarmorTests.swift; sourceTree = SOURCE_ROOT; };
 		90E75276239DA575003D3A88 /* NMRCalcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NMRCalcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		90E75278239DA575003D3A88 /* NMRCalcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcTests.swift; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 				90495A3623CEA4D2003F2FAA /* WatchNucleusDetailView.swift */,
 				90B2A67B23CFF59C00599931 /* WatchNuclearSpinView.swift */,
 				90FFBA5023CB9E70000A9BC9 /* NucleusList.swift */,
+				90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 				90FFBA5A23CBAB45000A9BC9 /* WatchPeriodicTable.swift in Sources */,
 				90FFBA5323CBA11F000A9BC9 /* WatchNucleusView.swift in Sources */,
 				90FFBA3423CB8C55000A9BC9 /* ContentView.swift in Sources */,
+				90B8E84C23EF8E39004292B1 /* WatchNucleusInfoView.swift in Sources */,
 				90495A3723CEA4D2003F2FAA /* WatchNucleusDetailView.swift in Sources */,
 				90FFBA5823CBA90C000A9BC9 /* UserData.swift in Sources */,
 				90FFBA3A23CB8C55000A9BC9 /* NotificationController.swift in Sources */,
