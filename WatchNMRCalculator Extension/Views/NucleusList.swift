@@ -20,8 +20,8 @@ struct NucleusList<DetailView: View>: View {
                     NavigationLink(destination:
                         self.detailViewProducer(nucleus)
                         .environmentObject(self.userData)) {
-                        WatchNucleusView(nucleus: nucleus)
-                    }
+                            WatchNucleusView(nucleus: nucleus)
+                    }.navigationBarTitle("NMR Calculator")
                 }
                 .frame(width: geometry.size.width * 0.88, height: geometry.size.height * 0.7)
             }
