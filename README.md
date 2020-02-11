@@ -41,4 +41,4 @@ The app evaluates the values of some basic parameters used in nuclear magnetic r
 - Version 1.0 / Aug 24, 2016
 - Version 1.1 / Sep 28, 2016
 - Version 1.2 / Nov 1, 2017
-
+- Version 1.3.2 / Feb 10, 2020
