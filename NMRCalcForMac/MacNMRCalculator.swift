@@ -9,9 +9,6 @@
 import Foundation
 
 class MacNMRCalculator: ObservableObject {
-    public static let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
-    public static let gammaElectron = -176.0859644 / 2 / Double.pi // in GHz/T
-    
     @Published var nucleus: NMRNucleus?
     @Published var larmorFrequency: Double?
     @Published var protonFrequency: Double?
@@ -26,8 +23,8 @@ class MacNMRCalculator: ObservableObject {
         
         self.externalField = self.externalField ?? 1.0
         self.larmorFrequency = gyromaneticRatio * self.externalField!
-        self.protonFrequency = self.externalField! * MacNMRCalculator.gammaProton
-        self.electronFrequency = self.externalField! * MacNMRCalculator.gammaElectron
+        self.protonFrequency = self.externalField! * NMRCalcConstants.gammaProton
+        self.electronFrequency = self.externalField! * NMRCalcConstants.gammaElectron
     }
     
     func externalFieldUpdated() {
@@ -36,8 +33,8 @@ class MacNMRCalculator: ObservableObject {
         }
         
         self.larmorFrequency = externalField * Double(nucleus.gyromagneticRatio)!
-        self.protonFrequency = externalField * MacNMRCalculator.gammaProton
-        self.electronFrequency  = externalField * MacLamorFrequencyView.gammaElectron
+        self.protonFrequency = externalField * NMRCalcConstants.gammaProton
+        self.electronFrequency  = externalField * NMRCalcConstants.gammaElectron
     }
     
     func larmorFrequencyUpdated() {
@@ -48,8 +45,8 @@ class MacNMRCalculator: ObservableObject {
         let gyromaneticRatio = Double(nucleus.gyromagneticRatio)!
         
         self.externalField = larmorFrequency / gyromaneticRatio
-        self.protonFrequency = self.externalField! * MacNMRCalculator.gammaProton
-        self.electronFrequency  = self.externalField! * MacLamorFrequencyView.gammaElectron
+        self.protonFrequency = self.externalField! * NMRCalcConstants.gammaProton
+        self.electronFrequency  = self.externalField! * NMRCalcConstants.gammaElectron
     }
     
     func protonFrequencyUpdated() {
@@ -59,9 +56,9 @@ class MacNMRCalculator: ObservableObject {
         
         let gyromaneticRatio = Double(nucleus.gyromagneticRatio)!
         
-        self.externalField = protonFrequency / MacNMRCalculator.gammaProton
+        self.externalField = protonFrequency / NMRCalcConstants.gammaProton
         self.larmorFrequency = self.externalField! * gyromaneticRatio
-        self.electronFrequency  = self.externalField! * MacLamorFrequencyView.gammaElectron
+        self.electronFrequency  = self.externalField! * NMRCalcConstants.gammaElectron
     }
     
     func electronFrequencyUpdated() {
@@ -71,9 +68,9 @@ class MacNMRCalculator: ObservableObject {
         
         let gyromaneticRatio = Double(nucleus.gyromagneticRatio)!
         
-        self.externalField = electronFrequency / MacNMRCalculator.gammaElectron
+        self.externalField = electronFrequency / NMRCalcConstants.gammaElectron
         self.larmorFrequency = self.externalField! * gyromaneticRatio
-        self.protonFrequency  = self.externalField! * MacLamorFrequencyView.gammaProton
+        self.protonFrequency  = self.externalField! * NMRCalcConstants.gammaProton
     }
     
 }

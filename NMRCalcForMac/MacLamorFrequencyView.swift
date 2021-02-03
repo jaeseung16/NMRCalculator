@@ -9,16 +9,13 @@
 import SwiftUI
 
 struct MacLamorFrequencyView: View {
-    public static let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
-    public static let gammaElectron = -176.0859644 / 2 / Double.pi // in GHz/T
-    
     private static let frequencyFormat = "%6.4f"
     
     private let externalFieldFormat = "%.4f"
     private let larmorFrequencyFormat = "%.3f"
     
     @State private var isEditing = false
-    @State var larmorFrequency: Double = MacLamorFrequencyView.gammaProton
+    @State var larmorFrequency: Double = NMRCalcConstants.gammaProton
     @State var externalField: Double
     @State var protonFrequency: Double
     @State var electronFrequency: Double
@@ -40,7 +37,7 @@ struct MacLamorFrequencyView: View {
     }
     
     var electronFrquency: Double {
-        return self.externalField * MacLamorFrequencyView.gammaElectron
+        return self.externalField * NMRCalcConstants.gammaElectron
     }
     
     var numberFormatter: NumberFormatter {
@@ -175,8 +172,8 @@ struct MacLamorFrequencyView_Previews: PreviewProvider {
         MacLamorFrequencyView(
             larmorFrequency: MacLamorFrequencyView_Previews.larmorFrequency,
             externalField: MacLamorFrequencyView_Previews.externalField,
-            protonFrequency: MacLamorFrequencyView.gammaProton * 1.0,
-            electronFrequency: MacLamorFrequencyView.gammaElectron * 1.0)
+            protonFrequency: NMRCalcConstants.gammaProton * 1.0,
+            electronFrequency: NMRCalcConstants.gammaElectron * 1.0)
             .environmentObject(calculator)
     }
 }
