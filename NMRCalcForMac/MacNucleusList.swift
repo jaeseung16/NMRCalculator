@@ -40,8 +40,8 @@ struct MacNucleusList<DetailView: View>: View {
         VStack(alignment: .center) {
             MacLamorFrequencyView(
                 externalField: externalField,
-                protonFrequency: MacLamorFrequencyView.gammaProton * externalField,
-                electronFrequency: MacLamorFrequencyView.gammaElectron * externalField
+                protonFrequency: NMRCalcConstants.gammaProton * externalField,
+                electronFrequency: NMRCalcConstants.gammaElectron * externalField
             )
             .environmentObject(calculator)
             /*
