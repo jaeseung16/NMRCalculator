@@ -45,6 +45,8 @@
 		907316C225CA0901004DB321 /* MacNMRCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907316C125CA0901004DB321 /* MacNMRCalculator.swift */; };
 		90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		9073F03B213B36F100406056 /* IPadSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9073F03A213B36F100406056 /* IPadSplitViewController.swift */; };
+		909ACA3E25CF5D7000C92C2F /* MacNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */; };
+		909ACA5725CF65FF00C92C2F /* WatchNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */; };
 		909C112725BF908A00E8C285 /* NMRCalcForMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112625BF908A00E8C285 /* NMRCalcForMacApp.swift */; };
 		909C112925BF908A00E8C285 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112825BF908A00E8C285 /* ContentView.swift */; };
 		909C112B25BF908B00E8C285 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909C112A25BF908B00E8C285 /* Assets.xcassets */; };
@@ -53,7 +55,6 @@
 		909C114125BF90A800E8C285 /* LarmorFrequencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F1F86723DDE588004A144A /* LarmorFrequencyView.swift */; };
 		909C114825BF90AA00E8C285 /* WatchAtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* WatchAtomicElementView.swift */; };
 		909C115625BF90B000E8C285 /* WatchNuclearSpinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67B23CFF59C00599931 /* WatchNuclearSpinView.swift */; };
-		909C116B25BF90BA00E8C285 /* WatchNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */; };
 		909C117225BF90D900E8C285 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* UserData.swift */; };
 		909C117925BF90DD00E8C285 /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
 		909C118025BF90E100E8C285 /* WatchPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */; };
@@ -197,6 +198,7 @@
 		907316C125CA0901004DB321 /* MacNMRCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalculator.swift; sourceTree = "<group>"; };
 		90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRPeriodicTable.swift; sourceTree = "<group>"; };
 		9073F03A213B36F100406056 /* IPadSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadSplitViewController.swift; sourceTree = "<group>"; };
+		909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNucleusInfoView.swift; sourceTree = "<group>"; };
 		909C112425BF908A00E8C285 /* NMRCalcForMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NMRCalcForMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		909C112625BF908A00E8C285 /* NMRCalcForMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcForMacApp.swift; sourceTree = "<group>"; };
 		909C112825BF908A00E8C285 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -390,20 +392,29 @@
 			path = NMRCalcUITests;
 			sourceTree = "<group>";
 		};
+		909ACA3025CF5BFC00C92C2F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				90D3935425C7343D000545FE /* MacLamorFrequencyView.swift */,
+				907316C125CA0901004DB321 /* MacNMRCalculator.swift */,
+				909C119525BF917C00E8C285 /* MacNucleusList.swift */,
+				909C11C925BF945500E8C285 /* MacNucleusView.swift */,
+				909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		909C112525BF908A00E8C285 /* NMRCalcForMac */ = {
 			isa = PBXGroup;
 			children = (
+				909ACA3025CF5BFC00C92C2F /* Views */,
 				909C112625BF908A00E8C285 /* NMRCalcForMacApp.swift */,
 				909C112825BF908A00E8C285 /* ContentView.swift */,
 				909C112A25BF908B00E8C285 /* Assets.xcassets */,
 				909C112F25BF908B00E8C285 /* Info.plist */,
 				909C113025BF908B00E8C285 /* NMRCalcForMac.entitlements */,
 				909C112C25BF908B00E8C285 /* Preview Content */,
-				909C119525BF917C00E8C285 /* MacNucleusList.swift */,
 				909C11A325BF91BB00E8C285 /* NucleusDetailView.swift */,
-				909C11C925BF945500E8C285 /* MacNucleusView.swift */,
-				90D3935425C7343D000545FE /* MacLamorFrequencyView.swift */,
-				907316C125CA0901004DB321 /* MacNMRCalculator.swift */,
 			);
 			path = NMRCalcForMac;
 			sourceTree = "<group>";
@@ -767,13 +778,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				909C116B25BF90BA00E8C285 /* WatchNucleusInfoView.swift in Sources */,
 				909C112925BF908A00E8C285 /* ContentView.swift in Sources */,
 				909C118025BF90E100E8C285 /* WatchPeriodicTable.swift in Sources */,
 				909C11CA25BF945500E8C285 /* MacNucleusView.swift in Sources */,
 				909C113A25BF90A500E8C285 /* ProtonFrequencyView.swift in Sources */,
 				909C117925BF90DD00E8C285 /* Fraction.swift in Sources */,
 				90A0A21825CB6C7C001DA889 /* NMRCalcConstants.swift in Sources */,
+				909ACA3E25CF5D7000C92C2F /* MacNucleusInfoView.swift in Sources */,
+				909ACA5725CF65FF00C92C2F /* WatchNucleusInfoView.swift in Sources */,
 				909C115625BF90B000E8C285 /* WatchNuclearSpinView.swift in Sources */,
 				909C119625BF917C00E8C285 /* MacNucleusList.swift in Sources */,
 				909C117225BF90D900E8C285 /* UserData.swift in Sources */,
