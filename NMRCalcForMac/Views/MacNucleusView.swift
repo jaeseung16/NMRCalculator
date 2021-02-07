@@ -25,18 +25,37 @@ struct MacNucleusView: View {
                 Spacer()
                 
                 VStack(alignment: .trailing) {
-                    WatchNucleusInfoView(title: "Nuclear Spin",
-                                         item: Fraction(from: self.nucleus.nuclearSpin, isPositive: self.nucleus.γ > 0).inlineDescription)
+                    getInfoView(
+                        title: "Nuclear Spin",
+                        value: Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription
+                    )
                     
-                    WatchNucleusInfoView(title: "MHz/T",
-                                         item: "\(String(format: "%.2f", abs(self.nucleus.γ)))")
+                    getInfoView(
+                        title: "MHz/T",
+                        value: "\(String(format: "%.4f", abs(nucleus.γ)))"
+                    )
                     
-                    WatchNucleusInfoView(title: "NA",
-                                         item: self.nucleus.naturalAbundance)
+                    getInfoView(
+                        title: "NA",
+                        value: nucleus.naturalAbundance
+                    )
                 }
                 .scaledToFill()
             }
             .frame(width: geometry.size.width)
+        }
+    }
+    
+    private func getInfoView(title: String, value: String) -> some View {
+        VStack(alignment: .trailing) {
+            Text(title)
+                .font(.subheadline)
+                .foregroundColor(Color.secondary)
+            
+            Text(value)
+                .font(.body)
+                .foregroundColor(Color.primary)
+                .fontWeight(.semibold)
         }
     }
 }

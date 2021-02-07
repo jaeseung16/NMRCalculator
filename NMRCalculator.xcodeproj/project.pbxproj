@@ -46,7 +46,6 @@
 		90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		9073F03B213B36F100406056 /* IPadSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9073F03A213B36F100406056 /* IPadSplitViewController.swift */; };
 		909ACA3E25CF5D7000C92C2F /* MacNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */; };
-		909ACA5725CF65FF00C92C2F /* WatchNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */; };
 		909C112725BF908A00E8C285 /* NMRCalcForMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112625BF908A00E8C285 /* NMRCalcForMacApp.swift */; };
 		909C112925BF908A00E8C285 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112825BF908A00E8C285 /* ContentView.swift */; };
 		909C112B25BF908B00E8C285 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909C112A25BF908B00E8C285 /* Assets.xcassets */; };
@@ -785,7 +784,6 @@
 				909C117925BF90DD00E8C285 /* Fraction.swift in Sources */,
 				90A0A21825CB6C7C001DA889 /* NMRCalcConstants.swift in Sources */,
 				909ACA3E25CF5D7000C92C2F /* MacNucleusInfoView.swift in Sources */,
-				909ACA5725CF65FF00C92C2F /* WatchNucleusInfoView.swift in Sources */,
 				909C115625BF90B000E8C285 /* WatchNuclearSpinView.swift in Sources */,
 				909C119625BF917C00E8C285 /* MacNucleusList.swift in Sources */,
 				909C117225BF90D900E8C285 /* UserData.swift in Sources */,

@@ -107,19 +107,21 @@ struct MacLamorFrequencyView: View {
     private func getInfoView(title: String, value: String) -> some View {
         HStack(alignment: .center) {
             Text(title)
-            .font(.callout)
-            .fontWeight(.semibold)
-            .foregroundColor(Color.secondary)
+                .font(.callout)
+                .foregroundColor(Color.secondary)
             
             Spacer()
             
             Text(value)
-            .font(.body)
-            .foregroundColor(Color.primary)
+                .font(.body)
+                .foregroundColor(Color.primary)
+                .fontWeight(.semibold)
         }
     }
     
-    private let defaultTextField = "0.0"
+    private let defaultLabel = "0.0"
+    private let defaultTextFieldWidth: CGFloat = 100
+    private let defaultUnitTextWidth: CGFloat = 40
     private func getCalculatorView(title: String, value: Binding<Double?>, unit: String, onCommit: @escaping () -> Void) -> some View {
         HStack(alignment: .center) {
             Text(title)
@@ -127,20 +129,20 @@ struct MacLamorFrequencyView: View {
             
             Spacer()
             
-            TextField(defaultTextField, value: value,
+            TextField(defaultLabel, value: value,
                       formatter: numberFormatter) { isEditing in
                 self.isEditing = isEditing
             } onCommit: {
                 onCommit()
             }
             .multilineTextAlignment(.trailing)
-            .frame(width: 100)
-            .font(.body)
+            .frame(width: defaultTextFieldWidth)
+            .font(Font.body.weight(.semibold))
             .foregroundColor(.orange)
             
             Text(unit)
                 .font(.body)
-                .frame(width: 40, alignment: .leading)
+                .frame(width: defaultUnitTextWidth, alignment: .leading)
         }
         .foregroundColor(Color.primary)
     }
