@@ -10,8 +10,8 @@ import SwiftUI
 
 struct MacNucleusList<DetailView: View>: View {
     @EnvironmentObject var userData: UserData
+    @ObservedObject var calculator = MacNMRCalculator()
     
-    @State var selected: NMRNucleus?
     @State var externalField = 1.0
     @State private var isEditing = false
     
@@ -19,39 +19,31 @@ struct MacNucleusList<DetailView: View>: View {
     let proton = NMRNucleus()
     
     var nucleus: NMRNucleus {
-        return self.selected ?? proton
+        return calculator.nucleus ?? proton
     }
     
     var elementSymbol: String {
-        return self.nucleus.symbolNucleus
+        return nucleus.symbolNucleus
     }
     
     var atomicWeight: UInt {
-        return UInt(self.nucleus.atomicWeight)!
+        return UInt(nucleus.atomicWeight)!
     }
     
     var gyromagneticRatio: Double {
-        return Double(self.nucleus.gyromagneticRatio)!
+        return Double(nucleus.gyromagneticRatio)!
     }
-    
-    @ObservedObject var calculator = MacNMRCalculator()
     
     var body: some View {
         HStack(alignment: .center) {
-            VStack {
-                MacLamorFrequencyView(
-                    externalField: externalField,
-                    protonFrequency: NMRCalcConstants.gammaProton * externalField,
-                    electronFrequency: NMRCalcConstants.gammaElectron * externalField
-                )
-                .environmentObject(calculator)
-                .frame(width: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-            }
+            MacLamorFrequencyView()
+            .environmentObject(calculator)
+            .frame(width: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             
             Divider()
             
             List(selection: $calculator.nucleus, content: {
-                ForEach(self.userData.nuclei, id: \.self) { nucleus in
+                ForEach(userData.nuclei, id: \.self) { nucleus in
                     HStack {
                         Spacer()
                         MacNucleusView(nucleus: nucleus)
