@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct WatchAtomicElementView: View {
+struct AtomicElementView: View {
     let elementSymbol: String
     let massNumber: UInt
     
@@ -23,8 +23,8 @@ struct WatchAtomicElementView: View {
     }
 }
 
-struct WatchAtomicElementView_Previews: PreviewProvider {
+struct AtomicElementView_Previews: PreviewProvider {
     static var previews: some View {
-        WatchAtomicElementView(elementSymbol: "Mg", massNumber: 24)
+        AtomicElementView(elementSymbol: "Mg", massNumber: 24)
     }
 }

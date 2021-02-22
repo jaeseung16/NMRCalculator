@@ -32,7 +32,7 @@ struct WatchNucleusDetailView: View {
         GeometryReader { geometry in
             VStack(alignment: .trailing, spacing: 0) {
                 HStack(alignment: .center) {
-                    WatchAtomicElementView(
+                    AtomicElementView(
                         elementSymbol: self.nucleus.symbolNucleus,
                         massNumber: UInt(self.nucleus.atomicWeight)!)
                         .padding(.leading, 8)

@@ -15,7 +15,7 @@ struct MacNucleusView: View {
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .center, spacing: 0) {
-                WatchAtomicElementView(
+                AtomicElementView(
                     elementSymbol: self.nucleus.symbolNucleus,
                     massNumber: UInt(self.nucleus.atomicWeight)!)
                     .scaledToFill()
