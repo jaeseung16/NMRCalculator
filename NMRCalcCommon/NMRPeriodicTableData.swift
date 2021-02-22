@@ -9,7 +9,7 @@
 import Combine
 import SwiftUI
 
-final class UserData: ObservableObject {
+final class NMRPeriodicTableData: ObservableObject {
     @Published var nuclei = NMRPeriodicTable.shared.nuclei
     @Published var scrollAmount = 10.0
     @Published var focus = Focus.ExternalField

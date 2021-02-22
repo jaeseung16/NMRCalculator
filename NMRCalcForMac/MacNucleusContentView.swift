@@ -13,7 +13,7 @@ struct MacNucleusContentView: View {
         MacNucleusList {
             NucleusDetailView(nucleus: $0)
         }
-        .environmentObject(UserData())
+        .environmentObject(NMRPeriodicTableData())
     }
 }
 
@@ -22,6 +22,6 @@ struct MacNucleusContentView_Previews: PreviewProvider {
         MacNucleusList {
             NucleusDetailView(nucleus: $0)
         }
-        .environmentObject(UserData())
+        .environmentObject(NMRPeriodicTableData())
     }
 }

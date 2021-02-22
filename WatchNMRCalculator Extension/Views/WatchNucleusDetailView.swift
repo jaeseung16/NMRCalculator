@@ -9,18 +9,18 @@
 import SwiftUI
 
 struct WatchNucleusDetailView: View {
-    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userData: NMRPeriodicTableData
     @State var scrollAmountToFieldFactor: Double = 1
     
     var nucleus: NMRNucleus
     
     private var externalField: Double
     {
-        return self.userData.focus == .ExternalField ? self.userData.scrollAmount  : self.userData.scrollAmount / UserData.γProton
+        return self.userData.focus == .ExternalField ? self.userData.scrollAmount  : self.userData.scrollAmount / NMRPeriodicTableData.γProton
     }
     private var protonFrequency: Double
     {
-        return self.userData.focus == .ProtonFrequency ? self.userData.scrollAmount : self.userData.scrollAmount * UserData.γProton
+        return self.userData.focus == .ProtonFrequency ? self.userData.scrollAmount : self.userData.scrollAmount * NMRPeriodicTableData.γProton
     }
     
     private let minValue = 0.0
@@ -58,7 +58,7 @@ struct WatchNucleusDetailView: View {
                     .focusable(true) { _ in
                         if (self.userData.focus == .ProtonFrequency) {
                             self.userData.focus = .ExternalField
-                            self.userData.scrollAmount /= UserData.γProton
+                            self.userData.scrollAmount /= NMRPeriodicTableData.γProton
                         }
 //                        self.switchFocus()
                     }
@@ -70,7 +70,7 @@ struct WatchNucleusDetailView: View {
                     .focusable(true) { _ in
                         if (self.userData.focus == .ExternalField) {
                             self.userData.focus = .ProtonFrequency
-                            self.userData.scrollAmount *= UserData.γProton
+                            self.userData.scrollAmount *= NMRPeriodicTableData.γProton
                         }
                         //self.switchFocus()
                     }
@@ -97,7 +97,7 @@ struct WatchNucleusDetailView: View {
 
 struct WatchNucleusDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        return WatchNucleusDetailView(nucleus: UserData().nuclei[3])
-            .environmentObject(UserData())
+        return WatchNucleusDetailView(nucleus: NMRPeriodicTableData().nuclei[3])
+            .environmentObject(NMRPeriodicTableData())
     }
 }

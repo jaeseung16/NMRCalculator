@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MacNucleusView: View {
-    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userData: NMRPeriodicTableData
     var nucleus: NMRNucleus
     
     var body: some View {
@@ -62,6 +62,6 @@ struct MacNucleusView: View {
 
 struct MacNucleusView_Previews: PreviewProvider {
     static var previews: some View {
-        MacNucleusView(nucleus: UserData().nuclei[9])
+        MacNucleusView(nucleus: NMRPeriodicTableData().nuclei[9])
     }
 }

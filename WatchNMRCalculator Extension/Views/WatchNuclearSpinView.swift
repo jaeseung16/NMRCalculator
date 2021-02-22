@@ -36,6 +36,6 @@ struct WatchNuclearSpinView: View {
 
 struct WatchNuclearSpinView_Previews: PreviewProvider {
     static var previews: some View {
-        WatchNuclearSpinView(nucleus: UserData().nuclei[6])
+        WatchNuclearSpinView(nucleus: NMRPeriodicTableData().nuclei[6])
     }
 }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct NucleusList<DetailView: View>: View {
-    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userData: NMRPeriodicTableData
     
     let detailViewProducer: (NMRNucleus) -> DetailView
     
@@ -33,7 +33,7 @@ struct NucleusList<DetailView: View>: View {
 
 struct NucleusList_Previews: PreviewProvider {
     static var previews: some View {
-        let userData = UserData()
+        let userData = NMRPeriodicTableData()
         return NucleusList {WatchNucleusView(nucleus: $0)}
             .environmentObject(userData)
     }
