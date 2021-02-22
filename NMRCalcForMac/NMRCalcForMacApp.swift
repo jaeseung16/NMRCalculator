@@ -14,5 +14,11 @@ struct NMRCalcForMacApp: App {
         WindowGroup {
             ContentView()
         }
+        
+        #if os(macOS)
+        Settings {
+            MacNMRCalcSettings()
+        }
+        #endif
     }
 }

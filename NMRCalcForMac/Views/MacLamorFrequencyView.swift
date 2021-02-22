@@ -46,6 +46,12 @@ struct MacLamorFrequencyView: View {
         return formatter
     }
     
+    @AppStorage("MacNucleusView.elementColor")
+    private var elementColor: MacNMRCalcSettings.ElementColor = .systemGreen
+    
+    @AppStorage("MacNucleusView.numberColor")
+    private var numberColor: MacNMRCalcSettings.NumberColor = .systemPurple
+    
     var body: some View {
         VStack {
             HStack(alignment: .top, spacing: 0) {
@@ -57,7 +63,7 @@ struct MacLamorFrequencyView: View {
                     .font(.title)
                     .fontWeight(.semibold)
             }
-            .foregroundColor(Color(NSColor.systemGreen))
+            .foregroundColor(elementColor.getColor())
             
             VStack() {
                 getInfoView(title: "Nuclear Spin", value: Fraction(from: nuclearSpin, isPositive: gyromagneticRatio > 0).inlineDescription)
@@ -138,7 +144,7 @@ struct MacLamorFrequencyView: View {
             .multilineTextAlignment(.trailing)
             .frame(width: defaultTextFieldWidth)
             .font(Font.body.weight(.semibold))
-            .foregroundColor(Color(NSColor.systemPurple))
+            .foregroundColor(numberColor.getColor())
             
             Text(unit)
                 .font(.body)
