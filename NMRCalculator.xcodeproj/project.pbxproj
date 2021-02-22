@@ -59,7 +59,6 @@
 		909C115625BF90B000E8C285 /* NuclearSpinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67B23CFF59C00599931 /* NuclearSpinView.swift */; };
 		909C117225BF90D900E8C285 /* NMRPeriodicTableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */; };
 		909C117925BF90DD00E8C285 /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
-		909C118025BF90E100E8C285 /* WatchPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */; };
 		909C118725BF912400E8C285 /* NMRNucleus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */; };
 		909C118E25BF913C00E8C285 /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		909C119625BF917C00E8C285 /* MacNucleusList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C119525BF917C00E8C285 /* MacNucleusList.swift */; };
@@ -456,6 +455,7 @@
 				906EBC6F25E4740E00ED8641 /* Assets */,
 				90A0A21325CB6C7C001DA889 /* NMRCalcConstants.swift */,
 				90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */,
+				90B2A67D23CFFC5E00599931 /* Fraction.swift */,
 			);
 			path = NMRCalcCommon;
 			sourceTree = "<group>";
@@ -505,7 +505,6 @@
 				90FFBA4223CB8C56000A9BC9 /* Info.plist */,
 				90FFBA4323CB8C56000A9BC9 /* PushNotificationPayload.apns */,
 				90FFBA3F23CB8C56000A9BC9 /* Preview Content */,
-				90B2A67D23CFFC5E00599931 /* Fraction.swift */,
 				90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */,
 			);
 			path = "WatchNMRCalculator Extension";
@@ -801,7 +800,6 @@
 			files = (
 				906EBC6825E4685A00ED8641 /* MacNMRCalcSettings.swift in Sources */,
 				909C112925BF908A00E8C285 /* MacNucleusContentView.swift in Sources */,
-				909C118025BF90E100E8C285 /* WatchPeriodicTable.swift in Sources */,
 				909C11CA25BF945500E8C285 /* MacNucleusView.swift in Sources */,
 				909C113A25BF90A500E8C285 /* ProtonFrequencyView.swift in Sources */,
 				906EBCC825E4796C00ED8641 /* AtomicElementView.swift in Sources */,
