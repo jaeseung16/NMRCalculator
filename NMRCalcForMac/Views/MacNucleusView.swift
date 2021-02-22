@@ -20,7 +20,7 @@ struct MacNucleusView: View {
                     massNumber: UInt(self.nucleus.atomicWeight)!)
                     .scaledToFill()
                     .frame(width: geometry.size.width * 0.35)
-                    .foregroundColor(Color.green)
+                    .foregroundColor(Color(NSColor.systemGreen))
                 
                 Spacer()
                 

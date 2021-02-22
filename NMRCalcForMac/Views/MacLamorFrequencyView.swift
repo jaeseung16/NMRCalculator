@@ -57,7 +57,7 @@ struct MacLamorFrequencyView: View {
                     .font(.title)
                     .fontWeight(.semibold)
             }
-            .foregroundColor(Color.green)
+            .foregroundColor(Color(NSColor.systemGreen))
             
             VStack() {
                 getInfoView(title: "Nuclear Spin", value: Fraction(from: nuclearSpin, isPositive: gyromagneticRatio > 0).inlineDescription)
@@ -138,7 +138,7 @@ struct MacLamorFrequencyView: View {
             .multilineTextAlignment(.trailing)
             .frame(width: defaultTextFieldWidth)
             .font(Font.body.weight(.semibold))
-            .foregroundColor(.orange)
+            .foregroundColor(Color(NSColor.systemPurple))
             
             Text(unit)
                 .font(.body)
