@@ -12,7 +12,7 @@ import SwiftUI
 struct NMRCalcForMacApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MacNucleusContentView()
         }
         
         #if os(macOS)

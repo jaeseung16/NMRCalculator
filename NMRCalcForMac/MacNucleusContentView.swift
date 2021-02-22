@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct MacNucleusContentView: View {
     var body: some View {
         MacNucleusList {
             NucleusDetailView(nucleus: $0)
@@ -17,7 +17,7 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct MacNucleusContentView_Previews: PreviewProvider {
     static var previews: some View {
         MacNucleusList {
             NucleusDetailView(nucleus: $0)
