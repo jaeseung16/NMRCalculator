@@ -334,7 +334,6 @@
 			isa = PBXGroup;
 			children = (
 				0B590F141D5155300064C926 /* InfoText.rtf */,
-				0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -393,6 +392,14 @@
 			path = NMRCalcUITests;
 			sourceTree = "<group>";
 		};
+		906EBC6F25E4740E00ED8641 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		909ACA3025CF5BFC00C92C2F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,6 +439,7 @@
 		90A0A21225CB6C5F001DA889 /* NMRCalcCommon */ = {
 			isa = PBXGroup;
 			children = (
+				906EBC6F25E4740E00ED8641 /* Assets */,
 				90A0A21325CB6C7C001DA889 /* NMRCalcConstants.swift */,
 			);
 			path = NMRCalcCommon;
@@ -996,6 +1004,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1045,6 +1054,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.3.1;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.NMRCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1304,6 +1314,7 @@
 				);
 				MARKETING_VERSION = 1.3.1;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.NMRCalculator.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1371,6 +1382,7 @@
 				);
 				MARKETING_VERSION = 1.3.1;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.NMRCalculator.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
