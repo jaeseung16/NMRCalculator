@@ -40,7 +40,7 @@ struct NucleusDetailView: View {
                     Spacer()
                     
                     VStack(alignment: .trailing, spacing: 0) {
-                        WatchNuclearSpinView(nucleus: self.nucleus)
+                        NuclearSpinView(nucleus: self.nucleus)
                             .font(.body)
                                               
                         Text("\(self.nucleus.naturalAbundance)")
