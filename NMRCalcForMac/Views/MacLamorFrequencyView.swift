@@ -11,8 +11,6 @@ import SwiftUI
 struct MacLamorFrequencyView: View {
     @EnvironmentObject var calculator: MacNMRCalculator
     
-    @State private var isEditing = false
-    
     private let proton = NMRNucleus()
     
     private var nucleus: NMRNucleus {
@@ -39,18 +37,8 @@ struct MacLamorFrequencyView: View {
         return nucleus.naturalAbundance
     }
    
-    private var numberFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 4
-        formatter.maximumFractionDigits = 4
-        return formatter
-    }
-    
     @AppStorage("MacNucleusView.elementColor")
     private var elementColor: ElementColor = .systemGreen
-    
-    @AppStorage("MacNucleusView.numberColor")
-    private var numberColor: NumberColor = .systemPurple
     
     var body: some View {
         VStack {
@@ -75,7 +63,7 @@ struct MacLamorFrequencyView: View {
             .padding()
             
             VStack {
-                getCalculatorView(title: "External Field", value: $calculator.externalField, unit: "T") {
+                MacCalculatorView(title: "External Field", value: $calculator.externalField, unit: "T") {
                     _ = calculator.$externalField.sink() {
                         let externalField = $0 ?? 1.0
                         if externalField < 0.0 {
@@ -87,19 +75,19 @@ struct MacLamorFrequencyView: View {
                     }
                 }
                
-                getCalculatorView(title: "Larmor Frequency", value: $calculator.larmorFrequency, unit: "MHz") {
+                MacCalculatorView(title: "Larmor Frequency", value: $calculator.larmorFrequency, unit: "MHz") {
                     _ = calculator.$larmorFrequency.sink() { _ in
                         calculator.larmorFrequencyUpdated()
                     }
                 }
                 
-                getCalculatorView(title: "Proton Frequency", value: $calculator.protonFrequency, unit: "MHz") {
+                MacCalculatorView(title: "Proton Frequency", value: $calculator.protonFrequency, unit: "MHz") {
                     _ = calculator.$protonFrequency.sink() { _ in
                         calculator.protonFrequencyUpdated()
                     }
                 }
                 
-                getCalculatorView(title: "Electron Frequency", value: $calculator.electronFrequency, unit: "GHz") {
+                MacCalculatorView(title: "Electron Frequency", value: $calculator.electronFrequency, unit: "GHz") {
                     _ = calculator.$electronFrequency.sink() { _ in
                         calculator.electronFrequencyUpdated()
                     }
@@ -123,34 +111,6 @@ struct MacLamorFrequencyView: View {
                 .foregroundColor(Color.primary)
                 .fontWeight(.semibold)
         }
-    }
-    
-    private let defaultLabel = "0.0"
-    private let defaultTextFieldWidth: CGFloat = 100
-    private let defaultUnitTextWidth: CGFloat = 40
-    private func getCalculatorView(title: String, value: Binding<Double?>, unit: String, onCommit: @escaping () -> Void) -> some View {
-        HStack(alignment: .center) {
-            Text(title)
-                .font(.callout)
-            
-            Spacer()
-            
-            TextField(defaultLabel, value: value,
-                      formatter: numberFormatter) { isEditing in
-                self.isEditing = isEditing
-            } onCommit: {
-                onCommit()
-            }
-            .multilineTextAlignment(.trailing)
-            .frame(width: defaultTextFieldWidth)
-            .font(Font.body.weight(.semibold))
-            .foregroundColor(numberColor.getColor())
-            
-            Text(unit)
-                .font(.body)
-                .frame(width: defaultUnitTextWidth, alignment: .leading)
-        }
-        .foregroundColor(Color.primary)
     }
 }
 
