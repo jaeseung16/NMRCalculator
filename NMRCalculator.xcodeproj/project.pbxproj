@@ -423,11 +423,18 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		906EBD2F25E47F7800ED8641 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				907316C125CA0901004DB321 /* MacNMRCalculator.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		909ACA3025CF5BFC00C92C2F /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				90D3935425C7343D000545FE /* MacLamorFrequencyView.swift */,
-				907316C125CA0901004DB321 /* MacNMRCalculator.swift */,
 				906EBC6725E4685A00ED8641 /* MacNMRCalcSettings.swift */,
 				909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */,
 				909C119525BF917C00E8C285 /* MacNucleusList.swift */,
@@ -439,6 +446,7 @@
 		909C112525BF908A00E8C285 /* NMRCalcForMac */ = {
 			isa = PBXGroup;
 			children = (
+				906EBD2F25E47F7800ED8641 /* ViewModel */,
 				906EBD1825E47D5C00ED8641 /* Settings */,
 				909ACA3025CF5BFC00C92C2F /* Views */,
 				909C112625BF908A00E8C285 /* NMRCalcForMacApp.swift */,
