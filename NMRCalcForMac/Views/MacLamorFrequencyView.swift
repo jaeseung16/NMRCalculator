@@ -47,7 +47,7 @@ struct MacLamorFrequencyView: View {
     }
     
     @AppStorage("MacNucleusView.elementColor")
-    private var elementColor: MacNMRCalcSettings.ElementColor = .systemGreen
+    private var elementColor: ElementColor = .systemGreen
     
     @AppStorage("MacNucleusView.numberColor")
     private var numberColor: MacNMRCalcSettings.NumberColor = .systemPurple

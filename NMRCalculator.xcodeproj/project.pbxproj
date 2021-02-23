@@ -46,6 +46,7 @@
 		906EBCA025E477A400ED8641 /* NMRPeriodicTableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */; };
 		906EBCA225E477A400ED8641 /* NMRPeriodicTableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */; };
 		906EBCC825E4796C00ED8641 /* AtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* AtomicElementView.swift */; };
+		906EBD1A25E47D8E00ED8641 /* ElementColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906EBD1925E47D8E00ED8641 /* ElementColor.swift */; };
 		907316C225CA0901004DB321 /* MacNMRCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907316C125CA0901004DB321 /* MacNMRCalculator.swift */; };
 		90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		9073F03B213B36F100406056 /* IPadSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9073F03A213B36F100406056 /* IPadSplitViewController.swift */; };
@@ -196,6 +197,7 @@
 		90532BEB223D7C1E00379175 /* NMRCalcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcUITests.swift; sourceTree = "<group>"; };
 		90532BED223D7C1E00379175 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		906EBC6725E4685A00ED8641 /* MacNMRCalcSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcSettings.swift; sourceTree = "<group>"; };
+		906EBD1925E47D8E00ED8641 /* ElementColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementColor.swift; sourceTree = "<group>"; };
 		907316C125CA0901004DB321 /* MacNMRCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalculator.swift; sourceTree = "<group>"; };
 		90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRPeriodicTable.swift; sourceTree = "<group>"; };
 		9073F03A213B36F100406056 /* IPadSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadSplitViewController.swift; sourceTree = "<group>"; };
@@ -410,6 +412,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		906EBD1825E47D5C00ED8641 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				906EBD1925E47D8E00ED8641 /* ElementColor.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		909ACA3025CF5BFC00C92C2F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,6 +436,7 @@
 		909C112525BF908A00E8C285 /* NMRCalcForMac */ = {
 			isa = PBXGroup;
 			children = (
+				906EBD1825E47D5C00ED8641 /* Settings */,
 				909ACA3025CF5BFC00C92C2F /* Views */,
 				909C112625BF908A00E8C285 /* NMRCalcForMacApp.swift */,
 				909C112825BF908A00E8C285 /* MacNucleusContentView.swift */,
@@ -807,6 +818,7 @@
 				909C119625BF917C00E8C285 /* MacNucleusList.swift in Sources */,
 				909C117225BF90D900E8C285 /* NMRPeriodicTableData.swift in Sources */,
 				907316C225CA0901004DB321 /* MacNMRCalculator.swift in Sources */,
+				906EBD1A25E47D8E00ED8641 /* ElementColor.swift in Sources */,
 				909C114125BF90A800E8C285 /* LarmorFrequencyView.swift in Sources */,
 				909C118E25BF913C00E8C285 /* NMRPeriodicTable.swift in Sources */,
 				909C118725BF912400E8C285 /* NMRNucleus.swift in Sources */,
