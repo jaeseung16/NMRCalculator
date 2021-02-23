@@ -9,6 +9,16 @@
 import SwiftUI
 
 struct MacCalculatorView: View {
+    var title: NMRPeriodicTableData.Property
+    @Binding var value: Double?
+    var unit: NMRPeriodicTableData.Unit
+    var onCommit: () -> Void
+    
+    @State private var isEditing = false
+    
+    @AppStorage("MacNucleusView.numberColor")
+    private var numberColor: NumberColor = .systemPurple
+    
     private let defaultLabel = "0.0"
     private let defaultTextFieldWidth: CGFloat = 100
     private let defaultUnitTextWidth: CGFloat = 40
@@ -20,21 +30,9 @@ struct MacCalculatorView: View {
         return formatter
     }
     
-    @State private var isEditing = false
-    
-    @AppStorage("MacNucleusView.numberColor")
-    private var numberColor: NumberColor = .systemPurple
-    
-    var title: String
-    @Binding var value: Double?
-    var unit: String
-    
-    var onCommit: () -> Void
-    
-    
     var body: some View {
         HStack(alignment: .center) {
-            Text(title)
+            Text(title.rawValue)
                 .font(.callout)
             
             Spacer()
@@ -50,7 +48,7 @@ struct MacCalculatorView: View {
             .font(Font.body.weight(.semibold))
             .foregroundColor(numberColor.getColor())
             
-            Text(unit)
+            Text(unit.rawValue)
                 .font(.body)
                 .frame(width: defaultUnitTextWidth, alignment: .leading)
         }
@@ -59,9 +57,9 @@ struct MacCalculatorView: View {
 }
 
 struct MacCalculatorView_Previews: PreviewProvider {
-    static let title = "External Field"
+    static let title = NMRPeriodicTableData.Property.externalField
     @State static var value: Double? = 0.0
-    static let unit = "T"
+    static let unit = NMRPeriodicTableData.Unit.T
     
     static var previews: some View {
         MacCalculatorView(title: title, value: $value, unit: unit) {

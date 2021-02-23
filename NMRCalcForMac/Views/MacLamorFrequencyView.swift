@@ -46,16 +46,25 @@ struct MacLamorFrequencyView: View {
                 .foregroundColor(elementColor.getColor())
             
             VStack() {
-                getInfoView(title: "Nuclear Spin", value: Fraction(from: nuclearSpin, isPositive: gyromagneticRatio > 0).inlineDescription)
+                getInfoView(title: .nuclearSpin,
+                            value: Fraction(from: nuclearSpin,
+                                            isPositive: gyromagneticRatio > 0).inlineDescription
+                )
                 
-                getInfoView(title: "Gyromagnetic Ratio (MHz/T)", value: "\(String(format: "%.6f", abs(gyromagneticRatio)))")
+                getInfoView(title: .gyromagneticRatio,
+                            value: "\(String(format: "%.6f", abs(gyromagneticRatio)))"
+                )
                 
-                getInfoView(title: "Natural Abundance (%)", value: "\(naturalAbundance)")
+                getInfoView(title: .naturalAbundance,
+                            value: "\(naturalAbundance)"
+                )
             }
             .padding()
             
             VStack {
-                MacCalculatorView(title: "External Field", value: $calculator.externalField, unit: "T") {
+                MacCalculatorView(title: .externalField,
+                                  value: $calculator.externalField,
+                                  unit: .T) {
                     _ = calculator.$externalField.sink() {
                         let externalField = $0 ?? 1.0
                         if externalField < 0.0 {
@@ -67,19 +76,25 @@ struct MacLamorFrequencyView: View {
                     }
                 }
                
-                MacCalculatorView(title: "Larmor Frequency", value: $calculator.larmorFrequency, unit: "MHz") {
+                MacCalculatorView(title: .larmorFrequency,
+                                  value: $calculator.larmorFrequency,
+                                  unit: .MHz) {
                     _ = calculator.$larmorFrequency.sink() { _ in
                         calculator.larmorFrequencyUpdated()
                     }
                 }
                 
-                MacCalculatorView(title: "Proton Frequency", value: $calculator.protonFrequency, unit: "MHz") {
+                MacCalculatorView(title: .protonFrequency,
+                                  value: $calculator.protonFrequency,
+                                  unit: .MHz) {
                     _ = calculator.$protonFrequency.sink() { _ in
                         calculator.protonFrequencyUpdated()
                     }
                 }
                 
-                MacCalculatorView(title: "Electron Frequency", value: $calculator.electronFrequency, unit: "GHz") {
+                MacCalculatorView(title: .electronFrequency,
+                                  value: $calculator.electronFrequency,
+                                  unit: .GHz) {
                     _ = calculator.$electronFrequency.sink() { _ in
                         calculator.electronFrequencyUpdated()
                     }
@@ -90,9 +105,9 @@ struct MacLamorFrequencyView: View {
         }
     }
     
-    private func getInfoView(title: String, value: String) -> some View {
+    private func getInfoView(title: NMRPeriodicTableData.Property, value: String) -> some View {
         HStack(alignment: .center) {
-            Text(title)
+            Text(title.rawValue)
                 .font(.callout)
                 .foregroundColor(Color.secondary)
             
