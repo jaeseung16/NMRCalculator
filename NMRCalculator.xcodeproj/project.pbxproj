@@ -298,7 +298,6 @@
 				0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */,
 				0B03D2D71D7A2E8F008AF186 /* NMRPulse.swift */,
 				0B03D2D91D7A361C008AF186 /* NMRSpectrum.swift */,
-				90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -477,6 +476,7 @@
 				906EBC6F25E4740E00ED8641 /* Assets */,
 				90A0A21325CB6C7C001DA889 /* NMRCalcConstants.swift */,
 				90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */,
+				90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */,
 				90B2A67D23CFFC5E00599931 /* Fraction.swift */,
 			);
 			path = NMRCalcCommon;
