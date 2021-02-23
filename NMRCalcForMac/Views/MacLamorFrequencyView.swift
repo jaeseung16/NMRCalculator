@@ -42,16 +42,8 @@ struct MacLamorFrequencyView: View {
     
     var body: some View {
         VStack {
-            HStack(alignment: .top, spacing: 0) {
-                Text("\(atomicWeight)")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    
-                Text(elementSymbol)
-                    .font(.title)
-                    .fontWeight(.semibold)
-            }
-            .foregroundColor(elementColor.getColor())
+            AtomicElementView(elementSymbol: elementSymbol, massNumber: atomicWeight, weight: .semibold)
+                .foregroundColor(elementColor.getColor())
             
             VStack() {
                 getInfoView(title: "Nuclear Spin", value: Fraction(from: nuclearSpin, isPositive: gyromagneticRatio > 0).inlineDescription)

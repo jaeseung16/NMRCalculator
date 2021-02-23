@@ -11,14 +11,17 @@ import SwiftUI
 struct AtomicElementView: View {
     let elementSymbol: String
     let massNumber: UInt
+    var weight: Font.Weight = .regular
     
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
             Text("\(self.massNumber)")
                 .font(.subheadline)
+                .fontWeight(weight)
                 
             Text(self.elementSymbol)
                 .font(.title)
+                .fontWeight(weight)
         }
     }
 }
