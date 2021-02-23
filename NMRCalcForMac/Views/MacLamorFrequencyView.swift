@@ -50,7 +50,7 @@ struct MacLamorFrequencyView: View {
     private var elementColor: ElementColor = .systemGreen
     
     @AppStorage("MacNucleusView.numberColor")
-    private var numberColor: MacNMRCalcSettings.NumberColor = .systemPurple
+    private var numberColor: NumberColor = .systemPurple
     
     var body: some View {
         VStack {

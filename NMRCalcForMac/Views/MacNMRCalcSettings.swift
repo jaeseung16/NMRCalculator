@@ -13,30 +13,7 @@ struct MacNMRCalcSettings: View {
     private var elementColor: ElementColor = .systemGreen
     
     @AppStorage("MacNucleusView.numberColor")
-    private var numberColor: MacNMRCalcSettings.NumberColor = .systemPurple
-    
-    enum NumberColor: String, CaseIterable, Identifiable {
-        case systemOrange
-        case systemPurple
-        case systemTeal
-        
-        var id: NumberColor {
-            return self
-        }
-        
-        public func getColor() -> Color {
-            var nsColor: NSColor
-            switch (self) {
-            case .systemOrange:
-                nsColor = NSColor.systemOrange
-            case .systemPurple:
-                nsColor = NSColor.systemPurple
-            case .systemTeal:
-                nsColor = NSColor.systemTeal
-            }
-            return Color(nsColor)
-        }
-    }
+    private var numberColor: NumberColor = .systemPurple
     
     var body: some View {
         Form {
@@ -48,7 +25,7 @@ struct MacNMRCalcSettings: View {
             .pickerStyle(InlinePickerStyle())
             
             Picker("Number Color:", selection: $numberColor) {
-                ForEach(MacNMRCalcSettings.NumberColor.allCases) { color in
+                ForEach(NumberColor.allCases) { color in
                     Text(color.rawValue)
                 }
             }
