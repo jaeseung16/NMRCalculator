@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MacNucleusList: View {
-    @EnvironmentObject var userData: NMRPeriodicTableData
+    let userData = NMRPeriodicTableData()
     @ObservedObject var calculator = MacNMRCalculator()
 
     let proton = NMRNucleus()
@@ -50,7 +50,6 @@ struct MacNucleusList: View {
 
 struct MacNucleusList_Previews: PreviewProvider {
     static var previews: some View {
-        let userData = NMRPeriodicTableData()
-        return MacNucleusList().environmentObject(userData)
+        return MacNucleusList()
     }
 }

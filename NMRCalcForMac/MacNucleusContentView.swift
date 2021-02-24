@@ -11,13 +11,11 @@ import SwiftUI
 struct MacNucleusContentView: View {
     var body: some View {
         MacNucleusList()
-            .environmentObject(NMRPeriodicTableData())
     }
 }
 
 struct MacNucleusContentView_Previews: PreviewProvider {
     static var previews: some View {
         MacNucleusList()
-            .environmentObject(NMRPeriodicTableData())
     }
 }
