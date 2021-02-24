@@ -31,6 +31,6 @@ struct MacNucleusContentView: View {
 
 struct MacNucleusContentView_Previews: PreviewProvider {
     static var previews: some View {
-        MacNucleusList()
+        MacNucleusContentView()
     }
 }
