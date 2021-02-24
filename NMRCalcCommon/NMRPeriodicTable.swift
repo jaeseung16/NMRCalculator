@@ -28,8 +28,6 @@ class NMRPeriodicTable {
     }
     
     private func readtable() -> [String]? {
-        print("read table")
-        print("\(Bundle.main)")
         if let path = Bundle.main.path(forResource: "NMRFreqTable", ofType: "txt") {
             do {
                 let table = try String(contentsOfFile: path, encoding: String.Encoding.utf8).components(separatedBy: "\n")

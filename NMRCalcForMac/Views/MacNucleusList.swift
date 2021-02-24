@@ -44,7 +44,6 @@ struct MacNucleusList: View {
                 }
             }
         }
-        .frame(width: 500, height: 400, alignment: .center)
     }
 }
 

@@ -10,7 +10,22 @@ import SwiftUI
 
 struct MacNucleusContentView: View {
     var body: some View {
-        MacNucleusList()
+        TabView {
+            MacNucleusList()
+                .tabItem {
+                    Text("Nucleus")
+                }
+            Text("Another Tab")
+                .tabItem {
+                    Text("Signal")
+                }
+            Text("The Last Tab")
+                .tabItem {
+                    Text("RF Pulse")
+                }
+        }
+        .font(.headline)
+        .frame(width: 500, height: 400, alignment: .center)
     }
 }
 
