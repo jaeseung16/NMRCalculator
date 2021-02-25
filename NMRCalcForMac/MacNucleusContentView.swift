@@ -15,7 +15,8 @@ struct MacNucleusContentView: View {
                 .tabItem {
                     Text("Nucleus")
                 }
-            Text("Another Tab")
+            
+            MacNMRCalcSignalView()
                 .tabItem {
                     Text("Signal")
                 }
