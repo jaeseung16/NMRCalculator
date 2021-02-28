@@ -20,9 +20,15 @@ struct MacNucleusContentView: View {
                 .tabItem {
                     Text("Signal")
                 }
+            
             MacNMRCalcPulseView()
                 .tabItem {
                     Text("RF Pulse")
+                }
+            
+            MacNMRCalcErnstAngleView()
+                .tabItem {
+                    Text("Ernst Angle")
                 }
         }
         .font(.headline)
