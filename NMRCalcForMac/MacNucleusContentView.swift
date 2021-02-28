@@ -20,7 +20,7 @@ struct MacNucleusContentView: View {
                 .tabItem {
                     Text("Signal")
                 }
-            Text("The Last Tab")
+            MacNMRCalcPulseView()
                 .tabItem {
                     Text("RF Pulse")
                 }
