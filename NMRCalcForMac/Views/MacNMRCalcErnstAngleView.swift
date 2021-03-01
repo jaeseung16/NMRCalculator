@@ -14,19 +14,19 @@ struct MacNMRCalcErnstAngleView: View {
     var body: some View {
         VStack {
             Section(header: Text("Ernst Angle")) {
-                MacSignalItemView(title: "Repetition Time", value: $ernstAngleCalculator.repetitionTime, unit: "sec") {
+                MacNMRCalcItemView(title: "Repetition Time", value: $ernstAngleCalculator.repetitionTime, unit: "sec") {
                     _ = ernstAngleCalculator.$repetitionTime.sink() { _ in
                         ernstAngleCalculator.repetitionTimeUpdated()
                     }
                 }
                 
-                MacSignalItemView(title: "Relaxatio Time", value: $ernstAngleCalculator.relaxationTime, unit: "sec") {
+                MacNMRCalcItemView(title: "Relaxation Time", value: $ernstAngleCalculator.relaxationTime, unit: "sec") {
                     _ = ernstAngleCalculator.$relaxationTime.sink() { _ in
                         ernstAngleCalculator.relaxationTimeUpdated()
                     }
                 }
                 
-                MacSignalItemView(title: "Ernst Angle", value: $ernstAngleCalculator.ernstAngle, unit: "°") {
+                MacNMRCalcItemView(title: "Ernst Angle", value: $ernstAngleCalculator.ernstAngle, unit: "°") {
                     _ = ernstAngleCalculator.$ernstAngle.sink() { _ in
                         ernstAngleCalculator.ernstAngleUpdated()
                     }

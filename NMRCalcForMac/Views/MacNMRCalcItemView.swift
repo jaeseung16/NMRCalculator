@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct MacSignalItemView: View {
+struct MacNMRCalcItemView: View {
     private let defaultLabel = "0.0"
     private let defaultTextFieldWidth: CGFloat = 100
     private let defaultUnitTextWidth: CGFloat = 40
@@ -57,7 +57,7 @@ struct MacSignalItemView: View {
 struct MacSignalItemView_Previews: PreviewProvider {
     @State static var value: Double? = 1.0
     static var previews: some View {
-        MacSignalItemView(title: "Dwell time", value: $value, unit: "μs") {
+        MacNMRCalcItemView(title: "Dwell time", value: $value, unit: "μs") {
         }
     }
 }
