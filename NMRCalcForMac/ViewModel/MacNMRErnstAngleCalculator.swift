@@ -23,7 +23,7 @@ class MacNMRErnstAngleCalculator: ObservableObject {
         }
         
         if repetitionTime == nil {
-            relaxationTime = 1.0
+            repetitionTime = 1.0
         }
         
         ernstAngle = updateErnstAngle(repetitionTime: repetitionTime!, relaxationTime: relaxationTime!)
@@ -35,7 +35,7 @@ class MacNMRErnstAngleCalculator: ObservableObject {
         }
         
         if repetitionTime == nil {
-            relaxationTime = 1.0
+            repetitionTime = 1.0
         }
         
         ernstAngle = updateErnstAngle(repetitionTime: repetitionTime!, relaxationTime: relaxationTime!)
