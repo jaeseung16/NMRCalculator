@@ -16,61 +16,71 @@ class NucleusCalculatorViewModel: ObservableObject {
     @Published var externalField: Double?
     
     func nucluesUpdated() {
-        guard let nucleus = self.nucleus else {
+        guard let nucleus = self.nucleus,
+              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
+        else {
             return
         }
-        let gyromaneticRatio = Double(nucleus.gyromagneticRatio)!
         
         self.externalField = self.externalField ?? 1.0
-        self.larmorFrequency = gyromaneticRatio * self.externalField!
-        self.protonFrequency = self.externalField! * NMRCalcConstants.gammaProton
-        self.electronFrequency = self.externalField! * NMRCalcConstants.gammaElectron
+        self.larmorFrequency = ω(γ: gyromaneticRatio, B: self.externalField!)
+        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: self.externalField!)
+        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: self.externalField!)
     }
     
     func externalFieldUpdated() {
-        guard let externalField = self.externalField, let nucleus = self.nucleus else {
+        guard let externalField = self.externalField,
+              let nucleus = self.nucleus,
+              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
+        else {
             return
         }
         
-        self.larmorFrequency = externalField * Double(nucleus.gyromagneticRatio)!
-        self.protonFrequency = externalField * NMRCalcConstants.gammaProton
-        self.electronFrequency  = externalField * NMRCalcConstants.gammaElectron
+        self.larmorFrequency = ω(γ: gyromaneticRatio, B: externalField)
+        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: externalField)
+        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: externalField)
     }
     
     func larmorFrequencyUpdated() {
-        guard let larmorFrequency = self.larmorFrequency, let nucleus = self.nucleus else {
+        guard let larmorFrequency = self.larmorFrequency,
+              let nucleus = self.nucleus,
+              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
+        else {
             return
         }
         
-        let gyromaneticRatio = Double(nucleus.gyromagneticRatio)!
-        
         self.externalField = larmorFrequency / gyromaneticRatio
-        self.protonFrequency = self.externalField! * NMRCalcConstants.gammaProton
-        self.electronFrequency  = self.externalField! * NMRCalcConstants.gammaElectron
+        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: self.externalField!)
+        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: self.externalField!)
     }
     
     func protonFrequencyUpdated() {
-        guard let protonFrequency = self.protonFrequency, let nucleus = self.nucleus else {
+        guard let protonFrequency = self.protonFrequency,
+              let nucleus = self.nucleus,
+              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
+        else {
             return
         }
         
-        let gyromaneticRatio = Double(nucleus.gyromagneticRatio)!
-        
         self.externalField = protonFrequency / NMRCalcConstants.gammaProton
-        self.larmorFrequency = self.externalField! * gyromaneticRatio
-        self.electronFrequency  = self.externalField! * NMRCalcConstants.gammaElectron
+        self.larmorFrequency = ω(γ: gyromaneticRatio, B: self.externalField!)
+        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: self.externalField!)
     }
     
     func electronFrequencyUpdated() {
-        guard let electronFrequency = self.electronFrequency, let nucleus = self.nucleus else {
+        guard let electronFrequency = self.electronFrequency,
+              let nucleus = self.nucleus,
+              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
+        else {
             return
         }
         
-        let gyromaneticRatio = Double(nucleus.gyromagneticRatio)!
-        
         self.externalField = electronFrequency / NMRCalcConstants.gammaElectron
-        self.larmorFrequency = self.externalField! * gyromaneticRatio
-        self.protonFrequency  = self.externalField! * NMRCalcConstants.gammaProton
+        self.larmorFrequency = ω(γ: gyromaneticRatio, B: self.externalField!)
+        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: self.externalField!)
     }
     
+    private func ω(γ: Double, B: Double) -> Double {
+        return γ * B
+    }
 }
