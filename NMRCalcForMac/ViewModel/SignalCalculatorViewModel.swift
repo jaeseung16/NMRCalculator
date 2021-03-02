@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
+class SignalCalculatorViewModel: ObservableObject {
     @Published var numberOfTimeDataPoint: Double?
     @Published var acquisitionDuration: Double?
     @Published var dwellTime: Double?
@@ -16,15 +16,17 @@ class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
     @Published var spectralWidth: Double?
     @Published var frequencyResolution: Double?
     
-    private let msToμs: Double = 1000.0
-    private var μsToMs: Double {
+    private let secToμs: Double = 1000000.0
+    private var μsToSec: Double {
         get {
-            return 1.0 / msToμs
+            return 1.0 / secToμs
         }
     }
     
-    var description: String {
-        return "numberOfTimeDataPoint = \(numberOfTimeDataPoint), acquisitionDuration = \(acquisitionDuration), dwellTime = \(dwellTime)"
+    private let kHzToHz: Double = 1000.0
+    
+    private func updateDwellTime() {
+        dwellTime = acquisitionDuration! * secToμs / numberOfTimeDataPoint!
     }
     
     func numberOfTimeDataPointUpdated() {
@@ -36,7 +38,7 @@ class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
             numberOfTimeDataPoint = 1000.0
         }
         
-        dwellTime = acquisitionDuration! * 1000000 / numberOfTimeDataPoint!
+        updateDwellTime()
     }
     
     func acquisitionDurationUpdated() {
@@ -48,7 +50,7 @@ class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
             numberOfTimeDataPoint = 1000.0
         }
         
-        dwellTime = acquisitionDuration! * 1000000 / numberOfTimeDataPoint!
+        updateDwellTime()
     }
     
     func dwellTimeUpdated() {
@@ -60,7 +62,11 @@ class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
             numberOfTimeDataPoint = 1.0
         }
         
-        acquisitionDuration = numberOfTimeDataPoint! * (dwellTime! * 0.000001)
+        acquisitionDuration = numberOfTimeDataPoint! * (dwellTime! * μsToSec)
+    }
+    
+    private func updateFrequencyResolution() {
+        frequencyResolution =  spectralWidth! * kHzToHz / numberOfFrequencyDataPoint!
     }
     
     func numberOfFrequencyDataPointUpdated() {
@@ -72,7 +78,7 @@ class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
             spectralWidth = 1.0
         }
         
-        frequencyResolution = 1000.0 * spectralWidth! / numberOfFrequencyDataPoint!
+        updateFrequencyResolution()
     }
     
     func spectralWidthUpdated() {
@@ -84,7 +90,7 @@ class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
             spectralWidth = 1.0
         }
         
-        frequencyResolution = 1000.0 * spectralWidth! / numberOfFrequencyDataPoint!
+        updateFrequencyResolution()
     }
     
     func frequencyResolutionUpdated() {
@@ -96,6 +102,6 @@ class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
             spectralWidth = 1.0
         }
         
-        numberOfFrequencyDataPoint = 1000.0 * spectralWidth! / frequencyResolution!
+        numberOfFrequencyDataPoint = spectralWidth! * kHzToHz / frequencyResolution!
     }
 }
