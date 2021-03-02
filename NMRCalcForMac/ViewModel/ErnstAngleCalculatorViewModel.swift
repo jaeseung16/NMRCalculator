@@ -13,8 +13,13 @@ class ErnstAngleCalculatorViewModel: ObservableObject {
     @Published var relaxationTime: Double?
     @Published var ernstAngle: Double?
     
+    private let radianToDegree = 180.0 / Double.pi
+    private var degreeToRadian: Double {
+        return 1.0 / radianToDegree
+    }
+    
     private func updateErnstAngle(repetitionTime: Double, relaxationTime: Double) -> Double {
-        return acos( exp(-1.0 * repetitionTime / relaxationTime) ) * (180.0 / Double.pi)
+        return acos( exp(-1.0 * repetitionTime / relaxationTime) ) * radianToDegree
     }
     
     func repetitionTimeUpdated() -> Void {
@@ -46,6 +51,6 @@ class ErnstAngleCalculatorViewModel: ObservableObject {
             relaxationTime = 1.0
         }
         
-        repetitionTime = -1.0 * relaxationTime! * log( cos(ernstAngle! * (Double.pi / 180.0)) )
+        repetitionTime = -1.0 * relaxationTime! * log(cos(ernstAngle! * degreeToRadian))
     }
 }
