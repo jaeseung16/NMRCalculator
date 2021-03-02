@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MacNucleusList: View {
     let userData = NMRPeriodicTableData()
-    @ObservedObject var calculator = MacNMRCalculator()
+    @ObservedObject var calculator = NucleusCalculatorViewModel()
 
     let proton = NMRNucleus()
     

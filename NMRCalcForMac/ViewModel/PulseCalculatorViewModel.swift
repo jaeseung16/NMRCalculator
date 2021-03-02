@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MacNMRPulseCalculator: ObservableObject {
+class PulseCalculatorViewModel: ObservableObject {
     @Published var duration1: Double?
     @Published var flipAngle1: Double?
     @Published var amplitude1: Double?

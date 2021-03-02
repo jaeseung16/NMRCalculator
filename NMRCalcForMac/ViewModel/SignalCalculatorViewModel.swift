@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MacNMRSignalCalculator: ObservableObject, CustomStringConvertible {
+class SignalCalculatorViewModel: ObservableObject, CustomStringConvertible {
     @Published var numberOfTimeDataPoint: Double?
     @Published var acquisitionDuration: Double?
     @Published var dwellTime: Double?

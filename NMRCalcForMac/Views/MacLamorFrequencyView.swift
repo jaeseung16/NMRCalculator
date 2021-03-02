@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MacLamorFrequencyView: View {
-    @EnvironmentObject var calculator: MacNMRCalculator
+    @EnvironmentObject var calculator: NucleusCalculatorViewModel
     
     private let proton = NMRNucleus()
     
@@ -132,7 +132,7 @@ struct MacLamorFrequencyView: View {
 }
 
 struct MacLamorFrequencyView_Previews: PreviewProvider {
-    @StateObject static var calculator = MacNMRCalculator()
+    @StateObject static var calculator = NucleusCalculatorViewModel()
     
     static var previews: some View {
         MacLamorFrequencyView()

@@ -9,58 +9,58 @@
 import SwiftUI
 
 struct MacNMRCalcSignalView: View {
-    @ObservedObject var signalCalculator = MacNMRSignalCalculator()
+    @ObservedObject var calculator = SignalCalculatorViewModel()
 
     var body: some View {
         VStack {
             Section(header: Text("Time Domain")) {
-                MacNMRCalcItemView(title: "Number of data points", value: $signalCalculator.numberOfTimeDataPoint, unit: "") {
-                    _ = signalCalculator.$numberOfTimeDataPoint
+                MacNMRCalcItemView(title: "Number of data points", value: $calculator.numberOfTimeDataPoint, unit: "") {
+                    _ = calculator.$numberOfTimeDataPoint
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            signalCalculator.numberOfTimeDataPointUpdated()
+                            calculator.numberOfTimeDataPointUpdated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Acquisition duration", value: $signalCalculator.acquisitionDuration, unit: "sec") {
-                    _ = signalCalculator.$acquisitionDuration
+                MacNMRCalcItemView(title: "Acquisition duration", value: $calculator.acquisitionDuration, unit: "sec") {
+                    _ = calculator.$acquisitionDuration
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            signalCalculator.acquisitionDurationUpdated()
+                            calculator.acquisitionDurationUpdated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Dwell time", value: $signalCalculator.dwellTime, unit: "μs") {
-                    _ = signalCalculator.$dwellTime
+                MacNMRCalcItemView(title: "Dwell time", value: $calculator.dwellTime, unit: "μs") {
+                    _ = calculator.$dwellTime
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            signalCalculator.dwellTimeUpdated()
+                            calculator.dwellTimeUpdated()
                         }
                 }
             }
             
             Section(header: Text("Frequency Domain")) {
-                MacNMRCalcItemView(title: "Number of data points", value: $signalCalculator.numberOfFrequencyDataPoint, unit: "") {
-                    _ = signalCalculator.$numberOfFrequencyDataPoint
+                MacNMRCalcItemView(title: "Number of data points", value: $calculator.numberOfFrequencyDataPoint, unit: "") {
+                    _ = calculator.$numberOfFrequencyDataPoint
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            signalCalculator.numberOfFrequencyDataPointUpdated()
+                            calculator.numberOfFrequencyDataPointUpdated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Spectral width", value: $signalCalculator.spectralWidth, unit: "kHz") {
-                    _ = signalCalculator.$spectralWidth
+                MacNMRCalcItemView(title: "Spectral width", value: $calculator.spectralWidth, unit: "kHz") {
+                    _ = calculator.$spectralWidth
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            signalCalculator.spectralWidthUpdated()
+                            calculator.spectralWidthUpdated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Frequency resolution", value: $signalCalculator.frequencyResolution, unit: "Hz") {
-                    _ = signalCalculator.$frequencyResolution
+                MacNMRCalcItemView(title: "Frequency resolution", value: $calculator.frequencyResolution, unit: "Hz") {
+                    _ = calculator.$frequencyResolution
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            signalCalculator.frequencyResolutionUpdated()
+                            calculator.frequencyResolutionUpdated()
                         }
                 }
             }

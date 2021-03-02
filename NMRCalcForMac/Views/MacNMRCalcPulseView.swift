@@ -9,66 +9,66 @@
 import SwiftUI
 
 struct MacNMRCalcPulseView: View {
-    @ObservedObject var pulseCalculator = MacNMRPulseCalculator()
+    @ObservedObject var calculator = PulseCalculatorViewModel()
 
     var body: some View {
         VStack {
             Section(header: Text("First Pulse")) {
-                MacNMRCalcItemView(title: "Pulse duration", value: $pulseCalculator.duration1, unit: "μs") {
-                    _ = pulseCalculator.$duration1
+                MacNMRCalcItemView(title: "Pulse duration", value: $calculator.duration1, unit: "μs") {
+                    _ = calculator.$duration1
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            pulseCalculator.duration1Updated()
+                            calculator.duration1Updated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Flip angle", value: $pulseCalculator.flipAngle1, unit: "°") {
-                    _ = pulseCalculator.$flipAngle1
+                MacNMRCalcItemView(title: "Flip angle", value: $calculator.flipAngle1, unit: "°") {
+                    _ = calculator.$flipAngle1
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            pulseCalculator.flipAngle1Updated()
+                            calculator.flipAngle1Updated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "RF Amplitude", value: $pulseCalculator.amplitude1, unit: "Hz") {
-                    _ = pulseCalculator.$amplitude1
+                MacNMRCalcItemView(title: "RF Amplitude", value: $calculator.amplitude1, unit: "Hz") {
+                    _ = calculator.$amplitude1
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            pulseCalculator.amplitude1Updated()
+                            calculator.amplitude1Updated()
                         }
                 }
             }
             
             Section(header: Text("Second Pulse")) {
-                MacNMRCalcItemView(title: "Pulse duration", value: $pulseCalculator.duration2, unit: "μs") {
-                    _ = pulseCalculator.$duration2
+                MacNMRCalcItemView(title: "Pulse duration", value: $calculator.duration2, unit: "μs") {
+                    _ = calculator.$duration2
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            pulseCalculator.duration2Updated()
+                            calculator.duration2Updated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Flip angle", value: $pulseCalculator.flipAngle2, unit: "°") {
-                    _ = pulseCalculator.$flipAngle2
+                MacNMRCalcItemView(title: "Flip angle", value: $calculator.flipAngle2, unit: "°") {
+                    _ = calculator.$flipAngle2
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            pulseCalculator.flipAngle2Updated()
+                            calculator.flipAngle2Updated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "RF Amplitude", value: $pulseCalculator.amplitude2, unit: "Hz") {
-                    _ = pulseCalculator.$amplitude2
+                MacNMRCalcItemView(title: "RF Amplitude", value: $calculator.amplitude2, unit: "Hz") {
+                    _ = calculator.$amplitude2
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            pulseCalculator.amplitude2Updated()
+                            calculator.amplitude2Updated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "RF power relateve to 1st", value: $pulseCalculator.relativePower, unit: "dB") {
-                    _ = pulseCalculator.$relativePower
+                MacNMRCalcItemView(title: "RF power relateve to 1st", value: $calculator.relativePower, unit: "dB") {
+                    _ = calculator.$relativePower
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            pulseCalculator.relativePowerUpdated()
+                            calculator.relativePowerUpdated()
                         }
                 }
             }

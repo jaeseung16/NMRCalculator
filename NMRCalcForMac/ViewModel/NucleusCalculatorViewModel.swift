@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MacNMRCalculator: ObservableObject {
+class NucleusCalculatorViewModel: ObservableObject {
     @Published var nucleus: NMRNucleus?
     @Published var larmorFrequency: Double?
     @Published var protonFrequency: Double?

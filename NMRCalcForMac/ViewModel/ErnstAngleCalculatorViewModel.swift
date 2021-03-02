@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MacNMRErnstAngleCalculator: ObservableObject {
+class ErnstAngleCalculatorViewModel: ObservableObject {
     @Published var repetitionTime: Double?
     @Published var relaxationTime: Double?
     @Published var ernstAngle: Double?

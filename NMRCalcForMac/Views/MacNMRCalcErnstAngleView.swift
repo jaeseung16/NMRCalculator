@@ -9,32 +9,32 @@
 import SwiftUI
 
 struct MacNMRCalcErnstAngleView: View {
-    @ObservedObject var ernstAngleCalculator = MacNMRErnstAngleCalculator()
+    @ObservedObject var calculator = ErnstAngleCalculatorViewModel()
 
     var body: some View {
         VStack {
             Section(header: Text("Ernst Angle")) {
-                MacNMRCalcItemView(title: "Repetition Time", value: $ernstAngleCalculator.repetitionTime, unit: "sec") {
-                    _ = ernstAngleCalculator.$repetitionTime
+                MacNMRCalcItemView(title: "Repetition Time", value: $calculator.repetitionTime, unit: "sec") {
+                    _ = calculator.$repetitionTime
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            ernstAngleCalculator.repetitionTimeUpdated()
+                            calculator.repetitionTimeUpdated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Relaxation Time", value: $ernstAngleCalculator.relaxationTime, unit: "sec") {
-                    _ = ernstAngleCalculator.$relaxationTime
+                MacNMRCalcItemView(title: "Relaxation Time", value: $calculator.relaxationTime, unit: "sec") {
+                    _ = calculator.$relaxationTime
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            ernstAngleCalculator.relaxationTimeUpdated()
+                            calculator.relaxationTimeUpdated()
                         }
                 }
                 
-                MacNMRCalcItemView(title: "Ernst Angle", value: $ernstAngleCalculator.ernstAngle, unit: "°") {
-                    _ = ernstAngleCalculator.$ernstAngle
+                MacNMRCalcItemView(title: "Ernst Angle", value: $calculator.ernstAngle, unit: "°") {
+                    _ = calculator.$ernstAngle
                         .filter() { $0 != nil }
                         .sink() { _ in
-                            ernstAngleCalculator.ernstAngleUpdated()
+                            calculator.ernstAngleUpdated()
                         }
                 }
             }
