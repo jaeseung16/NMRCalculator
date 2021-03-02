@@ -15,21 +15,27 @@ struct MacNMRCalcErnstAngleView: View {
         VStack {
             Section(header: Text("Ernst Angle")) {
                 MacNMRCalcItemView(title: "Repetition Time", value: $ernstAngleCalculator.repetitionTime, unit: "sec") {
-                    _ = ernstAngleCalculator.$repetitionTime.sink() { _ in
-                        ernstAngleCalculator.repetitionTimeUpdated()
-                    }
+                    _ = ernstAngleCalculator.$repetitionTime
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            ernstAngleCalculator.repetitionTimeUpdated()
+                        }
                 }
                 
                 MacNMRCalcItemView(title: "Relaxation Time", value: $ernstAngleCalculator.relaxationTime, unit: "sec") {
-                    _ = ernstAngleCalculator.$relaxationTime.sink() { _ in
-                        ernstAngleCalculator.relaxationTimeUpdated()
-                    }
+                    _ = ernstAngleCalculator.$relaxationTime
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            ernstAngleCalculator.relaxationTimeUpdated()
+                        }
                 }
                 
                 MacNMRCalcItemView(title: "Ernst Angle", value: $ernstAngleCalculator.ernstAngle, unit: "°") {
-                    _ = ernstAngleCalculator.$ernstAngle.sink() { _ in
-                        ernstAngleCalculator.ernstAngleUpdated()
-                    }
+                    _ = ernstAngleCalculator.$ernstAngle
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            ernstAngleCalculator.ernstAngleUpdated()
+                        }
                 }
             }
         }

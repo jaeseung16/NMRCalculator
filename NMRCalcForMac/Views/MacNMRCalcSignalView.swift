@@ -15,41 +15,53 @@ struct MacNMRCalcSignalView: View {
         VStack {
             Section(header: Text("Time Domain")) {
                 MacNMRCalcItemView(title: "Number of data points", value: $signalCalculator.numberOfTimeDataPoint, unit: "") {
-                    _ = signalCalculator.$numberOfTimeDataPoint.sink() {_ in
-                        signalCalculator.numberOfTimeDataPointUpdated()
-                    }
+                    _ = signalCalculator.$numberOfTimeDataPoint
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            signalCalculator.numberOfTimeDataPointUpdated()
+                        }
                 }
                 
                 MacNMRCalcItemView(title: "Acquisition duration", value: $signalCalculator.acquisitionDuration, unit: "sec") {
-                    _ = signalCalculator.$acquisitionDuration.sink() {_ in
-                        signalCalculator.acquisitionDurationUpdated()
-                    }
+                    _ = signalCalculator.$acquisitionDuration
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            signalCalculator.acquisitionDurationUpdated()
+                        }
                 }
                 
                 MacNMRCalcItemView(title: "Dwell time", value: $signalCalculator.dwellTime, unit: "μs") {
-                    _ = signalCalculator.$dwellTime.sink() {_ in
-                        signalCalculator.dwellTimeUpdated()
-                    }
+                    _ = signalCalculator.$dwellTime
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            signalCalculator.dwellTimeUpdated()
+                        }
                 }
             }
             
             Section(header: Text("Frequency Domain")) {
                 MacNMRCalcItemView(title: "Number of data points", value: $signalCalculator.numberOfFrequencyDataPoint, unit: "") {
-                    _ = signalCalculator.$numberOfFrequencyDataPoint.sink() {_ in
-                        signalCalculator.numberOfFrequencyDataPointUpdated()
-                    }
+                    _ = signalCalculator.$numberOfFrequencyDataPoint
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            signalCalculator.numberOfFrequencyDataPointUpdated()
+                        }
                 }
                 
                 MacNMRCalcItemView(title: "Spectral width", value: $signalCalculator.spectralWidth, unit: "kHz") {
-                    _ = signalCalculator.$spectralWidth.sink() {_ in
-                        signalCalculator.spectralWidthUpdated()
-                    }
+                    _ = signalCalculator.$spectralWidth
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            signalCalculator.spectralWidthUpdated()
+                        }
                 }
                 
                 MacNMRCalcItemView(title: "Frequency resolution", value: $signalCalculator.frequencyResolution, unit: "Hz") {
-                    _ = signalCalculator.$frequencyResolution.sink() {_ in
-                        signalCalculator.frequencyResolutionUpdated()
-                    }
+                    _ = signalCalculator.$frequencyResolution
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            signalCalculator.frequencyResolutionUpdated()
+                        }
                 }
             }
         }

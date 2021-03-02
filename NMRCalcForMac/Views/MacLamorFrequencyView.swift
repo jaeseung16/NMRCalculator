@@ -65,39 +65,49 @@ struct MacLamorFrequencyView: View {
                 MacCalculatorView(title: .externalField,
                                   value: $calculator.externalField,
                                   unit: .T) {
-                    _ = calculator.$externalField.sink() {
-                        let externalField = $0 ?? 1.0
-                        if externalField < 0.0 {
-                            calculator.externalField = 0.0
-                        } else if externalField > 1000.0 {
-                            calculator.externalField = 1000.0
+                    _ = calculator.$externalField
+                        .filter() { (newValue) -> Bool in
+                            newValue != nil
                         }
-                        calculator.externalFieldUpdated()
-                    }
+                        .sink() {
+                            let externalField = $0 ?? 1.0
+                            if externalField < 0.0 {
+                                calculator.externalField = 0.0
+                            } else if externalField > 1000.0 {
+                                calculator.externalField = 1000.0
+                            }
+                            calculator.externalFieldUpdated()
+                        }
                 }
                
                 MacCalculatorView(title: .larmorFrequency,
                                   value: $calculator.larmorFrequency,
                                   unit: .MHz) {
-                    _ = calculator.$larmorFrequency.sink() { _ in
-                        calculator.larmorFrequencyUpdated()
-                    }
+                    _ = calculator.$larmorFrequency
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            calculator.larmorFrequencyUpdated()
+                        }
                 }
                 
                 MacCalculatorView(title: .protonFrequency,
                                   value: $calculator.protonFrequency,
                                   unit: .MHz) {
-                    _ = calculator.$protonFrequency.sink() { _ in
-                        calculator.protonFrequencyUpdated()
-                    }
+                    _ = calculator.$protonFrequency
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            calculator.protonFrequencyUpdated()
+                        }
                 }
                 
                 MacCalculatorView(title: .electronFrequency,
                                   value: $calculator.electronFrequency,
                                   unit: .GHz) {
-                    _ = calculator.$electronFrequency.sink() { _ in
-                        calculator.electronFrequencyUpdated()
-                    }
+                    _ = calculator.$electronFrequency
+                        .filter() { $0 != nil }
+                        .sink() { _ in
+                            calculator.electronFrequencyUpdated()
+                        }
                 }
                 
             }
