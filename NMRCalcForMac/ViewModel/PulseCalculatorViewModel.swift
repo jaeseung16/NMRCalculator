@@ -17,19 +17,25 @@ class PulseCalculatorViewModel: ObservableObject {
     @Published var amplitude2: Double?
     @Published var relativePower: Double?
     
+    private let secToμs: Double = 1000000.0
+    private var μsToSec: Double {
+        get {
+            return 1.0 / secToμs
+        }
+    }
+    
     private func updateAmplitude(flipAngle: Double, duration: Double) -> Double {
-        return ( flipAngle / 360.0) / (duration / 1000000)
+        return (flipAngle / 360.0) / (duration * μsToSec)
     }
     
     private func updateDuration(flipAngle: Double, amplitude: Double) -> Double {
-        return ( flipAngle / 360.0 ) / amplitude * 1000000
+        return (flipAngle / 360.0) / amplitude * secToμs
     }
-    
     
     private func calculateRelativePower() -> Void {
          if let amp1 = amplitude1 {
              if let amp2 = amplitude2 {
-                 relativePower = 20.0 * log10( abs(amp2 / amp1) )
+                 relativePower = 20.0 * log10(abs(amp2/amp1))
              }
          }
      }
