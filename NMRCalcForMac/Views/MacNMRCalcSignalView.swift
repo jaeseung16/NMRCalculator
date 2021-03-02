@@ -13,7 +13,7 @@ struct MacNMRCalcSignalView: View {
 
     var body: some View {
         VStack {
-            Section(header: Text("Time Domain")) {
+            Section(header: Text("Time Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points", value: $calculator.numberOfTimeDataPoint, unit: "") {
                     _ = calculator.$numberOfTimeDataPoint
                         .filter() { $0 != nil }
@@ -39,7 +39,7 @@ struct MacNMRCalcSignalView: View {
                 }
             }
             
-            Section(header: Text("Frequency Domain")) {
+            Section(header: Text("Frequency Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points", value: $calculator.numberOfFrequencyDataPoint, unit: "") {
                     _ = calculator.$numberOfFrequencyDataPoint
                         .filter() { $0 != nil }

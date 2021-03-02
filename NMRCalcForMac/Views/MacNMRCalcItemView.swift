@@ -25,11 +25,11 @@ struct MacNMRCalcItemView: View {
     var body: some View {
         HStack(alignment: .center) {
             Text(title)
-                .font(.callout)
+                .font(.body)
         
             Spacer()
         
-            TextField(defaultLabel, value: $value, formatter: numberFormatter) {isEditing in
+            TextField(defaultLabel, value: $value, formatter: numberFormatter) { isEditing in
                 self.isEditing = isEditing
             } onCommit: {
                 onCommit()
@@ -43,7 +43,7 @@ struct MacNMRCalcItemView: View {
                 .font(.body)
                 .frame(width: defaultUnitTextWidth, alignment: .leading)
         }
-        .foregroundColor(Color.primary)
+        .foregroundColor(Color.secondary)
     }
     
     private var numberFormatter: NumberFormatter {

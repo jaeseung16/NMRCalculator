@@ -13,7 +13,7 @@ struct MacNMRCalcPulseView: View {
 
     var body: some View {
         VStack {
-            Section(header: Text("First Pulse")) {
+            Section(header: Text("First Pulse").font(.title2)) {
                 MacNMRCalcItemView(title: "Pulse duration", value: $calculator.duration1, unit: "μs") {
                     _ = calculator.$duration1
                         .filter() { $0 != nil }
@@ -39,7 +39,7 @@ struct MacNMRCalcPulseView: View {
                 }
             }
             
-            Section(header: Text("Second Pulse")) {
+            Section(header: Text("Second Pulse").font(.title2)) {
                 MacNMRCalcItemView(title: "Pulse duration", value: $calculator.duration2, unit: "μs") {
                     _ = calculator.$duration2
                         .filter() { $0 != nil }

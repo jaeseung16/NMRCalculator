@@ -31,7 +31,6 @@ struct MacNucleusContentView: View {
                     Text("Ernst Angle")
                 }
         }
-        .font(.headline)
         .frame(width: 500, height: 400, alignment: .center)
     }
 }

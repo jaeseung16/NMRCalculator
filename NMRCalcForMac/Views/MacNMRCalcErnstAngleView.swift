@@ -13,7 +13,7 @@ struct MacNMRCalcErnstAngleView: View {
 
     var body: some View {
         VStack {
-            Section(header: Text("Ernst Angle")) {
+            Section(header:Text("Ernst Angle").font(.title2)) {
                 MacNMRCalcItemView(title: "Repetition Time", value: $calculator.repetitionTime, unit: "sec") {
                     _ = calculator.$repetitionTime
                         .filter() { $0 != nil }
