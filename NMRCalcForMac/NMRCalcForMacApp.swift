@@ -10,9 +10,20 @@ import SwiftUI
 
 @main
 struct NMRCalcForMacApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             MacNucleusContentView()
+        }
+        .commands {
+            CommandGroup(replacing: .help) {
+                Button(action: {
+                        NSApp.sendAction(#selector(AppDelegate.openHelpWindow), to: nil, from:nil)
+                }) {
+                    Text("NMRCalcForMac Guide")
+                }
+            }
         }
         
         #if os(macOS)
