@@ -8,7 +8,7 @@ date: 2021-03-07
 
 [<img src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg">](https://itunes.apple.com/us/app/nmr-calculator/id1146296877?mt=8)
 
-<img src="../../assets/images/NMRCalcIcon.png" alt="NMR Calculator Icon" width="256" align="center"/>
+<img src="./assets/images/NMRCalcIcon.png" alt="NMR Calculator Icon" width="256" align="center"/>
 
 You may clone or download the source from the GitHub [repository](https://github.com/jaeseung16/NMRCalculator).
 
