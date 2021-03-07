@@ -11,13 +11,13 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NucleusList {WatchNucleusDetailView(nucleus: $0)}
-            .environmentObject(UserData())
+            .environmentObject(NMRPeriodicTableData())
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NucleusList {WatchNucleusDetailView(nucleus: $0)}
-            .environmentObject(UserData())
+            .environmentObject(NMRPeriodicTableData())
     }
 }

@@ -9,13 +9,13 @@
 import SwiftUI
 
 struct WatchNucleusView: View {
-    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userData: NMRPeriodicTableData
     var nucleus: NMRNucleus
     
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .center, spacing: 0) {
-                WatchAtomicElementView(
+                AtomicElementView(
                     elementSymbol: self.nucleus.symbolNucleus,
                     massNumber: UInt(self.nucleus.atomicWeight)!)
                     .scaledToFill()
@@ -43,6 +43,6 @@ struct WatchNucleusView: View {
 
 struct WatchNucleusView_Previews: PreviewProvider {
     static var previews: some View {
-        WatchNucleusView(nucleus: UserData().nuclei[9])
+        WatchNucleusView(nucleus: NMRPeriodicTableData().nuclei[9])
     }
 }

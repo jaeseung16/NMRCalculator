@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct WatchNuclearSpinView: View {
+struct NuclearSpinView: View {
     let slash = "/"
     let nucleus: NMRNucleus
     
@@ -34,8 +34,8 @@ struct WatchNuclearSpinView: View {
     }
 }
 
-struct WatchNuclearSpinView_Previews: PreviewProvider {
+struct NuclearSpinView_Previews: PreviewProvider {
     static var previews: some View {
-        WatchNuclearSpinView(nucleus: UserData().nuclei[6])
+        NuclearSpinView(nucleus: NMRPeriodicTableData().nuclei[6])
     }
 }

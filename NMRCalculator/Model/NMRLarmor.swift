@@ -10,10 +10,6 @@ import Foundation
 
 struct NMRLarmor {
     // MARK: Properties
-    // Constants
-    static let gammaProton = 267.522128 / 2 / Double.pi // in MHz/T
-    static let gammaElectron = 176.0859644 / 2 / Double.pi // in GHz/T
-    
     // Variables
     var nucleus: NMRNucleus
     
@@ -34,15 +30,15 @@ struct NMRLarmor {
     init() {
         self.nucleus = NMRNucleus()
         frequencyLarmor = fieldExternal * nucleus.γ
-        frequencyProton = fieldExternal * NMRLarmor.gammaProton
-        frequencyElectron = fieldExternal * NMRLarmor.gammaElectron
+        frequencyProton = fieldExternal * NMRCalcConstants.gammaProton
+        frequencyElectron = fieldExternal * NMRCalcConstants.gammaElectron
     }
     
     init(nucleus: NMRNucleus) {
         self.nucleus = nucleus
         frequencyLarmor = fieldExternal * nucleus.γ
-        frequencyProton = fieldExternal * NMRLarmor.gammaProton
-        frequencyElectron = fieldExternal * NMRLarmor.gammaElectron
+        frequencyProton = fieldExternal * NMRCalcConstants.gammaProton
+        frequencyElectron = fieldExternal * NMRCalcConstants.gammaElectron
     }
     
     public mutating func update(_ parameter: Parameter, to value: Double) -> Bool {
@@ -50,22 +46,22 @@ struct NMRLarmor {
         case .field:
             fieldExternal = value
             frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
-            frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
-            frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
+            frequencyProton = larmorFrequency(γ: NMRCalcConstants.gammaProton, at: fieldExternal)
+            frequencyElectron = larmorFrequency(γ: NMRCalcConstants.gammaElectron, at: fieldExternal)
         case .larmor:
             frequencyLarmor = value
             fieldExternal = externalField(γ: nucleus.γ, at: value)
-            frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
-            frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
+            frequencyProton = larmorFrequency(γ: NMRCalcConstants.gammaProton, at: fieldExternal)
+            frequencyElectron = larmorFrequency(γ: NMRCalcConstants.gammaElectron, at: fieldExternal)
         case .proton:
             frequencyProton = value
-            fieldExternal = externalField(γ: NMRLarmor.gammaProton, at: value)
+            fieldExternal = externalField(γ: NMRCalcConstants.gammaProton, at: value)
             frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
-            frequencyElectron = larmorFrequency(γ: NMRLarmor.gammaElectron, at: fieldExternal)
+            frequencyElectron = larmorFrequency(γ: NMRCalcConstants.gammaElectron, at: fieldExternal)
         case .electron:
             frequencyElectron = value
-            fieldExternal = externalField(γ: NMRLarmor.gammaElectron, at: value)
-            frequencyProton = larmorFrequency(γ: NMRLarmor.gammaProton, at: fieldExternal)
+            fieldExternal = externalField(γ: NMRCalcConstants.gammaElectron, at: value)
+            frequencyProton = larmorFrequency(γ: NMRCalcConstants.gammaProton, at: fieldExternal)
             frequencyLarmor = larmorFrequency(γ: nucleus.γ, at: fieldExternal)
         }
         
