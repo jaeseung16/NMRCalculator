@@ -26,6 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 backing: .buffered,
                 defer: false)
             helpWindow.center()
+            helpWindow.title = "NMR Calculator Guide"
             helpWindow.setFrameAutosaveName("Guide")
             helpWindow.isReleasedWhenClosed = false
             helpWindow.contentView = NSHostingView(rootView: contentView)

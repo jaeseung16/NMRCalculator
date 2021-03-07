@@ -9,7 +9,7 @@
 import SwiftUI
 
 @main
-struct NMRCalcForMacApp: App {
+struct NMRCalculatorApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
@@ -21,7 +21,7 @@ struct NMRCalcForMacApp: App {
                 Button(action: {
                         NSApp.sendAction(#selector(AppDelegate.openHelpWindow), to: nil, from:nil)
                 }) {
-                    Text("NMRCalcForMac Guide")
+                    Text("NMR Calculator Guide")
                 }
             }
         }

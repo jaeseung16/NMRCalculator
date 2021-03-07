@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct MacNMRCalcSettings: View {
-    @AppStorage("MacNucleusView.elementColor")
+    @AppStorage("NucleusView.elementColor")
     private var elementColor: ElementColor = .systemGreen
     
-    @AppStorage("MacNucleusView.numberColor")
+    @AppStorage("NucleusView.numberColor")
     private var numberColor: NumberColor = .systemPurple
     
     var body: some View {
@@ -32,7 +32,7 @@ struct MacNMRCalcSettings: View {
             .pickerStyle(InlinePickerStyle())
         }
         .frame(width: 300)
-        .navigationTitle("MacNucleusView Settings")
+        .navigationTitle("NMR Calculator Settings")
         .padding(80)
     }
 }
