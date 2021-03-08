@@ -16,7 +16,7 @@ struct MacCalculatorView: View {
     
     @State private var isEditing = false
     
-    @AppStorage("MacNucleusView.numberColor")
+    @AppStorage("NucleusView.numberColor")
     private var numberColor: NumberColor = .systemPurple
     
     private let defaultLabel = "0.0"
