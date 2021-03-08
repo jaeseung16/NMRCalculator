@@ -14,7 +14,7 @@ struct MacNMRCalcItemView: View {
     private let defaultUnitTextWidth: CGFloat = 40
     @State private var isEditing = false
     
-    @AppStorage("MacNucleusView.numberColor")
+    @AppStorage("NucleusView.numberColor")
     private var numberColor: NumberColor = .systemPurple
     
     var title: String

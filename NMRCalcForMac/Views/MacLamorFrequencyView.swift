@@ -37,7 +37,7 @@ struct MacLamorFrequencyView: View {
         return nucleus.naturalAbundance
     }
    
-    @AppStorage("MacNucleusView.elementColor")
+    @AppStorage("NucleusView.elementColor")
     private var elementColor: ElementColor = .systemGreen
     
     var body: some View {
