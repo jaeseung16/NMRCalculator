@@ -15,6 +15,7 @@ struct NMRCalculatorApp: App {
     var body: some Scene {
         WindowGroup {
             MacNucleusContentView()
+                .environmentObject(MacNMRCalculatorViewModel())
         }
         .commands {
             CommandGroup(replacing: .help) {

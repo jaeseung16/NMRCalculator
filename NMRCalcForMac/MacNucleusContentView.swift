@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct MacNucleusContentView: View {
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
+    
     var body: some View {
         TabView {
             MacNucleusList()
