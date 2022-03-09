@@ -10,9 +10,12 @@ import SwiftUI
 import PDFKit
 
 struct MacNMRCalcHelpView: NSViewRepresentable {
+    private let infoFilename = "NMRCalculatorInfo"
+    private let pdf = "pdf"
+    
     func makeNSView(context: Context) -> some NSView {
         let pdfView = PDFView()
-        if let url = Bundle.main.url(forResource: "NMRCalculatorInfo", withExtension: "pdf") {
+        if let url = Bundle.main.url(forResource: infoFilename, withExtension: pdf) {
             pdfView.document = PDFDocument(url: url)
             pdfView.displayMode = .singlePage
             pdfView.autoScales = true
@@ -21,11 +24,5 @@ struct MacNMRCalcHelpView: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: NSViewType, context: Context) {
-    }
-}
-
-struct MacNMRCalcInfoView_Previews: PreviewProvider {
-    static var previews: some View {
-        MacNMRCalcHelpView()
     }
 }

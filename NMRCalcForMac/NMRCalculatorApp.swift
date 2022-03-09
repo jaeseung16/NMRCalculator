@@ -19,7 +19,7 @@ struct NMRCalculatorApp: App {
         .commands {
             CommandGroup(replacing: .help) {
                 Button(action: {
-                        NSApp.sendAction(#selector(AppDelegate.openHelpWindow), to: nil, from:nil)
+                        NSApp.sendAction(#selector(AppDelegate.openHelpWindow), to: nil, from: nil)
                 }) {
                     Text("NMR Calculator Guide")
                 }
