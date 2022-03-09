@@ -9,25 +9,22 @@
 import SwiftUI
 
 struct MacNucleusList: View {
-    let userData = NMRPeriodicTableData()
-    @ObservedObject var calculator = NucleusCalculatorViewModel()
-
-    let proton = NMRNucleus()
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
     
-    var nucleus: NMRNucleus {
-        return calculator.nucleus ?? proton
-    }
+    private let periodicTable = NMRPeriodicTableData()
+    private let proton = NMRNucleus()
+    
+    @State var selected: NMRNucleus?
     
     var body: some View {
         HStack(alignment: .center) {
             MacLamorFrequencyView()
-                .environmentObject(calculator)
                 .frame(width: 300, alignment: .center)
             
             Divider()
             
-            List(selection: $calculator.nucleus) {
-                ForEach(userData.nuclei, id: \.self) { nucleus in
+            List(selection: $selected) {
+                ForEach(periodicTable.nuclei, id: \.self) { nucleus in
                     HStack {
                         Spacer()
                         MacNucleusView(nucleus: nucleus)
@@ -38,10 +35,9 @@ struct MacNucleusList: View {
                 }
             }
             .listStyle(PlainListStyle())
-            .onChange(of: calculator.nucleus) { value in
-                _ = calculator.$nucleus.sink { nucleus in
-                    calculator.nucluesUpdated()
-                }
+            .onChange(of: selected) { _ in
+                viewModel.nucleus = selected
+                viewModel.nucluesUpdated()
             }
         }
     }

@@ -9,12 +9,15 @@
 import SwiftUI
 
 struct MacLamorFrequencyView: View {
-    @EnvironmentObject var calculator: NucleusCalculatorViewModel
+    @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
+    @AppStorage("NucleusView.elementColor") private var elementColor: ElementColor = .systemGreen
     
-    private let proton = NMRNucleus()
+    private var proton: NMRNucleus {
+        return viewModel.proton
+    }
     
     private var nucleus: NMRNucleus {
-        return  calculator.nucleus ?? proton
+        return  viewModel.nucleus ?? proton
     }
     
     private var elementSymbol: String {
@@ -37,81 +40,59 @@ struct MacLamorFrequencyView: View {
         return nucleus.naturalAbundance
     }
    
-    @AppStorage("NucleusView.elementColor")
-    private var elementColor: ElementColor = .systemGreen
     
     var body: some View {
         VStack {
             AtomicElementView(elementSymbol: elementSymbol, massNumber: atomicWeight, weight: .semibold)
                 .foregroundColor(elementColor.getColor())
             
-            VStack() {
-                getInfoView(title: .nuclearSpin,
-                            value: Fraction(from: nuclearSpin,
-                                            isPositive: gyromagneticRatio > 0).inlineDescription
-                )
-                
-                getInfoView(title: .gyromagneticRatio,
-                            value: "\(String(format: "%.6f", abs(gyromagneticRatio)))"
-                )
-                
-                getInfoView(title: .naturalAbundance,
-                            value: "\(naturalAbundance)"
-                )
-            }
-            .padding()
+            displayInfo()
+                .padding()
             
             VStack {
                 MacCalculatorView(title: .externalField,
-                                  value: $calculator.externalField,
+                                  value: $viewModel.externalField,
                                   unit: .T) {
-                    _ = calculator.$externalField
-                        .filter() { (newValue) -> Bool in
-                            newValue != nil
-                        }
-                        .sink() {
-                            let externalField = $0 ?? 1.0
-                            if externalField < 0.0 {
-                                calculator.externalField = 0.0
-                            } else if externalField > 1000.0 {
-                                calculator.externalField = 1000.0
-                            }
-                            calculator.externalFieldUpdated()
-                        }
+                    viewModel.validateExternalField()
+                    viewModel.externalFieldUpdated()
                 }
                
                 MacCalculatorView(title: .larmorFrequency,
-                                  value: $calculator.larmorFrequency,
+                                  value: $viewModel.larmorFrequency,
                                   unit: .MHz) {
-                    _ = calculator.$larmorFrequency
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.larmorFrequencyUpdated()
-                        }
+                    viewModel.larmorFrequencyUpdated()
                 }
                 
                 MacCalculatorView(title: .protonFrequency,
-                                  value: $calculator.protonFrequency,
+                                  value: $viewModel.protonFrequency,
                                   unit: .MHz) {
-                    _ = calculator.$protonFrequency
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.protonFrequencyUpdated()
-                        }
+                    viewModel.protonFrequencyUpdated()
                 }
                 
                 MacCalculatorView(title: .electronFrequency,
-                                  value: $calculator.electronFrequency,
+                                  value: $viewModel.electronFrequency,
                                   unit: .GHz) {
-                    _ = calculator.$electronFrequency
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.electronFrequencyUpdated()
-                        }
+                    viewModel.electronFrequencyUpdated()
                 }
-                
             }
             .padding()
+        }
+    }
+    
+    private func displayInfo() -> some View {
+        VStack() {
+            getInfoView(title: .nuclearSpin,
+                        value: Fraction(from: nuclearSpin,
+                                        isPositive: gyromagneticRatio > 0).inlineDescription
+            )
+            
+            getInfoView(title: .gyromagneticRatio,
+                        value: "\(String(format: "%.6f", abs(gyromagneticRatio)))"
+            )
+            
+            getInfoView(title: .naturalAbundance,
+                        value: "\(naturalAbundance)"
+            )
         }
     }
     
@@ -132,10 +113,10 @@ struct MacLamorFrequencyView: View {
 }
 
 struct MacLamorFrequencyView_Previews: PreviewProvider {
-    @StateObject static var calculator = NucleusCalculatorViewModel()
+    @StateObject static var viewModel = MacNMRCalculatorViewModel()
     
     static var previews: some View {
         MacLamorFrequencyView()
-            .environmentObject(calculator)
+            .environmentObject(viewModel)
     }
 }
