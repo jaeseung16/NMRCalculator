@@ -9,67 +9,39 @@
 import SwiftUI
 
 struct MacNMRCalcPulseView: View {
-    @ObservedObject var calculator = PulseCalculatorViewModel()
+    @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
 
     var body: some View {
         VStack {
             Section(header: Text("First Pulse").font(.title2)) {
-                MacNMRCalcItemView(title: "Pulse duration", value: $calculator.duration1, unit: "μs") {
-                    _ = calculator.$duration1
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.duration1Updated()
-                        }
+                MacNMRCalcItemView(title: "Pulse duration", value: $viewModel.duration1, unit: "μs") {
+                    viewModel.duration1Updated()
                 }
                 
-                MacNMRCalcItemView(title: "Flip angle", value: $calculator.flipAngle1, unit: "°") {
-                    _ = calculator.$flipAngle1
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.flipAngle1Updated()
-                        }
+                MacNMRCalcItemView(title: "Flip angle", value: $viewModel.flipAngle1, unit: "°") {
+                    viewModel.flipAngle1Updated()
                 }
                 
-                MacNMRCalcItemView(title: "RF Amplitude", value: $calculator.amplitude1, unit: "Hz") {
-                    _ = calculator.$amplitude1
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.amplitude1Updated()
-                        }
+                MacNMRCalcItemView(title: "RF Amplitude", value: $viewModel.amplitude1, unit: "Hz") {
+                    viewModel.amplitude1Updated()
                 }
             }
             
             Section(header: Text("Second Pulse").font(.title2)) {
-                MacNMRCalcItemView(title: "Pulse duration", value: $calculator.duration2, unit: "μs") {
-                    _ = calculator.$duration2
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.duration2Updated()
-                        }
+                MacNMRCalcItemView(title: "Pulse duration", value: $viewModel.duration2, unit: "μs") {
+                    viewModel.duration2Updated()
                 }
                 
-                MacNMRCalcItemView(title: "Flip angle", value: $calculator.flipAngle2, unit: "°") {
-                    _ = calculator.$flipAngle2
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.flipAngle2Updated()
-                        }
+                MacNMRCalcItemView(title: "Flip angle", value: $viewModel.flipAngle2, unit: "°") {
+                    viewModel.flipAngle2Updated()
                 }
                 
-                MacNMRCalcItemView(title: "RF Amplitude", value: $calculator.amplitude2, unit: "Hz") {
-                    _ = calculator.$amplitude2
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.amplitude2Updated()
-                        }
+                MacNMRCalcItemView(title: "RF Amplitude", value: $viewModel.amplitude2, unit: "Hz") {
+                    viewModel.amplitude2Updated()
                 }
                 
-                MacNMRCalcItemView(title: "RF power relateve to 1st", value: $calculator.relativePower, unit: "dB") {
-                    _ = calculator.$relativePower
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.relativePowerUpdated()
-                        }
+                MacNMRCalcItemView(title: "RF power relateve to 1st", value: $viewModel.relativePower, unit: "dB") {
+                    viewModel.relativePowerUpdated()
                 }
             }
         }
