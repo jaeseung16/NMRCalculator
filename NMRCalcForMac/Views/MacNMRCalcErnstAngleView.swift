@@ -9,33 +9,21 @@
 import SwiftUI
 
 struct MacNMRCalcErnstAngleView: View {
-    @ObservedObject var calculator = ErnstAngleCalculatorViewModel()
+    @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
 
     var body: some View {
         VStack {
             Section(header:Text("Ernst Angle").font(.title2)) {
-                MacNMRCalcItemView(title: "Repetition Time", value: $calculator.repetitionTime, unit: "sec") {
-                    _ = calculator.$repetitionTime
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.repetitionTimeUpdated()
-                        }
+                MacNMRCalcItemView(title: "Repetition Time", value: $viewModel.repetitionTime, unit: "sec") {
+                    viewModel.repetitionTimeUpdated()
                 }
                 
-                MacNMRCalcItemView(title: "Relaxation Time", value: $calculator.relaxationTime, unit: "sec") {
-                    _ = calculator.$relaxationTime
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.relaxationTimeUpdated()
-                        }
+                MacNMRCalcItemView(title: "Relaxation Time", value: $viewModel.relaxationTime, unit: "sec") {
+                    viewModel.relaxationTimeUpdated()
                 }
                 
-                MacNMRCalcItemView(title: "Ernst Angle", value: $calculator.ernstAngle, unit: "°") {
-                    _ = calculator.$ernstAngle
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.ernstAngleUpdated()
-                        }
+                MacNMRCalcItemView(title: "Ernst Angle", value: $viewModel.ernstAngle, unit: "°") {
+                    viewModel.ernstAngleUpdated()
                 }
             }
         }
