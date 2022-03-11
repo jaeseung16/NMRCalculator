@@ -9,59 +9,35 @@
 import SwiftUI
 
 struct MacNMRCalcSignalView: View {
-    @ObservedObject var calculator = SignalCalculatorViewModel()
+    @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
 
     var body: some View {
         VStack {
             Section(header: Text("Time Domain").font(.title2)) {
-                MacNMRCalcItemView(title: "Number of data points", value: $calculator.numberOfTimeDataPoint, unit: "") {
-                    _ = calculator.$numberOfTimeDataPoint
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.numberOfTimeDataPointUpdated()
-                        }
+                MacNMRCalcItemView(title: "Number of data points", value: $viewModel.numberOfTimeDataPoint, unit: "") {
+                    viewModel.numberOfTimeDataPointUpdated()
                 }
                 
-                MacNMRCalcItemView(title: "Acquisition duration", value: $calculator.acquisitionDuration, unit: "sec") {
-                    _ = calculator.$acquisitionDuration
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.acquisitionDurationUpdated()
-                        }
+                MacNMRCalcItemView(title: "Acquisition duration", value: $viewModel.acquisitionDuration, unit: "sec") {
+                    viewModel.acquisitionDurationUpdated()
                 }
                 
-                MacNMRCalcItemView(title: "Dwell time", value: $calculator.dwellTime, unit: "μs") {
-                    _ = calculator.$dwellTime
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.dwellTimeUpdated()
-                        }
+                MacNMRCalcItemView(title: "Dwell time", value: $viewModel.dwellTime, unit: "μs") {
+                    viewModel.dwellTimeUpdated()
                 }
             }
             
             Section(header: Text("Frequency Domain").font(.title2)) {
-                MacNMRCalcItemView(title: "Number of data points", value: $calculator.numberOfFrequencyDataPoint, unit: "") {
-                    _ = calculator.$numberOfFrequencyDataPoint
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.numberOfFrequencyDataPointUpdated()
-                        }
+                MacNMRCalcItemView(title: "Number of data points", value: $viewModel.numberOfFrequencyDataPoint, unit: "") {
+                    viewModel.numberOfFrequencyDataPointUpdated()
                 }
                 
-                MacNMRCalcItemView(title: "Spectral width", value: $calculator.spectralWidth, unit: "kHz") {
-                    _ = calculator.$spectralWidth
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.spectralWidthUpdated()
-                        }
+                MacNMRCalcItemView(title: "Spectral width", value: $viewModel.spectralWidth, unit: "kHz") {
+                    viewModel.spectralWidthUpdated()
                 }
                 
-                MacNMRCalcItemView(title: "Frequency resolution", value: $calculator.frequencyResolution, unit: "Hz") {
-                    _ = calculator.$frequencyResolution
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.frequencyResolutionUpdated()
-                        }
+                MacNMRCalcItemView(title: "Frequency resolution", value: $viewModel.frequencyResolution, unit: "Hz") {
+                    viewModel.frequencyResolutionUpdated()
                 }
             }
         }
