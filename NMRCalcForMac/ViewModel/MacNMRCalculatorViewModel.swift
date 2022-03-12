@@ -21,7 +21,14 @@ class MacNMRCalculatorViewModel: ObservableObject {
     private var subscriptions: Set<AnyCancellable> = []
     
     init() {
-     
+        $nucleus
+            .receive(on: DispatchQueue.main, options: nil)
+            .sink { _ in
+                if self.amplitude1InT != nil {
+                    self.updateAmplitude1InT()
+                }
+            }
+            .store(in: &subscriptions)
     }
     
     func nucluesUpdated() {
@@ -207,6 +214,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var duration1: Double?
     @Published var flipAngle1: Double?
     @Published var amplitude1: Double?
+    @Published var amplitude1InT: Double?
     @Published var duration2: Double?
     @Published var flipAngle2: Double?
     @Published var amplitude2: Double?
@@ -238,6 +246,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
         
         amplitude1 = updateAmplitude(flipAngle: flipAngle1!, duration: duration1!)
+        updateAmplitude1InT()
         calculateRelativePower()
     }
     
@@ -264,6 +273,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
         
         amplitude1 = updateAmplitude(flipAngle: flipAngle1!, duration: duration1!)
+        updateAmplitude1InT()
         calculateRelativePower()
     }
     
@@ -289,8 +299,15 @@ class MacNMRCalculatorViewModel: ObservableObject {
             amplitude1 = 25000
         }
         
+        updateAmplitude1InT()
         duration1 = updateDuration(flipAngle: flipAngle1!, amplitude: amplitude1!)
         calculateRelativePower()
+    }
+    
+    private func updateAmplitude1InT() {
+        if let nucleus = nucleus, let gyromaneticRatio = Double(nucleus.gyromagneticRatio) {
+            amplitude1InT = amplitude1! / gyromaneticRatio
+        }
     }
     
     func amplitude2Updated() -> Void {

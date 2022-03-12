@@ -25,6 +25,12 @@ struct MacNMRCalcPulseView: View {
                 MacNMRCalcItemView(title: "RF Amplitude", value: $viewModel.amplitude1, unit: "Hz") {
                     viewModel.amplitude1Updated()
                 }
+                
+                if let nucleus = viewModel.nucleus {
+                    MacNMRCalcItemView(title: "RF Amplitude for \(nucleus.nameNucleus)", value: $viewModel.amplitude1InT, unit: "μT") {
+                        viewModel.amplitude1Updated()
+                    }
+                }
             }
             
             Section(header: Text("Second Pulse").font(.title2)) {
