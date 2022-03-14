@@ -20,10 +20,12 @@ struct MacNMRCalcSignalView: View {
                 }
                 
                 MacNMRCalcItemView(title: "Acquisition duration", value: $viewModel.acquisitionDuration, unit: "sec") {
+                    viewModel.validateAcquisitionDuration()
                     viewModel.acquisitionDurationUpdated()
                 }
                 
                 MacNMRCalcItemView(title: "Dwell time", value: $viewModel.dwellTime, unit: "μs") {
+                    viewModel.validateDwellTime()
                     viewModel.dwellTimeUpdated()
                 }
             }
@@ -35,10 +37,12 @@ struct MacNMRCalcSignalView: View {
                 }
                 
                 MacNMRCalcItemView(title: "Spectral width", value: $viewModel.spectralWidth, unit: "kHz") {
+                    viewModel.validateSpectralWidth()
                     viewModel.spectralWidthUpdated()
                 }
                 
                 MacNMRCalcItemView(title: "Frequency resolution", value: $viewModel.frequencyResolution, unit: "Hz") {
+                    viewModel.validateFrequencyResolution()
                     viewModel.frequencyResolutionUpdated()
                 }
             }

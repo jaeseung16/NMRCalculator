@@ -152,6 +152,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateDwellTime()
     }
     
+    func validateAcquisitionDuration() {
+        if let duration = acquisitionDuration, duration < 0.0 {
+            acquisitionDuration = 0.0
+        }
+    }
+    
     func acquisitionDurationUpdated() {
         if acquisitionDuration == nil {
             acquisitionDuration = 1.0
@@ -162,6 +168,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
         
         updateDwellTime()
+    }
+    
+    func validateDwellTime() {
+        if let dwell = dwellTime, dwell < 0.0 {
+            dwellTime = 0.0
+        }
     }
     
     func dwellTimeUpdated() {
@@ -198,6 +210,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateFrequencyResolution()
     }
     
+    func validateSpectralWidth() {
+        if let width = spectralWidth, width < 0.0 {
+            spectralWidth = 0.0
+        }
+    }
+    
     func spectralWidthUpdated() {
         if numberOfFrequencyDataPoint == nil {
             numberOfFrequencyDataPoint = 1000.0
@@ -208,6 +226,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
         
         updateFrequencyResolution()
+    }
+    
+    func validateFrequencyResolution() {
+        if let resolution = frequencyResolution, resolution < 0.0 {
+            frequencyResolution = 0.0
+        }
     }
     
     func frequencyResolutionUpdated() {
