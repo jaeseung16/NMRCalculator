@@ -15,6 +15,7 @@ struct MacNMRCalcSignalView: View {
         VStack {
             Section(header: Text("Time Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points", value: $viewModel.numberOfTimeDataPoint, unit: "") {
+                    viewModel.validateNumberOfTimeDataPoint()
                     viewModel.numberOfTimeDataPointUpdated()
                 }
                 
@@ -29,6 +30,7 @@ struct MacNMRCalcSignalView: View {
             
             Section(header: Text("Frequency Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points", value: $viewModel.numberOfFrequencyDataPoint, unit: "") {
+                    viewModel.validateNumberOfFrequencyDataPoint()
                     viewModel.numberOfFrequencyDataPointUpdated()
                 }
                 

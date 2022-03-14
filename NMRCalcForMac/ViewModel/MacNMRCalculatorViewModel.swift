@@ -134,6 +134,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         dwellTime = acquisitionDuration! * secToμs / numberOfTimeDataPoint!
     }
     
+    func validateNumberOfTimeDataPoint() {
+        if let number = numberOfTimeDataPoint, number < 1 {
+            numberOfTimeDataPoint = 1
+        }
+    }
+    
     func numberOfTimeDataPointUpdated() {
         if acquisitionDuration == nil {
             acquisitionDuration = 1.0
@@ -172,6 +178,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     private func updateFrequencyResolution() {
         frequencyResolution =  spectralWidth! * kHzToHz / numberOfFrequencyDataPoint!
+    }
+    
+    func validateNumberOfFrequencyDataPoint() {
+        if let number = numberOfFrequencyDataPoint, number < 1 {
+            numberOfFrequencyDataPoint = 1
+        }
     }
     
     func numberOfFrequencyDataPointUpdated() {
