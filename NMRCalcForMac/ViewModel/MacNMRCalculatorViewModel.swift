@@ -393,8 +393,16 @@ class MacNMRCalculatorViewModel: ObservableObject {
         return 1.0 / radianToDegree
     }
     
+    func validateErnstAngle() -> Bool {
+        return ernstAngle == nil || ernstAngle! >= 0.0
+    }
+    
     private func updateErnstAngle(repetitionTime: Double, relaxationTime: Double) -> Double {
         return acos( exp(-1.0 * repetitionTime / relaxationTime) ) * radianToDegree
+    }
+    
+    func validateRepetitionTime() -> Bool {
+        return repetitionTime == nil || repetitionTime! >= 0.0
     }
     
     func repetitionTimeUpdated() -> Void {
@@ -407,6 +415,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
         
         ernstAngle = updateErnstAngle(repetitionTime: repetitionTime!, relaxationTime: relaxationTime!)
+    }
+    
+    func validateRelaxationTime() -> Bool {
+        return relaxationTime == nil || relaxationTime! >= 0.0
     }
     
     func relaxationTimeUpdated() -> Void {
@@ -424,6 +436,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
     func ernstAngleUpdated() -> Void {
         if relaxationTime == nil {
             relaxationTime = 1.0
+        }
+        
+        if ernstAngle == nil {
+            ernstAngle = 0.0
         }
         
         repetitionTime = -1.0 * relaxationTime! * log(cos(ernstAngle! * degreeToRadian))

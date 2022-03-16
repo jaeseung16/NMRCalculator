@@ -10,24 +10,43 @@ import SwiftUI
 
 struct MacNMRCalcErnstAngleView: View {
     @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
+    
+    @State private var showAlert = false
 
     var body: some View {
         VStack {
             Section(header:Text("Ernst Angle").font(.title2)) {
                 MacNMRCalcItemView(title: "Repetition Time", value: $viewModel.repetitionTime, unit: "sec") {
-                    viewModel.repetitionTimeUpdated()
+                    if viewModel.validateRepetitionTime() {
+                        viewModel.repetitionTimeUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
                 
                 MacNMRCalcItemView(title: "Relaxation Time", value: $viewModel.relaxationTime, unit: "sec") {
-                    viewModel.relaxationTimeUpdated()
+                    if viewModel.validateRelaxationTime() {
+                        viewModel.relaxationTimeUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
                 
                 MacNMRCalcItemView(title: "Ernst Angle", value: $viewModel.ernstAngle, unit: "°") {
-                    viewModel.ernstAngleUpdated()
+                    if viewModel.validateErnstAngle() {
+                        viewModel.ernstAngleUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
             }
         }
         .padding()
+        .alert("Try another value", isPresented: $showAlert) {
+            Button("OK") {
+                showAlert.toggle()
+            }
+        }
     }
 }
 
