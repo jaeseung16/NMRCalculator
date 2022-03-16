@@ -34,18 +34,27 @@ struct MacNMRCalcSignalView: View {
             
             Section(header: Text("Frequency Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points", value: $viewModel.numberOfFrequencyDataPoint, unit: "") {
-                    showAlert = !viewModel.validateNumberOfFrequencyDataPoint()
-                    viewModel.numberOfFrequencyDataPointUpdated()
+                    if viewModel.validateNumberOfFrequencyDataPoint() {
+                        viewModel.numberOfFrequencyDataPointUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
                 
                 MacNMRCalcItemView(title: "Spectral width", value: $viewModel.spectralWidth, unit: "kHz") {
-                    showAlert = !viewModel.validateSpectralWidth()
-                    viewModel.spectralWidthUpdated()
+                    if viewModel.validateSpectralWidth() {
+                        viewModel.spectralWidthUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
                 
                 MacNMRCalcItemView(title: "Frequency resolution", value: $viewModel.frequencyResolution, unit: "Hz") {
-                    showAlert = !viewModel.validateFrequencyResolution()
-                    viewModel.frequencyResolutionUpdated()
+                    if viewModel.validateFrequencyResolution() {
+                        viewModel.frequencyResolutionUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
             }
         }
