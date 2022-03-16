@@ -20,7 +20,7 @@ struct MacNMRCalcItemView: View {
     var title: String
     @Binding var value: Double?
     var unit: String
-    var onCommit: () -> Void
+    var onSubmit: () -> Void
     
     var body: some View {
         HStack(alignment: .center) {
@@ -29,15 +29,14 @@ struct MacNMRCalcItemView: View {
         
             Spacer()
         
-            TextField(defaultLabel, value: $value, formatter: numberFormatter) { isEditing in
-                self.isEditing = isEditing
-            } onCommit: {
-                onCommit()
-            }
-            .multilineTextAlignment(.trailing)
-            .font(Font.body.weight(.semibold))
-            .frame(width: defaultTextFieldWidth)
-            .foregroundColor(numberColor.getColor())
+            TextField(defaultLabel, value: $value, formatter: numberFormatter)
+                .onSubmit {
+                    onSubmit()
+                }
+                .multilineTextAlignment(.trailing)
+                .font(Font.body.weight(.semibold))
+                .frame(width: defaultTextFieldWidth)
+                .foregroundColor(numberColor.getColor())
         
             Text(unit)
                 .font(.body)
