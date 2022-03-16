@@ -192,10 +192,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         frequencyResolution =  spectralWidth! * kHzToHz / numberOfFrequencyDataPoint!
     }
     
-    func validateNumberOfFrequencyDataPoint() {
-        if let number = numberOfFrequencyDataPoint, number < 1 {
-            numberOfFrequencyDataPoint = 1
-        }
+    func validateNumberOfFrequencyDataPoint() -> Bool {
+        return numberOfFrequencyDataPoint == nil || numberOfFrequencyDataPoint! >= 1
     }
     
     func numberOfFrequencyDataPointUpdated() {
@@ -210,10 +208,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateFrequencyResolution()
     }
     
-    func validateSpectralWidth() {
-        if let width = spectralWidth, width < 0.0 {
-            spectralWidth = 0.0
-        }
+    func validateSpectralWidth() -> Bool {
+        return spectralWidth == nil || spectralWidth! > 0.0
     }
     
     func spectralWidthUpdated() {

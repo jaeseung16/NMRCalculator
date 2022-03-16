@@ -34,12 +34,12 @@ struct MacNMRCalcSignalView: View {
             
             Section(header: Text("Frequency Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points", value: $viewModel.numberOfFrequencyDataPoint, unit: "") {
-                    viewModel.validateNumberOfFrequencyDataPoint()
+                    showAlert = !viewModel.validateNumberOfFrequencyDataPoint()
                     viewModel.numberOfFrequencyDataPointUpdated()
                 }
                 
                 MacNMRCalcItemView(title: "Spectral width", value: $viewModel.spectralWidth, unit: "kHz") {
-                    viewModel.validateSpectralWidth()
+                    showAlert = !viewModel.validateSpectralWidth()
                     viewModel.spectralWidthUpdated()
                 }
                 
