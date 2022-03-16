@@ -11,6 +11,8 @@ import SwiftUI
 struct MacNMRCalcSignalView: View {
     @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
 
+    @State private var showAlert = false
+    
     var body: some View {
         VStack {
             Section(header: Text("Time Domain").font(.title2)) {
@@ -42,12 +44,17 @@ struct MacNMRCalcSignalView: View {
                 }
                 
                 MacNMRCalcItemView(title: "Frequency resolution", value: $viewModel.frequencyResolution, unit: "Hz") {
-                    viewModel.validateFrequencyResolution()
+                    showAlert = !viewModel.validateFrequencyResolution()
                     viewModel.frequencyResolutionUpdated()
                 }
             }
         }
         .padding()
+        .alert("Try another value", isPresented: $showAlert) {
+            Button("OK") {
+                showAlert.toggle()
+            }
+        }
     }
     
 }
