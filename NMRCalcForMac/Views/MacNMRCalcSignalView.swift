@@ -17,18 +17,28 @@ struct MacNMRCalcSignalView: View {
         VStack {
             Section(header: Text("Time Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points", value: $viewModel.numberOfTimeDataPoint, unit: "") {
-                    viewModel.validateNumberOfTimeDataPoint()
-                    viewModel.numberOfTimeDataPointUpdated()
+                    if viewModel.validateNumberOfTimeDataPoint() {
+                        viewModel.numberOfTimeDataPointUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
                 
                 MacNMRCalcItemView(title: "Acquisition duration", value: $viewModel.acquisitionDuration, unit: "sec") {
-                    viewModel.validateAcquisitionDuration()
-                    viewModel.acquisitionDurationUpdated()
+                    if viewModel.validateAcquisitionDuration() {
+                        viewModel.acquisitionDurationUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
+                    
                 }
                 
                 MacNMRCalcItemView(title: "Dwell time", value: $viewModel.dwellTime, unit: "μs") {
-                    viewModel.validateDwellTime()
-                    viewModel.dwellTimeUpdated()
+                    if viewModel.validateDwellTime() {
+                        viewModel.dwellTimeUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
             }
             

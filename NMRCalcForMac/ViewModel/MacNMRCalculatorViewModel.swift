@@ -134,10 +134,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         dwellTime = acquisitionDuration! * secToμs / numberOfTimeDataPoint!
     }
     
-    func validateNumberOfTimeDataPoint() {
-        if let number = numberOfTimeDataPoint, number < 1 {
-            numberOfTimeDataPoint = 1
-        }
+    func validateNumberOfTimeDataPoint() -> Bool {
+        return numberOfTimeDataPoint == nil || numberOfTimeDataPoint! >= 1.0
     }
     
     func numberOfTimeDataPointUpdated() {
@@ -152,10 +150,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateDwellTime()
     }
     
-    func validateAcquisitionDuration() {
-        if let duration = acquisitionDuration, duration < 0.0 {
-            acquisitionDuration = 0.0
-        }
+    func validateAcquisitionDuration() -> Bool {
+        return acquisitionDuration == nil || acquisitionDuration! > 0.0
     }
     
     func acquisitionDurationUpdated() {
@@ -170,10 +166,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateDwellTime()
     }
     
-    func validateDwellTime() {
-        if let dwell = dwellTime, dwell < 0.0 {
-            dwellTime = 0.0
-        }
+    func validateDwellTime() -> Bool {
+        return dwellTime == nil || dwellTime! > 0.0
     }
     
     func dwellTimeUpdated() {
