@@ -228,10 +228,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateFrequencyResolution()
     }
     
-    func validateFrequencyResolution() {
-        if let resolution = frequencyResolution, resolution < 0.0 {
-            frequencyResolution = 0.0
-        }
+    func validateFrequencyResolution() -> Bool {
+        return frequencyResolution == nil || frequencyResolution! > 0.0
     }
     
     func frequencyResolutionUpdated() {
