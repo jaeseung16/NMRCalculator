@@ -260,6 +260,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
          }
      }
     
+    func validateDuration1() -> Bool {
+        return duration1 == nil || duration1! >= 0.0
+    }
+    
     func duration1Updated() -> Void {
         if flipAngle1 == nil {
             flipAngle1 = 90.0
@@ -274,6 +278,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         calculateRelativePower()
     }
     
+    func validateDuration2() -> Bool {
+        return duration2 == nil || duration2! >= 0.0
+    }
+    
     func duration2Updated() -> Void {
         if flipAngle2 == nil {
             flipAngle2 = 90.0
@@ -285,6 +293,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         
         amplitude2 = updateAmplitude(flipAngle: flipAngle2!, duration: duration2!)
         calculateRelativePower()
+    }
+    
+    func validateFlipAngle1() -> Bool {
+        return flipAngle1 == nil || flipAngle1! >= 0.0
     }
     
     func flipAngle1Updated() -> Void {
@@ -301,6 +313,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         calculateRelativePower()
     }
     
+    func validateFlipAngle2() -> Bool {
+        return flipAngle2 == nil || flipAngle2! >= 0.0
+    }
+    
     func flipAngle2Updated() -> Void {
         if flipAngle2 == nil {
             flipAngle2 = 90.0
@@ -312,6 +328,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         
         amplitude2 = updateAmplitude(flipAngle: flipAngle2!, duration: duration2!)
         calculateRelativePower()
+    }
+    
+    func validateAmplitude1() -> Bool {
+        return amplitude1 == nil || amplitude1! >= 0.0
     }
     
     func amplitude1Updated() -> Void {
@@ -328,10 +348,18 @@ class MacNMRCalculatorViewModel: ObservableObject {
         calculateRelativePower()
     }
     
+    func validateAmplitude1InT() -> Bool {
+        return amplitude1InT == nil || amplitude1InT! >= 0.0
+    }
+    
     private func updateAmplitude1InT() {
         if let nucleus = nucleus, let gyromaneticRatio = Double(nucleus.gyromagneticRatio) {
             amplitude1InT = amplitude1! / gyromaneticRatio
         }
+    }
+    
+    func validateAmplitude2() -> Bool {
+        return amplitude2 == nil || amplitude2! >= 0.0
     }
     
     func amplitude2Updated() -> Void {
