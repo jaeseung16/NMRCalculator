@@ -14,7 +14,6 @@ struct MacNucleusList: View {
     private let periodicTable = NMRPeriodicTableData()
     private let proton = NMRNucleus()
     
-    @State var selected: NMRNucleus?
     @State private var selectedSpin: Float = 0.0
     private var possibleSpins: [Float] = [-4.5, -4.0, -3.5, -2.5, -1.5, -0.5, 0.0, 0.5, 1.0, 1.5, 2.5, 3.0, 3.5, 4.5, 5.0, 6.0, 7.0]
     
@@ -75,7 +74,7 @@ struct MacNucleusList: View {
     }
     
     private func ListView() -> some View {
-        List(selection: $selected) {
+        List(selection: $viewModel.nucleus) {
             ForEach(filteredNuclei, id: \.self) { nucleus in
                 HStack {
                     Spacer()
@@ -87,10 +86,6 @@ struct MacNucleusList: View {
             }
         }
         .listStyle(PlainListStyle())
-        .onChange(of: selected) { _ in
-            viewModel.nucleus = selected
-            viewModel.nucluesUpdated()
-        }
     }
 }
 

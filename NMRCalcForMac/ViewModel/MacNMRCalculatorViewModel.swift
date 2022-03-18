@@ -21,9 +21,38 @@ class MacNMRCalculatorViewModel: ObservableObject {
     private var subscriptions: Set<AnyCancellable> = []
     
     init() {
+        nucleus = NMRNucleus()
+        externalField = 1.0
+        larmorFrequency = ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
+        protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
+        electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: 1.0)
+        
+        numberOfTimeDataPoint = 1000.0
+        acquisitionDuration = 1.0
+        updateDwellTime()
+        
+        numberOfFrequencyDataPoint = 1000.0
+        spectralWidth = 1.0
+        updateFrequencyResolution()
+        
+        duration1 = 10.0
+        flipAngle1 = 90.0
+        amplitude1 = updateAmplitude(flipAngle: flipAngle1!, duration: duration1!)
+        updateAmplitude1InT()
+        
+        duration2 = 1000.0
+        flipAngle2 = 90.0
+        amplitude2 = updateAmplitude(flipAngle: flipAngle2!, duration: duration2!)
+        calculateRelativePower()
+        
+        repetitionTime = 1.0
+        relaxationTime = 1.0
+        ernstAngle = updateErnstAngle(repetitionTime: repetitionTime!, relaxationTime: relaxationTime!)
+        
         $nucleus
             .receive(on: DispatchQueue.main, options: nil)
             .sink { _ in
+                self.nucluesUpdated()
                 if self.amplitude1InT != nil {
                     self.updateAmplitude1InT()
                 }
@@ -113,7 +142,6 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     // Signal
-    
     @Published var numberOfTimeDataPoint: Double?
     @Published var acquisitionDuration: Double?
     @Published var dwellTime: Double?
