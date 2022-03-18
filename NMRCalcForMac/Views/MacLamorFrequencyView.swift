@@ -40,6 +40,7 @@ struct MacLamorFrequencyView: View {
         return nucleus.naturalAbundance
     }
    
+    @State private var showAlert = false
     
     var body: some View {
         VStack {
@@ -53,8 +54,11 @@ struct MacLamorFrequencyView: View {
                 MacCalculatorView(title: .externalField,
                                   value: $viewModel.externalField,
                                   unit: .T) {
-                    viewModel.validateExternalField()
-                    viewModel.externalFieldUpdated()
+                    if viewModel.validateExternalField() {
+                        viewModel.externalFieldUpdated()
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
                
                 MacCalculatorView(title: .larmorFrequency,
@@ -76,6 +80,11 @@ struct MacLamorFrequencyView: View {
                 }
             }
             .padding()
+            .alert("Try another value", isPresented: $showAlert) {
+                Button("OK") {
+                    showAlert.toggle()
+                }
+            }
         }
     }
     
