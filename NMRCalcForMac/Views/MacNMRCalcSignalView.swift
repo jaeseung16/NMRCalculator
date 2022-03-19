@@ -13,6 +13,8 @@ struct MacNMRCalcSignalView: View {
 
     @State private var showAlert = false
     
+    private var alertMessage = "Try a positive value."
+    
     var body: some View {
         VStack {
             Section(header: Text("Time Domain").font(.title2)) {
@@ -69,7 +71,7 @@ struct MacNMRCalcSignalView: View {
             }
         }
         .padding()
-        .alert("Try another value", isPresented: $showAlert) {
+        .alert(alertMessage, isPresented: $showAlert) {
             Button("OK") {
                 showAlert.toggle()
             }

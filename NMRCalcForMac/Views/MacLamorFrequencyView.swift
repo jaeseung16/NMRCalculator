@@ -41,6 +41,7 @@ struct MacLamorFrequencyView: View {
     }
    
     @State private var showAlert = false
+    private var alertMessage = "Try a value between -1000 to 1000."
     
     var body: some View {
         VStack {
@@ -80,7 +81,7 @@ struct MacLamorFrequencyView: View {
                 }
             }
             .padding()
-            .alert("Try another value", isPresented: $showAlert) {
+            .alert(alertMessage, isPresented: $showAlert) {
                 Button("OK") {
                     showAlert.toggle()
                 }

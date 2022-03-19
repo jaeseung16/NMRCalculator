@@ -12,7 +12,9 @@ struct MacNMRCalcErnstAngleView: View {
     @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
     
     @State private var showAlert = false
-
+    
+    private var alertMessage = "Try a positive value."
+    
     var body: some View {
         VStack {
             Section(header:Text("Ernst Angle").font(.title2)) {
@@ -42,7 +44,7 @@ struct MacNMRCalcErnstAngleView: View {
             }
         }
         .padding()
-        .alert("Try another value", isPresented: $showAlert) {
+        .alert(alertMessage, isPresented: $showAlert) {
             Button("OK") {
                 showAlert.toggle()
             }

@@ -13,6 +13,8 @@ struct MacNMRCalcPulseView: View {
 
     @State private var showAlert = false
     
+    private var alertMessage = "Try a positive value."
+    
     var body: some View {
         VStack {
             Section(header: Text("First Pulse").font(.title2)) {
@@ -82,7 +84,7 @@ struct MacNMRCalcPulseView: View {
             }
         }
         .padding()
-        .alert("Try another value", isPresented: $showAlert) {
+        .alert(alertMessage, isPresented: $showAlert) {
             Button("OK") {
                 showAlert.toggle()
             }
