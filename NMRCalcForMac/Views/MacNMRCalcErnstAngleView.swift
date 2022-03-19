@@ -15,10 +15,28 @@ struct MacNMRCalcErnstAngleView: View {
     
     private var alertMessage = "Try a positive value."
     
+    private var flipAngleFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var relaxationTimeFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
     var body: some View {
         VStack {
             Section(header:Text("Ernst Angle").font(.title2)) {
-                MacNMRCalcItemView(title: "Repetition Time", value: $viewModel.repetitionTime, unit: "sec") {
+                MacNMRCalcItemView(title: "Repetition Time",
+                                   titleFont: .body,
+                                   value: $viewModel.repetitionTime,
+                                   unit: "sec",
+                                   formatter: relaxationTimeFormatter) {
                     if viewModel.validateRepetitionTime() {
                         viewModel.repetitionTimeUpdated()
                     } else {
@@ -26,7 +44,11 @@ struct MacNMRCalcErnstAngleView: View {
                     }
                 }
                 
-                MacNMRCalcItemView(title: "Relaxation Time", value: $viewModel.relaxationTime, unit: "sec") {
+                MacNMRCalcItemView(title: "Relaxation Time",
+                                   titleFont: .body,
+                                   value: $viewModel.relaxationTime,
+                                   unit: "sec",
+                                   formatter: relaxationTimeFormatter) {
                     if viewModel.validateRelaxationTime() {
                         viewModel.relaxationTimeUpdated()
                     } else {
@@ -34,7 +56,11 @@ struct MacNMRCalcErnstAngleView: View {
                     }
                 }
                 
-                MacNMRCalcItemView(title: "Ernst Angle", value: $viewModel.ernstAngle, unit: "°") {
+                MacNMRCalcItemView(title: "Ernst Angle",
+                                   titleFont: .body,
+                                   value: $viewModel.ernstAngle,
+                                   unit: "°",
+                                   formatter: flipAngleFormatter) {
                     if viewModel.validateErnstAngle() {
                         viewModel.ernstAngleUpdated()
                     } else {

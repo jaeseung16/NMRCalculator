@@ -15,10 +15,42 @@ struct MacNMRCalcPulseView: View {
     
     private var alertMessage = "Try a positive value."
     
+    private var amplitudeFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var durationFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var flipAngleFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var relativePowerFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
     var body: some View {
         VStack {
             Section(header: Text("First Pulse").font(.title2)) {
-                MacNMRCalcItemView(title: "Pulse duration", value: $viewModel.duration1, unit: "μs") {
+                MacNMRCalcItemView(title: "Pulse duration",
+                                   titleFont: .body,
+                                   value: $viewModel.duration1,
+                                   unit: "μs",
+                                   formatter: durationFormatter) {
                     if viewModel.validateDuration1() {
                         viewModel.duration1Updated()
                     } else {
@@ -26,7 +58,11 @@ struct MacNMRCalcPulseView: View {
                     }
                 }
                 
-                MacNMRCalcItemView(title: "Flip angle", value: $viewModel.flipAngle1, unit: "°") {
+                MacNMRCalcItemView(title: "Flip angle",
+                                   titleFont: .body,
+                                   value: $viewModel.flipAngle1,
+                                   unit: "°",
+                                   formatter: flipAngleFormatter) {
                     if viewModel.validateFlipAngle1() {
                         viewModel.flipAngle1Updated()
                     } else {
@@ -34,7 +70,11 @@ struct MacNMRCalcPulseView: View {
                     }
                 }
                 
-                MacNMRCalcItemView(title: "RF Amplitude", value: $viewModel.amplitude1, unit: "Hz") {
+                MacNMRCalcItemView(title: "RF Amplitude",
+                                   titleFont: .body,
+                                   value: $viewModel.amplitude1,
+                                   unit: "Hz",
+                                   formatter: amplitudeFormatter) {
                     if viewModel.validateAmplitude1() {
                         viewModel.amplitude1Updated()
                     } else {
@@ -43,7 +83,11 @@ struct MacNMRCalcPulseView: View {
                 }
                 
                 if let nucleus = viewModel.nucleus {
-                    MacNMRCalcItemView(title: "RF Amplitude for \(nucleus.nameNucleus)", value: $viewModel.amplitude1InT, unit: "μT") {
+                    MacNMRCalcItemView(title: "RF Amplitude for \(nucleus.nameNucleus)",
+                                       titleFont: .body,
+                                       value: $viewModel.amplitude1InT,
+                                       unit: "μT",
+                                       formatter: amplitudeFormatter) {
                         if viewModel.validateAmplitude1InT() {
                             viewModel.amplitude1Updated()
                         } else {
@@ -54,7 +98,11 @@ struct MacNMRCalcPulseView: View {
             }
             
             Section(header: Text("Second Pulse").font(.title2)) {
-                MacNMRCalcItemView(title: "Pulse duration", value: $viewModel.duration2, unit: "μs") {
+                MacNMRCalcItemView(title: "Pulse duration",
+                                   titleFont: .body,
+                                   value: $viewModel.duration2,
+                                   unit: "μs",
+                                   formatter: durationFormatter) {
                     if viewModel.validateDuration2() {
                         viewModel.duration2Updated()
                     } else {
@@ -62,7 +110,10 @@ struct MacNMRCalcPulseView: View {
                     }
                 }
                 
-                MacNMRCalcItemView(title: "Flip angle", value: $viewModel.flipAngle2, unit: "°") {
+                MacNMRCalcItemView(title: "Flip angle",
+                                   titleFont: .body,
+                                   value: $viewModel.flipAngle2, unit: "°",
+                                   formatter: flipAngleFormatter) {
                     if viewModel.validateFlipAngle2() {
                         viewModel.flipAngle2Updated()
                     } else {
@@ -70,7 +121,11 @@ struct MacNMRCalcPulseView: View {
                     }
                 }
                 
-                MacNMRCalcItemView(title: "RF Amplitude", value: $viewModel.amplitude2, unit: "Hz") {
+                MacNMRCalcItemView(title: "RF Amplitude",
+                                   titleFont: .body,
+                                   value: $viewModel.amplitude2,
+                                   unit: "Hz",
+                                   formatter: amplitudeFormatter) {
                     if viewModel.validateAmplitude2() {
                         viewModel.amplitude2Updated()
                     } else {
@@ -78,7 +133,11 @@ struct MacNMRCalcPulseView: View {
                     }
                 }
                 
-                MacNMRCalcItemView(title: "RF power relateve to 1st", value: $viewModel.relativePower, unit: "dB") {
+                MacNMRCalcItemView(title: "RF power relateve to 1st",
+                                   titleFont: .body,
+                                   value: $viewModel.relativePower,
+                                   unit: "dB",
+                                   formatter: relativePowerFormatter) {
                     viewModel.relativePowerUpdated()
                 }
             }
