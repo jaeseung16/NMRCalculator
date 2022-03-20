@@ -12,6 +12,7 @@ import Combine
 class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
     let pulseCalculator = PulseCalculator.shared
+    let ernstAngleCalculator = ErnstAngleCalculator.shared
     
     let proton = NMRNucleus()
     
@@ -75,7 +76,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         
         repetitionTime = 1.0
         relaxationTime = 1.0
-        ernstAngle = MacNMRCalculatorViewModel.updateErnstAngle(repetitionTime: 1.0, relaxationTime: 1.0)
+        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: 1.0, relaxationTime: 1.0)
     }
     
     func validateExternalField() -> Bool {
@@ -274,17 +275,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var relaxationTime: Double
     @Published var ernstAngle: Double
     
-    private static let radianToDegree = 180.0 / Double.pi
-    private var degreeToRadian: Double {
-        return 1.0 / MacNMRCalculatorViewModel.radianToDegree
-    }
-    
     func validateErnstAngle() -> Bool {
         return ernstAngle >= 0.0
-    }
-    
-    private static func updateErnstAngle(repetitionTime: Double, relaxationTime: Double) -> Double {
-        return acos( exp(-1.0 * repetitionTime / relaxationTime) ) * radianToDegree
     }
     
     func validateRepetitionTime() -> Bool {
@@ -292,7 +284,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func repetitionTimeUpdated() -> Void {
-        ernstAngle = MacNMRCalculatorViewModel.updateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
+        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
     }
     
     func validateRelaxationTime() -> Bool {
@@ -300,10 +292,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func relaxationTimeUpdated() -> Void {
-        ernstAngle = MacNMRCalculatorViewModel.updateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
+        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
     }
     
     func ernstAngleUpdated() -> Void {
-        repetitionTime = -1.0 * relaxationTime * log(cos(ernstAngle * degreeToRadian))
+        repetitionTime = ernstAngleCalculator.calculateRepetitionTime(relaxationTime: relaxationTime, ernstAngle: ernstAngle)
     }
 }
