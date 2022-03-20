@@ -10,6 +10,8 @@ import Foundation
 import Combine
 
 class MacNMRCalculatorViewModel: ObservableObject {
+    let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
+    
     let proton = NMRNucleus()
     
     @Published var nucleusUpdated = false
@@ -20,14 +22,19 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var electronFrequency: Double
     @Published var externalField: Double
     
-    private var subscriptions: Set<AnyCancellable> = []
+    private var γNucleus: Double {
+        guard let γNucleus = Double(nucleus.gyromagneticRatio) else {
+            return NMRCalcConstants.gammaProton
+        }
+        return γNucleus
+    }
     
     init() {
         nucleus = NMRNucleus()
         externalField = 1.0
-        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
-        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: 1.0)
-        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: 1.0)
+        larmorFrequency = larmorFrequencyCalculator.ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
+        protonFrequency = larmorFrequencyCalculator.ωProton(at: 1.0)
+        electronFrequency = larmorFrequencyCalculator.ωElectron(at: 1.0)
         
         numberOfTimeDataPoint = 1000.0
         acquisitionDuration = 1.0
@@ -60,14 +67,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func nucluesUpdated() {
-        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
-            return
-        }
-        
         externalField = externalField
-        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
-        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
-        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
+        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
         updateAmplitude1InT()
         
         nucleusUpdated.toggle()
@@ -78,57 +81,29 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func externalFieldUpdated() {
-        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
-            return
-        }
-        
-        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
-        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
-        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
+        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
     }
     
     func larmorFrequencyUpdated() {
-        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
-            return
-        }
-        
-        externalField = larmorFrequency / gyromaneticRatio
-        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
-        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
+        externalField = larmorFrequency / γNucleus
+        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
     }
     
     func protonFrequencyUpdated() {
-        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
-            return
-        }
-        
         externalField = protonFrequency / NMRCalcConstants.gammaProton
-        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
-        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
+        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
     }
     
     func electronFrequencyUpdated() {
-        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
-            return
-        }
-        
         externalField = electronFrequency / NMRCalcConstants.gammaElectron
-        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
-        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
+        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
     }
-    
-    private static func ω(γ: Double, B: Double) -> Double {
-        return γ * B
-    }
-    
-    private static func ωProton(at B: Double) -> Double {
-        return ω(γ: NMRCalcConstants.gammaProton, B: B)
-    }
-    
-    private static func ωElectron(at B: Double) -> Double {
-        return ω(γ: NMRCalcConstants.gammaElectron, B: B)
-    }
-    
+  
     // Signal
     @Published var numberOfTimeDataPoint: Double
     @Published var acquisitionDuration: Double
@@ -277,17 +252,13 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func amplitude1InTUpdated() -> Void {
-        if let gyromaneticRatio = Double(nucleus.gyromagneticRatio) {
-            amplitude1 = amplitude1InT * gyromaneticRatio
-            duration1 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
-            calculateRelativePower()
-        }
+        amplitude1 = amplitude1InT * γNucleus
+        duration1 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
+        calculateRelativePower()
     }
     
     private func updateAmplitude1InT() {
-        if let gyromaneticRatio = Double(nucleus.gyromagneticRatio) {
-            amplitude1InT = amplitude1 / gyromaneticRatio
-        }
+        amplitude1InT = amplitude1 / γNucleus
     }
     
     func validateAmplitude2() -> Bool {
