@@ -12,6 +12,7 @@ import Combine
 class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
     let timeDomainCalculator = TimeDomainCalculator.shared
+    let frequencyDomainCalculator = FrequencyDomainCalculator.shared
     let pulseCalculator = PulseCalculator.shared
     let ernstAngleCalculator = ErnstAngleCalculator.shared
     
@@ -56,7 +57,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         
         numberOfFrequencyDataPoint = 1000.0
         spectralWidth = 1.0
-        frequencyResolution = 1.0 * MacNMRCalculatorViewModel.kHzToHz / 1000.0
+        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: 1.0, numberOfDataPoints: 1000.0)
         
         let p1 = 10.0
         let φ1 = 90.0
@@ -116,8 +117,6 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var spectralWidth: Double
     @Published var frequencyResolution: Double
     
-    private static let kHzToHz: Double = 1000.0
-    
     private func updateDwellTime() {
         dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoint)
     }
@@ -147,7 +146,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     private func updateFrequencyResolution() {
-        frequencyResolution =  spectralWidth * MacNMRCalculatorViewModel.kHzToHz / numberOfFrequencyDataPoint
+        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralWidth, numberOfDataPoints: numberOfFrequencyDataPoint)
     }
     
     func validateNumberOfFrequencyDataPoint() -> Bool {
@@ -171,7 +170,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func frequencyResolutionUpdated() {
-        numberOfFrequencyDataPoint = spectralWidth * MacNMRCalculatorViewModel.kHzToHz / frequencyResolution
+        numberOfFrequencyDataPoint = frequencyDomainCalculator.calcualteNumberOfDataPoints(spectralWidth: spectralWidth, frequencyResolution: frequencyResolution)
     }
 
     // Pulse
