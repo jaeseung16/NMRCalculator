@@ -16,7 +16,18 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     @Published var nucleusUpdated = false
     
-    @Published var nucleus: NMRNucleus
+    @Published var nucleus: NMRNucleus {
+        didSet {
+            externalField = externalField
+            larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+            protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+            electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
+            updateAmplitude1InT()
+            
+            nucleusUpdated.toggle()
+        }
+    }
+    
     @Published var larmorFrequency: Double
     @Published var protonFrequency: Double
     @Published var electronFrequency: Double
@@ -57,23 +68,6 @@ class MacNMRCalculatorViewModel: ObservableObject {
         repetitionTime = 1.0
         relaxationTime = 1.0
         ernstAngle = MacNMRCalculatorViewModel.updateErnstAngle(repetitionTime: 1.0, relaxationTime: 1.0)
-        
-        $nucleus
-            .receive(on: DispatchQueue.main, options: nil)
-            .sink { _ in
-                self.nucluesUpdated()
-            }
-            .store(in: &subscriptions)
-    }
-    
-    func nucluesUpdated() {
-        externalField = externalField
-        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
-        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
-        updateAmplitude1InT()
-        
-        nucleusUpdated.toggle()
     }
     
     func validateExternalField() -> Bool {
