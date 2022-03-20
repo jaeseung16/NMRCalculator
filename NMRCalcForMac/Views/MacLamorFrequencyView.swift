@@ -9,15 +9,17 @@
 import SwiftUI
 
 struct MacLamorFrequencyView: View {
-    @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
     @AppStorage("NucleusView.elementColor") private var elementColor: ElementColor = .systemGreen
+    
+    @Binding var nucleus: NMRNucleus
+    @State var larmorFrequency: Double
+    @State var protonFrequency: Double
+    @State var electronFrequency: Double
+    @State var externalField: Double
     
     private var proton: NMRNucleus {
         return viewModel.proton
-    }
-    
-    private var nucleus: NMRNucleus {
-        return  viewModel.nucleus ?? proton
     }
     
     private var elementSymbol: String {
@@ -41,7 +43,7 @@ struct MacLamorFrequencyView: View {
     }
    
     @State private var showAlert = false
-    private var alertMessage = "Try a value between -1000 to 1000."
+    private let alertMessage = "Try a value between -1000 to 1000"
     
     private var externalFieldFormatter: NumberFormatter {
         let formatter = NumberFormatter()
@@ -68,38 +70,57 @@ struct MacLamorFrequencyView: View {
             VStack {
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.externalField.rawValue,
                                    titleFont: .callout,
-                                   value: $viewModel.externalField,
+                                   value: $externalField,
                                    unit: NMRPeriodicTableData.Unit.T.rawValue,
                                    formatter: externalFieldFormatter) {
+                    let previousExternalField = viewModel.externalField
+                    viewModel.externalField = externalField
                     if viewModel.validateExternalField() {
                         viewModel.externalFieldUpdated()
+                        larmorFrequency = viewModel.larmorFrequency
+                        protonFrequency = viewModel.protonFrequency
+                        electronFrequency = viewModel.electronFrequency
                     } else {
+                        externalField = previousExternalField
+                        viewModel.externalField = externalField
                         showAlert.toggle()
                     }
                 }
                
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.larmorFrequency.rawValue,
                                    titleFont: .callout,
-                                   value: $viewModel.larmorFrequency,
+                                   value: $larmorFrequency,
                                    unit: NMRPeriodicTableData.Unit.MHz.rawValue,
                                    formatter: frequencyFormatter) {
+                    viewModel.larmorFrequency = larmorFrequency
                     viewModel.larmorFrequencyUpdated()
+                    externalField = viewModel.externalField
+                    protonFrequency = viewModel.protonFrequency
+                    electronFrequency = viewModel.electronFrequency
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
                                    titleFont: .callout,
-                                   value: $viewModel.protonFrequency,
+                                   value: $protonFrequency,
                                    unit: NMRPeriodicTableData.Unit.MHz.rawValue,
                                    formatter: frequencyFormatter) {
+                    viewModel.protonFrequency = protonFrequency
                     viewModel.protonFrequencyUpdated()
+                    externalField = viewModel.externalField
+                    larmorFrequency = viewModel.larmorFrequency
+                    electronFrequency = viewModel.electronFrequency
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
                                    titleFont: .callout,
-                                   value: $viewModel.electronFrequency,
+                                   value: $electronFrequency,
                                    unit: NMRPeriodicTableData.Unit.GHz.rawValue,
                                    formatter: frequencyFormatter) {
+                    viewModel.electronFrequency = electronFrequency
                     viewModel.electronFrequencyUpdated()
+                    externalField = viewModel.externalField
+                    larmorFrequency = viewModel.larmorFrequency
+                    protonFrequency = viewModel.protonFrequency
                 }
             }
             .padding()
@@ -107,6 +128,12 @@ struct MacLamorFrequencyView: View {
                 Button("OK") {
                     showAlert.toggle()
                 }
+            }
+            .onChange(of: viewModel.nucleusUpdated) { _ in
+                larmorFrequency = viewModel.larmorFrequency
+                protonFrequency = viewModel.protonFrequency
+                electronFrequency = viewModel.electronFrequency
+                externalField = viewModel.externalField
             }
         }
     }
@@ -141,14 +168,5 @@ struct MacLamorFrequencyView: View {
                 .foregroundColor(Color.primary)
                 .fontWeight(.semibold)
         }
-    }
-}
-
-struct MacLamorFrequencyView_Previews: PreviewProvider {
-    @StateObject static var viewModel = MacNMRCalculatorViewModel()
-    
-    static var previews: some View {
-        MacLamorFrequencyView()
-            .environmentObject(viewModel)
     }
 }

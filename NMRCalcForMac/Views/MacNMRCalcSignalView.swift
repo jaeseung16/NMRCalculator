@@ -9,11 +9,18 @@
 import SwiftUI
 
 struct MacNMRCalcSignalView: View {
-    @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
 
+    @State var numberOfTimeDataPoint: Double
+    @State var acquisitionDuration: Double
+    @State var dwellTime: Double
+    @State var numberOfFrequencyDataPoint: Double
+    @State var spectralWidth: Double
+    @State var frequencyResolution: Double
+    
     @State private var showAlert = false
     
-    private var alertMessage = "Try a positive value."
+    private let alertMessage = "Try a positive value."
     
     private var dataPointsFormatter: NumberFormatter {
         let formatter = NumberFormatter()
@@ -34,24 +41,36 @@ struct MacNMRCalcSignalView: View {
             Section(header: Text("Time Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points",
                                    titleFont: .body,
-                                   value: $viewModel.numberOfTimeDataPoint,
+                                   value: $numberOfTimeDataPoint,
                                    unit: "",
                                    formatter: dataPointsFormatter) {
+                    let previousValue = viewModel.numberOfTimeDataPoint
+                    viewModel.numberOfTimeDataPoint = numberOfTimeDataPoint
                     if viewModel.validateNumberOfTimeDataPoint() {
                         viewModel.numberOfTimeDataPointUpdated()
+                        acquisitionDuration = viewModel.acquisitionDuration
+                        dwellTime = viewModel.dwellTime
                     } else {
+                        numberOfTimeDataPoint = previousValue
+                        viewModel.numberOfTimeDataPoint = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "Acquisition duration",
                                    titleFont: .body,
-                                   value: $viewModel.acquisitionDuration,
+                                   value: $acquisitionDuration,
                                    unit: "sec",
                                    formatter: durationTimeFormatter) {
+                    let previousValue = viewModel.acquisitionDuration
+                    viewModel.acquisitionDuration = acquisitionDuration
                     if viewModel.validateAcquisitionDuration() {
                         viewModel.acquisitionDurationUpdated()
+                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoint
+                        dwellTime = viewModel.dwellTime
                     } else {
+                        acquisitionDuration = previousValue
+                        viewModel.acquisitionDuration = previousValue
                         showAlert.toggle()
                     }
                     
@@ -59,12 +78,18 @@ struct MacNMRCalcSignalView: View {
                 
                 MacNMRCalcItemView(title: "Dwell time",
                                    titleFont: .body,
-                                   value: $viewModel.dwellTime,
+                                   value: $dwellTime,
                                    unit: "μs",
                                    formatter: durationTimeFormatter) {
+                    let previousValue = viewModel.dwellTime
+                    viewModel.dwellTime = dwellTime
                     if viewModel.validateDwellTime() {
                         viewModel.dwellTimeUpdated()
+                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoint
+                        acquisitionDuration = viewModel.acquisitionDuration
                     } else {
+                        dwellTime = previousValue
+                        viewModel.dwellTime = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -73,36 +98,54 @@ struct MacNMRCalcSignalView: View {
             Section(header: Text("Frequency Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points",
                                    titleFont: .body,
-                                   value: $viewModel.numberOfFrequencyDataPoint,
+                                   value: $numberOfFrequencyDataPoint,
                                    unit: "",
                                    formatter: dataPointsFormatter) {
+                    let previousValue = viewModel.numberOfFrequencyDataPoint
+                    viewModel.numberOfFrequencyDataPoint = numberOfFrequencyDataPoint
                     if viewModel.validateNumberOfFrequencyDataPoint() {
                         viewModel.numberOfFrequencyDataPointUpdated()
+                        spectralWidth = viewModel.spectralWidth
+                        frequencyResolution = viewModel.frequencyResolution
                     } else {
+                        numberOfFrequencyDataPoint = previousValue
+                        viewModel.numberOfFrequencyDataPoint = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "Spectral width",
                                    titleFont: .body,
-                                   value: $viewModel.spectralWidth,
+                                   value: $spectralWidth,
                                    unit: "kHz",
                                    formatter: durationTimeFormatter) {
+                    let previousValue = viewModel.spectralWidth
+                    viewModel.spectralWidth = spectralWidth
                     if viewModel.validateSpectralWidth() {
                         viewModel.spectralWidthUpdated()
+                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoint
+                        frequencyResolution = viewModel.frequencyResolution
                     } else {
+                        spectralWidth = previousValue
+                        viewModel.spectralWidth = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "Frequency resolution",
                                    titleFont: .body,
-                                   value: $viewModel.frequencyResolution,
+                                   value: $frequencyResolution,
                                    unit: "Hz",
                                    formatter: durationTimeFormatter) {
+                    let previousValue = viewModel.frequencyResolution
+                    viewModel.frequencyResolution = frequencyResolution
                     if viewModel.validateFrequencyResolution() {
                         viewModel.frequencyResolutionUpdated()
+                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoint
+                        spectralWidth = viewModel.spectralWidth
                     } else {
+                        frequencyResolution = previousValue
+                        viewModel.frequencyResolution = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -116,10 +159,11 @@ struct MacNMRCalcSignalView: View {
         }
     }
     
+    private func validateTimeDomainParameters() {
+        if numberOfTimeDataPoint < 0 {
+            numberOfTimeDataPoint = 0
+        }
+    }
+    
 }
 
-struct MacNMRCalcSignalView_Previews: PreviewProvider {
-    static var previews: some View {
-        MacNMRCalcSignalView()
-    }
-}

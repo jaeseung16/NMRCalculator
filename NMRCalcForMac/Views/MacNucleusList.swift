@@ -14,8 +14,10 @@ struct MacNucleusList: View {
     private let periodicTable = NMRPeriodicTableData()
     private let proton = NMRNucleus()
     
+    @State var selectedNucleus: NMRNucleus?
     @State private var selectedSpin: Float = 0.0
-    private var possibleSpins: [Float] = [-4.5, -4.0, -3.5, -2.5, -1.5, -0.5, 0.0, 0.5, 1.0, 1.5, 2.5, 3.0, 3.5, 4.5, 5.0, 6.0, 7.0]
+    
+    private let possibleSpins: [Float] = [-4.5, -4.0, -3.5, -2.5, -1.5, -0.5, 0.0, 0.5, 1.0, 1.5, 2.5, 3.0, 3.5, 4.5, 5.0, 6.0, 7.0]
     
     private var filteredNuclei: [NMRNucleus] {
         if selectedSpin != 0 {
@@ -32,7 +34,11 @@ struct MacNucleusList: View {
     
     var body: some View {
         HStack(alignment: .center) {
-            MacLamorFrequencyView()
+            MacLamorFrequencyView(nucleus: $viewModel.nucleus,
+                                  larmorFrequency: viewModel.larmorFrequency,
+                                  protonFrequency: viewModel.protonFrequency,
+                                  electronFrequency: viewModel.electronFrequency,
+                                  externalField: viewModel.externalField)
                 .frame(width: 300, alignment: .center)
             
             Divider()
@@ -74,7 +80,7 @@ struct MacNucleusList: View {
     }
     
     private func ListView() -> some View {
-        List(selection: $viewModel.nucleus) {
+        List(selection: $selectedNucleus) {
             ForEach(filteredNuclei, id: \.self) { nucleus in
                 HStack {
                     Spacer()
@@ -86,6 +92,11 @@ struct MacNucleusList: View {
             }
         }
         .listStyle(PlainListStyle())
+        .onChange(of: selectedNucleus) {
+            if let nucleus = $0 {
+                viewModel.nucleus = nucleus
+            }
+        }
     }
 }
 

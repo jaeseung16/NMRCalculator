@@ -9,11 +9,20 @@
 import SwiftUI
 
 struct MacNMRCalcPulseView: View {
-    @EnvironmentObject var viewModel: MacNMRCalculatorViewModel
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
+    
+    @State var duration1: Double
+    @State var flipAngle1: Double
+    @State var amplitude1: Double
+    @State var amplitude1InT: Double
+    @State var duration2: Double
+    @State var flipAngle2: Double
+    @State var amplitude2: Double
+    @State var relativePower: Double
 
     @State private var showAlert = false
     
-    private var alertMessage = "Try a positive value."
+    private let alertMessage = "Try a positive value."
     
     private var amplitudeFormatter: NumberFormatter {
         let formatter = NumberFormatter()
@@ -48,36 +57,60 @@ struct MacNMRCalcPulseView: View {
             Section(header: Text("First Pulse").font(.title2)) {
                 MacNMRCalcItemView(title: "Pulse duration",
                                    titleFont: .body,
-                                   value: $viewModel.duration1,
+                                   value: $duration1,
                                    unit: "μs",
                                    formatter: durationFormatter) {
+                    let previousValue = viewModel.duration1
+                    viewModel.duration1 = duration1
                     if viewModel.validateDuration1() {
                         viewModel.duration1Updated()
+                        flipAngle1 = viewModel.flipAngle1
+                        amplitude1 = viewModel.amplitude1
+                        amplitude1InT = viewModel.amplitude1InT
+                        relativePower = viewModel.relativePower
                     } else {
+                        duration1 = previousValue
+                        viewModel.duration1 = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "Flip angle",
                                    titleFont: .body,
-                                   value: $viewModel.flipAngle1,
+                                   value: $flipAngle1,
                                    unit: "°",
                                    formatter: flipAngleFormatter) {
+                    let previousValue = viewModel.flipAngle1
+                    viewModel.flipAngle1 = flipAngle1
                     if viewModel.validateFlipAngle1() {
                         viewModel.flipAngle1Updated()
+                        duration1 = viewModel.duration1
+                        amplitude1 = viewModel.amplitude1
+                        amplitude1InT = viewModel.amplitude1InT
+                        relativePower = viewModel.relativePower
                     } else {
+                        flipAngle1 = previousValue
+                        viewModel.flipAngle1 = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "RF Amplitude",
                                    titleFont: .body,
-                                   value: $viewModel.amplitude1,
+                                   value: $amplitude1,
                                    unit: "Hz",
                                    formatter: amplitudeFormatter) {
+                    let previousValue = viewModel.amplitude1
+                    viewModel.amplitude1 = amplitude1
                     if viewModel.validateAmplitude1() {
                         viewModel.amplitude1Updated()
+                        duration1 = viewModel.duration1
+                        flipAngle1 = viewModel.flipAngle1
+                        amplitude1InT = viewModel.amplitude1InT
+                        relativePower = viewModel.relativePower
                     } else {
+                        amplitude1 = previousValue
+                        viewModel.amplitude1 = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -85,12 +118,20 @@ struct MacNMRCalcPulseView: View {
                 if let nucleus = viewModel.nucleus {
                     MacNMRCalcItemView(title: "RF Amplitude for \(nucleus.nameNucleus)",
                                        titleFont: .body,
-                                       value: $viewModel.amplitude1InT,
+                                       value: $amplitude1InT,
                                        unit: "μT",
                                        formatter: amplitudeFormatter) {
+                        let previousValue = viewModel.amplitude1InT
+                        viewModel.amplitude1InT = amplitude1InT
                         if viewModel.validateAmplitude1InT() {
-                            viewModel.amplitude1Updated()
+                            viewModel.amplitude1InTUpdated()
+                            duration1 = viewModel.duration1
+                            flipAngle1 = viewModel.flipAngle1
+                            amplitude1 = viewModel.amplitude1
+                            relativePower = viewModel.relativePower
                         } else {
+                            amplitude1InT = previousValue
+                            viewModel.amplitude1InT = previousValue
                             showAlert.toggle()
                         }
                     }
@@ -100,45 +141,70 @@ struct MacNMRCalcPulseView: View {
             Section(header: Text("Second Pulse").font(.title2)) {
                 MacNMRCalcItemView(title: "Pulse duration",
                                    titleFont: .body,
-                                   value: $viewModel.duration2,
+                                   value: $duration2,
                                    unit: "μs",
                                    formatter: durationFormatter) {
+                    let previousValue = viewModel.duration2
+                    viewModel.duration2 = duration2
                     if viewModel.validateDuration2() {
                         viewModel.duration2Updated()
+                        flipAngle2 = viewModel.flipAngle2
+                        amplitude2 = viewModel.amplitude2
+                        relativePower = viewModel.relativePower
                     } else {
+                        duration2 = previousValue
+                        viewModel.duration2 = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "Flip angle",
                                    titleFont: .body,
-                                   value: $viewModel.flipAngle2, unit: "°",
+                                   value: $flipAngle2, unit: "°",
                                    formatter: flipAngleFormatter) {
+                    let previousValue = viewModel.flipAngle2
+                    viewModel.flipAngle2 = flipAngle2
                     if viewModel.validateFlipAngle2() {
                         viewModel.flipAngle2Updated()
+                        duration2 = viewModel.duration2
+                        amplitude2 = viewModel.amplitude2
+                        relativePower = viewModel.relativePower
                     } else {
+                        flipAngle2 = previousValue
+                        viewModel.flipAngle2 = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "RF Amplitude",
                                    titleFont: .body,
-                                   value: $viewModel.amplitude2,
+                                   value: $amplitude2,
                                    unit: "Hz",
                                    formatter: amplitudeFormatter) {
+                    let previousValue = viewModel.amplitude2
+                    viewModel.amplitude2 = amplitude2
                     if viewModel.validateAmplitude2() {
                         viewModel.amplitude2Updated()
+                        duration2 = viewModel.duration2
+                        flipAngle2 = viewModel.flipAngle2
+                        relativePower = viewModel.relativePower
                     } else {
+                        amplitude2 = previousValue
+                        viewModel.amplitude2 = previousValue
                         showAlert.toggle()
                     }
                 }
                 
                 MacNMRCalcItemView(title: "RF power relateve to 1st",
                                    titleFont: .body,
-                                   value: $viewModel.relativePower,
+                                   value: $relativePower,
                                    unit: "dB",
                                    formatter: relativePowerFormatter) {
+                    viewModel.relativePower = relativePower
                     viewModel.relativePowerUpdated()
+                    duration2 = viewModel.duration2
+                    flipAngle2 = viewModel.flipAngle2
+                    amplitude2 = viewModel.amplitude2
                 }
             }
         }
@@ -152,8 +218,3 @@ struct MacNMRCalcPulseView: View {
     
 }
 
-struct MacNMRCalcPulseView_Previews: PreviewProvider {
-    static var previews: some View {
-        MacNMRCalcPulseView()
-    }
-}

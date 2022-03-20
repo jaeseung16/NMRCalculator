@@ -19,7 +19,7 @@ struct MacNMRCalcItemView: View {
     
     var title: String
     var titleFont: Font
-    @Binding var value: Double?
+    @Binding var value: Double
     var unit: String
     var formatter: NumberFormatter
     var onSubmit: () -> Void
@@ -47,10 +47,3 @@ struct MacNMRCalcItemView: View {
     
 }
 
-struct MacSignalItemView_Previews: PreviewProvider {
-    @State static var value: Double? = 1.0
-    static var previews: some View {
-        MacNMRCalcItemView(title: "Dwell time", titleFont: .body, value: $value, unit: "μs", formatter: NumberFormatter()) {
-        }
-    }
-}

@@ -12,468 +12,333 @@ import Combine
 class MacNMRCalculatorViewModel: ObservableObject {
     let proton = NMRNucleus()
     
-    @Published var nucleus: NMRNucleus?
-    @Published var larmorFrequency: Double?
-    @Published var protonFrequency: Double?
-    @Published var electronFrequency: Double?
-    @Published var externalField: Double?
+    @Published var nucleusUpdated = false
+    
+    @Published var nucleus: NMRNucleus
+    @Published var larmorFrequency: Double
+    @Published var protonFrequency: Double
+    @Published var electronFrequency: Double
+    @Published var externalField: Double
     
     private var subscriptions: Set<AnyCancellable> = []
     
     init() {
         nucleus = NMRNucleus()
         externalField = 1.0
-        larmorFrequency = ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
-        protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
-        electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: 1.0)
+        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
+        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: 1.0)
+        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: 1.0)
         
         numberOfTimeDataPoint = 1000.0
         acquisitionDuration = 1.0
-        updateDwellTime()
+        dwellTime = 1.0 * MacNMRCalculatorViewModel.secToμs / 1000.0
         
         numberOfFrequencyDataPoint = 1000.0
         spectralWidth = 1.0
-        updateFrequencyResolution()
+        frequencyResolution = 1.0 * MacNMRCalculatorViewModel.kHzToHz / 1000.0
         
         duration1 = 10.0
         flipAngle1 = 90.0
-        amplitude1 = updateAmplitude(flipAngle: flipAngle1!, duration: duration1!)
-        updateAmplitude1InT()
+        amplitude1 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 10.0)
+        amplitude1InT = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 10.0) / NMRCalcConstants.gammaProton
         
         duration2 = 1000.0
         flipAngle2 = 90.0
-        amplitude2 = updateAmplitude(flipAngle: flipAngle2!, duration: duration2!)
-        calculateRelativePower()
+        amplitude2 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 1000.0)
+        relativePower = 20.0 * log10(abs(MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 1000.0)/MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 10.0)))
         
         repetitionTime = 1.0
         relaxationTime = 1.0
-        ernstAngle = updateErnstAngle(repetitionTime: repetitionTime!, relaxationTime: relaxationTime!)
+        ernstAngle = MacNMRCalculatorViewModel.updateErnstAngle(repetitionTime: 1.0, relaxationTime: 1.0)
         
         $nucleus
             .receive(on: DispatchQueue.main, options: nil)
             .sink { _ in
                 self.nucluesUpdated()
-                if self.amplitude1InT != nil {
-                    self.updateAmplitude1InT()
-                }
             }
             .store(in: &subscriptions)
     }
     
     func nucluesUpdated() {
-        guard let nucleus = self.nucleus,
-              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
-        else {
+        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
             return
         }
         
-        self.externalField = self.externalField ?? 1.0
-        self.larmorFrequency = ω(γ: gyromaneticRatio, B: self.externalField!)
-        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: self.externalField!)
-        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: self.externalField!)
+        externalField = externalField
+        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
+        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
+        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
+        updateAmplitude1InT()
+        
+        nucleusUpdated.toggle()
     }
     
     func validateExternalField() -> Bool {
-        return externalField == nil || abs(externalField!) <= 1000.0
+        return abs(externalField) <= 1000.0
     }
     
     func externalFieldUpdated() {
-        if externalField == nil {
-            externalField = 1.0
-        }
-        
-        guard let nucleus = self.nucleus,
-              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
-        else {
+        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
             return
         }
         
-        self.larmorFrequency = ω(γ: gyromaneticRatio, B: externalField!)
-        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: externalField!)
-        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: externalField!)
+        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
+        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
+        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
     }
     
     func larmorFrequencyUpdated() {
-        if larmorFrequency == nil {
-            larmorFrequency = 10
-        }
-        
-        guard let nucleus = self.nucleus,
-              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
-        else {
+        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
             return
         }
         
-        self.externalField = larmorFrequency! / gyromaneticRatio
-        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: self.externalField!)
-        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: self.externalField!)
+        externalField = larmorFrequency / gyromaneticRatio
+        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
+        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
     }
     
     func protonFrequencyUpdated() {
-        if protonFrequency == nil {
-            protonFrequency = 100
-        }
-            
-        guard let nucleus = self.nucleus,
-              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
-        else {
+        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
             return
         }
         
-        self.externalField = protonFrequency! / NMRCalcConstants.gammaProton
-        self.larmorFrequency = ω(γ: gyromaneticRatio, B: self.externalField!)
-        self.electronFrequency = ω(γ: NMRCalcConstants.gammaElectron, B: self.externalField!)
+        externalField = protonFrequency / NMRCalcConstants.gammaProton
+        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
+        electronFrequency = MacNMRCalculatorViewModel.ωElectron(at: externalField)
     }
     
     func electronFrequencyUpdated() {
-        if electronFrequency == nil {
-            electronFrequency = -10
-        }
-        
-        guard let nucleus = self.nucleus,
-              let gyromaneticRatio = Double(nucleus.gyromagneticRatio)
-        else {
+        guard let gyromaneticRatio = Double(nucleus.gyromagneticRatio) else {
             return
         }
         
-        self.externalField = electronFrequency! / NMRCalcConstants.gammaElectron
-        self.larmorFrequency = ω(γ: gyromaneticRatio, B: self.externalField!)
-        self.protonFrequency = ω(γ: NMRCalcConstants.gammaProton, B: self.externalField!)
+        externalField = electronFrequency / NMRCalcConstants.gammaElectron
+        larmorFrequency = MacNMRCalculatorViewModel.ω(γ: gyromaneticRatio, B: externalField)
+        protonFrequency = MacNMRCalculatorViewModel.ωProton(at: externalField)
     }
     
-    private func ω(γ: Double, B: Double) -> Double {
+    private static func ω(γ: Double, B: Double) -> Double {
         return γ * B
     }
     
-    // Signal
-    @Published var numberOfTimeDataPoint: Double?
-    @Published var acquisitionDuration: Double?
-    @Published var dwellTime: Double?
-    @Published var numberOfFrequencyDataPoint: Double?
-    @Published var spectralWidth: Double?
-    @Published var frequencyResolution: Double?
+    private static func ωProton(at B: Double) -> Double {
+        return ω(γ: NMRCalcConstants.gammaProton, B: B)
+    }
     
-    private let secToμs: Double = 1000000.0
-    private var μsToSec: Double {
+    private static func ωElectron(at B: Double) -> Double {
+        return ω(γ: NMRCalcConstants.gammaElectron, B: B)
+    }
+    
+    // Signal
+    @Published var numberOfTimeDataPoint: Double
+    @Published var acquisitionDuration: Double
+    @Published var dwellTime: Double
+    @Published var numberOfFrequencyDataPoint: Double
+    @Published var spectralWidth: Double
+    @Published var frequencyResolution: Double
+    
+    private static let secToμs: Double = 1000000.0
+    private static var μsToSec: Double {
         get {
             return 1.0 / secToμs
         }
     }
     
-    private let kHzToHz: Double = 1000.0
+    private static let kHzToHz: Double = 1000.0
     
     private func updateDwellTime() {
-        dwellTime = acquisitionDuration! * secToμs / numberOfTimeDataPoint!
+        dwellTime = acquisitionDuration * MacNMRCalculatorViewModel.secToμs / numberOfTimeDataPoint
     }
     
     func validateNumberOfTimeDataPoint() -> Bool {
-        return numberOfTimeDataPoint == nil || numberOfTimeDataPoint! >= 1.0
+        return numberOfTimeDataPoint >= 1.0
     }
     
     func numberOfTimeDataPointUpdated() {
-        if acquisitionDuration == nil {
-            acquisitionDuration = 1.0
-        }
-        
-        if numberOfTimeDataPoint == nil {
-            numberOfTimeDataPoint = 1000.0
-        }
-        
         updateDwellTime()
     }
     
     func validateAcquisitionDuration() -> Bool {
-        return acquisitionDuration == nil || acquisitionDuration! > 0.0
+        return acquisitionDuration > 0.0
     }
     
     func acquisitionDurationUpdated() {
-        if acquisitionDuration == nil {
-            acquisitionDuration = 1.0
-        }
-        
-        if numberOfTimeDataPoint == nil {
-            numberOfTimeDataPoint = 1000.0
-        }
-        
         updateDwellTime()
     }
     
     func validateDwellTime() -> Bool {
-        return dwellTime == nil || dwellTime! > 0.0
+        return dwellTime > 0.0
     }
     
     func dwellTimeUpdated() {
-        if dwellTime == nil {
-            dwellTime = 1.0
-        }
-        
-        if numberOfTimeDataPoint == nil {
-            numberOfTimeDataPoint = 1.0
-        }
-        
-        acquisitionDuration = numberOfTimeDataPoint! * (dwellTime! * μsToSec)
+        acquisitionDuration = numberOfTimeDataPoint * (dwellTime * MacNMRCalculatorViewModel.μsToSec)
     }
     
     private func updateFrequencyResolution() {
-        frequencyResolution =  spectralWidth! * kHzToHz / numberOfFrequencyDataPoint!
+        frequencyResolution =  spectralWidth * MacNMRCalculatorViewModel.kHzToHz / numberOfFrequencyDataPoint
     }
     
     func validateNumberOfFrequencyDataPoint() -> Bool {
-        return numberOfFrequencyDataPoint == nil || numberOfFrequencyDataPoint! >= 1
+        return numberOfFrequencyDataPoint >= 1
     }
     
     func numberOfFrequencyDataPointUpdated() {
-        if numberOfFrequencyDataPoint == nil {
-            numberOfFrequencyDataPoint = 1000.0
-        }
-        
-        if spectralWidth == nil {
-            spectralWidth = 1.0
-        }
-        
         updateFrequencyResolution()
     }
     
     func validateSpectralWidth() -> Bool {
-        return spectralWidth == nil || spectralWidth! > 0.0
+        return spectralWidth > 0.0
     }
     
     func spectralWidthUpdated() {
-        if numberOfFrequencyDataPoint == nil {
-            numberOfFrequencyDataPoint = 1000.0
-        }
-        
-        if spectralWidth == nil {
-            spectralWidth = 1.0
-        }
-        
         updateFrequencyResolution()
     }
     
     func validateFrequencyResolution() -> Bool {
-        return frequencyResolution == nil || frequencyResolution! > 0.0
+        return frequencyResolution > 0.0
     }
     
     func frequencyResolutionUpdated() {
-        if frequencyResolution == nil {
-            frequencyResolution = 1.0
-        }
-        
-        if spectralWidth == nil {
-            spectralWidth = 1.0
-        }
-        
-        numberOfFrequencyDataPoint = spectralWidth! * kHzToHz / frequencyResolution!
+        numberOfFrequencyDataPoint = spectralWidth * MacNMRCalculatorViewModel.kHzToHz / frequencyResolution
     }
 
     // Pulse
-    @Published var duration1: Double?
-    @Published var flipAngle1: Double?
-    @Published var amplitude1: Double?
-    @Published var amplitude1InT: Double?
-    @Published var duration2: Double?
-    @Published var flipAngle2: Double?
-    @Published var amplitude2: Double?
-    @Published var relativePower: Double?
+    @Published var duration1: Double
+    @Published var flipAngle1: Double
+    @Published var amplitude1: Double
+    @Published var amplitude1InT: Double
+    @Published var duration2: Double
+    @Published var flipAngle2: Double
+    @Published var amplitude2: Double
+    @Published var relativePower: Double
     
-    private func updateAmplitude(flipAngle: Double, duration: Double) -> Double {
+    private static func updateAmplitude(flipAngle: Double, duration: Double) -> Double {
         return (flipAngle / 360.0) / (duration * μsToSec)
     }
     
-    private func updateDuration(flipAngle: Double, amplitude: Double) -> Double {
+    private static func updateDuration(flipAngle: Double, amplitude: Double) -> Double {
         return (flipAngle / 360.0) / amplitude * secToμs
     }
     
     private func calculateRelativePower() -> Void {
-         if let amp1 = amplitude1 {
-             if let amp2 = amplitude2 {
-                 relativePower = 20.0 * log10(abs(amp2/amp1))
-             }
-         }
-     }
+        relativePower = 20.0 * log10(abs(amplitude2/amplitude1))
+    }
     
     func validateDuration1() -> Bool {
-        return duration1 == nil || duration1! >= 0.0
+        return duration1 >= 0.0
     }
     
     func duration1Updated() -> Void {
-        if flipAngle1 == nil {
-            flipAngle1 = 90.0
-        }
-        
-        if duration1 == nil {
-            duration1 = 10
-        }
-        
-        amplitude1 = updateAmplitude(flipAngle: flipAngle1!, duration: duration1!)
+        amplitude1 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
         updateAmplitude1InT()
         calculateRelativePower()
     }
     
     func validateDuration2() -> Bool {
-        return duration2 == nil || duration2! >= 0.0
+        return duration2 >= 0.0
     }
     
     func duration2Updated() -> Void {
-        if flipAngle2 == nil {
-            flipAngle2 = 90.0
-        }
-        
-        if duration2 == nil {
-            duration2 = 10
-        }
-        
-        amplitude2 = updateAmplitude(flipAngle: flipAngle2!, duration: duration2!)
+        amplitude2 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
         calculateRelativePower()
     }
     
     func validateFlipAngle1() -> Bool {
-        return flipAngle1 == nil || flipAngle1! >= 0.0
+        return flipAngle1 >= 0.0
     }
     
     func flipAngle1Updated() -> Void {
-        if flipAngle1 == nil {
-            flipAngle1 = 90.0
-        }
-        
-        if duration1 == nil {
-            duration1 = 10.0
-        }
-        
-        amplitude1 = updateAmplitude(flipAngle: flipAngle1!, duration: duration1!)
+        amplitude1 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
         updateAmplitude1InT()
         calculateRelativePower()
     }
     
     func validateFlipAngle2() -> Bool {
-        return flipAngle2 == nil || flipAngle2! >= 0.0
+        return flipAngle2 >= 0.0
     }
     
     func flipAngle2Updated() -> Void {
-        if flipAngle2 == nil {
-            flipAngle2 = 90.0
-        }
-        
-        if duration2 == nil {
-            duration2 = 10.0
-        }
-        
-        amplitude2 = updateAmplitude(flipAngle: flipAngle2!, duration: duration2!)
+        amplitude2 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
         calculateRelativePower()
     }
     
     func validateAmplitude1() -> Bool {
-        return amplitude1 == nil || amplitude1! >= 0.0
+        return amplitude1 >= 0.0
     }
     
     func amplitude1Updated() -> Void {
-        if flipAngle1 == nil {
-            flipAngle1 = 90.0
-        }
-        
-        if amplitude1 == nil {
-            amplitude1 = 25000
-        }
-        
         updateAmplitude1InT()
-        duration1 = updateDuration(flipAngle: flipAngle1!, amplitude: amplitude1!)
+        duration1 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
         calculateRelativePower()
     }
     
     func validateAmplitude1InT() -> Bool {
-        return amplitude1InT == nil || amplitude1InT! >= 0.0
+        return amplitude1InT >= 0.0
+    }
+    
+    func amplitude1InTUpdated() -> Void {
+        if let gyromaneticRatio = Double(nucleus.gyromagneticRatio) {
+            amplitude1 = amplitude1InT * gyromaneticRatio
+            duration1 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
+            calculateRelativePower()
+        }
     }
     
     private func updateAmplitude1InT() {
-        if let nucleus = nucleus, let gyromaneticRatio = Double(nucleus.gyromagneticRatio) {
-            amplitude1InT = amplitude1! / gyromaneticRatio
+        if let gyromaneticRatio = Double(nucleus.gyromagneticRatio) {
+            amplitude1InT = amplitude1 / gyromaneticRatio
         }
     }
     
     func validateAmplitude2() -> Bool {
-        return amplitude2 == nil || amplitude2! >= 0.0
+        return amplitude2 >= 0.0
     }
     
     func amplitude2Updated() -> Void {
-        if flipAngle2 == nil {
-            flipAngle2 = 90.0
-        }
-        
-        if amplitude2 == nil {
-            amplitude2 = 25000
-        }
-        
-        duration2 = updateDuration(flipAngle: flipAngle2!, amplitude: amplitude2!)
+        duration2 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
         calculateRelativePower()
     }
 
     func relativePowerUpdated() -> Void {
-        guard let amp1 = amplitude1 else {
-            return
-        }
-        
-        amplitude2 = pow(10.0, 1.0 * relativePower! / 20.0) * amp1
+        amplitude2 = pow(10.0, 1.0 * relativePower / 20.0) * amplitude1
+        duration2 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
     }
     
     // Ernst
-    @Published var repetitionTime: Double?
-    @Published var relaxationTime: Double?
-    @Published var ernstAngle: Double?
+    @Published var repetitionTime: Double
+    @Published var relaxationTime: Double
+    @Published var ernstAngle: Double
     
-    private let radianToDegree = 180.0 / Double.pi
+    private static let radianToDegree = 180.0 / Double.pi
     private var degreeToRadian: Double {
-        return 1.0 / radianToDegree
+        return 1.0 / MacNMRCalculatorViewModel.radianToDegree
     }
     
     func validateErnstAngle() -> Bool {
-        return ernstAngle == nil || ernstAngle! >= 0.0
+        return ernstAngle >= 0.0
     }
     
-    private func updateErnstAngle(repetitionTime: Double, relaxationTime: Double) -> Double {
+    private static func updateErnstAngle(repetitionTime: Double, relaxationTime: Double) -> Double {
         return acos( exp(-1.0 * repetitionTime / relaxationTime) ) * radianToDegree
     }
     
     func validateRepetitionTime() -> Bool {
-        return repetitionTime == nil || repetitionTime! >= 0.0
+        return repetitionTime >= 0.0
     }
     
     func repetitionTimeUpdated() -> Void {
-        if relaxationTime == nil {
-            relaxationTime = 1.0
-        }
-        
-        if repetitionTime == nil {
-            repetitionTime = 1.0
-        }
-        
-        ernstAngle = updateErnstAngle(repetitionTime: repetitionTime!, relaxationTime: relaxationTime!)
+        ernstAngle = MacNMRCalculatorViewModel.updateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
     }
     
     func validateRelaxationTime() -> Bool {
-        return relaxationTime == nil || relaxationTime! >= 0.0
+        return relaxationTime >= 0.0
     }
     
     func relaxationTimeUpdated() -> Void {
-        if relaxationTime == nil {
-            relaxationTime = 1.0
-        }
-        
-        if repetitionTime == nil {
-            repetitionTime = 1.0
-        }
-        
-        ernstAngle = updateErnstAngle(repetitionTime: repetitionTime!, relaxationTime: relaxationTime!)
+        ernstAngle = MacNMRCalculatorViewModel.updateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
     }
     
     func ernstAngleUpdated() -> Void {
-        if relaxationTime == nil {
-            relaxationTime = 1.0
-        }
-        
-        if ernstAngle == nil {
-            ernstAngle = 0.0
-        }
-        
-        repetitionTime = -1.0 * relaxationTime! * log(cos(ernstAngle! * degreeToRadian))
+        repetitionTime = -1.0 * relaxationTime * log(cos(ernstAngle * degreeToRadian))
     }
 }
