@@ -11,6 +11,7 @@ import Combine
 
 class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
+    let timeDomainCalculator = TimeDomainCalculator.shared
     let pulseCalculator = PulseCalculator.shared
     let ernstAngleCalculator = ErnstAngleCalculator.shared
     
@@ -51,7 +52,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         
         numberOfTimeDataPoint = 1000.0
         acquisitionDuration = 1.0
-        dwellTime = 1.0 * MacNMRCalculatorViewModel.secToμs / 1000.0
+        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: 1.0, numberOfDataPoints: 1000.0)
         
         numberOfFrequencyDataPoint = 1000.0
         spectralWidth = 1.0
@@ -115,17 +116,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var spectralWidth: Double
     @Published var frequencyResolution: Double
     
-    private static let secToμs: Double = 1000000.0
-    private static var μsToSec: Double {
-        get {
-            return 1.0 / secToμs
-        }
-    }
-    
     private static let kHzToHz: Double = 1000.0
     
     private func updateDwellTime() {
-        dwellTime = acquisitionDuration * MacNMRCalculatorViewModel.secToμs / numberOfTimeDataPoint
+        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoint)
     }
     
     func validateNumberOfTimeDataPoint() -> Bool {
@@ -149,7 +143,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func dwellTimeUpdated() {
-        acquisitionDuration = numberOfTimeDataPoint * (dwellTime * MacNMRCalculatorViewModel.μsToSec)
+        acquisitionDuration = timeDomainCalculator.calculateTotalDuration(dwellTime: dwellTime, numberOfDataPoints: numberOfTimeDataPoint)
     }
     
     private func updateFrequencyResolution() {
