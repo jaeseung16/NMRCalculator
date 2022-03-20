@@ -45,19 +45,24 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     init() {
+        let B0 = 1.0
         nucleus = NMRNucleus()
-        externalField = 1.0
-        larmorFrequency = larmorFrequencyCalculator.ω(γ: NMRCalcConstants.gammaProton, B: 1.0)
-        protonFrequency = larmorFrequencyCalculator.ωProton(at: 1.0)
-        electronFrequency = larmorFrequencyCalculator.ωElectron(at: 1.0)
+        externalField = B0
+        larmorFrequency = larmorFrequencyCalculator.ω(γ: NMRCalcConstants.gammaProton, B: B0)
+        protonFrequency = larmorFrequencyCalculator.ωProton(at: B0)
+        electronFrequency = larmorFrequencyCalculator.ωElectron(at: B0)
         
-        numberOfTimeDataPoint = 1000.0
-        acquisitionDuration = 1.0
-        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: 1.0, numberOfDataPoints: 1000.0)
+        let numberOfDataPoints = 1000.0
+        let duration = 1.0
+        let spectralRange = 1.0
         
-        numberOfFrequencyDataPoint = 1000.0
-        spectralWidth = 1.0
-        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: 1.0, numberOfDataPoints: 1000.0)
+        numberOfTimeDataPoints = numberOfDataPoints
+        acquisitionDuration = duration
+        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: duration, numberOfDataPoints: numberOfDataPoints)
+        
+        numberOfFrequencyDataPoints = numberOfDataPoints
+        spectralWidth = spectralRange
+        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralRange, numberOfDataPoints: numberOfDataPoints)
         
         let p1 = 10.0
         let φ1 = 90.0
@@ -70,15 +75,17 @@ class MacNMRCalculatorViewModel: ObservableObject {
         let p2 = 1000.0
         let φ2 = 90.0
         let amp2 = pulseCalculator.updateAmplitude(flipAngle: φ2, duration: p2)
-        duration2 = φ2
-        flipAngle2 = 90.0
+        duration2 = p2
+        flipAngle2 = φ2
         amplitude2 = amp2
         
         relativePower = 20.0 * log10(abs(amp2/amp1))
         
-        repetitionTime = 1.0
-        relaxationTime = 1.0
-        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: 1.0, relaxationTime: 1.0)
+        let τ = 1.0
+        let T1 = 1.0
+        repetitionTime = τ
+        relaxationTime = T1
+        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: τ, relaxationTime: T1)
     }
     
     func validateExternalField() -> Bool {
@@ -110,19 +117,19 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
   
     // Signal
-    @Published var numberOfTimeDataPoint: Double
+    @Published var numberOfTimeDataPoints: Double
     @Published var acquisitionDuration: Double
     @Published var dwellTime: Double
-    @Published var numberOfFrequencyDataPoint: Double
+    @Published var numberOfFrequencyDataPoints: Double
     @Published var spectralWidth: Double
     @Published var frequencyResolution: Double
     
     private func updateDwellTime() {
-        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoint)
+        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoints)
     }
     
     func validateNumberOfTimeDataPoint() -> Bool {
-        return numberOfTimeDataPoint >= 1.0
+        return numberOfTimeDataPoints >= 1.0
     }
     
     func numberOfTimeDataPointUpdated() {
@@ -142,15 +149,15 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func dwellTimeUpdated() {
-        acquisitionDuration = timeDomainCalculator.calculateTotalDuration(dwellTime: dwellTime, numberOfDataPoints: numberOfTimeDataPoint)
+        acquisitionDuration = timeDomainCalculator.calculateTotalDuration(dwellTime: dwellTime, numberOfDataPoints: numberOfTimeDataPoints)
     }
     
     private func updateFrequencyResolution() {
-        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralWidth, numberOfDataPoints: numberOfFrequencyDataPoint)
+        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralWidth, numberOfDataPoints: numberOfFrequencyDataPoints)
     }
     
     func validateNumberOfFrequencyDataPoint() -> Bool {
-        return numberOfFrequencyDataPoint >= 1
+        return numberOfFrequencyDataPoints >= 1
     }
     
     func numberOfFrequencyDataPointUpdated() {
@@ -170,7 +177,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func frequencyResolutionUpdated() {
-        numberOfFrequencyDataPoint = frequencyDomainCalculator.calcualteNumberOfDataPoints(spectralWidth: spectralWidth, frequencyResolution: frequencyResolution)
+        numberOfFrequencyDataPoints = frequencyDomainCalculator.calcualteNumberOfDataPoints(spectralWidth: spectralWidth, frequencyResolution: frequencyResolution)
     }
 
     // Pulse

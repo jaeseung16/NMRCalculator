@@ -44,15 +44,15 @@ struct MacNMRCalcSignalView: View {
                                    value: $numberOfTimeDataPoint,
                                    unit: "",
                                    formatter: dataPointsFormatter) {
-                    let previousValue = viewModel.numberOfTimeDataPoint
-                    viewModel.numberOfTimeDataPoint = numberOfTimeDataPoint
+                    let previousValue = viewModel.numberOfTimeDataPoints
+                    viewModel.numberOfTimeDataPoints = numberOfTimeDataPoint
                     if viewModel.validateNumberOfTimeDataPoint() {
                         viewModel.numberOfTimeDataPointUpdated()
                         acquisitionDuration = viewModel.acquisitionDuration
                         dwellTime = viewModel.dwellTime
                     } else {
                         numberOfTimeDataPoint = previousValue
-                        viewModel.numberOfTimeDataPoint = previousValue
+                        viewModel.numberOfTimeDataPoints = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -66,7 +66,7 @@ struct MacNMRCalcSignalView: View {
                     viewModel.acquisitionDuration = acquisitionDuration
                     if viewModel.validateAcquisitionDuration() {
                         viewModel.acquisitionDurationUpdated()
-                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoint
+                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoints
                         dwellTime = viewModel.dwellTime
                     } else {
                         acquisitionDuration = previousValue
@@ -85,7 +85,7 @@ struct MacNMRCalcSignalView: View {
                     viewModel.dwellTime = dwellTime
                     if viewModel.validateDwellTime() {
                         viewModel.dwellTimeUpdated()
-                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoint
+                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoints
                         acquisitionDuration = viewModel.acquisitionDuration
                     } else {
                         dwellTime = previousValue
@@ -101,15 +101,15 @@ struct MacNMRCalcSignalView: View {
                                    value: $numberOfFrequencyDataPoint,
                                    unit: "",
                                    formatter: dataPointsFormatter) {
-                    let previousValue = viewModel.numberOfFrequencyDataPoint
-                    viewModel.numberOfFrequencyDataPoint = numberOfFrequencyDataPoint
+                    let previousValue = viewModel.numberOfFrequencyDataPoints
+                    viewModel.numberOfFrequencyDataPoints = numberOfFrequencyDataPoint
                     if viewModel.validateNumberOfFrequencyDataPoint() {
                         viewModel.numberOfFrequencyDataPointUpdated()
                         spectralWidth = viewModel.spectralWidth
                         frequencyResolution = viewModel.frequencyResolution
                     } else {
                         numberOfFrequencyDataPoint = previousValue
-                        viewModel.numberOfFrequencyDataPoint = previousValue
+                        viewModel.numberOfFrequencyDataPoints = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -123,7 +123,7 @@ struct MacNMRCalcSignalView: View {
                     viewModel.spectralWidth = spectralWidth
                     if viewModel.validateSpectralWidth() {
                         viewModel.spectralWidthUpdated()
-                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoint
+                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoints
                         frequencyResolution = viewModel.frequencyResolution
                     } else {
                         spectralWidth = previousValue
@@ -141,7 +141,7 @@ struct MacNMRCalcSignalView: View {
                     viewModel.frequencyResolution = frequencyResolution
                     if viewModel.validateFrequencyResolution() {
                         viewModel.frequencyResolutionUpdated()
-                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoint
+                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoints
                         spectralWidth = viewModel.spectralWidth
                     } else {
                         frequencyResolution = previousValue
