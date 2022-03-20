@@ -11,6 +11,7 @@ import Combine
 
 class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
+    let pulseCalculator = PulseCalculator.shared
     
     let proton = NMRNucleus()
     
@@ -55,15 +56,22 @@ class MacNMRCalculatorViewModel: ObservableObject {
         spectralWidth = 1.0
         frequencyResolution = 1.0 * MacNMRCalculatorViewModel.kHzToHz / 1000.0
         
-        duration1 = 10.0
-        flipAngle1 = 90.0
-        amplitude1 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 10.0)
-        amplitude1InT = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 10.0) / NMRCalcConstants.gammaProton
+        let p1 = 10.0
+        let φ1 = 90.0
+        let amp1 = pulseCalculator.updateAmplitude(flipAngle: φ1, duration: p1)
+        duration1 = p1
+        flipAngle1 = φ1
+        amplitude1 = amp1
+        amplitude1InT = amp1 / NMRCalcConstants.gammaProton
         
-        duration2 = 1000.0
+        let p2 = 1000.0
+        let φ2 = 90.0
+        let amp2 = pulseCalculator.updateAmplitude(flipAngle: φ2, duration: p2)
+        duration2 = φ2
         flipAngle2 = 90.0
-        amplitude2 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 1000.0)
-        relativePower = 20.0 * log10(abs(MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 1000.0)/MacNMRCalculatorViewModel.updateAmplitude(flipAngle: 90.0, duration: 10.0)))
+        amplitude2 = amp2
+        
+        relativePower = 20.0 * log10(abs(amp2/amp1))
         
         repetitionTime = 1.0
         relaxationTime = 1.0
@@ -181,16 +189,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var amplitude2: Double
     @Published var relativePower: Double
     
-    private static func updateAmplitude(flipAngle: Double, duration: Double) -> Double {
-        return (flipAngle / 360.0) / (duration * μsToSec)
-    }
-    
-    private static func updateDuration(flipAngle: Double, amplitude: Double) -> Double {
-        return (flipAngle / 360.0) / amplitude * secToμs
-    }
-    
-    private func calculateRelativePower() -> Void {
-        relativePower = 20.0 * log10(abs(amplitude2/amplitude1))
+    private func updateRelativePower() -> Void {
+        relativePower = pulseCalculator.calculateDecibel(measured: amplitude2, reference: amplitude1)
     }
     
     func validateDuration1() -> Bool {
@@ -198,9 +198,9 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func duration1Updated() -> Void {
-        amplitude1 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
+        amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
         updateAmplitude1InT()
-        calculateRelativePower()
+        updateRelativePower()
     }
     
     func validateDuration2() -> Bool {
@@ -208,8 +208,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func duration2Updated() -> Void {
-        amplitude2 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
-        calculateRelativePower()
+        amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
+        updateRelativePower()
     }
     
     func validateFlipAngle1() -> Bool {
@@ -217,9 +217,9 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func flipAngle1Updated() -> Void {
-        amplitude1 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
+        amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
         updateAmplitude1InT()
-        calculateRelativePower()
+        updateRelativePower()
     }
     
     func validateFlipAngle2() -> Bool {
@@ -227,8 +227,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func flipAngle2Updated() -> Void {
-        amplitude2 = MacNMRCalculatorViewModel.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
-        calculateRelativePower()
+        amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
+        updateRelativePower()
     }
     
     func validateAmplitude1() -> Bool {
@@ -237,8 +237,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     func amplitude1Updated() -> Void {
         updateAmplitude1InT()
-        duration1 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
-        calculateRelativePower()
+        duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
+        updateRelativePower()
     }
     
     func validateAmplitude1InT() -> Bool {
@@ -247,8 +247,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     func amplitude1InTUpdated() -> Void {
         amplitude1 = amplitude1InT * γNucleus
-        duration1 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
-        calculateRelativePower()
+        duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
+        updateRelativePower()
     }
     
     private func updateAmplitude1InT() {
@@ -260,13 +260,13 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func amplitude2Updated() -> Void {
-        duration2 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
-        calculateRelativePower()
+        duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
+        updateRelativePower()
     }
 
     func relativePowerUpdated() -> Void {
-        amplitude2 = pow(10.0, 1.0 * relativePower / 20.0) * amplitude1
-        duration2 = MacNMRCalculatorViewModel.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
+        amplitude2 = pulseCalculator.calculateAmplitude(dB: relativePower, reference: amplitude1)
+        duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
     }
     
     // Ernst
