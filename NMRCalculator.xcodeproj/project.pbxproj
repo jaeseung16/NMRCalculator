@@ -46,13 +46,10 @@
 		900B441A27E7D23700E10A25 /* TimeDomainCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441927E7D23700E10A25 /* TimeDomainCalculator.swift */; };
 		900B441C27E7D63600E10A25 /* FrequencyDomainCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441B27E7D63600E10A25 /* FrequencyDomainCalculator.swift */; };
 		901CF16025E8593E00B123D1 /* MacNMRCalcSignalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF15F25E8593E00B123D1 /* MacNMRCalcSignalView.swift */; };
-		901CF16825E85EE400B123D1 /* SignalCalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF16725E85EE400B123D1 /* SignalCalculatorViewModel.swift */; };
 		901CF17025E8611600B123D1 /* MacNMRCalcItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF16F25E8611600B123D1 /* MacNMRCalcItemView.swift */; };
 		9026CA4D25E5BCB90059E64D /* MacCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9026CA4C25E5BCB90059E64D /* MacCalculatorView.swift */; };
 		9028827727D966BB00795259 /* MacNMRCalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9028827627D966BB00795259 /* MacNMRCalculatorViewModel.swift */; };
 		9041951825EC14800029D61B /* MacNMRCalcPulseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9041951725EC14800029D61B /* MacNMRCalcPulseView.swift */; };
-		9041952125EC1B2D0029D61B /* PulseCalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9041952025EC1B2D0029D61B /* PulseCalculatorViewModel.swift */; };
-		9041953125EC24850029D61B /* ErnstAngleCalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9041953025EC24850029D61B /* ErnstAngleCalculatorViewModel.swift */; };
 		9041955625EC28BB0029D61B /* MacNMRCalcErnstAngleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9041952825EC24560029D61B /* MacNMRCalcErnstAngleView.swift */; };
 		90495A3723CEA4D2003F2FAA /* WatchNucleusDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90495A3623CEA4D2003F2FAA /* WatchNucleusDetailView.swift */; };
 		90532BEC223D7C1E00379175 /* NMRCalcUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90532BEB223D7C1E00379175 /* NMRCalcUITests.swift */; };
@@ -217,14 +214,11 @@
 		900B441927E7D23700E10A25 /* TimeDomainCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDomainCalculator.swift; sourceTree = "<group>"; };
 		900B441B27E7D63600E10A25 /* FrequencyDomainCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyDomainCalculator.swift; sourceTree = "<group>"; };
 		901CF15F25E8593E00B123D1 /* MacNMRCalcSignalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcSignalView.swift; sourceTree = "<group>"; };
-		901CF16725E85EE400B123D1 /* SignalCalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalCalculatorViewModel.swift; sourceTree = "<group>"; };
 		901CF16F25E8611600B123D1 /* MacNMRCalcItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcItemView.swift; sourceTree = "<group>"; };
 		9026CA4C25E5BCB90059E64D /* MacCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacCalculatorView.swift; sourceTree = "<group>"; };
 		9028827627D966BB00795259 /* MacNMRCalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalculatorViewModel.swift; sourceTree = "<group>"; };
 		9041951725EC14800029D61B /* MacNMRCalcPulseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcPulseView.swift; sourceTree = "<group>"; };
-		9041952025EC1B2D0029D61B /* PulseCalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseCalculatorViewModel.swift; sourceTree = "<group>"; };
 		9041952825EC24560029D61B /* MacNMRCalcErnstAngleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcErnstAngleView.swift; sourceTree = "<group>"; };
-		9041953025EC24850029D61B /* ErnstAngleCalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErnstAngleCalculatorViewModel.swift; sourceTree = "<group>"; };
 		90495A3623CEA4D2003F2FAA /* WatchNucleusDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusDetailView.swift; sourceTree = "<group>"; };
 		90532BE9223D7C1E00379175 /* NMRCalcUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NMRCalcUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		90532BEB223D7C1E00379175 /* NMRCalcUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcUITests.swift; sourceTree = "<group>"; };
@@ -419,6 +413,18 @@
 			path = NMRCalculator;
 			sourceTree = "<group>";
 		};
+		900B441D27E7DA6D00E10A25 /* Calculators */ = {
+			isa = PBXGroup;
+			children = (
+				900B441727E7D0B900E10A25 /* ErnstAngleCalculator.swift */,
+				900B441B27E7D63600E10A25 /* FrequencyDomainCalculator.swift */,
+				900B441327E77C7900E10A25 /* LarmorFrequencyCalculator.swift */,
+				900B441527E7C60400E10A25 /* PulseCalculator.swift */,
+				900B441927E7D23700E10A25 /* TimeDomainCalculator.swift */,
+			);
+			path = Calculators;
+			sourceTree = "<group>";
+		};
 		90532BEA223D7C1E00379175 /* NMRCalcUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -460,15 +466,7 @@
 		906EBD2F25E47F7800ED8641 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				901CF16725E85EE400B123D1 /* SignalCalculatorViewModel.swift */,
-				9041952025EC1B2D0029D61B /* PulseCalculatorViewModel.swift */,
-				9041953025EC24850029D61B /* ErnstAngleCalculatorViewModel.swift */,
-				900B441727E7D0B900E10A25 /* ErnstAngleCalculator.swift */,
-				900B441327E77C7900E10A25 /* LarmorFrequencyCalculator.swift */,
 				9028827627D966BB00795259 /* MacNMRCalculatorViewModel.swift */,
-				900B441527E7C60400E10A25 /* PulseCalculator.swift */,
-				900B441927E7D23700E10A25 /* TimeDomainCalculator.swift */,
-				900B441B27E7D63600E10A25 /* FrequencyDomainCalculator.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -494,6 +492,7 @@
 		909C112525BF908A00E8C285 /* NMRCalcForMac */ = {
 			isa = PBXGroup;
 			children = (
+				900B441D27E7DA6D00E10A25 /* Calculators */,
 				906EBD2F25E47F7800ED8641 /* ViewModel */,
 				906EBD1825E47D5C00ED8641 /* Settings */,
 				909ACA3025CF5BFC00C92C2F /* Views */,
@@ -882,7 +881,6 @@
 				901CF17025E8611600B123D1 /* MacNMRCalcItemView.swift in Sources */,
 				9028827727D966BB00795259 /* MacNMRCalculatorViewModel.swift in Sources */,
 				90A0A21825CB6C7C001DA889 /* NMRCalcConstants.swift in Sources */,
-				9041953125EC24850029D61B /* ErnstAngleCalculatorViewModel.swift in Sources */,
 				909ACA3E25CF5D7000C92C2F /* MacNucleusInfoView.swift in Sources */,
 				909C115625BF90B000E8C285 /* NuclearSpinView.swift in Sources */,
 				900B441A27E7D23700E10A25 /* TimeDomainCalculator.swift in Sources */,
@@ -895,9 +893,7 @@
 				906EBD1A25E47D8E00ED8641 /* ElementColor.swift in Sources */,
 				9041955625EC28BB0029D61B /* MacNMRCalcErnstAngleView.swift in Sources */,
 				909C114125BF90A800E8C285 /* LarmorFrequencyView.swift in Sources */,
-				9041952125EC1B2D0029D61B /* PulseCalculatorViewModel.swift in Sources */,
 				909C118E25BF913C00E8C285 /* NMRPeriodicTable.swift in Sources */,
-				901CF16825E85EE400B123D1 /* SignalCalculatorViewModel.swift in Sources */,
 				9026CA4D25E5BCB90059E64D /* MacCalculatorView.swift in Sources */,
 				909C118725BF912400E8C285 /* NMRNucleus.swift in Sources */,
 				900B441627E7C60400E10A25 /* PulseCalculator.swift in Sources */,
