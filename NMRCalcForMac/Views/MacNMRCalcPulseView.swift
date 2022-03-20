@@ -214,6 +214,9 @@ struct MacNMRCalcPulseView: View {
                 showAlert.toggle()
             }
         }
+        .onChange(of: viewModel.nucleusUpdated) { _ in
+            amplitude1InT = viewModel.amplitude1InT
+        }
     }
     
 }
