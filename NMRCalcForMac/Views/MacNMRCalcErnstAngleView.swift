@@ -16,8 +16,10 @@ struct MacNMRCalcErnstAngleView: View {
     @State var ernstAngle: Double
     
     @State private var showAlert = false
+    @State private var showAlertErnstAngle = false
     
     private let alertMessage = "Try a positive value."
+    private let ernstAngleAlertMessage = "Try a value between 0 and 90 exclusive"
     
     private var flipAngleFormatter: NumberFormatter {
         let formatter = NumberFormatter()
@@ -86,7 +88,7 @@ struct MacNMRCalcErnstAngleView: View {
                     } else {
                         ernstAngle = previousValue
                         viewModel.ernstAngle = previousValue
-                        showAlert.toggle()
+                        showAlertErnstAngle.toggle()
                     }
                 }
             }
@@ -95,6 +97,11 @@ struct MacNMRCalcErnstAngleView: View {
         .alert(alertMessage, isPresented: $showAlert) {
             Button("OK") {
                 showAlert.toggle()
+            }
+        }
+        .alert(ernstAngleAlertMessage, isPresented: $showAlertErnstAngle) {
+            Button("OK") {
+                showAlertErnstAngle.toggle()
             }
         }
     }

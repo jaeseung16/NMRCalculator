@@ -276,7 +276,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var ernstAngle: Double
     
     func validateErnstAngle() -> Bool {
-        return ernstAngle >= 0.0
+        return ernstAngle > 0.0 && ernstAngle < 90.0
     }
     
     func validateRepetitionTime() -> Bool {
