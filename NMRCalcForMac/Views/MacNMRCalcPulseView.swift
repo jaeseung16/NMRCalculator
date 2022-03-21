@@ -58,7 +58,7 @@ struct MacNMRCalcPulseView: View {
                 MacNMRCalcItemView(title: "Pulse duration",
                                    titleFont: .body,
                                    value: $duration1,
-                                   unit: "μs",
+                                   unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
                     let previousValue = viewModel.duration1
                     viewModel.duration1 = duration1
@@ -78,7 +78,7 @@ struct MacNMRCalcPulseView: View {
                 MacNMRCalcItemView(title: "Flip angle",
                                    titleFont: .body,
                                    value: $flipAngle1,
-                                   unit: "°",
+                                   unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     let previousValue = viewModel.flipAngle1
                     viewModel.flipAngle1 = flipAngle1
@@ -98,7 +98,7 @@ struct MacNMRCalcPulseView: View {
                 MacNMRCalcItemView(title: "RF Amplitude",
                                    titleFont: .body,
                                    value: $amplitude1,
-                                   unit: "Hz",
+                                   unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
                     let previousValue = viewModel.amplitude1
                     viewModel.amplitude1 = amplitude1
@@ -119,7 +119,7 @@ struct MacNMRCalcPulseView: View {
                     MacNMRCalcItemView(title: "RF Amplitude for \(nucleus.nameNucleus)",
                                        titleFont: .body,
                                        value: $amplitude1InT,
-                                       unit: "μT",
+                                       unit: NMRCalcUnit.μT,
                                        formatter: amplitudeFormatter) {
                         let previousValue = viewModel.amplitude1InT
                         viewModel.amplitude1InT = amplitude1InT
@@ -142,7 +142,7 @@ struct MacNMRCalcPulseView: View {
                 MacNMRCalcItemView(title: "Pulse duration",
                                    titleFont: .body,
                                    value: $duration2,
-                                   unit: "μs",
+                                   unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
                     let previousValue = viewModel.duration2
                     viewModel.duration2 = duration2
@@ -160,7 +160,8 @@ struct MacNMRCalcPulseView: View {
                 
                 MacNMRCalcItemView(title: "Flip angle",
                                    titleFont: .body,
-                                   value: $flipAngle2, unit: "°",
+                                   value: $flipAngle2,
+                                   unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     let previousValue = viewModel.flipAngle2
                     viewModel.flipAngle2 = flipAngle2
@@ -179,7 +180,7 @@ struct MacNMRCalcPulseView: View {
                 MacNMRCalcItemView(title: "RF Amplitude",
                                    titleFont: .body,
                                    value: $amplitude2,
-                                   unit: "Hz",
+                                   unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
                     let previousValue = viewModel.amplitude2
                     viewModel.amplitude2 = amplitude2
@@ -198,7 +199,7 @@ struct MacNMRCalcPulseView: View {
                 MacNMRCalcItemView(title: "RF power relateve to 1st",
                                    titleFont: .body,
                                    value: $relativePower,
-                                   unit: "dB",
+                                   unit: NMRCalcUnit.dB,
                                    formatter: relativePowerFormatter) {
                     viewModel.relativePower = relativePower
                     viewModel.relativePowerUpdated()

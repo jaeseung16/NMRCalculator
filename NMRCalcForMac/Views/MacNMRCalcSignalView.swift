@@ -42,7 +42,7 @@ struct MacNMRCalcSignalView: View {
                 MacNMRCalcItemView(title: "Number of data points",
                                    titleFont: .body,
                                    value: $numberOfTimeDataPoint,
-                                   unit: "",
+                                   unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
                     let previousValue = viewModel.numberOfTimeDataPoints
                     viewModel.numberOfTimeDataPoints = numberOfTimeDataPoint
@@ -60,7 +60,7 @@ struct MacNMRCalcSignalView: View {
                 MacNMRCalcItemView(title: "Acquisition duration",
                                    titleFont: .body,
                                    value: $acquisitionDuration,
-                                   unit: "sec",
+                                   unit: NMRCalcUnit.sec,
                                    formatter: durationTimeFormatter) {
                     let previousValue = viewModel.acquisitionDuration
                     viewModel.acquisitionDuration = acquisitionDuration
@@ -79,7 +79,7 @@ struct MacNMRCalcSignalView: View {
                 MacNMRCalcItemView(title: "Dwell time",
                                    titleFont: .body,
                                    value: $dwellTime,
-                                   unit: "μs",
+                                   unit: NMRCalcUnit.μs,
                                    formatter: durationTimeFormatter) {
                     let previousValue = viewModel.dwellTime
                     viewModel.dwellTime = dwellTime
@@ -99,7 +99,7 @@ struct MacNMRCalcSignalView: View {
                 MacNMRCalcItemView(title: "Number of data points",
                                    titleFont: .body,
                                    value: $numberOfFrequencyDataPoint,
-                                   unit: "",
+                                   unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
                     let previousValue = viewModel.numberOfFrequencyDataPoints
                     viewModel.numberOfFrequencyDataPoints = numberOfFrequencyDataPoint
@@ -117,7 +117,7 @@ struct MacNMRCalcSignalView: View {
                 MacNMRCalcItemView(title: "Spectral width",
                                    titleFont: .body,
                                    value: $spectralWidth,
-                                   unit: "kHz",
+                                   unit: NMRCalcUnit.kHz,
                                    formatter: durationTimeFormatter) {
                     let previousValue = viewModel.spectralWidth
                     viewModel.spectralWidth = spectralWidth
@@ -135,7 +135,7 @@ struct MacNMRCalcSignalView: View {
                 MacNMRCalcItemView(title: "Frequency resolution",
                                    titleFont: .body,
                                    value: $frequencyResolution,
-                                   unit: "Hz",
+                                   unit: NMRCalcUnit.Hz,
                                    formatter: durationTimeFormatter) {
                     let previousValue = viewModel.frequencyResolution
                     viewModel.frequencyResolution = frequencyResolution

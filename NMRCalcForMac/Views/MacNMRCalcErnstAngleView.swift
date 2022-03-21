@@ -39,7 +39,7 @@ struct MacNMRCalcErnstAngleView: View {
                 MacNMRCalcItemView(title: "Repetition Time",
                                    titleFont: .body,
                                    value: $repetitionTime,
-                                   unit: "sec",
+                                   unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
                     let previousValue = viewModel.repetitionTime
                     viewModel.repetitionTime = repetitionTime
@@ -57,7 +57,7 @@ struct MacNMRCalcErnstAngleView: View {
                 MacNMRCalcItemView(title: "Relaxation Time",
                                    titleFont: .body,
                                    value: $relaxationTime,
-                                   unit: "sec",
+                                   unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
                     let previousValue = viewModel.relaxationTime
                     viewModel.relaxationTime = relaxationTime
@@ -75,7 +75,7 @@ struct MacNMRCalcErnstAngleView: View {
                 MacNMRCalcItemView(title: "Ernst Angle",
                                    titleFont: .body,
                                    value: $ernstAngle,
-                                   unit: "°",
+                                   unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     let previousValue = viewModel.ernstAngle
                     viewModel.ernstAngle = ernstAngle

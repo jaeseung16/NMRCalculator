@@ -20,7 +20,7 @@ struct MacNMRCalcItemView: View {
     var title: String
     var titleFont: Font
     @Binding var value: Double
-    var unit: String
+    var unit: NMRCalcUnit
     var formatter: NumberFormatter
     var onSubmit: () -> Void
     
@@ -38,7 +38,7 @@ struct MacNMRCalcItemView: View {
                 .frame(width: defaultTextFieldWidth)
                 .foregroundColor(numberColor.getColor())
         
-            Text(unit)
+            Text(unit.rawValue)
                 .font(.body)
                 .frame(width: defaultUnitTextWidth, alignment: .leading)
         }

@@ -71,7 +71,7 @@ struct MacLamorFrequencyView: View {
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.externalField.rawValue,
                                    titleFont: .callout,
                                    value: $externalField,
-                                   unit: NMRPeriodicTableData.Unit.T.rawValue,
+                                   unit: NMRCalcUnit.T,
                                    formatter: externalFieldFormatter) {
                     let previousExternalField = viewModel.externalField
                     viewModel.externalField = externalField
@@ -90,7 +90,7 @@ struct MacLamorFrequencyView: View {
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.larmorFrequency.rawValue,
                                    titleFont: .callout,
                                    value: $larmorFrequency,
-                                   unit: NMRPeriodicTableData.Unit.MHz.rawValue,
+                                   unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
                     viewModel.larmorFrequency = larmorFrequency
                     viewModel.larmorFrequencyUpdated()
@@ -102,7 +102,7 @@ struct MacLamorFrequencyView: View {
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
                                    titleFont: .callout,
                                    value: $protonFrequency,
-                                   unit: NMRPeriodicTableData.Unit.MHz.rawValue,
+                                   unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
                     viewModel.protonFrequency = protonFrequency
                     viewModel.protonFrequencyUpdated()
@@ -114,7 +114,7 @@ struct MacLamorFrequencyView: View {
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
                                    titleFont: .callout,
                                    value: $electronFrequency,
-                                   unit: NMRPeriodicTableData.Unit.GHz.rawValue,
+                                   unit: NMRCalcUnit.GHz,
                                    formatter: frequencyFormatter) {
                     viewModel.electronFrequency = electronFrequency
                     viewModel.electronFrequencyUpdated()
