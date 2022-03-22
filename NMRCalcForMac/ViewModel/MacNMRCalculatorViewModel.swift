@@ -22,10 +22,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     @Published var nucleus: NMRNucleus {
         didSet {
-            externalField = externalField
             larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-            protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
-            electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
             updateAmplitude1InT()
             
             nucleusUpdated.toggle()
