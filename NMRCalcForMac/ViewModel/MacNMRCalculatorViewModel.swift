@@ -32,10 +32,45 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
     }
     
-    @Published var larmorFrequency: Double
-    @Published var protonFrequency: Double
-    @Published var electronFrequency: Double
-    @Published var externalField: Double
+    @Published var externalField: Double {
+        didSet {
+            if externalField != oldValue {
+                larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+                protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+                electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
+            }
+        }
+    }
+    
+    @Published var larmorFrequency: Double {
+        didSet {
+            if larmorFrequency != oldValue {
+                externalField = larmorFrequency / γNucleus
+                protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+                electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
+            }
+        }
+    }
+    
+    @Published var protonFrequency: Double {
+        didSet {
+            if protonFrequency != oldValue {
+                externalField = protonFrequency / NMRCalcConstants.gammaProton
+                larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+                electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
+            }
+        }
+    }
+    
+    @Published var electronFrequency: Double {
+        didSet {
+            if electronFrequency != oldValue {
+                externalField = electronFrequency / NMRCalcConstants.gammaElectron
+                larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+                protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+            }
+        }
+    }
     
     private var γNucleus: Double {
         guard let γNucleus = Double(nucleus.gyromagneticRatio) else {
@@ -92,28 +127,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         return abs(externalField) <= 1000.0
     }
     
-    func externalFieldUpdated() {
-        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
-        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
-    }
-    
-    func larmorFrequencyUpdated() {
-        externalField = larmorFrequency / γNucleus
-        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
-        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
-    }
-    
-    func protonFrequencyUpdated() {
-        externalField = protonFrequency / NMRCalcConstants.gammaProton
-        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
-    }
-    
-    func electronFrequencyUpdated() {
-        externalField = electronFrequency / NMRCalcConstants.gammaElectron
-        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+    func validate(externalField B0: Double) -> Bool {
+        return abs(B0) <= 1000.0
     }
   
     // Signal

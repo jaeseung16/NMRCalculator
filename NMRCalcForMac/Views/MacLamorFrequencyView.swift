@@ -73,16 +73,9 @@ struct MacLamorFrequencyView: View {
                                    value: $externalField,
                                    unit: NMRCalcUnit.T,
                                    formatter: externalFieldFormatter) {
-                    let previousExternalField = viewModel.externalField
-                    viewModel.externalField = externalField
-                    if viewModel.validateExternalField() {
-                        viewModel.externalFieldUpdated()
-                        larmorFrequency = viewModel.larmorFrequency
-                        protonFrequency = viewModel.protonFrequency
-                        electronFrequency = viewModel.electronFrequency
-                    } else {
-                        externalField = previousExternalField
+                    if viewModel.validate(externalField: externalField) {
                         viewModel.externalField = externalField
+                    } else {
                         showAlert.toggle()
                     }
                 }
@@ -93,10 +86,6 @@ struct MacLamorFrequencyView: View {
                                    unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
                     viewModel.larmorFrequency = larmorFrequency
-                    viewModel.larmorFrequencyUpdated()
-                    externalField = viewModel.externalField
-                    protonFrequency = viewModel.protonFrequency
-                    electronFrequency = viewModel.electronFrequency
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
@@ -105,10 +94,6 @@ struct MacLamorFrequencyView: View {
                                    unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
                     viewModel.protonFrequency = protonFrequency
-                    viewModel.protonFrequencyUpdated()
-                    externalField = viewModel.externalField
-                    larmorFrequency = viewModel.larmorFrequency
-                    electronFrequency = viewModel.electronFrequency
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
@@ -117,15 +102,12 @@ struct MacLamorFrequencyView: View {
                                    unit: NMRCalcUnit.GHz,
                                    formatter: frequencyFormatter) {
                     viewModel.electronFrequency = electronFrequency
-                    viewModel.electronFrequencyUpdated()
-                    externalField = viewModel.externalField
-                    larmorFrequency = viewModel.larmorFrequency
-                    protonFrequency = viewModel.protonFrequency
                 }
             }
             .padding()
             .alert(alertMessage, isPresented: $showAlert) {
                 Button("OK") {
+                    externalField = viewModel.externalField
                     showAlert.toggle()
                 }
             }
@@ -134,6 +116,26 @@ struct MacLamorFrequencyView: View {
                 protonFrequency = viewModel.protonFrequency
                 electronFrequency = viewModel.electronFrequency
                 externalField = viewModel.externalField
+            }
+            .onChange(of: viewModel.externalField) { _ in
+                if externalField != viewModel.externalField {
+                    externalField = viewModel.externalField
+                }
+            }
+            .onChange(of: viewModel.larmorFrequency) { _ in
+                if larmorFrequency != viewModel.larmorFrequency {
+                    larmorFrequency = viewModel.larmorFrequency
+                }
+            }
+            .onChange(of: viewModel.protonFrequency) { _ in
+                if protonFrequency != viewModel.protonFrequency {
+                    protonFrequency = viewModel.protonFrequency
+                }
+            }
+            .onChange(of: viewModel.electronFrequency) { _ in
+                if electronFrequency != viewModel.electronFrequency {
+                    electronFrequency = viewModel.electronFrequency
+                }
             }
         }
     }
