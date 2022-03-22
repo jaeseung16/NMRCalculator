@@ -185,78 +185,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         return value > 0.0
     }
     
-    func validate(numberOfPoints value: Double) -> Bool {
-        return value > 1.0
-    }
-    
     func validate(numberOfDataPoints: Double) -> Bool {
         return numberOfDataPoints >= 1.0
     }
     
-    func validateNumberOfTimeDataPoint() -> Bool {
-        return numberOfTimeDataPoints >= 1.0
-    }
-    
-    func numberOfTimeDataPointUpdated() {
-        updateDwellTime()
-    }
-    
-    func validateAcquisitionDuration() -> Bool {
-        return acquisitionDuration > 0.0
-    }
-    
-    func validate(duration: Double) -> Bool {
-        return duration > 0.0
-    }
-    
-    func acquisitionDurationUpdated() {
-        updateDwellTime()
-    }
-    
-    func validate(time: Double) -> Bool {
-        return time > 0.0
-    }
-    
-    func validateDwellTime() -> Bool {
-        return dwellTime > 0.0
-    }
-    
-    func dwellTimeUpdated() {
-        acquisitionDuration = timeDomainCalculator.calculateTotalDuration(dwellTime: dwellTime, numberOfDataPoints: numberOfTimeDataPoints)
-    }
-    
     private func updateFrequencyResolution() {
         frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralWidth, numberOfDataPoints: numberOfFrequencyDataPoints)
-    }
-    
-    func validateNumberOfFrequencyDataPoint() -> Bool {
-        return numberOfFrequencyDataPoints >= 1
-    }
-    
-    func numberOfFrequencyDataPointUpdated() {
-        updateFrequencyResolution()
-    }
-    
-    func validate(spectralWidth: Double) -> Bool {
-        return spectralWidth > 0.0
-    }
-    
-    func validateSpectralWidth() -> Bool {
-        return spectralWidth > 0.0
-    }
-    
-    func spectralWidthUpdated() {
-        updateFrequencyResolution()
-    }
-    
-    
-    
-    func validateFrequencyResolution() -> Bool {
-        return frequencyResolution > 0.0
-    }
-    
-    func frequencyResolutionUpdated() {
-        numberOfFrequencyDataPoints = frequencyDomainCalculator.calcualteNumberOfDataPoints(spectralWidth: spectralWidth, frequencyResolution: frequencyResolution)
     }
 
     // Pulse
