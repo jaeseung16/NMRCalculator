@@ -18,10 +18,10 @@ struct MacNucleusContentView: View {
                     Text("Nucleus")
                 }
             
-            MacNMRCalcSignalView(numberOfTimeDataPoint: viewModel.numberOfTimeDataPoints,
+            MacNMRCalcSignalView(numberOfTimeDataPoints: viewModel.numberOfTimeDataPoints,
                                  acquisitionDuration: viewModel.acquisitionDuration,
                                  dwellTime: viewModel.dwellTime,
-                                 numberOfFrequencyDataPoint: viewModel.numberOfFrequencyDataPoints,
+                                 numberOfFrequencyDataPoints: viewModel.numberOfFrequencyDataPoints,
                                  spectralWidth: viewModel.spectralWidth,
                                  frequencyResolution: viewModel.frequencyResolution)
             .tabItem { Text("Signal") }

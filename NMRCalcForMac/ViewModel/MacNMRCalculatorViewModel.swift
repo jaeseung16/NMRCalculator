@@ -129,15 +129,68 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
   
     // Signal
-    @Published var numberOfTimeDataPoints: Double
-    @Published var acquisitionDuration: Double
-    @Published var dwellTime: Double
-    @Published var numberOfFrequencyDataPoints: Double
-    @Published var spectralWidth: Double
-    @Published var frequencyResolution: Double
+    @Published var numberOfTimeDataPoints: Double {
+        didSet {
+            if numberOfTimeDataPoints != oldValue {
+                updateDwellTime()
+            }
+        }
+    }
+    
+    @Published var acquisitionDuration: Double {
+        didSet {
+            if acquisitionDuration != oldValue {
+                updateDwellTime()
+            }
+        }
+    }
+    
+    @Published var dwellTime: Double {
+        didSet {
+            if dwellTime != oldValue {
+                acquisitionDuration = timeDomainCalculator.calculateTotalDuration(dwellTime: dwellTime, numberOfDataPoints: numberOfTimeDataPoints)
+            }
+        }
+    }
+    
+    @Published var numberOfFrequencyDataPoints: Double {
+        didSet {
+            if numberOfFrequencyDataPoints != oldValue {
+                updateFrequencyResolution()
+            }
+        }
+    }
+    
+    @Published var spectralWidth: Double {
+        didSet {
+            if spectralWidth != oldValue {
+                updateFrequencyResolution()
+            }
+        }
+    }
+    
+    @Published var frequencyResolution: Double {
+        didSet {
+            if frequencyResolution != oldValue {
+                numberOfFrequencyDataPoints = frequencyDomainCalculator.calcualteNumberOfDataPoints(spectralWidth: spectralWidth, frequencyResolution: frequencyResolution)
+            }
+        }
+    }
     
     private func updateDwellTime() {
         dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoints)
+    }
+    
+    func isPositive(_ value: Double) -> Bool {
+        return value > 0.0
+    }
+    
+    func validate(numberOfPoints value: Double) -> Bool {
+        return value > 1.0
+    }
+    
+    func validate(numberOfDataPoints: Double) -> Bool {
+        return numberOfDataPoints >= 1.0
     }
     
     func validateNumberOfTimeDataPoint() -> Bool {
@@ -152,8 +205,16 @@ class MacNMRCalculatorViewModel: ObservableObject {
         return acquisitionDuration > 0.0
     }
     
+    func validate(duration: Double) -> Bool {
+        return duration > 0.0
+    }
+    
     func acquisitionDurationUpdated() {
         updateDwellTime()
+    }
+    
+    func validate(time: Double) -> Bool {
+        return time > 0.0
     }
     
     func validateDwellTime() -> Bool {
@@ -176,6 +237,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateFrequencyResolution()
     }
     
+    func validate(spectralWidth: Double) -> Bool {
+        return spectralWidth > 0.0
+    }
+    
     func validateSpectralWidth() -> Bool {
         return spectralWidth > 0.0
     }
@@ -183,6 +248,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     func spectralWidthUpdated() {
         updateFrequencyResolution()
     }
+    
+    
     
     func validateFrequencyResolution() -> Bool {
         return frequencyResolution > 0.0

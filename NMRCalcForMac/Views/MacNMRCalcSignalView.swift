@@ -11,16 +11,18 @@ import SwiftUI
 struct MacNMRCalcSignalView: View {
     @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
 
-    @State var numberOfTimeDataPoint: Double
+    @State var numberOfTimeDataPoints: Double
     @State var acquisitionDuration: Double
     @State var dwellTime: Double
-    @State var numberOfFrequencyDataPoint: Double
+    @State var numberOfFrequencyDataPoints: Double
     @State var spectralWidth: Double
     @State var frequencyResolution: Double
     
     @State private var showAlert = false
+    @State private var showDataPointsAlert = false
     
     private let alertMessage = "Try a positive value."
+    private let dataPointsAlertMessage = "Try a natural whole number."
     
     private var dataPointsFormatter: NumberFormatter {
         let formatter = NumberFormatter()
@@ -41,19 +43,13 @@ struct MacNMRCalcSignalView: View {
             Section(header: Text("Time Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points",
                                    titleFont: .body,
-                                   value: $numberOfTimeDataPoint,
+                                   value: $numberOfTimeDataPoints,
                                    unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
-                    let previousValue = viewModel.numberOfTimeDataPoints
-                    viewModel.numberOfTimeDataPoints = numberOfTimeDataPoint
-                    if viewModel.validateNumberOfTimeDataPoint() {
-                        viewModel.numberOfTimeDataPointUpdated()
-                        acquisitionDuration = viewModel.acquisitionDuration
-                        dwellTime = viewModel.dwellTime
+                    if viewModel.validate(numberOfDataPoints: numberOfTimeDataPoints) {
+                        viewModel.numberOfTimeDataPoints = numberOfTimeDataPoints
                     } else {
-                        numberOfTimeDataPoint = previousValue
-                        viewModel.numberOfTimeDataPoints = previousValue
-                        showAlert.toggle()
+                        showDataPointsAlert.toggle()
                     }
                 }
                 
@@ -62,18 +58,11 @@ struct MacNMRCalcSignalView: View {
                                    value: $acquisitionDuration,
                                    unit: NMRCalcUnit.sec,
                                    formatter: durationTimeFormatter) {
-                    let previousValue = viewModel.acquisitionDuration
-                    viewModel.acquisitionDuration = acquisitionDuration
-                    if viewModel.validateAcquisitionDuration() {
-                        viewModel.acquisitionDurationUpdated()
-                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoints
-                        dwellTime = viewModel.dwellTime
+                    if viewModel.isPositive(acquisitionDuration) {
+                        viewModel.acquisitionDuration = acquisitionDuration
                     } else {
-                        acquisitionDuration = previousValue
-                        viewModel.acquisitionDuration = previousValue
                         showAlert.toggle()
                     }
-                    
                 }
                 
                 MacNMRCalcItemView(title: "Dwell time",
@@ -81,15 +70,9 @@ struct MacNMRCalcSignalView: View {
                                    value: $dwellTime,
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationTimeFormatter) {
-                    let previousValue = viewModel.dwellTime
-                    viewModel.dwellTime = dwellTime
-                    if viewModel.validateDwellTime() {
-                        viewModel.dwellTimeUpdated()
-                        numberOfTimeDataPoint = viewModel.numberOfTimeDataPoints
-                        acquisitionDuration = viewModel.acquisitionDuration
+                    if viewModel.isPositive(dwellTime) {
+                        viewModel.dwellTime = dwellTime
                     } else {
-                        dwellTime = previousValue
-                        viewModel.dwellTime = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -98,19 +81,13 @@ struct MacNMRCalcSignalView: View {
             Section(header: Text("Frequency Domain").font(.title2)) {
                 MacNMRCalcItemView(title: "Number of data points",
                                    titleFont: .body,
-                                   value: $numberOfFrequencyDataPoint,
+                                   value: $numberOfFrequencyDataPoints,
                                    unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
-                    let previousValue = viewModel.numberOfFrequencyDataPoints
-                    viewModel.numberOfFrequencyDataPoints = numberOfFrequencyDataPoint
-                    if viewModel.validateNumberOfFrequencyDataPoint() {
-                        viewModel.numberOfFrequencyDataPointUpdated()
-                        spectralWidth = viewModel.spectralWidth
-                        frequencyResolution = viewModel.frequencyResolution
+                    if viewModel.validate(numberOfDataPoints: numberOfFrequencyDataPoints) {
+                        viewModel.numberOfFrequencyDataPoints = numberOfFrequencyDataPoints
                     } else {
-                        numberOfFrequencyDataPoint = previousValue
-                        viewModel.numberOfFrequencyDataPoints = previousValue
-                        showAlert.toggle()
+                        showDataPointsAlert.toggle()
                     }
                 }
                 
@@ -119,15 +96,9 @@ struct MacNMRCalcSignalView: View {
                                    value: $spectralWidth,
                                    unit: NMRCalcUnit.kHz,
                                    formatter: durationTimeFormatter) {
-                    let previousValue = viewModel.spectralWidth
-                    viewModel.spectralWidth = spectralWidth
-                    if viewModel.validateSpectralWidth() {
-                        viewModel.spectralWidthUpdated()
-                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoints
-                        frequencyResolution = viewModel.frequencyResolution
+                    if viewModel.isPositive(spectralWidth) {
+                        viewModel.spectralWidth = spectralWidth
                     } else {
-                        spectralWidth = previousValue
-                        viewModel.spectralWidth = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -137,15 +108,9 @@ struct MacNMRCalcSignalView: View {
                                    value: $frequencyResolution,
                                    unit: NMRCalcUnit.Hz,
                                    formatter: durationTimeFormatter) {
-                    let previousValue = viewModel.frequencyResolution
-                    viewModel.frequencyResolution = frequencyResolution
-                    if viewModel.validateFrequencyResolution() {
-                        viewModel.frequencyResolutionUpdated()
-                        numberOfFrequencyDataPoint = viewModel.numberOfFrequencyDataPoints
-                        spectralWidth = viewModel.spectralWidth
+                    if viewModel.isPositive(frequencyResolution) {
+                        viewModel.frequencyResolution = frequencyResolution
                     } else {
-                        frequencyResolution = previousValue
-                        viewModel.frequencyResolution = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -154,15 +119,44 @@ struct MacNMRCalcSignalView: View {
         .padding()
         .alert(alertMessage, isPresented: $showAlert) {
             Button("OK") {
+                reset()
                 showAlert.toggle()
             }
         }
+        .alert(dataPointsAlertMessage, isPresented: $showDataPointsAlert) {
+            Button("OK") {
+                reset()
+                showDataPointsAlert.toggle()
+            }
+        }
+        .onChange(of: viewModel.numberOfTimeDataPoints) { _ in
+            numberOfTimeDataPoints = viewModel.numberOfTimeDataPoints
+        }
+        .onChange(of: viewModel.acquisitionDuration) { _ in
+            acquisitionDuration = viewModel.acquisitionDuration
+        }
+        .onChange(of: viewModel.dwellTime) { _ in
+            dwellTime = viewModel.dwellTime
+        }
+        .onChange(of: viewModel.numberOfFrequencyDataPoints) { _ in
+            numberOfFrequencyDataPoints = viewModel.numberOfFrequencyDataPoints
+        }
+        .onChange(of: viewModel.spectralWidth) { _ in
+            spectralWidth = viewModel.spectralWidth
+        }
+        .onChange(of: viewModel.frequencyResolution) { _ in
+            frequencyResolution = viewModel.frequencyResolution
+        }
+       
     }
     
-    private func validateTimeDomainParameters() {
-        if numberOfTimeDataPoint < 0 {
-            numberOfTimeDataPoint = 0
-        }
+    private func reset() -> Void {
+        numberOfTimeDataPoints = viewModel.numberOfTimeDataPoints
+        acquisitionDuration = viewModel.acquisitionDuration
+        dwellTime = viewModel.dwellTime
+        numberOfFrequencyDataPoints = viewModel.numberOfFrequencyDataPoints
+        spectralWidth = viewModel.spectralWidth
+        frequencyResolution = viewModel.frequencyResolution
     }
     
 }
