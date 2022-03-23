@@ -279,9 +279,37 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     // Ernst
-    @Published var repetitionTime: Double
-    @Published var relaxationTime: Double
-    @Published var ernstAngle: Double
+    @Published var repetitionTime: Double {
+        didSet {
+            if repetitionTime != oldValue {
+                ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
+            }
+        }
+    }
+    
+    @Published var relaxationTime: Double {
+        didSet {
+            if relaxationTime != oldValue {
+                ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
+            }
+        }
+    }
+    
+    @Published var ernstAngle: Double {
+        didSet {
+            if ernstAngle != oldValue {
+                repetitionTime = ernstAngleCalculator.calculateRepetitionTime(relaxationTime: relaxationTime, ernstAngle: ernstAngle)
+            }
+        }
+    }
+    
+    func validate(ernstAngle: Double) -> Bool {
+        return ernstAngle > 0.0 && ernstAngle < 90.0
+    }
+    
+    func isNonNegative(_ value: Double) -> Bool {
+        return value >= 0.0
+    }
     
     func validateErnstAngle() -> Bool {
         return ernstAngle > 0.0 && ernstAngle < 90.0

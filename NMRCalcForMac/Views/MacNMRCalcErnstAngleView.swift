@@ -43,15 +43,9 @@ struct MacNMRCalcErnstAngleView: View {
                                    value: $repetitionTime,
                                    unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
-                    let previousValue = viewModel.repetitionTime
-                    viewModel.repetitionTime = repetitionTime
-                    if viewModel.validateRepetitionTime() {
-                        viewModel.repetitionTimeUpdated()
-                        relaxationTime = viewModel.relaxationTime
-                        ernstAngle = viewModel.ernstAngle
+                    if viewModel.isNonNegative(repetitionTime) {
+                        viewModel.repetitionTime = repetitionTime
                     } else {
-                        repetitionTime = previousValue
-                        viewModel.repetitionTime = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -61,15 +55,9 @@ struct MacNMRCalcErnstAngleView: View {
                                    value: $relaxationTime,
                                    unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
-                    let previousValue = viewModel.relaxationTime
-                    viewModel.relaxationTime = relaxationTime
-                    if viewModel.validateRelaxationTime() {
-                        viewModel.relaxationTimeUpdated()
-                        relaxationTime = viewModel.relaxationTime
-                        ernstAngle = viewModel.ernstAngle
+                    if viewModel.isPositive(relaxationTime) {
+                        viewModel.relaxationTime = relaxationTime
                     } else {
-                        relaxationTime = previousValue
-                        viewModel.relaxationTime = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -79,15 +67,9 @@ struct MacNMRCalcErnstAngleView: View {
                                    value: $ernstAngle,
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
-                    let previousValue = viewModel.ernstAngle
-                    viewModel.ernstAngle = ernstAngle
-                    if viewModel.validateErnstAngle() {
-                        viewModel.ernstAngleUpdated()
-                        repetitionTime = viewModel.repetitionTime
-                        relaxationTime = viewModel.relaxationTime
+                    if viewModel.validate(ernstAngle: ernstAngle) {
+                        viewModel.ernstAngle = ernstAngle
                     } else {
-                        ernstAngle = previousValue
-                        viewModel.ernstAngle = previousValue
                         showAlertErnstAngle.toggle()
                     }
                 }
@@ -96,13 +78,30 @@ struct MacNMRCalcErnstAngleView: View {
         .padding()
         .alert(alertMessage, isPresented: $showAlert) {
             Button("OK") {
+                reset()
                 showAlert.toggle()
             }
         }
         .alert(ernstAngleAlertMessage, isPresented: $showAlertErnstAngle) {
             Button("OK") {
+                reset()
                 showAlertErnstAngle.toggle()
             }
         }
+        .onChange(of: viewModel.repetitionTime) { _ in
+            repetitionTime = viewModel.repetitionTime
+        }
+        .onChange(of: viewModel.relaxationTime) { _ in
+            relaxationTime = viewModel.relaxationTime
+        }
+        .onChange(of: viewModel.ernstAngle) { _ in
+            ernstAngle = viewModel.ernstAngle
+        }
+    }
+    
+    private func reset() {
+        repetitionTime = viewModel.repetitionTime
+        relaxationTime = viewModel.relaxationTime
+        ernstAngle = viewModel.ernstAngle
     }
 }
