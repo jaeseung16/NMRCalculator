@@ -69,7 +69,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
     }
     
-    private var γNucleus: Double {
+    var γNucleus: Double {
         guard let γNucleus = Double(nucleus.gyromagneticRatio) else {
             return NMRCalcConstants.gammaProton
         }
@@ -194,93 +194,88 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
 
     // Pulse
-    @Published var duration1: Double
-    @Published var flipAngle1: Double
-    @Published var amplitude1: Double
-    @Published var amplitude1InT: Double
-    @Published var duration2: Double
-    @Published var flipAngle2: Double
-    @Published var amplitude2: Double
-    @Published var relativePower: Double
+    @Published var duration1: Double {
+        didSet {
+            if duration1 != oldValue {
+                amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
+                updateAmplitude1InT()
+                updateRelativePower()
+            }
+        }
+    }
+    
+    @Published var flipAngle1: Double {
+        didSet {
+            if flipAngle1 != oldValue {
+                amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
+                updateAmplitude1InT()
+                updateRelativePower()
+            }
+        }
+    }
+    
+    @Published var amplitude1: Double {
+        didSet {
+            if amplitude1 != oldValue {
+                updateAmplitude1InT()
+                duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
+                updateRelativePower()
+            }
+        }
+    }
+    
+    @Published var amplitude1InT: Double {
+        didSet {
+            if amplitude1InT != oldValue {
+                amplitude1 = amplitude1InT * γNucleus
+                duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
+                updateRelativePower()
+            }
+        }
+    }
+    
+    @Published var duration2: Double {
+        didSet {
+            if duration2 != oldValue {
+                amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
+                updateRelativePower()
+            }
+        }
+    }
+    
+    @Published var flipAngle2: Double {
+        didSet {
+            if flipAngle2 != oldValue {
+                amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
+                updateRelativePower()
+            }
+        }
+    }
+    
+    @Published var amplitude2: Double {
+        didSet {
+            if amplitude2 != oldValue {
+                duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
+                updateRelativePower()
+            }
+        }
+    }
+    
+    @Published var relativePower: Double {
+        didSet {
+            if relativePower != oldValue {
+                amplitude2 = pulseCalculator.calculateAmplitude(dB: relativePower, reference: amplitude1)
+                duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
+            }
+        }
+    }
     
     private func updateRelativePower() -> Void {
         relativePower = pulseCalculator.calculateDecibel(measured: amplitude2, reference: amplitude1)
     }
     
-    func validateDuration1() -> Bool {
-        return duration1 >= 0.0
-    }
-    
-    func duration1Updated() -> Void {
-        amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
-        updateAmplitude1InT()
-        updateRelativePower()
-    }
-    
-    func validateDuration2() -> Bool {
-        return duration2 >= 0.0
-    }
-    
-    func duration2Updated() -> Void {
-        amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
-        updateRelativePower()
-    }
-    
-    func validateFlipAngle1() -> Bool {
-        return flipAngle1 >= 0.0
-    }
-    
-    func flipAngle1Updated() -> Void {
-        amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
-        updateAmplitude1InT()
-        updateRelativePower()
-    }
-    
-    func validateFlipAngle2() -> Bool {
-        return flipAngle2 >= 0.0
-    }
-    
-    func flipAngle2Updated() -> Void {
-        amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
-        updateRelativePower()
-    }
-    
-    func validateAmplitude1() -> Bool {
-        return amplitude1 >= 0.0
-    }
-    
-    func amplitude1Updated() -> Void {
-        updateAmplitude1InT()
-        duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
-        updateRelativePower()
-    }
-    
-    func validateAmplitude1InT() -> Bool {
-        return amplitude1InT >= 0.0
-    }
-    
-    func amplitude1InTUpdated() -> Void {
-        amplitude1 = amplitude1InT * γNucleus
-        duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
-        updateRelativePower()
-    }
-    
     private func updateAmplitude1InT() {
         amplitude1InT = amplitude1 / γNucleus
-    }
-    
-    func validateAmplitude2() -> Bool {
-        return amplitude2 >= 0.0
-    }
-    
-    func amplitude2Updated() -> Void {
-        duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
-        updateRelativePower()
-    }
-
-    func relativePowerUpdated() -> Void {
-        amplitude2 = pulseCalculator.calculateAmplitude(dB: relativePower, reference: amplitude1)
-        duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
     }
     
     // Ernst

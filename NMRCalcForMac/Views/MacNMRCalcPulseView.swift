@@ -60,17 +60,9 @@ struct MacNMRCalcPulseView: View {
                                    value: $duration1,
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
-                    let previousValue = viewModel.duration1
-                    viewModel.duration1 = duration1
-                    if viewModel.validateDuration1() {
-                        viewModel.duration1Updated()
-                        flipAngle1 = viewModel.flipAngle1
-                        amplitude1 = viewModel.amplitude1
-                        amplitude1InT = viewModel.amplitude1InT
-                        relativePower = viewModel.relativePower
+                    if viewModel.isPositive(duration1) {
+                        viewModel.duration1 = duration1
                     } else {
-                        duration1 = previousValue
-                        viewModel.duration1 = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -80,17 +72,9 @@ struct MacNMRCalcPulseView: View {
                                    value: $flipAngle1,
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
-                    let previousValue = viewModel.flipAngle1
-                    viewModel.flipAngle1 = flipAngle1
-                    if viewModel.validateFlipAngle1() {
-                        viewModel.flipAngle1Updated()
-                        duration1 = viewModel.duration1
-                        amplitude1 = viewModel.amplitude1
-                        amplitude1InT = viewModel.amplitude1InT
-                        relativePower = viewModel.relativePower
+                    if viewModel.isPositive(flipAngle1) {
+                        viewModel.flipAngle1 = flipAngle1
                     } else {
-                        flipAngle1 = previousValue
-                        viewModel.flipAngle1 = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -100,17 +84,9 @@ struct MacNMRCalcPulseView: View {
                                    value: $amplitude1,
                                    unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
-                    let previousValue = viewModel.amplitude1
-                    viewModel.amplitude1 = amplitude1
-                    if viewModel.validateAmplitude1() {
-                        viewModel.amplitude1Updated()
-                        duration1 = viewModel.duration1
-                        flipAngle1 = viewModel.flipAngle1
-                        amplitude1InT = viewModel.amplitude1InT
-                        relativePower = viewModel.relativePower
+                    if viewModel.isPositive(amplitude1) {
+                        viewModel.amplitude1 = amplitude1
                     } else {
-                        amplitude1 = previousValue
-                        viewModel.amplitude1 = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -121,17 +97,10 @@ struct MacNMRCalcPulseView: View {
                                        value: $amplitude1InT,
                                        unit: NMRCalcUnit.μT,
                                        formatter: amplitudeFormatter) {
-                        let previousValue = viewModel.amplitude1InT
-                        viewModel.amplitude1InT = amplitude1InT
-                        if viewModel.validateAmplitude1InT() {
-                            viewModel.amplitude1InTUpdated()
-                            duration1 = viewModel.duration1
-                            flipAngle1 = viewModel.flipAngle1
-                            amplitude1 = viewModel.amplitude1
-                            relativePower = viewModel.relativePower
+                        if viewModel.isPositive(abs(amplitude1InT)) {
+                            viewModel.amplitude1InT = viewModel.γNucleus >= 0 ? abs(amplitude1InT) : -abs(amplitude1InT)
+                            amplitude1InT = viewModel.amplitude1InT
                         } else {
-                            amplitude1InT = previousValue
-                            viewModel.amplitude1InT = previousValue
                             showAlert.toggle()
                         }
                     }
@@ -144,16 +113,9 @@ struct MacNMRCalcPulseView: View {
                                    value: $duration2,
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
-                    let previousValue = viewModel.duration2
-                    viewModel.duration2 = duration2
-                    if viewModel.validateDuration2() {
-                        viewModel.duration2Updated()
-                        flipAngle2 = viewModel.flipAngle2
-                        amplitude2 = viewModel.amplitude2
-                        relativePower = viewModel.relativePower
+                    if viewModel.isPositive(duration2) {
+                        viewModel.duration2 = duration2
                     } else {
-                        duration2 = previousValue
-                        viewModel.duration2 = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -163,16 +125,9 @@ struct MacNMRCalcPulseView: View {
                                    value: $flipAngle2,
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
-                    let previousValue = viewModel.flipAngle2
-                    viewModel.flipAngle2 = flipAngle2
-                    if viewModel.validateFlipAngle2() {
-                        viewModel.flipAngle2Updated()
-                        duration2 = viewModel.duration2
-                        amplitude2 = viewModel.amplitude2
-                        relativePower = viewModel.relativePower
+                    if viewModel.isPositive(flipAngle2) {
+                        viewModel.flipAngle2 = flipAngle2
                     } else {
-                        flipAngle2 = previousValue
-                        viewModel.flipAngle2 = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -182,16 +137,9 @@ struct MacNMRCalcPulseView: View {
                                    value: $amplitude2,
                                    unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
-                    let previousValue = viewModel.amplitude2
-                    viewModel.amplitude2 = amplitude2
-                    if viewModel.validateAmplitude2() {
-                        viewModel.amplitude2Updated()
-                        duration2 = viewModel.duration2
-                        flipAngle2 = viewModel.flipAngle2
-                        relativePower = viewModel.relativePower
+                    if viewModel.isPositive(amplitude2) {
+                        viewModel.amplitude2 = amplitude2
                     } else {
-                        amplitude2 = previousValue
-                        viewModel.amplitude2 = previousValue
                         showAlert.toggle()
                     }
                 }
@@ -202,22 +150,55 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.dB,
                                    formatter: relativePowerFormatter) {
                     viewModel.relativePower = relativePower
-                    viewModel.relativePowerUpdated()
-                    duration2 = viewModel.duration2
-                    flipAngle2 = viewModel.flipAngle2
-                    amplitude2 = viewModel.amplitude2
                 }
             }
         }
         .padding()
         .alert(alertMessage, isPresented: $showAlert) {
             Button("OK") {
+                reset()
                 showAlert.toggle()
             }
         }
         .onChange(of: viewModel.nucleusUpdated) { _ in
             amplitude1InT = viewModel.amplitude1InT
         }
+        .onChange(of: viewModel.duration1) { _ in
+            duration1 = viewModel.duration1
+        }
+        .onChange(of: viewModel.flipAngle1) { _ in
+            flipAngle1 = viewModel.flipAngle1
+        }
+        .onChange(of: viewModel.amplitude1) { _ in
+            amplitude1 = viewModel.amplitude1
+        }
+        .onChange(of: viewModel.amplitude1InT) { _ in
+            amplitude1InT = viewModel.amplitude1InT
+        }
+        .onChange(of: viewModel.duration2) { _ in
+            duration2 = viewModel.duration2
+        }
+        .onChange(of: viewModel.flipAngle2) { _ in
+            flipAngle2 = viewModel.flipAngle2
+        }
+        .onChange(of: viewModel.amplitude2) { _ in
+            amplitude2 = viewModel.amplitude2
+        }
+        .onChange(of: viewModel.relativePower) { _ in
+            relativePower = viewModel.relativePower
+        }
+       
+    }
+    
+    private func reset() {
+        duration1 = viewModel.duration1
+        flipAngle1 = viewModel.flipAngle1
+        amplitude1 = viewModel.amplitude1
+        amplitude1InT = viewModel.amplitude1InT
+        duration2 = viewModel.duration2
+        flipAngle2 = viewModel.flipAngle2
+        amplitude2 = viewModel.amplitude2
+        relativePower = viewModel.relativePower
     }
     
 }
