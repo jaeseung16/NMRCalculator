@@ -49,6 +49,15 @@
 		901CF17025E8611600B123D1 /* MacNMRCalcItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF16F25E8611600B123D1 /* MacNMRCalcItemView.swift */; };
 		9026CA4D25E5BCB90059E64D /* MacCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9026CA4C25E5BCB90059E64D /* MacCalculatorView.swift */; };
 		9028827727D966BB00795259 /* MacNMRCalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9028827627D966BB00795259 /* MacNMRCalculatorViewModel.swift */; };
+		902FDF4427EE77D400576210 /* MacNMRCalculatorViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902FDF4327EE77D400576210 /* MacNMRCalculatorViewModelTest.swift */; };
+		902FDF4A27EE784000576210 /* MacNMRCalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9028827627D966BB00795259 /* MacNMRCalculatorViewModel.swift */; };
+		902FDF4B27EE7AA900576210 /* NMRCalcConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A0A21325CB6C7C001DA889 /* NMRCalcConstants.swift */; };
+		902FDF4C27EE7AC400576210 /* ErnstAngleCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441727E7D0B900E10A25 /* ErnstAngleCalculator.swift */; };
+		902FDF4D27EE7AC600576210 /* FrequencyDomainCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441B27E7D63600E10A25 /* FrequencyDomainCalculator.swift */; };
+		902FDF4E27EE7AC900576210 /* LarmorFrequencyCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441327E77C7900E10A25 /* LarmorFrequencyCalculator.swift */; };
+		902FDF4F27EE7ACB00576210 /* PulseCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441527E7C60400E10A25 /* PulseCalculator.swift */; };
+		902FDF5027EE7ACE00576210 /* TimeDomainCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441927E7D23700E10A25 /* TimeDomainCalculator.swift */; };
+		902FDF5127EE7AF200576210 /* NMRNucleus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */; };
 		9039F9FB27E925D80021692A /* NMRCalcUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9039F9F927E925CF0021692A /* NMRCalcUnit.swift */; };
 		9041951825EC14800029D61B /* MacNMRCalcPulseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9041951725EC14800029D61B /* MacNMRCalcPulseView.swift */; };
 		9041955625EC28BB0029D61B /* MacNMRCalcErnstAngleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9041952825EC24560029D61B /* MacNMRCalcErnstAngleView.swift */; };
@@ -118,6 +127,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		902FDF4527EE77D400576210 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B6ACEF71D08E87F00D7D342 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 909C112325BF908A00E8C285;
+			remoteInfo = NMRCalc;
+		};
 		90532BEE223D7C1E00379175 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B6ACEF71D08E87F00D7D342 /* Project object */;
@@ -218,6 +234,8 @@
 		901CF16F25E8611600B123D1 /* MacNMRCalcItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcItemView.swift; sourceTree = "<group>"; };
 		9026CA4C25E5BCB90059E64D /* MacCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacCalculatorView.swift; sourceTree = "<group>"; };
 		9028827627D966BB00795259 /* MacNMRCalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalculatorViewModel.swift; sourceTree = "<group>"; };
+		902FDF4127EE77D400576210 /* MacNMRCalculatorViewModelTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacNMRCalculatorViewModelTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		902FDF4327EE77D400576210 /* MacNMRCalculatorViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalculatorViewModelTest.swift; sourceTree = "<group>"; };
 		9039F9F927E925CF0021692A /* NMRCalcUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcUnit.swift; sourceTree = "<group>"; };
 		9041951725EC14800029D61B /* MacNMRCalcPulseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcPulseView.swift; sourceTree = "<group>"; };
 		9041952825EC24560029D61B /* MacNMRCalcErnstAngleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcErnstAngleView.swift; sourceTree = "<group>"; };
@@ -278,6 +296,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		0B6ACEFC1D08E87F00D7D342 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		902FDF3E27EE77D400576210 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -380,6 +405,7 @@
 				90FFBA2323CB8C52000A9BC9 /* WatchNMRCalculator */,
 				90FFBA3223CB8C55000A9BC9 /* WatchNMRCalculator Extension */,
 				909C112525BF908A00E8C285 /* NMRCalcForMac */,
+				902FDF4227EE77D400576210 /* MacNMRCalculatorViewModelTest */,
 				0B6ACF001D08E88000D7D342 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -393,6 +419,7 @@
 				90FFBA2223CB8C52000A9BC9 /* WatchNMRCalculator.app */,
 				90FFBA2E23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex */,
 				909C112425BF908A00E8C285 /* NMR Calculator.app */,
+				902FDF4127EE77D400576210 /* MacNMRCalculatorViewModelTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -425,6 +452,14 @@
 				900B441927E7D23700E10A25 /* TimeDomainCalculator.swift */,
 			);
 			path = Calculators;
+			sourceTree = "<group>";
+		};
+		902FDF4227EE77D400576210 /* MacNMRCalculatorViewModelTest */ = {
+			isa = PBXGroup;
+			children = (
+				902FDF4327EE77D400576210 /* MacNMRCalculatorViewModelTest.swift */,
+			);
+			path = MacNMRCalculatorViewModelTest;
 			sourceTree = "<group>";
 		};
 		90532BEA223D7C1E00379175 /* NMRCalcUITests */ = {
@@ -611,6 +646,24 @@
 			productReference = 0B6ACEFF1D08E88000D7D342 /* NMRCalculator.app */;
 			productType = "com.apple.product-type.application";
 		};
+		902FDF4027EE77D400576210 /* MacNMRCalculatorViewModelTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 902FDF4927EE77D400576210 /* Build configuration list for PBXNativeTarget "MacNMRCalculatorViewModelTest" */;
+			buildPhases = (
+				902FDF3D27EE77D400576210 /* Sources */,
+				902FDF3E27EE77D400576210 /* Frameworks */,
+				902FDF3F27EE77D400576210 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				902FDF4627EE77D400576210 /* PBXTargetDependency */,
+			);
+			name = MacNMRCalculatorViewModelTest;
+			productName = MacNMRCalculatorViewModelTest;
+			productReference = 902FDF4127EE77D400576210 /* MacNMRCalculatorViewModelTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		90532BE8223D7C1E00379175 /* NMRCalcUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 90532BF0223D7C1E00379175 /* Build configuration list for PBXNativeTarget "NMRCalcUITests" */;
@@ -704,7 +757,7 @@
 		0B6ACEF71D08E87F00D7D342 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1230;
+				LastSwiftUpdateCheck = 1330;
 				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Jae-Seung Lee";
 				TargetAttributes = {
@@ -713,6 +766,10 @@
 						DevelopmentTeam = U8VSJXRJTQ;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
+					};
+					902FDF4027EE77D400576210 = {
+						CreatedOnToolsVersion = 13.3;
+						TestTargetID = 909C112325BF908A00E8C285;
 					};
 					90532BE8223D7C1E00379175 = {
 						CreatedOnToolsVersion = 10.1;
@@ -754,6 +811,7 @@
 				90FFBA2123CB8C52000A9BC9 /* WatchNMRCalculator */,
 				90FFBA2D23CB8C55000A9BC9 /* WatchNMRCalculator Extension */,
 				909C112325BF908A00E8C285 /* NMRCalc */,
+				902FDF4027EE77D400576210 /* MacNMRCalculatorViewModelTest */,
 			);
 		};
 /* End PBXProject section */
@@ -771,6 +829,13 @@
 				0B8CD4DE1D1239290017DCE6 /* NucleusView.xib in Resources */,
 				0BE1313B1D56C9F600CE6121 /* iPadStoryboard.storyboard in Resources */,
 				0B6ACF0A1D08E88000D7D342 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		902FDF3F27EE77D400576210 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,6 +920,22 @@
 				0B5AC1741D5EA3AF002102C8 /* NMRParametersTableViewCell.swift in Sources */,
 				0BF022DA1D63BAFB00EA75F2 /* SignalHeaderTableViewCell.swift in Sources */,
 				0B48D9F81D35A2380094BBAF /* ChemCalc.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		902FDF3D27EE77D400576210 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				902FDF4B27EE7AA900576210 /* NMRCalcConstants.swift in Sources */,
+				902FDF4F27EE7ACB00576210 /* PulseCalculator.swift in Sources */,
+				902FDF4A27EE784000576210 /* MacNMRCalculatorViewModel.swift in Sources */,
+				902FDF4D27EE7AC600576210 /* FrequencyDomainCalculator.swift in Sources */,
+				902FDF4E27EE7AC900576210 /* LarmorFrequencyCalculator.swift in Sources */,
+				902FDF4C27EE7AC400576210 /* ErnstAngleCalculator.swift in Sources */,
+				902FDF5027EE7ACE00576210 /* TimeDomainCalculator.swift in Sources */,
+				902FDF5127EE7AF200576210 /* NMRNucleus.swift in Sources */,
+				902FDF4427EE77D400576210 /* MacNMRCalculatorViewModelTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,6 +1029,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		902FDF4627EE77D400576210 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 909C112325BF908A00E8C285 /* NMRCalc */;
+			targetProxy = 902FDF4527EE77D400576210 /* PBXContainerItemProxy */;
+		};
 		90532BEF223D7C1E00379175 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0B6ACEFE1D08E87F00D7D342 /* NMRCalculator */;
@@ -1159,6 +1245,60 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		902FDF4727EE77D400576210 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U8VSJXRJTQ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.MacNMRCalculatorViewModelTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NMR Calculator.app/Contents/MacOS/NMR Calculator";
+			};
+			name = Debug;
+		};
+		902FDF4827EE77D400576210 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U8VSJXRJTQ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.MacNMRCalculatorViewModelTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NMR Calculator.app/Contents/MacOS/NMR Calculator";
 			};
 			name = Release;
 		};
@@ -1512,6 +1652,15 @@
 			buildConfigurations = (
 				0B6ACF1F1D08E88000D7D342 /* Debug */,
 				0B6ACF201D08E88000D7D342 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		902FDF4927EE77D400576210 /* Build configuration list for PBXNativeTarget "MacNMRCalculatorViewModelTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				902FDF4727EE77D400576210 /* Debug */,
+				902FDF4827EE77D400576210 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
