@@ -26,4 +26,8 @@ class LarmorFrequencyCalculator {
         return ω(γ: γElectron, B: B)
     }
     
+    func B0(larmorFrequency: Double, γ: Double) -> Double {
+        return larmorFrequency / γ
+    }
+    
 }

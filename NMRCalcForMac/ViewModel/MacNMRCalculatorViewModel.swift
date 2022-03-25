@@ -18,64 +18,6 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     let proton = NMRNucleus()
     
-    @Published var nucleusUpdated = false
-    
-    @Published var nucleus: NMRNucleus {
-        didSet {
-            larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-            updateAmplitude1InT()
-            
-            nucleusUpdated.toggle()
-        }
-    }
-    
-    @Published var externalField: Double {
-        didSet {
-            if externalField != oldValue {
-                larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-                protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
-                electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
-            }
-        }
-    }
-    
-    @Published var larmorFrequency: Double {
-        didSet {
-            if larmorFrequency != oldValue {
-                externalField = larmorFrequency / γNucleus
-                protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
-                electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
-            }
-        }
-    }
-    
-    @Published var protonFrequency: Double {
-        didSet {
-            if protonFrequency != oldValue {
-                externalField = protonFrequency / NMRCalcConstants.gammaProton
-                larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-                electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
-            }
-        }
-    }
-    
-    @Published var electronFrequency: Double {
-        didSet {
-            if electronFrequency != oldValue {
-                externalField = electronFrequency / NMRCalcConstants.gammaElectron
-                larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
-                protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
-            }
-        }
-    }
-    
-    var γNucleus: Double {
-        guard let γNucleus = Double(nucleus.gyromagneticRatio) else {
-            return NMRCalcConstants.gammaProton
-        }
-        return γNucleus
-    }
-    
     init() {
         let B0 = 1.0
         nucleus = NMRNucleus()
@@ -120,15 +62,103 @@ class MacNMRCalculatorViewModel: ObservableObject {
         ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: τ, relaxationTime: T1)
     }
     
-    func validateExternalField() -> Bool {
-        return abs(externalField) <= 1000.0
+    // MARK: - Validation
+    
+    func isPositive(_ value: Double) -> Bool {
+        return value > 0.0
+    }
+    
+    func isNonNegative(_ value: Double) -> Bool {
+        return value >= 0.0
     }
     
     func validate(externalField B0: Double) -> Bool {
         return abs(B0) <= 1000.0
     }
+    
+    func validate(numberOfDataPoints: Double) -> Bool {
+        return numberOfDataPoints >= 1.0
+    }
+    
+    func validate(ernstAngle: Double) -> Bool {
+        return ernstAngle > 0.0 && ernstAngle < 90.0
+    }
+    
+    
+    // MARK: - Larmor frequency
+    
+    @Published var nucleusUpdated = false
+    
+    @Published var nucleus: NMRNucleus {
+        didSet {
+            larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+            updateAmplitude1InT()
+            
+            nucleusUpdated.toggle()
+        }
+    }
+    
+    var γNucleus: Double {
+        guard let γNucleus = Double(nucleus.gyromagneticRatio) else {
+            return NMRCalcConstants.gammaProton
+        }
+        return γNucleus
+    }
+    
+    @Published var externalField: Double {
+        didSet {
+            if externalField != oldValue {
+                updateLarmorFrequency()
+                updateProtonFrequency()
+                updateElectronFrequency()
+            }
+        }
+    }
+    
+    @Published var larmorFrequency: Double {
+        didSet {
+            if larmorFrequency != oldValue {
+                externalField = larmorFrequencyCalculator.B0(larmorFrequency: larmorFrequency, γ: γNucleus)
+                updateProtonFrequency()
+                updateElectronFrequency()
+            }
+        }
+    }
+    
+    @Published var protonFrequency: Double {
+        didSet {
+            if protonFrequency != oldValue {
+                externalField = larmorFrequencyCalculator.B0(larmorFrequency: protonFrequency, γ: NMRCalcConstants.gammaProton)
+                updateLarmorFrequency()
+                updateElectronFrequency()
+            }
+        }
+    }
+    
+    @Published var electronFrequency: Double {
+        didSet {
+            if electronFrequency != oldValue {
+                externalField = larmorFrequencyCalculator.B0(larmorFrequency: electronFrequency, γ: NMRCalcConstants.gammaElectron)
+                updateLarmorFrequency()
+                updateProtonFrequency()
+            }
+        }
+    }
+    
+    private func updateLarmorFrequency() {
+        larmorFrequency = larmorFrequencyCalculator.ω(γ: γNucleus, B: externalField)
+    }
+    
+    private func updateProtonFrequency() {
+        protonFrequency = larmorFrequencyCalculator.ωProton(at: externalField)
+    }
+    
+    private func updateElectronFrequency() {
+        electronFrequency = larmorFrequencyCalculator.ωElectron(at: externalField)
+    }
   
-    // Signal
+    // MARK: - Signal
+    
     @Published var numberOfTimeDataPoints: Double {
         didSet {
             if numberOfTimeDataPoints != oldValue {
@@ -181,19 +211,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoints)
     }
     
-    func isPositive(_ value: Double) -> Bool {
-        return value > 0.0
-    }
-    
-    func validate(numberOfDataPoints: Double) -> Bool {
-        return numberOfDataPoints >= 1.0
-    }
-    
     private func updateFrequencyResolution() {
         frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralWidth, numberOfDataPoints: numberOfFrequencyDataPoints)
     }
 
-    // Pulse
+    // MARK: - Pulse
+    
     @Published var duration1: Double {
         didSet {
             if duration1 != oldValue {
@@ -278,7 +301,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         amplitude1InT = amplitude1 / γNucleus
     }
     
-    // Ernst
+    // MARK: - Ernst Angle
     @Published var repetitionTime: Double {
         didSet {
             if repetitionTime != oldValue {
@@ -303,35 +326,4 @@ class MacNMRCalculatorViewModel: ObservableObject {
         }
     }
     
-    func validate(ernstAngle: Double) -> Bool {
-        return ernstAngle > 0.0 && ernstAngle < 90.0
-    }
-    
-    func isNonNegative(_ value: Double) -> Bool {
-        return value >= 0.0
-    }
-    
-    func validateErnstAngle() -> Bool {
-        return ernstAngle > 0.0 && ernstAngle < 90.0
-    }
-    
-    func validateRepetitionTime() -> Bool {
-        return repetitionTime >= 0.0
-    }
-    
-    func repetitionTimeUpdated() -> Void {
-        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
-    }
-    
-    func validateRelaxationTime() -> Bool {
-        return relaxationTime >= 0.0
-    }
-    
-    func relaxationTimeUpdated() -> Void {
-        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
-    }
-    
-    func ernstAngleUpdated() -> Void {
-        repetitionTime = ernstAngleCalculator.calculateRepetitionTime(relaxationTime: relaxationTime, ernstAngle: ernstAngle)
-    }
 }
