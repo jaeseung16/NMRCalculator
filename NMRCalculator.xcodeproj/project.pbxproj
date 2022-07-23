@@ -53,6 +53,8 @@
 		9017230C288C5F6E00B520EC /* LarmorFrequencyMagneticFieldConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904693A6287CCDFB005B8FFA /* LarmorFrequencyMagneticFieldConverter.swift */; };
 		9017230D288C603000B520EC /* SpectralWidthFrequencyResolutionConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904693A8287CD09A005B8FFA /* SpectralWidthFrequencyResolutionConverter.swift */; };
 		9017230E288C603000B520EC /* SpectralWidthFrequencyResolutionConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904693A8287CD09A005B8FFA /* SpectralWidthFrequencyResolutionConverter.swift */; };
+		9017230F288C63EC00B520EC /* DwellAcquisitionTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900AFCC0287F793400F30039 /* DwellAcquisitionTimeConverter.swift */; };
+		90172310288C63EC00B520EC /* DwellAcquisitionTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900AFCC0287F793400F30039 /* DwellAcquisitionTimeConverter.swift */; };
 		901CF16025E8593E00B123D1 /* MacNMRCalcSignalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF15F25E8593E00B123D1 /* MacNMRCalcSignalView.swift */; };
 		901CF17025E8611600B123D1 /* MacNMRCalcItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF16F25E8611600B123D1 /* MacNMRCalcItemView.swift */; };
 		9026CA4D25E5BCB90059E64D /* MacCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9026CA4C25E5BCB90059E64D /* MacCalculatorView.swift */; };
@@ -1047,6 +1049,7 @@
 				9047C0CC2888BD58003170BC /* DecibelCalculator.swift in Sources */,
 				9017230C288C5F6E00B520EC /* LarmorFrequencyMagneticFieldConverter.swift in Sources */,
 				902FDF4E27EE7AC900576210 /* LarmorFrequencyCalculator.swift in Sources */,
+				90172310288C63EC00B520EC /* DwellAcquisitionTimeConverter.swift in Sources */,
 				902FDF5027EE7ACE00576210 /* TimeDomainCalculator.swift in Sources */,
 				9017230E288C603000B520EC /* SpectralWidthFrequencyResolutionConverter.swift in Sources */,
 				902FDF4427EE77D400576210 /* MacNMRCalculatorViewModelTest.swift in Sources */,
@@ -1083,6 +1086,7 @@
 				901CF16025E8593E00B123D1 /* MacNMRCalcSignalView.swift in Sources */,
 				909C11CA25BF945500E8C285 /* MacNucleusView.swift in Sources */,
 				9047C0C92888BCDF003170BC /* Pulse.swift in Sources */,
+				9017230F288C63EC00B520EC /* DwellAcquisitionTimeConverter.swift in Sources */,
 				909C113A25BF90A500E8C285 /* ProtonFrequencyView.swift in Sources */,
 				906EBCC825E4796C00ED8641 /* AtomicElementView.swift in Sources */,
 				909C117925BF90DD00E8C285 /* Fraction.swift in Sources */,

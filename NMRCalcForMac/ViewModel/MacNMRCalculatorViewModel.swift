@@ -11,7 +11,7 @@ import Combine
 
 class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
-    let timeDomainCalculator = TimeDomainCalculator.shared
+    let timeDomainCalculator = DwellAcquisitionTimeConverter(acqusitionTime: 1.0, numberOfPoints: 1000)
     let frequencyDomainCalculator = SpectralWidthFrequencyResolutionConverter(spectralWidth: 1000.0, numberOfPoints: 1000)
     let ernstAngleCalculator = ErnstAngleCalculator()
     let decibelCalculator = DecibelCalculator()
@@ -28,13 +28,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         larmorFrequency = larmorFrequencyCalculator.ω(γ: NMRCalcConstants.gammaProton, B: B0)
         protonFrequency = larmorFrequencyCalculator.ωProton(at: B0)
         electronFrequency = larmorFrequencyCalculator.ωElectron(at: B0)
-        
-        let numberOfDataPoints = 1000.0
-        let duration = 1.0
        
-        numberOfTimeDataPoints = numberOfDataPoints
-        acquisitionDuration = duration
-        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: duration, numberOfDataPoints: numberOfDataPoints)
+        numberOfTimeDataPoints = Double(timeDomainCalculator.numberOfPoints)
+        acquisitionDuration = timeDomainCalculator.acqusitionTime
+        dwellTime = timeDomainCalculator.dwellInμs
         
         numberOfFrequencyDataPoints = Double(frequencyDomainCalculator.numberOfPoints)
         spectralWidth = frequencyDomainCalculator.spectralWidthInkHz
@@ -158,7 +155,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var numberOfTimeDataPoints: Double {
         didSet {
             if numberOfTimeDataPoints != oldValue {
-                updateDwellTime()
+                timeDomainCalculator.set(numberOfPoints: Int(numberOfTimeDataPoints))
+                dwellTime = timeDomainCalculator.dwellInμs
             }
         }
     }
@@ -166,7 +164,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var acquisitionDuration: Double {
         didSet {
             if acquisitionDuration != oldValue {
-                updateDwellTime()
+                timeDomainCalculator.set(acqusitionTime: acquisitionDuration)
+                dwellTime = timeDomainCalculator.dwellInμs
             }
         }
     }
@@ -174,7 +173,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var dwellTime: Double {
         didSet {
             if dwellTime != oldValue {
-                acquisitionDuration = timeDomainCalculator.calculateTotalDuration(dwellTime: dwellTime, numberOfDataPoints: numberOfTimeDataPoints)
+                timeDomainCalculator.set(dwellInμs: dwellTime)
+                acquisitionDuration = timeDomainCalculator.acqusitionTime
             }
         }
     }
@@ -204,10 +204,6 @@ class MacNMRCalculatorViewModel: ObservableObject {
                 numberOfFrequencyDataPoints = Double(frequencyDomainCalculator.numberOfPoints)
             }
         }
-    }
-    
-    private func updateDwellTime() {
-        dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoints)
     }
 
     // MARK: - Pulse
