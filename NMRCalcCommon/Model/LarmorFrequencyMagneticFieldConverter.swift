@@ -9,10 +9,20 @@
 import Foundation
 
 public class LarmorFrequencyMagneticFieldConverter {
+    private static let γProton = NMRCalcConstants.gammaProton
+    private static let γElectron = NMRCalcConstants.gammaElectron
     
     public var larmorFrequency: Double // Hz
     public var magneticField: Double // Tesla
     public var gyromagneticRatio: Double // Hz/Tesla
+    
+    public var electroFrequency: Double {
+        return magneticField * LarmorFrequencyMagneticFieldConverter.γElectron
+    }
+    
+    public var protonFrequency: Double {
+        return magneticField * LarmorFrequencyMagneticFieldConverter.γProton
+    }
     
     public init(larmorFrequency: Double, magneticField: Double) {
         self.larmorFrequency = larmorFrequency
@@ -32,31 +42,39 @@ public class LarmorFrequencyMagneticFieldConverter {
         self.magneticField = larmorFrequency / gyromagneticRatio
     }
     
-    private func setMagneticField() {
+    private func updateMagneticField() {
         magneticField = larmorFrequency / gyromagneticRatio
     }
     
-    private func setLarmorFrequency() {
+    private func updateLarmorFrequency() {
         larmorFrequency = gyromagneticRatio * magneticField
     }
     
-    private func setGyromagneticRatio() {
+    private func updateGyromagneticRatio() {
         gyromagneticRatio = larmorFrequency / magneticField
     }
 
-    public func update(larmorFrequency: Double) -> Void {
+    public func set(larmorFrequency: Double) -> Void {
         self.larmorFrequency = larmorFrequency
-        setMagneticField()
+        updateMagneticField()
     }
     
-    public func update(magneticField: Double) -> Void {
+    public func set(electronFrequency: Double) -> Void {
+        set(magneticField: electronFrequency / LarmorFrequencyMagneticFieldConverter.γElectron)
+    }
+    
+    public func set(protonFrequency: Double) -> Void {
+        set(magneticField: protonFrequency / LarmorFrequencyMagneticFieldConverter.γProton)
+    }
+    
+    public func set(magneticField: Double) -> Void {
         self.magneticField = magneticField
-        setLarmorFrequency()
+        updateLarmorFrequency()
     }
     
-    public func update(gyromagneticRatio: Double) -> Void {
+    public func set(gyromagneticRatio: Double) -> Void {
         self.gyromagneticRatio = gyromagneticRatio
-        setLarmorFrequency()
+        updateLarmorFrequency()
     }
     
 }
