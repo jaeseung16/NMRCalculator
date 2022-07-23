@@ -13,8 +13,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
     let timeDomainCalculator = TimeDomainCalculator.shared
     let frequencyDomainCalculator = FrequencyDomainCalculator.shared
-    let pulseCalculator = PulseCalculator.shared
-    let ernstAngleCalculator = ErnstAngleCalculator.shared
+    let ernstAngleCalculator = ErnstAngleCalculator()
+    let decibelCalculator = DecibelCalculator()
     
     let proton = NMRNucleus()
     
