@@ -18,6 +18,9 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     let proton = NMRNucleus()
     
+    let pulse1 = Pulse(duration: 10.0, flipAngle: 90.0)
+    let pulse2 = Pulse(duration: 1000.0, flipAngle: 90.0)
+    
     init() {
         let B0 = 1.0
         nucleus = NMRNucleus()
@@ -38,22 +41,16 @@ class MacNMRCalculatorViewModel: ObservableObject {
         spectralWidth = spectralRange
         frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralRange, numberOfDataPoints: numberOfDataPoints)
         
-        let p1 = 10.0
-        let φ1 = 90.0
-        let amp1 = pulseCalculator.updateAmplitude(flipAngle: φ1, duration: p1)
-        duration1 = p1
-        flipAngle1 = φ1
-        amplitude1 = amp1
-        amplitude1InT = amp1 / NMRCalcConstants.gammaProton
+        duration1 = pulse1.duration
+        flipAngle1 = pulse1.flipAngle
+        amplitude1 = pulse1.amplitude
+        amplitude1InT = pulse1.amplitude / NMRCalcConstants.gammaProton
         
-        let p2 = 1000.0
-        let φ2 = 90.0
-        let amp2 = pulseCalculator.updateAmplitude(flipAngle: φ2, duration: p2)
-        duration2 = p2
-        flipAngle2 = φ2
-        amplitude2 = amp2
+        duration2 = pulse2.duration
+        flipAngle2 = pulse2.flipAngle
+        amplitude2 = pulse2.amplitude
         
-        relativePower = 20.0 * log10(abs(amp2/amp1))
+        relativePower = decibelCalculator.dB(measuredAmplitude: pulse2.amplitude, referenceAmplitude: pulse1.amplitude)
         
         let τ = 1.0
         let T1 = 1.0
@@ -220,7 +217,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var duration1: Double {
         didSet {
             if duration1 != oldValue {
-                amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
+                pulse1.set(duration: duration1)
+                amplitude1 = pulse1.amplitude
                 updateAmplitude1InT()
                 updateRelativePower()
             }
@@ -230,7 +228,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var flipAngle1: Double {
         didSet {
             if flipAngle1 != oldValue {
-                amplitude1 = pulseCalculator.updateAmplitude(flipAngle: flipAngle1, duration: duration1)
+                pulse1.set(flipAngle: flipAngle1)
+                amplitude1 = pulse1.amplitude
                 updateAmplitude1InT()
                 updateRelativePower()
             }
@@ -240,8 +239,9 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var amplitude1: Double {
         didSet {
             if amplitude1 != oldValue {
+                pulse1.set(amplitude: amplitude1)
+                duration1 = pulse1.duration
                 updateAmplitude1InT()
-                duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
                 updateRelativePower()
             }
         }
@@ -251,7 +251,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
         didSet {
             if amplitude1InT != oldValue {
                 amplitude1 = amplitude1InT * γNucleus
-                duration1 = pulseCalculator.updateDuration(flipAngle: flipAngle1, amplitude: amplitude1)
+                pulse1.set(amplitude: amplitude1)
+                duration1 = pulse1.duration
                 updateRelativePower()
             }
         }
@@ -260,7 +261,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var duration2: Double {
         didSet {
             if duration2 != oldValue {
-                amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
+                pulse2.set(duration: duration2)
+                amplitude2 = pulse2.amplitude
                 updateRelativePower()
             }
         }
@@ -269,7 +271,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var flipAngle2: Double {
         didSet {
             if flipAngle2 != oldValue {
-                amplitude2 = pulseCalculator.updateAmplitude(flipAngle: flipAngle2, duration: duration2)
+                pulse2.set(flipAngle: flipAngle2)
+                amplitude2 = pulse2.amplitude
                 updateRelativePower()
             }
         }
@@ -278,7 +281,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var amplitude2: Double {
         didSet {
             if amplitude2 != oldValue {
-                duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
+                pulse2.set(amplitude: amplitude2)
+                duration2 = pulse2.duration
                 updateRelativePower()
             }
         }
@@ -287,14 +291,13 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var relativePower: Double {
         didSet {
             if relativePower != oldValue {
-                amplitude2 = pulseCalculator.calculateAmplitude(dB: relativePower, reference: amplitude1)
-                duration2 = pulseCalculator.updateDuration(flipAngle: flipAngle2, amplitude: amplitude2)
+                amplitude2 = decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1)
             }
         }
     }
     
     private func updateRelativePower() -> Void {
-        relativePower = pulseCalculator.calculateDecibel(measured: amplitude2, reference: amplitude1)
+        relativePower = decibelCalculator.dB(measuredAmplitude: amplitude2, referenceAmplitude: amplitude1)
     }
     
     private func updateAmplitude1InT() {
@@ -321,7 +324,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var ernstAngle: Double {
         didSet {
             if ernstAngle != oldValue {
-                repetitionTime = ernstAngleCalculator.calculateRepetitionTime(relaxationTime: relaxationTime, ernstAngle: ernstAngle)
+                repetitionTime = ernstAngleCalculator.calculateRepetitionTime(ernstAngle: ernstAngle, relaxationTime: relaxationTime)
             }
         }
     }
