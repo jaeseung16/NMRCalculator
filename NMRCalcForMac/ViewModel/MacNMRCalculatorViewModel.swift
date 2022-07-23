@@ -12,7 +12,7 @@ import Combine
 class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyCalculator.shared
     let timeDomainCalculator = TimeDomainCalculator.shared
-    let frequencyDomainCalculator = FrequencyDomainCalculator.shared
+    let frequencyDomainCalculator = SpectralWidthFrequencyResolutionConverter(spectralWidth: 1000.0, numberOfPoints: 1000)
     let ernstAngleCalculator = ErnstAngleCalculator()
     let decibelCalculator = DecibelCalculator()
     
@@ -31,15 +31,14 @@ class MacNMRCalculatorViewModel: ObservableObject {
         
         let numberOfDataPoints = 1000.0
         let duration = 1.0
-        let spectralRange = 1.0
-        
+       
         numberOfTimeDataPoints = numberOfDataPoints
         acquisitionDuration = duration
         dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: duration, numberOfDataPoints: numberOfDataPoints)
         
-        numberOfFrequencyDataPoints = numberOfDataPoints
-        spectralWidth = spectralRange
-        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralRange, numberOfDataPoints: numberOfDataPoints)
+        numberOfFrequencyDataPoints = Double(frequencyDomainCalculator.numberOfPoints)
+        spectralWidth = frequencyDomainCalculator.spectralWidthInkHz
+        frequencyResolution = frequencyDomainCalculator.frequencyResolution
         
         duration1 = pulse1.duration
         flipAngle1 = pulse1.flipAngle
@@ -183,7 +182,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var numberOfFrequencyDataPoints: Double {
         didSet {
             if numberOfFrequencyDataPoints != oldValue {
-                updateFrequencyResolution()
+                frequencyDomainCalculator.set(numberOfPoints: Int(numberOfFrequencyDataPoints))
+                frequencyResolution = frequencyDomainCalculator.frequencyResolution
             }
         }
     }
@@ -191,7 +191,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var spectralWidth: Double {
         didSet {
             if spectralWidth != oldValue {
-                updateFrequencyResolution()
+                frequencyDomainCalculator.set(spectralWidthInkHz: spectralWidth)
+                frequencyResolution = frequencyDomainCalculator.frequencyResolution
             }
         }
     }
@@ -199,17 +200,14 @@ class MacNMRCalculatorViewModel: ObservableObject {
     @Published var frequencyResolution: Double {
         didSet {
             if frequencyResolution != oldValue {
-                numberOfFrequencyDataPoints = frequencyDomainCalculator.calcualteNumberOfDataPoints(spectralWidth: spectralWidth, frequencyResolution: frequencyResolution)
+                frequencyDomainCalculator.set(frequencyResolution: frequencyResolution)
+                numberOfFrequencyDataPoints = Double(frequencyDomainCalculator.numberOfPoints)
             }
         }
     }
     
     private func updateDwellTime() {
         dwellTime = timeDomainCalculator.calculateDwellTime(totalDuration: acquisitionDuration, numberOfDataPoints: numberOfTimeDataPoints)
-    }
-    
-    private func updateFrequencyResolution() {
-        frequencyResolution = frequencyDomainCalculator.calculateFrequencyResolution(spectralWidth: spectralWidth, numberOfDataPoints: numberOfFrequencyDataPoints)
     }
 
     // MARK: - Pulse

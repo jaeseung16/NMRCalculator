@@ -49,6 +49,10 @@
 		900B441627E7C60400E10A25 /* PulseCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441527E7C60400E10A25 /* PulseCalculator.swift */; };
 		900B441A27E7D23700E10A25 /* TimeDomainCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441927E7D23700E10A25 /* TimeDomainCalculator.swift */; };
 		900B441C27E7D63600E10A25 /* FrequencyDomainCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900B441B27E7D63600E10A25 /* FrequencyDomainCalculator.swift */; };
+		9017230B288C5F6E00B520EC /* LarmorFrequencyMagneticFieldConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904693A6287CCDFB005B8FFA /* LarmorFrequencyMagneticFieldConverter.swift */; };
+		9017230C288C5F6E00B520EC /* LarmorFrequencyMagneticFieldConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904693A6287CCDFB005B8FFA /* LarmorFrequencyMagneticFieldConverter.swift */; };
+		9017230D288C603000B520EC /* SpectralWidthFrequencyResolutionConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904693A8287CD09A005B8FFA /* SpectralWidthFrequencyResolutionConverter.swift */; };
+		9017230E288C603000B520EC /* SpectralWidthFrequencyResolutionConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904693A8287CD09A005B8FFA /* SpectralWidthFrequencyResolutionConverter.swift */; };
 		901CF16025E8593E00B123D1 /* MacNMRCalcSignalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF15F25E8593E00B123D1 /* MacNMRCalcSignalView.swift */; };
 		901CF17025E8611600B123D1 /* MacNMRCalcItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901CF16F25E8611600B123D1 /* MacNMRCalcItemView.swift */; };
 		9026CA4D25E5BCB90059E64D /* MacCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9026CA4C25E5BCB90059E64D /* MacCalculatorView.swift */; };
@@ -1041,8 +1045,10 @@
 				902FDF4A27EE784000576210 /* MacNMRCalculatorViewModel.swift in Sources */,
 				902FDF4D27EE7AC600576210 /* FrequencyDomainCalculator.swift in Sources */,
 				9047C0CC2888BD58003170BC /* DecibelCalculator.swift in Sources */,
+				9017230C288C5F6E00B520EC /* LarmorFrequencyMagneticFieldConverter.swift in Sources */,
 				902FDF4E27EE7AC900576210 /* LarmorFrequencyCalculator.swift in Sources */,
 				902FDF5027EE7ACE00576210 /* TimeDomainCalculator.swift in Sources */,
+				9017230E288C603000B520EC /* SpectralWidthFrequencyResolutionConverter.swift in Sources */,
 				902FDF4427EE77D400576210 /* MacNMRCalculatorViewModelTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1080,6 +1086,7 @@
 				909C113A25BF90A500E8C285 /* ProtonFrequencyView.swift in Sources */,
 				906EBCC825E4796C00ED8641 /* AtomicElementView.swift in Sources */,
 				909C117925BF90DD00E8C285 /* Fraction.swift in Sources */,
+				9017230D288C603000B520EC /* SpectralWidthFrequencyResolutionConverter.swift in Sources */,
 				901CF17025E8611600B123D1 /* MacNMRCalcItemView.swift in Sources */,
 				9028827727D966BB00795259 /* MacNMRCalculatorViewModel.swift in Sources */,
 				90A0A21825CB6C7C001DA889 /* NMRCalcConstants.swift in Sources */,
@@ -1091,6 +1098,7 @@
 				9047C0CB2888BD58003170BC /* DecibelCalculator.swift in Sources */,
 				909C119625BF917C00E8C285 /* MacNucleusList.swift in Sources */,
 				9047C0C62888B7BD003170BC /* ErnstAngleCalculator.swift in Sources */,
+				9017230B288C5F6E00B520EC /* LarmorFrequencyMagneticFieldConverter.swift in Sources */,
 				906EBD2825E47DFF00ED8641 /* NumberColor.swift in Sources */,
 				909C117225BF90D900E8C285 /* NMRPeriodicTableData.swift in Sources */,
 				90AA3ED825F2FC48001BCF10 /* AppDelegate.swift in Sources */,

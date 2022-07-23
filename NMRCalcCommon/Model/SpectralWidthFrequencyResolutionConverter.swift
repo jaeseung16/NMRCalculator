@@ -14,6 +14,10 @@ class SpectralWidthFrequencyResolutionConverter {
     public var numberOfPoints: Int
     public var frequencyResolution: Double // Hz
     
+    public var spectralWidthInkHz: Double {
+        return spectralWidth / 1000.0
+    }
+    
     public init(spectralWidth: Double, frequencyResolution: Double) {
         self.spectralWidth = spectralWidth
         self.frequencyResolution = frequencyResolution
@@ -32,30 +36,35 @@ class SpectralWidthFrequencyResolutionConverter {
         self.spectralWidth = Double(numberOfPoints) * frequencyResolution
     }
     
-    private func setNumberOfPoints() {
+    private func updateNumberOfPoints() {
         numberOfPoints = Int(spectralWidth / frequencyResolution)
     }
     
-    private func setFrequencyResolution() {
+    private func updateFrequencyResolution() {
         frequencyResolution = spectralWidth / Double(numberOfPoints)
     }
     
-    private func setSpectralWidth() {
+    private func updateSpectralWidth() {
         spectralWidth = Double(numberOfPoints) * frequencyResolution
     }
 
-    public func update(spectralWidth: Double) -> Void {
+    public func set(spectralWidth: Double) -> Void {
         self.spectralWidth = spectralWidth
-        setFrequencyResolution()
+        updateFrequencyResolution()
     }
     
-    public func update(frequencyResolution: Double) -> Void {
+    public func set(spectralWidthInkHz: Double) -> Void {
+        self.spectralWidth = spectralWidthInkHz * 1000
+        updateFrequencyResolution()
+    }
+    
+    public func set(frequencyResolution: Double) -> Void {
         self.frequencyResolution = frequencyResolution
-        setSpectralWidth()
+        updateNumberOfPoints()
     }
     
-    public func update(numberOfPoints: Int) -> Void {
+    public func set(numberOfPoints: Int) -> Void {
         self.numberOfPoints = numberOfPoints
-        setFrequencyResolution()
+        updateFrequencyResolution()
     }
 }
