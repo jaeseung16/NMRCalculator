@@ -74,7 +74,7 @@ struct MacLamorFrequencyView: View {
                                    unit: NMRCalcUnit.T,
                                    formatter: externalFieldFormatter) {
                     if viewModel.validate(externalField: externalField) {
-                        viewModel.externalField = externalField
+                        viewModel.update(externalField: externalField)
                     } else {
                         showAlert.toggle()
                     }
@@ -85,7 +85,7 @@ struct MacLamorFrequencyView: View {
                                    value: $larmorFrequency,
                                    unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
-                    viewModel.larmorFrequency = larmorFrequency
+                    viewModel.update(larmorFrequency: larmorFrequency)
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
@@ -93,7 +93,7 @@ struct MacLamorFrequencyView: View {
                                    value: $protonFrequency,
                                    unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
-                    viewModel.protonFrequency = protonFrequency
+                    viewModel.update(protonFrequency: protonFrequency)
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
@@ -101,7 +101,7 @@ struct MacLamorFrequencyView: View {
                                    value: $electronFrequency,
                                    unit: NMRCalcUnit.GHz,
                                    formatter: frequencyFormatter) {
-                    viewModel.electronFrequency = electronFrequency
+                    viewModel.update(electronFrequency: electronFrequency)
                 }
             }
             .padding()
@@ -111,31 +111,11 @@ struct MacLamorFrequencyView: View {
                     showAlert.toggle()
                 }
             }
-            .onChange(of: viewModel.nucleusUpdated) { _ in
+            .onReceive(viewModel.$nucleusUpdated) { _ in
                 larmorFrequency = viewModel.larmorFrequency
                 protonFrequency = viewModel.protonFrequency
                 electronFrequency = viewModel.electronFrequency
                 externalField = viewModel.externalField
-            }
-            .onChange(of: viewModel.externalField) { _ in
-                if externalField != viewModel.externalField {
-                    externalField = viewModel.externalField
-                }
-            }
-            .onChange(of: viewModel.larmorFrequency) { _ in
-                if larmorFrequency != viewModel.larmorFrequency {
-                    larmorFrequency = viewModel.larmorFrequency
-                }
-            }
-            .onChange(of: viewModel.protonFrequency) { _ in
-                if protonFrequency != viewModel.protonFrequency {
-                    protonFrequency = viewModel.protonFrequency
-                }
-            }
-            .onChange(of: viewModel.electronFrequency) { _ in
-                if electronFrequency != viewModel.electronFrequency {
-                    electronFrequency = viewModel.electronFrequency
-                }
             }
         }
     }
