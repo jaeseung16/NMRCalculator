@@ -21,18 +21,13 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let pulse1 = Pulse(duration: 10.0, flipAngle: 90.0)
     let pulse2 = Pulse(duration: 1000.0, flipAngle: 90.0)
     
-    let updateMagneticField: UpdateMagneticField
-    let updateLarmorFrequency: UpdateLarmorFrequency
-    let updateProtonFrequency: UpdateProtonFrequency
-    let updateElectronFrequency: UpdateElectronFrequency
+    let updateMagneticField: NMRCalcCommand
+    let updateLarmorFrequency: NMRCalcCommand
+    let updateProtonFrequency: NMRCalcCommand
+    let updateElectronFrequency: NMRCalcCommand
     
     init() {
         nucleus = NMRNucleus()
-        
-        externalField = larmorFrequencyCalculator.magneticField
-        larmorFrequency = larmorFrequencyCalculator.larmorFrequency
-        protonFrequency = larmorFrequencyCalculator.protonFrequency
-        electronFrequency = larmorFrequencyCalculator.electroFrequency
        
         numberOfTimeDataPoints = Double(timeDomainCalculator.numberOfPoints)
         acquisitionDuration = timeDomainCalculator.acqusitionTime
@@ -109,28 +104,36 @@ class MacNMRCalculatorViewModel: ObservableObject {
         return γNucleus
     }
     
-    var externalField: Double
+    var externalField: Double {
+        larmorFrequencyCalculator.magneticField
+    }
     
     func update(externalField: Double) -> Void {
         updateMagneticField.execute(with: externalField)
         updateFromLarmorFrequencyCalculator()
     }
     
-    var larmorFrequency: Double
+    var larmorFrequency: Double {
+        larmorFrequencyCalculator.larmorFrequency
+    }
     
     func update(larmorFrequency: Double) -> Void {
         updateLarmorFrequency.execute(with: larmorFrequency)
         updateFromLarmorFrequencyCalculator()
     }
     
-    var protonFrequency: Double
+    var protonFrequency: Double {
+        larmorFrequencyCalculator.protonFrequency
+    }
     
     func update(protonFrequency: Double) -> Void {
         updateProtonFrequency.execute(with: protonFrequency)
         updateFromLarmorFrequencyCalculator()
     }
     
-    var electronFrequency: Double
+    var electronFrequency: Double {
+        larmorFrequencyCalculator.electroFrequency
+    }
     
     func update(electronFrequency: Double) -> Void {
         updateElectronFrequency.execute(with: electronFrequency)
@@ -138,11 +141,6 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     func updateFromLarmorFrequencyCalculator() -> Void {
-        larmorFrequency = larmorFrequencyCalculator.larmorFrequency
-        externalField = larmorFrequencyCalculator.magneticField
-        protonFrequency = larmorFrequencyCalculator.protonFrequency
-        electronFrequency = larmorFrequencyCalculator.electroFrequency
-        
         nucleusUpdated.toggle()
     }
   
