@@ -86,7 +86,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
                     if viewModel.validate(numberOfDataPoints: numberOfFrequencyDataPoints) {
-                        viewModel.numberOfFrequencyDataPoints = numberOfFrequencyDataPoints
+                        viewModel.update(numberOfFrequencyDataPoints: numberOfFrequencyDataPoints)
                     } else {
                         showDataPointsAlert.toggle()
                     }
@@ -98,7 +98,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.kHz,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(spectralWidth) {
-                        viewModel.spectralWidth = spectralWidth
+                        viewModel.update(spectralWidth: spectralWidth)
                     } else {
                         showAlert.toggle()
                     }
@@ -110,7 +110,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.Hz,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(frequencyResolution) {
-                        viewModel.frequencyResolution = frequencyResolution
+                        viewModel.update(frequencyResolution: frequencyResolution)
                     } else {
                         showAlert.toggle()
                     }
@@ -133,14 +133,8 @@ struct MacNMRCalcSignalView: View {
         .onReceive(viewModel.$timeDomainUpdated) { _ in
             reset()
         }
-        .onChange(of: viewModel.numberOfFrequencyDataPoints) { _ in
-            numberOfFrequencyDataPoints = viewModel.numberOfFrequencyDataPoints
-        }
-        .onChange(of: viewModel.spectralWidth) { _ in
-            spectralWidth = viewModel.spectralWidth
-        }
-        .onChange(of: viewModel.frequencyResolution) { _ in
-            frequencyResolution = viewModel.frequencyResolution
+        .onReceive(viewModel.$frequencyDomainUpdated) { _ in
+            reset()
         }
        
     }

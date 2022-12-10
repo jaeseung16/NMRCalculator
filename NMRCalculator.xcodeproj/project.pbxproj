@@ -103,6 +103,18 @@
 		90833A9C2943F74F00FC14DA /* UpdateAcqusitionSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90833A9B2943F74F00FC14DA /* UpdateAcqusitionSize.swift */; };
 		90833A9D2943F74F00FC14DA /* UpdateAcqusitionSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90833A9B2943F74F00FC14DA /* UpdateAcqusitionSize.swift */; };
 		90833A9E2943F74F00FC14DA /* UpdateAcqusitionSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90833A9B2943F74F00FC14DA /* UpdateAcqusitionSize.swift */; };
+		90847F8A2944D5FF0079CCB0 /* UpdateSpectrumSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F892944D5FF0079CCB0 /* UpdateSpectrumSize.swift */; };
+		90847F8B2944D5FF0079CCB0 /* UpdateSpectrumSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F892944D5FF0079CCB0 /* UpdateSpectrumSize.swift */; };
+		90847F8C2944D5FF0079CCB0 /* UpdateSpectrumSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F892944D5FF0079CCB0 /* UpdateSpectrumSize.swift */; };
+		90847F8E2944D6D20079CCB0 /* UpdateFrequencyResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F8D2944D6D20079CCB0 /* UpdateFrequencyResolution.swift */; };
+		90847F8F2944D6D20079CCB0 /* UpdateFrequencyResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F8D2944D6D20079CCB0 /* UpdateFrequencyResolution.swift */; };
+		90847F902944D6D20079CCB0 /* UpdateFrequencyResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F8D2944D6D20079CCB0 /* UpdateFrequencyResolution.swift */; };
+		90847F922944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F912944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift */; };
+		90847F932944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F912944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift */; };
+		90847F942944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F912944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift */; };
+		90847F962944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */; };
+		90847F972944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */; };
+		90847F982944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */; };
 		909ACA3E25CF5D7000C92C2F /* MacNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */; };
 		909C112725BF908A00E8C285 /* NMRCalculatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112625BF908A00E8C285 /* NMRCalculatorApp.swift */; };
 		909C112925BF908A00E8C285 /* MacNucleusContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112825BF908A00E8C285 /* MacNucleusContentView.swift */; };
@@ -314,6 +326,10 @@
 		90833A932943F60400FC14DA /* UpdateDwellTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDwellTime.swift; sourceTree = "<group>"; };
 		90833A972943F6F700FC14DA /* UpdateDwellTimeInμs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpdateDwellTimeInμs.swift"; sourceTree = "<group>"; };
 		90833A9B2943F74F00FC14DA /* UpdateAcqusitionSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateAcqusitionSize.swift; sourceTree = "<group>"; };
+		90847F892944D5FF0079CCB0 /* UpdateSpectrumSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSpectrumSize.swift; sourceTree = "<group>"; };
+		90847F8D2944D6D20079CCB0 /* UpdateFrequencyResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFrequencyResolution.swift; sourceTree = "<group>"; };
+		90847F912944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSpectralWidthInkHz.swift; sourceTree = "<group>"; };
+		90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSpectralWidth.swift; sourceTree = "<group>"; };
 		909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNucleusInfoView.swift; sourceTree = "<group>"; };
 		909C112425BF908A00E8C285 /* NMR Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NMR Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		909C112625BF908A00E8C285 /* NMRCalculatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculatorApp.swift; sourceTree = "<group>"; };
@@ -683,6 +699,10 @@
 				90833A932943F60400FC14DA /* UpdateDwellTime.swift */,
 				90833A972943F6F700FC14DA /* UpdateDwellTimeInμs.swift */,
 				90833A9B2943F74F00FC14DA /* UpdateAcqusitionSize.swift */,
+				90847F892944D5FF0079CCB0 /* UpdateSpectrumSize.swift */,
+				90847F8D2944D6D20079CCB0 /* UpdateFrequencyResolution.swift */,
+				90847F912944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift */,
+				90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */,
 			);
 			path = Command;
 			sourceTree = "<group>";
@@ -1056,6 +1076,7 @@
 				0BF022DC1D63C11000EA75F2 /* NucleusTableViewCell.swift in Sources */,
 				904693A9287CD09A005B8FFA /* SpectralWidthFrequencyResolutionConverter.swift in Sources */,
 				904693A5287CCBE6005B8FFA /* ParameterConverting.swift in Sources */,
+				90847F922944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */,
 				90A1DB13293EB5BC00B8D105 /* UpdateElectronFrequency.swift in Sources */,
 				0B03D2D81D7A2E8F008AF186 /* NMRPulse.swift in Sources */,
 				0B5AC1721D5E9AF1002102C8 /* iPadNMRCalcViewController.swift in Sources */,
@@ -1068,6 +1089,7 @@
 				0B6ACF051D08E88000D7D342 /* NucleusViewController.swift in Sources */,
 				0B3A79BB1D6146B700F713F4 /* SignalTableViewCell.swift in Sources */,
 				0BFEB1281D0CA8FE00F37F1B /* NMRNucleus.swift in Sources */,
+				90847F8A2944D5FF0079CCB0 /* UpdateSpectrumSize.swift in Sources */,
 				0B03D2DC1D7A389D008AF186 /* NMRfid.swift in Sources */,
 				0B5BC4CC1D12010F00BF168B /* NucleusView.swift in Sources */,
 				0B9A1D891D402FF40007372F /* NMRCalcTabBarController.swift in Sources */,
@@ -1077,6 +1099,8 @@
 				0B5339921D5FF92400089DF3 /* PulseTableViewCell.swift in Sources */,
 				0B5339861D5FC9DF00089DF3 /* NMRCalcMasterItems.swift in Sources */,
 				90A1DB11293EAF1000B8D105 /* NMRCalcCommand.swift in Sources */,
+				90847F8E2944D6D20079CCB0 /* UpdateFrequencyResolution.swift in Sources */,
+				90847F962944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */,
 				0B3818C11FAA98A9001FAAD5 /* NMRErnstAngle.swift in Sources */,
 				900AFCC1287F793400F30039 /* DwellAcquisitionTimeConverter.swift in Sources */,
 				0B52037E1F251EAA00DCCD1C /* NMRLarmor.swift in Sources */,
@@ -1140,6 +1164,7 @@
 				901CF16025E8593E00B123D1 /* MacNMRCalcSignalView.swift in Sources */,
 				909C11CA25BF945500E8C285 /* MacNucleusView.swift in Sources */,
 				9047C0C92888BCDF003170BC /* Pulse.swift in Sources */,
+				90847F982944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */,
 				9017230F288C63EC00B520EC /* DwellAcquisitionTimeConverter.swift in Sources */,
 				90A1DB09293EAEFE00B8D105 /* UpdateLarmorFrequency.swift in Sources */,
 				909C113A25BF90A500E8C285 /* ProtonFrequencyView.swift in Sources */,
@@ -1168,6 +1193,7 @@
 				909C117225BF90D900E8C285 /* NMRPeriodicTableData.swift in Sources */,
 				90AA3ED825F2FC48001BCF10 /* AppDelegate.swift in Sources */,
 				906EBD1A25E47D8E00ED8641 /* ElementColor.swift in Sources */,
+				90847F902944D6D20079CCB0 /* UpdateFrequencyResolution.swift in Sources */,
 				900AFCBE287F721700F30039 /* NMRNucleus.swift in Sources */,
 				9041955625EC28BB0029D61B /* MacNMRCalcErnstAngleView.swift in Sources */,
 				909C114125BF90A800E8C285 /* LarmorFrequencyView.swift in Sources */,
@@ -1176,9 +1202,11 @@
 				900B441627E7C60400E10A25 /* PulseCalculator.swift in Sources */,
 				90833A9E2943F74F00FC14DA /* UpdateAcqusitionSize.swift in Sources */,
 				909C112725BF908A00E8C285 /* NMRCalculatorApp.swift in Sources */,
+				90847F8C2944D5FF0079CCB0 /* UpdateSpectrumSize.swift in Sources */,
 				900B441C27E7D63600E10A25 /* FrequencyDomainCalculator.swift in Sources */,
 				90A1DB08293EAEF900B8D105 /* NMRCalcCommand.swift in Sources */,
 				90D3935525C7343D000545FE /* MacLamorFrequencyView.swift in Sources */,
+				90847F942944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1204,10 +1232,12 @@
 				90FFBA5A23CBAB45000A9BC9 /* WatchPeriodicTable.swift in Sources */,
 				90FFBA5323CBA11F000A9BC9 /* WatchNucleusView.swift in Sources */,
 				90FFBA3423CB8C55000A9BC9 /* ContentView.swift in Sources */,
+				90847F8B2944D5FF0079CCB0 /* UpdateSpectrumSize.swift in Sources */,
 				90A1DB0B293EAF0600B8D105 /* UpdateMagneticField.swift in Sources */,
 				90B8E84C23EF8E39004292B1 /* WatchNucleusInfoView.swift in Sources */,
 				90495A3723CEA4D2003F2FAA /* WatchNucleusDetailView.swift in Sources */,
 				90FFBA5823CBA90C000A9BC9 /* NMRPeriodicTableData.swift in Sources */,
+				90847F8F2944D6D20079CCB0 /* UpdateFrequencyResolution.swift in Sources */,
 				90A1DB15293EB7CE00B8D105 /* UpdateElectronFrequency.swift in Sources */,
 				90FFBA3A23CB8C55000A9BC9 /* NotificationController.swift in Sources */,
 				900AFCBF287F721800F30039 /* NMRNucleus.swift in Sources */,
@@ -1217,8 +1247,10 @@
 				90A0A21725CB6C7C001DA889 /* NMRCalcConstants.swift in Sources */,
 				90A1DB0E293EAF0C00B8D105 /* UpdateLarmorFrequency.swift in Sources */,
 				90833A992943F6F700FC14DA /* UpdateDwellTimeInμs.swift in Sources */,
+				90847F972944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */,
 				90B2A67C23CFF59C00599931 /* NuclearSpinView.swift in Sources */,
 				90FFBA5123CB9E70000A9BC9 /* NucleusList.swift in Sources */,
+				90847F932944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */,
 				90FFBA3823CB8C55000A9BC9 /* ExtensionDelegate.swift in Sources */,
 				90A1DB0D293EAF0900B8D105 /* UpdateProtonFrequency.swift in Sources */,
 				90833A9D2943F74F00FC14DA /* UpdateAcqusitionSize.swift in Sources */,

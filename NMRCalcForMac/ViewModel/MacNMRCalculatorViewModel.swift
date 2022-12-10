@@ -31,14 +31,15 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let updateDwellTimeInμs: NMRCalcCommand
     let updateAcquisitionSize: NMRCalcCommand
     
+    let updateSpectrumSize: NMRCalcCommand
+    let updateFrequencyResolution: NMRCalcCommand
+    let updateSpectralWidth: NMRCalcCommand
+    let updateSpectralWidthInkHz: NMRCalcCommand
+    
     
     init() {
         nucleus = NMRNucleus()
        
-        numberOfFrequencyDataPoints = Double(frequencyDomainCalculator.numberOfPoints)
-        spectralWidth = frequencyDomainCalculator.spectralWidthInkHz
-        frequencyResolution = frequencyDomainCalculator.frequencyResolution
-        
         duration1 = pulse1.duration
         flipAngle1 = pulse1.flipAngle
         amplitude1 = pulse1.amplitude
@@ -65,6 +66,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateDwellTime = UpdateDwellTime(timeDomainCalculator)
         updateDwellTimeInμs = UpdateDwellTimeInμs(timeDomainCalculator)
         updateAcquisitionSize = UpdateAcquisitionSize(timeDomainCalculator)
+        
+        updateSpectrumSize = UpdateSpectrumSize(frequencyDomainCalculator)
+        updateFrequencyResolution = UpdateFrequencyResolution(frequencyDomainCalculator)
+        updateSpectralWidth = UpdateSpectralWidth(frequencyDomainCalculator)
+        updateSpectralWidthInkHz = UpdateSpectralWidthInkHz(frequencyDomainCalculator)
+        
     }
     
     // MARK: - Validation
@@ -186,31 +193,37 @@ class MacNMRCalculatorViewModel: ObservableObject {
         timeDomainUpdated.toggle()
     }
     
-    @Published var numberOfFrequencyDataPoints: Double {
-        didSet {
-            if numberOfFrequencyDataPoints != oldValue {
-                frequencyDomainCalculator.set(numberOfPoints: Int(numberOfFrequencyDataPoints))
-                frequencyResolution = frequencyDomainCalculator.frequencyResolution
-            }
-        }
+    @Published var frequencyDomainUpdated = false
+    
+    var numberOfFrequencyDataPoints: Double {
+        Double(frequencyDomainCalculator.numberOfPoints)
     }
     
-    @Published var spectralWidth: Double {
-        didSet {
-            if spectralWidth != oldValue {
-                frequencyDomainCalculator.set(spectralWidthInkHz: spectralWidth)
-                frequencyResolution = frequencyDomainCalculator.frequencyResolution
-            }
-        }
+    func update(numberOfFrequencyDataPoints: Double) -> Void {
+        updateSpectrumSize.execute(with: numberOfFrequencyDataPoints)
+        updateFromFrequencyDomainCalculator()
     }
     
-    @Published var frequencyResolution: Double {
-        didSet {
-            if frequencyResolution != oldValue {
-                frequencyDomainCalculator.set(frequencyResolution: frequencyResolution)
-                numberOfFrequencyDataPoints = Double(frequencyDomainCalculator.numberOfPoints)
-            }
-        }
+    var spectralWidth: Double {
+        frequencyDomainCalculator.spectralWidthInkHz
+    }
+
+    func update(spectralWidth: Double) -> Void {
+        updateSpectralWidthInkHz.execute(with: spectralWidth)
+        updateFromFrequencyDomainCalculator()
+    }
+    
+    var frequencyResolution: Double {
+        frequencyDomainCalculator.frequencyResolution
+    }
+    
+    func update(frequencyResolution: Double) -> Void {
+        updateFrequencyResolution.execute(with: frequencyResolution)
+        updateFromFrequencyDomainCalculator()
+    }
+    
+    func updateFromFrequencyDomainCalculator() -> Void {
+        frequencyDomainUpdated.toggle()
     }
 
     // MARK: - Pulse
