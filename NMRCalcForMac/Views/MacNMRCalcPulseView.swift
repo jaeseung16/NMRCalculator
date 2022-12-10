@@ -165,11 +165,8 @@ struct MacNMRCalcPulseView: View {
         .onReceive(viewModel.$pulse2Updated) { _ in
             reset()
         }
-        .onChange(of: viewModel.nucleusUpdated) { _ in
+        .onReceive(viewModel.$nucleusUpdated) { _ in
             amplitude1InT = viewModel.amplitude1InT
-        }
-        .onChange(of: viewModel.relativePower) { _ in
-            relativePower = viewModel.relativePower
         }
        
     }

@@ -307,7 +307,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateFromPulse2()
     }
     
-    @Published var relativePower: Double {
+    var relativePower: Double {
         didSet {
             if relativePower != oldValue {
                 update(pulse2Amplitude: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
