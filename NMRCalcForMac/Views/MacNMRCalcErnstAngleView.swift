@@ -44,7 +44,7 @@ struct MacNMRCalcErnstAngleView: View {
                                    unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
                     if viewModel.isNonNegative(repetitionTime) {
-                        viewModel.update(repetitionTime: repetitionTime)
+                        viewModel.update(.repetitionTime, to: repetitionTime)
                     } else {
                         showAlert.toggle()
                     }
@@ -56,7 +56,7 @@ struct MacNMRCalcErnstAngleView: View {
                                    unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
                     if viewModel.isPositive(relaxationTime) {
-                        viewModel.update(relaxationTime: relaxationTime)
+                        viewModel.update(.relaxationTime, to: relaxationTime)
                     } else {
                         showAlert.toggle()
                     }
@@ -68,7 +68,7 @@ struct MacNMRCalcErnstAngleView: View {
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     if viewModel.validate(ernstAngle: ernstAngle) {
-                        viewModel.update(ernstAngle: ernstAngle)
+                        viewModel.update(.ernstAngle, to: ernstAngle)
                     } else {
                         showAlertErnstAngle.toggle()
                     }

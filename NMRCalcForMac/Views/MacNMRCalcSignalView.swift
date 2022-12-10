@@ -47,7 +47,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
                     if viewModel.validate(numberOfDataPoints: numberOfTimeDataPoints) {
-                        viewModel.update(acquisitionSize: numberOfTimeDataPoints)
+                        viewModel.update(.acquisitionSize, to: numberOfTimeDataPoints)
                     } else {
                         showDataPointsAlert.toggle()
                     }
@@ -59,7 +59,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.sec,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(acquisitionDuration) {
-                        viewModel.update(acquisitionDuration: acquisitionDuration)
+                        viewModel.update(.acquisitionTime, to: acquisitionDuration)
                     } else {
                         showAlert.toggle()
                     }
@@ -71,8 +71,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(dwellTime) {
-                        viewModel.update(dwellTime: dwellTime)
-                        
+                        viewModel.update(.dwellTimeInμs, to: dwellTime)
                     } else {
                         showAlert.toggle()
                     }
@@ -86,7 +85,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
                     if viewModel.validate(numberOfDataPoints: numberOfFrequencyDataPoints) {
-                        viewModel.update(numberOfFrequencyDataPoints: numberOfFrequencyDataPoints)
+                        viewModel.update(.spectrumSize, to: numberOfFrequencyDataPoints)
                     } else {
                         showDataPointsAlert.toggle()
                     }
@@ -98,7 +97,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.kHz,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(spectralWidth) {
-                        viewModel.update(spectralWidth: spectralWidth)
+                        viewModel.update(.spectralWidthInkHz, to: spectralWidth)
                     } else {
                         showAlert.toggle()
                     }
@@ -110,7 +109,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.Hz,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(frequencyResolution) {
-                        viewModel.update(frequencyResolution: frequencyResolution)
+                        viewModel.update(.frequencyResolution, to: frequencyResolution)
                     } else {
                         showAlert.toggle()
                     }

@@ -8,8 +8,11 @@
 
 import Foundation
 import Combine
+import os
 
 class MacNMRCalculatorViewModel: ObservableObject {
+    static let logger = Logger()
+    
     let larmorFrequencyCalculator = LarmorFrequencyMagneticFieldConverter(magneticField: 1.0, gyromagneticRatio: NMRNucleus().γ)
     let timeDomainCalculator = DwellAcquisitionTimeConverter(acqusitionTime: 1.0, numberOfPoints: 1000)
     let frequencyDomainCalculator = SpectralWidthFrequencyResolutionConverter(spectralWidth: 1000.0, numberOfPoints: 1000)
@@ -21,63 +24,41 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let pulse1 = Pulse(duration: 10.0, flipAngle: 90.0)
     let pulse2 = Pulse(duration: 1000.0, flipAngle: 90.0)
     
-    let updateMagneticField: NMRCalcCommand
-    let updateLarmorFrequency: NMRCalcCommand
-    let updateProtonFrequency: NMRCalcCommand
-    let updateElectronFrequency: NMRCalcCommand
-    
-    let updateAcquisitionTime: NMRCalcCommand
-    let updateDwellTime: NMRCalcCommand
-    let updateDwellTimeInμs: NMRCalcCommand
-    let updateAcquisitionSize: NMRCalcCommand
-    
-    let updateSpectrumSize: NMRCalcCommand
-    let updateFrequencyResolution: NMRCalcCommand
-    let updateSpectralWidth: NMRCalcCommand
-    let updateSpectralWidthInkHz: NMRCalcCommand
-    
-    let updatePulse1Duration: NMRCalcCommand
-    let updatePulse2Duration: NMRCalcCommand
-    let updatePulse1FlipAngle: NMRCalcCommand
-    let updatePulse2FlipAngle: NMRCalcCommand
-    let updatePulse1Amplitude: NMRCalcCommand
-    let updatePulse2Amplitude: NMRCalcCommand
-    
-    let updateErnstAngle: NMRCalcCommand
-    let updateRepetitionTime: NMRCalcCommand
-    let updateRelaxationTime: NMRCalcCommand
-    
+    var commands = [NMRCalcCommandName: NMRCalcCommand]()
+
     init() {
         nucleus = NMRNucleus()
        
         amplitude1InT = pulse1.amplitude / NMRCalcConstants.gammaProton
         relativePower = decibelCalculator.dB(measuredAmplitude: pulse2.amplitude, referenceAmplitude: pulse1.amplitude)
+
+        commands[.larmorFrequency] = UpdateLarmorFrequency(larmorFrequencyCalculator)
+        commands[.magneticField] = UpdateMagneticField(larmorFrequencyCalculator)
+        commands[.protonFrequency] = UpdateProtonFrequency(larmorFrequencyCalculator)
+        commands[.electronFrequency] = UpdateElectronFrequency(larmorFrequencyCalculator)
         
-        updateLarmorFrequency = UpdateLarmorFrequency(larmorFrequencyCalculator)
-        updateMagneticField = UpdateMagneticField(larmorFrequencyCalculator)
-        updateProtonFrequency = UpdateProtonFrequency(larmorFrequencyCalculator)
-        updateElectronFrequency = UpdateElectronFrequency(larmorFrequencyCalculator)
+        commands[.acquisitionTime] = UpdateAcquisitionTime(timeDomainCalculator)
+        commands[.dwellTime] = UpdateDwellTime(timeDomainCalculator)
+        commands[.dwellTimeInμs] = UpdateDwellTimeInμs(timeDomainCalculator)
+        commands[.acquisitionSize] = UpdateAcquisitionSize(timeDomainCalculator)
         
-        updateAcquisitionTime = UpdateAcquisitionTime(timeDomainCalculator)
-        updateDwellTime = UpdateDwellTime(timeDomainCalculator)
-        updateDwellTimeInμs = UpdateDwellTimeInμs(timeDomainCalculator)
-        updateAcquisitionSize = UpdateAcquisitionSize(timeDomainCalculator)
+        commands[.spectrumSize] = UpdateSpectrumSize(frequencyDomainCalculator)
+        commands[.frequencyResolution] = UpdateFrequencyResolution(frequencyDomainCalculator)
+        commands[.spectralWidth] = UpdateSpectralWidth(frequencyDomainCalculator)
+        commands[.spectralWidthInkHz] = UpdateSpectralWidthInkHz(frequencyDomainCalculator)
         
-        updateSpectrumSize = UpdateSpectrumSize(frequencyDomainCalculator)
-        updateFrequencyResolution = UpdateFrequencyResolution(frequencyDomainCalculator)
-        updateSpectralWidth = UpdateSpectralWidth(frequencyDomainCalculator)
-        updateSpectralWidthInkHz = UpdateSpectralWidthInkHz(frequencyDomainCalculator)
+        commands[.pulse1Duration] = UpdatePulseDuration(pulse1)
+        commands[.pulse1Amplitude] = UpdatePulseAmplitude(pulse1)
+        commands[.pulse1FlipAngle] = UpdatePulseFlipAngle(pulse1)
         
-        updatePulse1Duration = UpdatePulseDuration(pulse1)
-        updatePulse2Duration = UpdatePulseDuration(pulse2)
-        updatePulse1FlipAngle = UpdatePulseFlipAngle(pulse1)
-        updatePulse2FlipAngle = UpdatePulseFlipAngle(pulse2)
-        updatePulse1Amplitude = UpdatePulseAmplitude(pulse1)
-        updatePulse2Amplitude = UpdatePulseAmplitude(pulse2)
+        commands[.pulse2Duration] = UpdatePulseDuration(pulse2)
+        commands[.pulse2Amplitude] = UpdatePulseAmplitude(pulse2)
+        commands[.pulse2FlipAngle] = UpdatePulseFlipAngle(pulse2)
         
-        updateErnstAngle = UpdateErnstAngle(ernstAngleCalculator)
-        updateRepetitionTime = UpdateRepetitionTime(ernstAngleCalculator)
-        updateRelaxationTime = UpdateRelaxationTime(ernstAngleCalculator)
+        commands[.ernstAngle] = UpdateErnstAngle(ernstAngleCalculator)
+        commands[.repetitionTime] = UpdateRepetitionTime(ernstAngleCalculator)
+        commands[.relaxationTime] = UpdateRelaxationTime(ernstAngleCalculator)
+        
     }
     
     // MARK: - Validation
@@ -102,6 +83,34 @@ class MacNMRCalculatorViewModel: ObservableObject {
         return ernstAngle > 0.0 && ernstAngle < 90.0
     }
     
+    func update(_ commandName: NMRCalcCommandName, to value: Double) -> Void {
+        if let command = commands[commandName] {
+            command.execute(with: value)
+            toggle(commandName)
+        } else {
+            MacNMRCalculatorViewModel.logger.log("Can't find any command named \(commandName.rawValue, privacy: .public)")
+        }
+    }
+    
+    func toggle(_ commandName: NMRCalcCommandName) {
+        switch commandName {
+        case .larmorFrequency, .magneticField, .protonFrequency, .electronFrequency:
+            nucleusUpdated.toggle()
+        case .dwellTime, .dwellTimeInμs, .acquisitionSize, .acquisitionTime:
+            timeDomainUpdated.toggle()
+        case .spectrumSize, .spectralWidth, .spectralWidthInkHz, .frequencyResolution:
+            frequencyDomainUpdated.toggle()
+        case .pulse1Duration, .pulse1Amplitude, .pulse1FlipAngle:
+            updateAmplitude1InT()
+            updateRelativePower()
+            pulse1Updated.toggle()
+        case .pulse2Duration, .pulse2Amplitude, .pulse2FlipAngle:
+            updateRelativePower()
+            pulse2Updated.toggle()
+        case .ernstAngle, .repetitionTime, .relaxationTime:
+            ernstAngleUpdated.toggle()
+        }
+    }
     
     // MARK: - Larmor frequency
     
@@ -111,7 +120,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
         didSet {
             if nucleus != oldValue {
                 larmorFrequencyCalculator.set(gyromagneticRatio: nucleus.γ)
-                updateFromLarmorFrequencyCalculator()
+                nucleusUpdated.toggle()
                 updateAmplitude1InT()
             }
         }
@@ -128,40 +137,16 @@ class MacNMRCalculatorViewModel: ObservableObject {
         larmorFrequencyCalculator.magneticField
     }
     
-    func update(externalField: Double) -> Void {
-        updateMagneticField.execute(with: externalField)
-        updateFromLarmorFrequencyCalculator()
-    }
-    
     var larmorFrequency: Double {
         larmorFrequencyCalculator.larmorFrequency
-    }
-    
-    func update(larmorFrequency: Double) -> Void {
-        updateLarmorFrequency.execute(with: larmorFrequency)
-        updateFromLarmorFrequencyCalculator()
     }
     
     var protonFrequency: Double {
         larmorFrequencyCalculator.protonFrequency
     }
     
-    func update(protonFrequency: Double) -> Void {
-        updateProtonFrequency.execute(with: protonFrequency)
-        updateFromLarmorFrequencyCalculator()
-    }
-    
     var electronFrequency: Double {
         larmorFrequencyCalculator.electroFrequency
-    }
-    
-    func update(electronFrequency: Double) -> Void {
-        updateElectronFrequency.execute(with: electronFrequency)
-        updateFromLarmorFrequencyCalculator()
-    }
-    
-    func updateFromLarmorFrequencyCalculator() -> Void {
-        nucleusUpdated.toggle()
     }
   
     // MARK: - Signal
@@ -172,31 +157,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         Double(timeDomainCalculator.numberOfPoints)
     }
     
-    func update(acquisitionSize: Double) -> Void {
-        updateAcquisitionSize.execute(with: acquisitionSize)
-        updateFromTimeDomainCalculator()
-    }
-    
     var acquisitionDuration: Double {
         timeDomainCalculator.acqusitionTime
     }
     
-    func update(acquisitionDuration: Double) -> Void {
-        updateAcquisitionTime.execute(with: acquisitionDuration)
-        updateFromTimeDomainCalculator()
-    }
-    
     var dwellTime: Double {
         timeDomainCalculator.dwellInμs
-    }
-    
-    func update(dwellTime: Double) -> Void {
-        updateDwellTimeInμs.execute(with: dwellTime)
-        updateFromTimeDomainCalculator()
-    }
-    
-    func updateFromTimeDomainCalculator() -> Void {
-        timeDomainUpdated.toggle()
     }
     
     @Published var frequencyDomainUpdated = false
@@ -205,31 +171,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         Double(frequencyDomainCalculator.numberOfPoints)
     }
     
-    func update(numberOfFrequencyDataPoints: Double) -> Void {
-        updateSpectrumSize.execute(with: numberOfFrequencyDataPoints)
-        updateFromFrequencyDomainCalculator()
-    }
-    
     var spectralWidth: Double {
         frequencyDomainCalculator.spectralWidthInkHz
-    }
-
-    func update(spectralWidth: Double) -> Void {
-        updateSpectralWidthInkHz.execute(with: spectralWidth)
-        updateFromFrequencyDomainCalculator()
     }
     
     var frequencyResolution: Double {
         frequencyDomainCalculator.frequencyResolution
-    }
-    
-    func update(frequencyResolution: Double) -> Void {
-        updateFrequencyResolution.execute(with: frequencyResolution)
-        updateFromFrequencyDomainCalculator()
-    }
-    
-    func updateFromFrequencyDomainCalculator() -> Void {
-        frequencyDomainUpdated.toggle()
     }
 
     // MARK: - Pulse
@@ -241,39 +188,18 @@ class MacNMRCalculatorViewModel: ObservableObject {
         pulse1.duration
     }
     
-    func update(pulse1Duration: Double) -> Void {
-        updatePulse1Duration.execute(with: pulse1Duration)
-        updateAmplitude1InT()
-        updateRelativePower()
-        updateFromPulse1()
-    }
-    
     var flipAngle1: Double {
         pulse1.flipAngle
     }
-    
-    func update(pulse1FlipAngle: Double) -> Void {
-        updatePulse1FlipAngle.execute(with: pulse1FlipAngle)
-        updateAmplitude1InT()
-        updateRelativePower()
-        updateFromPulse1()
-    }
-    
+
     var amplitude1: Double {
         pulse1.amplitude
     }
-    
-    func update(pulse1Amplitude: Double) -> Void {
-        updatePulse1Amplitude.execute(with: pulse1Amplitude)
-        updateAmplitude1InT()
-        updateRelativePower()
-        updateFromPulse1()
-    }
-    
+
     var amplitude1InT: Double
     
     func update(pulse1AmplitudeInT: Double) -> Void {
-        updatePulse1Amplitude.execute(with: pulse1AmplitudeInT * γNucleus)
+        update(.pulse1Amplitude, to: pulse1AmplitudeInT * γNucleus)
         updateAmplitude1InT()
         updateRelativePower()
         updateFromPulse1()
@@ -283,36 +209,18 @@ class MacNMRCalculatorViewModel: ObservableObject {
         pulse2.duration
     }
     
-    func update(pulse2Duration: Double) -> Void {
-        updatePulse2Duration.execute(with: pulse2Duration)
-        updateRelativePower()
-        updateFromPulse2()
-    }
-    
     var flipAngle2: Double {
         pulse2.flipAngle
-    }
-    
-    func update(pulse2FlipAngle: Double) -> Void {
-        updatePulse2FlipAngle.execute(with: pulse2FlipAngle)
-        updateRelativePower()
-        updateFromPulse2()
     }
     
     var amplitude2: Double {
         pulse2.amplitude
     }
     
-    func update(pulse2Amplitude: Double) -> Void {
-        updatePulse2Amplitude.execute(with: pulse2Amplitude)
-        updateRelativePower()
-        updateFromPulse2()
-    }
-    
     var relativePower: Double {
         didSet {
             if relativePower != oldValue {
-                update(pulse2Amplitude: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
+                update(.pulse2Amplitude, to: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
             }
         }
     }
@@ -340,31 +248,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         ernstAngleCalculator.repetitionTime
     }
     
-    func update(repetitionTime: Double) -> Void {
-        updateRepetitionTime.execute(with: repetitionTime)
-        updateFromErnstAngleCalculator()
-    }
-    
     var relaxationTime: Double {
         ernstAngleCalculator.relaxationTime
     }
     
-    func update(relaxationTime: Double) -> Void {
-        updateRelaxationTime.execute(with: relaxationTime)
-        updateFromErnstAngleCalculator()
-    }
-    
     var ernstAngle: Double {
         ernstAngleCalculator.ernstAngle
-    }
-    
-    func update(ernstAngle: Double) -> Void {
-        updateErnstAngle.execute(with: ernstAngle)
-        updateFromErnstAngleCalculator()
-    }
-    
-    func updateFromErnstAngleCalculator() -> Void {
-        ernstAngleUpdated.toggle()
     }
     
 }

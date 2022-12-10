@@ -61,7 +61,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
                     if viewModel.isPositive(duration1) {
-                        viewModel.update(pulse1Duration: duration1)
+                        viewModel.update(.pulse1Duration, to: duration1)
                     } else {
                         showAlert.toggle()
                     }
@@ -73,7 +73,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     if viewModel.isPositive(flipAngle1) {
-                        viewModel.update(pulse1FlipAngle: flipAngle1)
+                        viewModel.update(.pulse1FlipAngle, to: flipAngle1)
                     } else {
                         showAlert.toggle()
                     }
@@ -85,7 +85,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
                     if viewModel.isPositive(amplitude1) {
-                        viewModel.update(pulse1Amplitude: amplitude1)
+                        viewModel.update(.pulse1Amplitude, to: amplitude1)
                     } else {
                         showAlert.toggle()
                     }
@@ -113,7 +113,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
                     if viewModel.isPositive(duration2) {
-                        viewModel.update(pulse2Duration: duration2)
+                        viewModel.update(.pulse2Duration, to: duration2)
                     } else {
                         showAlert.toggle()
                     }
@@ -125,7 +125,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     if viewModel.isPositive(flipAngle2) {
-                        viewModel.update(pulse2FlipAngle: flipAngle2)
+                        viewModel.update(.pulse2FlipAngle, to: flipAngle2)
                     } else {
                         showAlert.toggle()
                     }
@@ -137,7 +137,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
                     if viewModel.isPositive(amplitude2) {
-                        viewModel.update(pulse2Amplitude: amplitude2)
+                        viewModel.update(.pulse2Amplitude, to: amplitude2)
                     } else {
                         showAlert.toggle()
                     }

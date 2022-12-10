@@ -74,7 +74,7 @@ struct MacLamorFrequencyView: View {
                                    unit: NMRCalcUnit.T,
                                    formatter: externalFieldFormatter) {
                     if viewModel.validate(externalField: externalField) {
-                        viewModel.update(externalField: externalField)
+                        viewModel.update(.magneticField, to: externalField)
                     } else {
                         showAlert.toggle()
                     }
@@ -85,7 +85,7 @@ struct MacLamorFrequencyView: View {
                                    value: $larmorFrequency,
                                    unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
-                    viewModel.update(larmorFrequency: larmorFrequency)
+                    viewModel.update(.larmorFrequency, to: larmorFrequency)
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
@@ -93,7 +93,7 @@ struct MacLamorFrequencyView: View {
                                    value: $protonFrequency,
                                    unit: NMRCalcUnit.MHz,
                                    formatter: frequencyFormatter) {
-                    viewModel.update(protonFrequency: protonFrequency)
+                    viewModel.update(.protonFrequency, to: protonFrequency)
                 }
                 
                 MacNMRCalcItemView(title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
@@ -101,7 +101,7 @@ struct MacLamorFrequencyView: View {
                                    value: $electronFrequency,
                                    unit: NMRCalcUnit.GHz,
                                    formatter: frequencyFormatter) {
-                    viewModel.update(electronFrequency: electronFrequency)
+                    viewModel.update(.electronFrequency, to: electronFrequency)
                 }
             }
             .padding()
