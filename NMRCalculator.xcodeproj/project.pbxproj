@@ -166,7 +166,7 @@
 		90F318F723D3D44E00B85FBC /* AtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* AtomicElementView.swift */; };
 		90FFBA2623CB8C52000A9BC9 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA2423CB8C52000A9BC9 /* Interface.storyboard */; };
 		90FFBA2823CB8C55000A9BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA2723CB8C55000A9BC9 /* Assets.xcassets */; };
-		90FFBA2F23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 90FFBA2E23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		90FFBA2F23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 90FFBA2E23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		90FFBA3423CB8C55000A9BC9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA3323CB8C55000A9BC9 /* ContentView.swift */; };
 		90FFBA3623CB8C55000A9BC9 /* HostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA3523CB8C55000A9BC9 /* HostingController.swift */; };
 		90FFBA3823CB8C55000A9BC9 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA3723CB8C55000A9BC9 /* ExtensionDelegate.swift */; };
@@ -240,15 +240,15 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		90FFBA4A23CB8C56000A9BC9 /* Embed App Extensions */ = {
+		90FFBA4A23CB8C56000A9BC9 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				90FFBA2F23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex in Embed App Extensions */,
+				90FFBA2F23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -881,7 +881,7 @@
 			buildConfigurationList = 90FFBA4E23CB8C56000A9BC9 /* Build configuration list for PBXNativeTarget "WatchNMRCalculator" */;
 			buildPhases = (
 				90FFBA2023CB8C52000A9BC9 /* Resources */,
-				90FFBA4A23CB8C56000A9BC9 /* Embed App Extensions */,
+				90FFBA4A23CB8C56000A9BC9 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -917,7 +917,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1410;
 				ORGANIZATIONNAME = "Jae-Seung Lee";
 				TargetAttributes = {
 					0B6ACEFE1D08E87F00D7D342 = {
@@ -1499,6 +1499,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1527,6 +1528,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1552,6 +1554,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1579,6 +1582,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1668,6 +1672,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 8;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NMRCalcForMac/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1706,6 +1711,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 8;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NMRCalcForMac/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				ENABLE_HARDENED_RUNTIME = YES;
