@@ -47,7 +47,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.none,
                                    formatter: dataPointsFormatter) {
                     if viewModel.validate(numberOfDataPoints: numberOfTimeDataPoints) {
-                        viewModel.numberOfTimeDataPoints = numberOfTimeDataPoints
+                        viewModel.update(acquisitionSize: numberOfTimeDataPoints)
                     } else {
                         showDataPointsAlert.toggle()
                     }
@@ -59,7 +59,7 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.sec,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(acquisitionDuration) {
-                        viewModel.acquisitionDuration = acquisitionDuration
+                        viewModel.update(acquisitionDuration: acquisitionDuration)
                     } else {
                         showAlert.toggle()
                     }
@@ -71,7 +71,8 @@ struct MacNMRCalcSignalView: View {
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationTimeFormatter) {
                     if viewModel.isPositive(dwellTime) {
-                        viewModel.dwellTime = dwellTime
+                        viewModel.update(dwellTime: dwellTime)
+                        
                     } else {
                         showAlert.toggle()
                     }
@@ -129,14 +130,8 @@ struct MacNMRCalcSignalView: View {
                 showDataPointsAlert.toggle()
             }
         }
-        .onChange(of: viewModel.numberOfTimeDataPoints) { _ in
-            numberOfTimeDataPoints = viewModel.numberOfTimeDataPoints
-        }
-        .onChange(of: viewModel.acquisitionDuration) { _ in
-            acquisitionDuration = viewModel.acquisitionDuration
-        }
-        .onChange(of: viewModel.dwellTime) { _ in
-            dwellTime = viewModel.dwellTime
+        .onReceive(viewModel.$timeDomainUpdated) { _ in
+            reset()
         }
         .onChange(of: viewModel.numberOfFrequencyDataPoints) { _ in
             numberOfFrequencyDataPoints = viewModel.numberOfFrequencyDataPoints

@@ -26,13 +26,15 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let updateProtonFrequency: NMRCalcCommand
     let updateElectronFrequency: NMRCalcCommand
     
+    let updateAcquisitionTime: NMRCalcCommand
+    let updateDwellTime: NMRCalcCommand
+    let updateDwellTimeInμs: NMRCalcCommand
+    let updateAcquisitionSize: NMRCalcCommand
+    
+    
     init() {
         nucleus = NMRNucleus()
        
-        numberOfTimeDataPoints = Double(timeDomainCalculator.numberOfPoints)
-        acquisitionDuration = timeDomainCalculator.acqusitionTime
-        dwellTime = timeDomainCalculator.dwellInμs
-        
         numberOfFrequencyDataPoints = Double(frequencyDomainCalculator.numberOfPoints)
         spectralWidth = frequencyDomainCalculator.spectralWidthInkHz
         frequencyResolution = frequencyDomainCalculator.frequencyResolution
@@ -58,6 +60,11 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateMagneticField = UpdateMagneticField(larmorFrequencyCalculator)
         updateProtonFrequency = UpdateProtonFrequency(larmorFrequencyCalculator)
         updateElectronFrequency = UpdateElectronFrequency(larmorFrequencyCalculator)
+        
+        updateAcquisitionTime = UpdateAcquisitionTime(timeDomainCalculator)
+        updateDwellTime = UpdateDwellTime(timeDomainCalculator)
+        updateDwellTimeInμs = UpdateDwellTimeInμs(timeDomainCalculator)
+        updateAcquisitionSize = UpdateAcquisitionSize(timeDomainCalculator)
     }
     
     // MARK: - Validation
@@ -146,31 +153,37 @@ class MacNMRCalculatorViewModel: ObservableObject {
   
     // MARK: - Signal
     
-    @Published var numberOfTimeDataPoints: Double {
-        didSet {
-            if numberOfTimeDataPoints != oldValue {
-                timeDomainCalculator.set(numberOfPoints: Int(numberOfTimeDataPoints))
-                dwellTime = timeDomainCalculator.dwellInμs
-            }
-        }
+    @Published var timeDomainUpdated = false
+    
+    var numberOfTimeDataPoints: Double {
+        Double(timeDomainCalculator.numberOfPoints)
     }
     
-    @Published var acquisitionDuration: Double {
-        didSet {
-            if acquisitionDuration != oldValue {
-                timeDomainCalculator.set(acqusitionTime: acquisitionDuration)
-                dwellTime = timeDomainCalculator.dwellInμs
-            }
-        }
+    func update(acquisitionSize: Double) -> Void {
+        updateAcquisitionSize.execute(with: acquisitionSize)
+        updateFromTimeDomainCalculator()
     }
     
-    @Published var dwellTime: Double {
-        didSet {
-            if dwellTime != oldValue {
-                timeDomainCalculator.set(dwellInμs: dwellTime)
-                acquisitionDuration = timeDomainCalculator.acqusitionTime
-            }
-        }
+    var acquisitionDuration: Double {
+        timeDomainCalculator.acqusitionTime
+    }
+    
+    func update(acquisitionDuration: Double) -> Void {
+        updateAcquisitionTime.execute(with: acquisitionDuration)
+        updateFromTimeDomainCalculator()
+    }
+    
+    var dwellTime: Double {
+        timeDomainCalculator.dwellInμs
+    }
+    
+    func update(dwellTime: Double) -> Void {
+        updateDwellTimeInμs.execute(with: dwellTime)
+        updateFromTimeDomainCalculator()
+    }
+    
+    func updateFromTimeDomainCalculator() -> Void {
+        timeDomainUpdated.toggle()
     }
     
     @Published var numberOfFrequencyDataPoints: Double {
