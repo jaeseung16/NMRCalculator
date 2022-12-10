@@ -13,7 +13,7 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let larmorFrequencyCalculator = LarmorFrequencyMagneticFieldConverter(magneticField: 1.0, gyromagneticRatio: NMRNucleus().γ)
     let timeDomainCalculator = DwellAcquisitionTimeConverter(acqusitionTime: 1.0, numberOfPoints: 1000)
     let frequencyDomainCalculator = SpectralWidthFrequencyResolutionConverter(spectralWidth: 1000.0, numberOfPoints: 1000)
-    let ernstAngleCalculator = ErnstAngleCalculator()
+    let ernstAngleCalculator = ErnstAngleCalculator(repetitionTime: 1.0, relaxationTime: 1.0)
     let decibelCalculator = DecibelCalculator()
     
     let proton = NMRNucleus()
@@ -43,17 +43,15 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let updatePulse1Amplitude: NMRCalcCommand
     let updatePulse2Amplitude: NMRCalcCommand
     
+    let updateErnstAngle: NMRCalcCommand
+    let updateRepetitionTime: NMRCalcCommand
+    let updateRelaxationTime: NMRCalcCommand
+    
     init() {
         nucleus = NMRNucleus()
        
         amplitude1InT = pulse1.amplitude / NMRCalcConstants.gammaProton
         relativePower = decibelCalculator.dB(measuredAmplitude: pulse2.amplitude, referenceAmplitude: pulse1.amplitude)
-        
-        let τ = 1.0
-        let T1 = 1.0
-        repetitionTime = τ
-        relaxationTime = T1
-        ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: τ, relaxationTime: T1)
         
         updateLarmorFrequency = UpdateLarmorFrequency(larmorFrequencyCalculator)
         updateMagneticField = UpdateMagneticField(larmorFrequencyCalculator)
@@ -76,6 +74,10 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updatePulse2FlipAngle = UpdatePulseFlipAngle(pulse2)
         updatePulse1Amplitude = UpdatePulseAmplitude(pulse1)
         updatePulse2Amplitude = UpdatePulseAmplitude(pulse2)
+        
+        updateErnstAngle = UpdateErnstAngle(ernstAngleCalculator)
+        updateRepetitionTime = UpdateRepetitionTime(ernstAngleCalculator)
+        updateRelaxationTime = UpdateRelaxationTime(ernstAngleCalculator)
     }
     
     // MARK: - Validation
@@ -332,28 +334,37 @@ class MacNMRCalculatorViewModel: ObservableObject {
     }
     
     // MARK: - Ernst Angle
-    @Published var repetitionTime: Double {
-        didSet {
-            if repetitionTime != oldValue {
-                ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
-            }
-        }
+    @Published var ernstAngleUpdated = false
+    
+    var repetitionTime: Double {
+        ernstAngleCalculator.repetitionTime
     }
     
-    @Published var relaxationTime: Double {
-        didSet {
-            if relaxationTime != oldValue {
-                ernstAngle = ernstAngleCalculator.calculateErnstAngle(repetitionTime: repetitionTime, relaxationTime: relaxationTime)
-            }
-        }
+    func update(repetitionTime: Double) -> Void {
+        updateRepetitionTime.execute(with: repetitionTime)
+        updateFromErnstAngleCalculator()
     }
     
-    @Published var ernstAngle: Double {
-        didSet {
-            if ernstAngle != oldValue {
-                repetitionTime = ernstAngleCalculator.calculateRepetitionTime(ernstAngle: ernstAngle, relaxationTime: relaxationTime)
-            }
-        }
+    var relaxationTime: Double {
+        ernstAngleCalculator.relaxationTime
+    }
+    
+    func update(relaxationTime: Double) -> Void {
+        updateRelaxationTime.execute(with: relaxationTime)
+        updateFromErnstAngleCalculator()
+    }
+    
+    var ernstAngle: Double {
+        ernstAngleCalculator.ernstAngle
+    }
+    
+    func update(ernstAngle: Double) -> Void {
+        updateErnstAngle.execute(with: ernstAngle)
+        updateFromErnstAngleCalculator()
+    }
+    
+    func updateFromErnstAngleCalculator() -> Void {
+        ernstAngleUpdated.toggle()
     }
     
 }

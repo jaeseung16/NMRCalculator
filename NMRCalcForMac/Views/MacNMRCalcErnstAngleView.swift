@@ -44,7 +44,7 @@ struct MacNMRCalcErnstAngleView: View {
                                    unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
                     if viewModel.isNonNegative(repetitionTime) {
-                        viewModel.repetitionTime = repetitionTime
+                        viewModel.update(repetitionTime: repetitionTime)
                     } else {
                         showAlert.toggle()
                     }
@@ -56,7 +56,7 @@ struct MacNMRCalcErnstAngleView: View {
                                    unit: NMRCalcUnit.sec,
                                    formatter: relaxationTimeFormatter) {
                     if viewModel.isPositive(relaxationTime) {
-                        viewModel.relaxationTime = relaxationTime
+                        viewModel.update(relaxationTime: relaxationTime)
                     } else {
                         showAlert.toggle()
                     }
@@ -68,7 +68,7 @@ struct MacNMRCalcErnstAngleView: View {
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     if viewModel.validate(ernstAngle: ernstAngle) {
-                        viewModel.ernstAngle = ernstAngle
+                        viewModel.update(ernstAngle: ernstAngle)
                     } else {
                         showAlertErnstAngle.toggle()
                     }
@@ -88,14 +88,8 @@ struct MacNMRCalcErnstAngleView: View {
                 showAlertErnstAngle.toggle()
             }
         }
-        .onChange(of: viewModel.repetitionTime) { _ in
-            repetitionTime = viewModel.repetitionTime
-        }
-        .onChange(of: viewModel.relaxationTime) { _ in
-            relaxationTime = viewModel.relaxationTime
-        }
-        .onChange(of: viewModel.ernstAngle) { _ in
-            ernstAngle = viewModel.ernstAngle
+        .onReceive(viewModel.$ernstAngleUpdated) { _ in
+            reset()
         }
     }
     
