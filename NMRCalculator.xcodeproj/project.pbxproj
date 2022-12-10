@@ -115,6 +115,15 @@
 		90847F962944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */; };
 		90847F972944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */; };
 		90847F982944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */; };
+		90847F9A2944DCEF0079CCB0 /* UpdatePulseDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F992944DCEF0079CCB0 /* UpdatePulseDuration.swift */; };
+		90847F9B2944DCEF0079CCB0 /* UpdatePulseDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F992944DCEF0079CCB0 /* UpdatePulseDuration.swift */; };
+		90847F9C2944DCEF0079CCB0 /* UpdatePulseDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F992944DCEF0079CCB0 /* UpdatePulseDuration.swift */; };
+		90847F9E2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F9D2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift */; };
+		90847F9F2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F9D2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift */; };
+		90847FA02944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847F9D2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift */; };
+		90847FA22944DE6E0079CCB0 /* UpdatePulseAmplitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847FA12944DE6E0079CCB0 /* UpdatePulseAmplitude.swift */; };
+		90847FA32944DE6E0079CCB0 /* UpdatePulseAmplitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847FA12944DE6E0079CCB0 /* UpdatePulseAmplitude.swift */; };
+		90847FA42944DE6E0079CCB0 /* UpdatePulseAmplitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847FA12944DE6E0079CCB0 /* UpdatePulseAmplitude.swift */; };
 		909ACA3E25CF5D7000C92C2F /* MacNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */; };
 		909C112725BF908A00E8C285 /* NMRCalculatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112625BF908A00E8C285 /* NMRCalculatorApp.swift */; };
 		909C112925BF908A00E8C285 /* MacNucleusContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909C112825BF908A00E8C285 /* MacNucleusContentView.swift */; };
@@ -330,6 +339,9 @@
 		90847F8D2944D6D20079CCB0 /* UpdateFrequencyResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFrequencyResolution.swift; sourceTree = "<group>"; };
 		90847F912944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSpectralWidthInkHz.swift; sourceTree = "<group>"; };
 		90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSpectralWidth.swift; sourceTree = "<group>"; };
+		90847F992944DCEF0079CCB0 /* UpdatePulseDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePulseDuration.swift; sourceTree = "<group>"; };
+		90847F9D2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePulseFlipAngle.swift; sourceTree = "<group>"; };
+		90847FA12944DE6E0079CCB0 /* UpdatePulseAmplitude.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePulseAmplitude.swift; sourceTree = "<group>"; };
 		909ACA3D25CF5D7000C92C2F /* MacNucleusInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNucleusInfoView.swift; sourceTree = "<group>"; };
 		909C112425BF908A00E8C285 /* NMR Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NMR Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		909C112625BF908A00E8C285 /* NMRCalculatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculatorApp.swift; sourceTree = "<group>"; };
@@ -703,6 +715,9 @@
 				90847F8D2944D6D20079CCB0 /* UpdateFrequencyResolution.swift */,
 				90847F912944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift */,
 				90847F952944D7BF0079CCB0 /* UpdateSpectralWidth.swift */,
+				90847F992944DCEF0079CCB0 /* UpdatePulseDuration.swift */,
+				90847F9D2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift */,
+				90847FA12944DE6E0079CCB0 /* UpdatePulseAmplitude.swift */,
 			);
 			path = Command;
 			sourceTree = "<group>";
@@ -1078,6 +1093,7 @@
 				904693A5287CCBE6005B8FFA /* ParameterConverting.swift in Sources */,
 				90847F922944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */,
 				90A1DB13293EB5BC00B8D105 /* UpdateElectronFrequency.swift in Sources */,
+				90847F9E2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift in Sources */,
 				0B03D2D81D7A2E8F008AF186 /* NMRPulse.swift in Sources */,
 				0B5AC1721D5E9AF1002102C8 /* iPadNMRCalcViewController.swift in Sources */,
 				0B6ACF031D08E88000D7D342 /* AppDelegate.swift in Sources */,
@@ -1087,6 +1103,7 @@
 				90833A902943F5CF00FC14DA /* UpdateAcquisitionTime.swift in Sources */,
 				0B1326F31D2C6AB8000473BC /* PulseViewController.swift in Sources */,
 				0B6ACF051D08E88000D7D342 /* NucleusViewController.swift in Sources */,
+				90847FA22944DE6E0079CCB0 /* UpdatePulseAmplitude.swift in Sources */,
 				0B3A79BB1D6146B700F713F4 /* SignalTableViewCell.swift in Sources */,
 				0BFEB1281D0CA8FE00F37F1B /* NMRNucleus.swift in Sources */,
 				90847F8A2944D5FF0079CCB0 /* UpdateSpectrumSize.swift in Sources */,
@@ -1108,6 +1125,7 @@
 				90A0A21425CB6C7C001DA889 /* NMRCalcConstants.swift in Sources */,
 				0B3A79B71D61448200F713F4 /* NMRCalcMasterViewController.swift in Sources */,
 				0B5AC1741D5EA3AF002102C8 /* NMRParametersTableViewCell.swift in Sources */,
+				90847F9A2944DCEF0079CCB0 /* UpdatePulseDuration.swift in Sources */,
 				904693A7287CCDFB005B8FFA /* LarmorFrequencyMagneticFieldConverter.swift in Sources */,
 				0BF022DA1D63BAFB00EA75F2 /* SignalHeaderTableViewCell.swift in Sources */,
 				0B48D9F81D35A2380094BBAF /* ChemCalc.swift in Sources */,
@@ -1186,12 +1204,15 @@
 				909C119625BF917C00E8C285 /* MacNucleusList.swift in Sources */,
 				9047C0C62888B7BD003170BC /* ErnstAngleCalculator.swift in Sources */,
 				90833A9A2943F6F700FC14DA /* UpdateDwellTimeInμs.swift in Sources */,
+				90847FA42944DE6E0079CCB0 /* UpdatePulseAmplitude.swift in Sources */,
 				9017230B288C5F6E00B520EC /* LarmorFrequencyMagneticFieldConverter.swift in Sources */,
 				90A1DB0A293EAF0600B8D105 /* UpdateMagneticField.swift in Sources */,
+				90847FA02944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift in Sources */,
 				906EBD2825E47DFF00ED8641 /* NumberColor.swift in Sources */,
 				90A1DB0C293EAF0900B8D105 /* UpdateProtonFrequency.swift in Sources */,
 				909C117225BF90D900E8C285 /* NMRPeriodicTableData.swift in Sources */,
 				90AA3ED825F2FC48001BCF10 /* AppDelegate.swift in Sources */,
+				90847F9C2944DCEF0079CCB0 /* UpdatePulseDuration.swift in Sources */,
 				906EBD1A25E47D8E00ED8641 /* ElementColor.swift in Sources */,
 				90847F902944D6D20079CCB0 /* UpdateFrequencyResolution.swift in Sources */,
 				900AFCBE287F721700F30039 /* NMRNucleus.swift in Sources */,
@@ -1246,6 +1267,7 @@
 				90A1DB10293EAF0F00B8D105 /* NMRCalcCommand.swift in Sources */,
 				90A0A21725CB6C7C001DA889 /* NMRCalcConstants.swift in Sources */,
 				90A1DB0E293EAF0C00B8D105 /* UpdateLarmorFrequency.swift in Sources */,
+				90847F9B2944DCEF0079CCB0 /* UpdatePulseDuration.swift in Sources */,
 				90833A992943F6F700FC14DA /* UpdateDwellTimeInμs.swift in Sources */,
 				90847F972944D7BF0079CCB0 /* UpdateSpectralWidth.swift in Sources */,
 				90B2A67C23CFF59C00599931 /* NuclearSpinView.swift in Sources */,
@@ -1256,8 +1278,10 @@
 				90833A9D2943F74F00FC14DA /* UpdateAcqusitionSize.swift in Sources */,
 				90FFBA3C23CB8C55000A9BC9 /* NotificationView.swift in Sources */,
 				90833A912943F5CF00FC14DA /* UpdateAcquisitionTime.swift in Sources */,
+				90847FA32944DE6E0079CCB0 /* UpdatePulseAmplitude.swift in Sources */,
 				90F1F86823DDE588004A144A /* LarmorFrequencyView.swift in Sources */,
 				90FFBA5423CBA289000A9BC9 /* NMRPeriodicTable.swift in Sources */,
+				90847F9F2944DE3B0079CCB0 /* UpdatePulseFlipAngle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

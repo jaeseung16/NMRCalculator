@@ -36,19 +36,17 @@ class MacNMRCalculatorViewModel: ObservableObject {
     let updateSpectralWidth: NMRCalcCommand
     let updateSpectralWidthInkHz: NMRCalcCommand
     
+    let updatePulse1Duration: NMRCalcCommand
+    let updatePulse2Duration: NMRCalcCommand
+    let updatePulse1FlipAngle: NMRCalcCommand
+    let updatePulse2FlipAngle: NMRCalcCommand
+    let updatePulse1Amplitude: NMRCalcCommand
+    let updatePulse2Amplitude: NMRCalcCommand
     
     init() {
         nucleus = NMRNucleus()
        
-        duration1 = pulse1.duration
-        flipAngle1 = pulse1.flipAngle
-        amplitude1 = pulse1.amplitude
         amplitude1InT = pulse1.amplitude / NMRCalcConstants.gammaProton
-        
-        duration2 = pulse2.duration
-        flipAngle2 = pulse2.flipAngle
-        amplitude2 = pulse2.amplitude
-        
         relativePower = decibelCalculator.dB(measuredAmplitude: pulse2.amplitude, referenceAmplitude: pulse1.amplitude)
         
         let τ = 1.0
@@ -72,6 +70,12 @@ class MacNMRCalculatorViewModel: ObservableObject {
         updateSpectralWidth = UpdateSpectralWidth(frequencyDomainCalculator)
         updateSpectralWidthInkHz = UpdateSpectralWidthInkHz(frequencyDomainCalculator)
         
+        updatePulse1Duration = UpdatePulseDuration(pulse1)
+        updatePulse2Duration = UpdatePulseDuration(pulse2)
+        updatePulse1FlipAngle = UpdatePulseFlipAngle(pulse1)
+        updatePulse2FlipAngle = UpdatePulseFlipAngle(pulse2)
+        updatePulse1Amplitude = UpdatePulseAmplitude(pulse1)
+        updatePulse2Amplitude = UpdatePulseAmplitude(pulse2)
     }
     
     // MARK: - Validation
@@ -228,84 +232,85 @@ class MacNMRCalculatorViewModel: ObservableObject {
 
     // MARK: - Pulse
     
-    @Published var duration1: Double {
-        didSet {
-            if duration1 != oldValue {
-                pulse1.set(duration: duration1)
-                amplitude1 = pulse1.amplitude
-                updateAmplitude1InT()
-                updateRelativePower()
-            }
-        }
+    @Published var pulse1Updated = false
+    @Published var pulse2Updated = false
+    
+    var duration1: Double {
+        pulse1.duration
     }
     
-    @Published var flipAngle1: Double {
-        didSet {
-            if flipAngle1 != oldValue {
-                pulse1.set(flipAngle: flipAngle1)
-                amplitude1 = pulse1.amplitude
-                updateAmplitude1InT()
-                updateRelativePower()
-            }
-        }
+    func update(pulse1Duration: Double) -> Void {
+        updatePulse1Duration.execute(with: pulse1Duration)
+        updateAmplitude1InT()
+        updateRelativePower()
+        updateFromPulse1()
     }
     
-    @Published var amplitude1: Double {
-        didSet {
-            if amplitude1 != oldValue {
-                pulse1.set(amplitude: amplitude1)
-                duration1 = pulse1.duration
-                updateAmplitude1InT()
-                updateRelativePower()
-            }
-        }
+    var flipAngle1: Double {
+        pulse1.flipAngle
     }
     
-    @Published var amplitude1InT: Double {
-        didSet {
-            if amplitude1InT != oldValue {
-                amplitude1 = amplitude1InT * γNucleus
-                pulse1.set(amplitude: amplitude1)
-                duration1 = pulse1.duration
-                updateRelativePower()
-            }
-        }
+    func update(pulse1FlipAngle: Double) -> Void {
+        updatePulse1FlipAngle.execute(with: pulse1FlipAngle)
+        updateAmplitude1InT()
+        updateRelativePower()
+        updateFromPulse1()
     }
     
-    @Published var duration2: Double {
-        didSet {
-            if duration2 != oldValue {
-                pulse2.set(duration: duration2)
-                amplitude2 = pulse2.amplitude
-                updateRelativePower()
-            }
-        }
+    var amplitude1: Double {
+        pulse1.amplitude
     }
     
-    @Published var flipAngle2: Double {
-        didSet {
-            if flipAngle2 != oldValue {
-                pulse2.set(flipAngle: flipAngle2)
-                amplitude2 = pulse2.amplitude
-                updateRelativePower()
-            }
-        }
+    func update(pulse1Amplitude: Double) -> Void {
+        updatePulse1Amplitude.execute(with: pulse1Amplitude)
+        updateAmplitude1InT()
+        updateRelativePower()
+        updateFromPulse1()
     }
     
-    @Published var amplitude2: Double {
-        didSet {
-            if amplitude2 != oldValue {
-                pulse2.set(amplitude: amplitude2)
-                duration2 = pulse2.duration
-                updateRelativePower()
-            }
-        }
+    var amplitude1InT: Double
+    
+    func update(pulse1AmplitudeInT: Double) -> Void {
+        updatePulse1Amplitude.execute(with: pulse1AmplitudeInT * γNucleus)
+        updateAmplitude1InT()
+        updateRelativePower()
+        updateFromPulse1()
+    }
+    
+    var duration2: Double {
+        pulse2.duration
+    }
+    
+    func update(pulse2Duration: Double) -> Void {
+        updatePulse2Duration.execute(with: pulse2Duration)
+        updateRelativePower()
+        updateFromPulse2()
+    }
+    
+    var flipAngle2: Double {
+        pulse2.flipAngle
+    }
+    
+    func update(pulse2FlipAngle: Double) -> Void {
+        updatePulse2FlipAngle.execute(with: pulse2FlipAngle)
+        updateRelativePower()
+        updateFromPulse2()
+    }
+    
+    var amplitude2: Double {
+        pulse2.amplitude
+    }
+    
+    func update(pulse2Amplitude: Double) -> Void {
+        updatePulse2Amplitude.execute(with: pulse2Amplitude)
+        updateRelativePower()
+        updateFromPulse2()
     }
     
     @Published var relativePower: Double {
         didSet {
             if relativePower != oldValue {
-                amplitude2 = decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1)
+                update(pulse2Amplitude: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
             }
         }
     }
@@ -316,6 +321,14 @@ class MacNMRCalculatorViewModel: ObservableObject {
     
     private func updateAmplitude1InT() {
         amplitude1InT = amplitude1 / γNucleus
+    }
+    
+    func updateFromPulse1() -> Void {
+        pulse1Updated.toggle()
+    }
+    
+    func updateFromPulse2() -> Void {
+        pulse2Updated.toggle()
     }
     
     // MARK: - Ernst Angle

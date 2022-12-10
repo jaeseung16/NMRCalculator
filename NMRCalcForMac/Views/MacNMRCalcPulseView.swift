@@ -61,7 +61,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
                     if viewModel.isPositive(duration1) {
-                        viewModel.duration1 = duration1
+                        viewModel.update(pulse1Duration: duration1)
                     } else {
                         showAlert.toggle()
                     }
@@ -73,7 +73,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     if viewModel.isPositive(flipAngle1) {
-                        viewModel.flipAngle1 = flipAngle1
+                        viewModel.update(pulse1FlipAngle: flipAngle1)
                     } else {
                         showAlert.toggle()
                     }
@@ -85,7 +85,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
                     if viewModel.isPositive(amplitude1) {
-                        viewModel.amplitude1 = amplitude1
+                        viewModel.update(pulse1Amplitude: amplitude1)
                     } else {
                         showAlert.toggle()
                     }
@@ -98,8 +98,7 @@ struct MacNMRCalcPulseView: View {
                                        unit: NMRCalcUnit.μT,
                                        formatter: amplitudeFormatter) {
                         if viewModel.isPositive(abs(amplitude1InT)) {
-                            viewModel.amplitude1InT = viewModel.γNucleus >= 0 ? abs(amplitude1InT) : -abs(amplitude1InT)
-                            amplitude1InT = viewModel.amplitude1InT
+                            viewModel.update(pulse1AmplitudeInT: viewModel.γNucleus >= 0 ? abs(amplitude1InT) : -abs(amplitude1InT))
                         } else {
                             showAlert.toggle()
                         }
@@ -114,7 +113,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.μs,
                                    formatter: durationFormatter) {
                     if viewModel.isPositive(duration2) {
-                        viewModel.duration2 = duration2
+                        viewModel.update(pulse2Duration: duration2)
                     } else {
                         showAlert.toggle()
                     }
@@ -126,7 +125,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.degree,
                                    formatter: flipAngleFormatter) {
                     if viewModel.isPositive(flipAngle2) {
-                        viewModel.flipAngle2 = flipAngle2
+                        viewModel.update(pulse2FlipAngle: flipAngle2)
                     } else {
                         showAlert.toggle()
                     }
@@ -138,7 +137,7 @@ struct MacNMRCalcPulseView: View {
                                    unit: NMRCalcUnit.Hz,
                                    formatter: amplitudeFormatter) {
                     if viewModel.isPositive(amplitude2) {
-                        viewModel.amplitude2 = amplitude2
+                        viewModel.update(pulse2Amplitude: amplitude2)
                     } else {
                         showAlert.toggle()
                     }
@@ -160,29 +159,14 @@ struct MacNMRCalcPulseView: View {
                 showAlert.toggle()
             }
         }
+        .onReceive(viewModel.$pulse1Updated) { _ in
+            reset()
+        }
+        .onReceive(viewModel.$pulse2Updated) { _ in
+            reset()
+        }
         .onChange(of: viewModel.nucleusUpdated) { _ in
             amplitude1InT = viewModel.amplitude1InT
-        }
-        .onChange(of: viewModel.duration1) { _ in
-            duration1 = viewModel.duration1
-        }
-        .onChange(of: viewModel.flipAngle1) { _ in
-            flipAngle1 = viewModel.flipAngle1
-        }
-        .onChange(of: viewModel.amplitude1) { _ in
-            amplitude1 = viewModel.amplitude1
-        }
-        .onChange(of: viewModel.amplitude1InT) { _ in
-            amplitude1InT = viewModel.amplitude1InT
-        }
-        .onChange(of: viewModel.duration2) { _ in
-            duration2 = viewModel.duration2
-        }
-        .onChange(of: viewModel.flipAngle2) { _ in
-            flipAngle2 = viewModel.flipAngle2
-        }
-        .onChange(of: viewModel.amplitude2) { _ in
-            amplitude2 = viewModel.amplitude2
         }
         .onChange(of: viewModel.relativePower) { _ in
             relativePower = viewModel.relativePower
