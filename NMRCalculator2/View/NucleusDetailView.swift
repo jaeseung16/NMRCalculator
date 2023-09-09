@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct NucleusDetailView: View {
+    @EnvironmentObject private var calculator: NMRCalculator2
+    
     var nucleus: NMRNucleus
     
     private var proton: NMRNucleus {
@@ -42,6 +44,14 @@ struct NucleusDetailView: View {
                                   massNumber: UInt(nucleus.atomicWeight)!)
                 displayInfo()
                     .frame(minWidth: 0.5 * geometry.size.width, maxWidth: 0.8 * geometry.size.width, alignment: .center)
+                
+                Spacer()
+                
+                LarmorFrequencyView(larmorFrequency: calculator.larmorFrequency,
+                                    protonFrequency: calculator.protonFrequency,
+                                    electronFrequency: calculator.electronFrequency,
+                                    externalField: calculator.externalField)
+                    .environmentObject(calculator)
                 
                 Spacer()
             }

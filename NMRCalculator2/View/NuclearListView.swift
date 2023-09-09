@@ -22,6 +22,7 @@ struct NuclearListView: View {
         } detail: {
             if let selected, let nucleus = NMRPeriodicTable.shared.nucleiById[selected] {
                 NucleusDetailView(nucleus: nucleus)
+                    .environmentObject(NMRCalculator2(nucleus: nucleus))
                     .id(selected)
             }
         }
