@@ -8,7 +8,9 @@
 
 import Foundation
 
-struct NMRNucleus: Hashable, CustomStringConvertible {
+struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable {
+    var id: String
+    
     var identifier: String
     var nameNucleus: String
     var atomicNumber: String
@@ -33,6 +35,8 @@ struct NMRNucleus: Hashable, CustomStringConvertible {
         naturalAbundance = "99.9885"
         nuclearSpin = "1/2"
         gyromagneticRatio = String( 26.7522128 / 2.0 / Double.pi * 10.0 )
+        
+        id = identifier
     }
     
     init(string: String) {
@@ -46,6 +50,8 @@ struct NMRNucleus: Hashable, CustomStringConvertible {
         naturalAbundance = items[5]
         nuclearSpin = items[6]
         gyromagneticRatio = String( Double(items[7])! / 2.0 / Double.pi * 10.0 )
+        
+        id = identifier
     }
     
     var description: String {

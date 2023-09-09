@@ -11,8 +11,10 @@ import Foundation
 class NMRPeriodicTable {
     // MARK: - Properties
     static let shared = NMRPeriodicTable()
+    let proton = NMRNucleus()
     var nuclei = [NMRNucleus]()
     var nucleiDictionary = [String: Int]()
+    var nucleiById = [String: NMRNucleus]()
     
     // MARK: - Methods
     private init() {
@@ -24,6 +26,7 @@ class NMRPeriodicTable {
             let nucleus = NMRNucleus(string: nucleusTable[k])
             nuclei.append(nucleus)
             nucleiDictionary[nucleus.identifier] = k
+            nucleiById[nucleus.id] = nucleus
         }
     }
     

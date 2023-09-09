@@ -91,17 +91,15 @@ struct MacNMRCalcPulseView: View {
                     }
                 }
                 
-                if let nucleus = viewModel.nucleus {
-                    MacNMRCalcItemView(title: "RF Amplitude for \(nucleus.nameNucleus)",
-                                       titleFont: .body,
-                                       value: $amplitude1InT,
-                                       unit: NMRCalcUnit.μT,
-                                       formatter: amplitudeFormatter) {
-                        if viewModel.isPositive(abs(amplitude1InT)) {
-                            viewModel.update(pulse1AmplitudeInT: viewModel.γNucleus >= 0 ? abs(amplitude1InT) : -abs(amplitude1InT))
-                        } else {
-                            showAlert.toggle()
-                        }
+                MacNMRCalcItemView(title: "RF Amplitude for \(viewModel.nucleus.nameNucleus)",
+                                   titleFont: .body,
+                                   value: $amplitude1InT,
+                                   unit: NMRCalcUnit.μT,
+                                   formatter: amplitudeFormatter) {
+                    if viewModel.isPositive(abs(amplitude1InT)) {
+                        viewModel.update(pulse1AmplitudeInT: viewModel.γNucleus >= 0 ? abs(amplitude1InT) : -abs(amplitude1InT))
+                    } else {
+                        showAlert.toggle()
                     }
                 }
             }
