@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -93,7 +93,7 @@
 		9067B3552AACEEFB00A8FA29 /* NMRNucleus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */; };
 		9067B3562AACEF0B00A8FA29 /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		9067B35A2AACEF9900A8FA29 /* NuclearListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B3592AACEF9900A8FA29 /* NuclearListView.swift */; };
-		9067B35C2AACF00A00A8FA29 /* NMRCalc2ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B35B2AACF00A00A8FA29 /* NMRCalc2ViewModel.swift */; };
+		9067B35C2AACF00A00A8FA29 /* NMRCalculator2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B35B2AACF00A00A8FA29 /* NMRCalculator2.swift */; };
 		9067B35D2AACF07600A8FA29 /* NMRPeriodicTableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */; };
 		9067B35F2AACF29E00A8FA29 /* NucleusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B35E2AACF29E00A8FA29 /* NucleusView.swift */; };
 		9067B3612AACF2B100A8FA29 /* NucleusDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B3602AACF2B100A8FA29 /* NucleusDetailView.swift */; };
@@ -381,7 +381,7 @@
 		9067B3482AACED2A00A8FA29 /* NMRCalculator2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculator2UITests.swift; sourceTree = "<group>"; };
 		9067B34A2AACED2A00A8FA29 /* NMRCalculator2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculator2UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9067B3592AACEF9900A8FA29 /* NuclearListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuclearListView.swift; sourceTree = "<group>"; };
-		9067B35B2AACF00A00A8FA29 /* NMRCalc2ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalc2ViewModel.swift; sourceTree = "<group>"; };
+		9067B35B2AACF00A00A8FA29 /* NMRCalculator2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculator2.swift; sourceTree = "<group>"; };
 		9067B35E2AACF29E00A8FA29 /* NucleusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NucleusView.swift; sourceTree = "<group>"; };
 		9067B3602AACF2B100A8FA29 /* NucleusDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NucleusDetailView.swift; sourceTree = "<group>"; };
 		906EBC6725E4685A00ED8641 /* MacNMRCalcSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcSettings.swift; sourceTree = "<group>"; };
@@ -743,7 +743,7 @@
 		9067B3582AACEF4500A8FA29 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9067B35B2AACF00A00A8FA29 /* NMRCalc2ViewModel.swift */,
+				9067B35B2AACF00A00A8FA29 /* NMRCalculator2.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1134,8 +1134,9 @@
 		0B6ACEF71D08E87F00D7D342 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1410;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Jae-Seung Lee";
 				TargetAttributes = {
 					0B6ACEFE1D08E87F00D7D342 = {
@@ -1426,7 +1427,7 @@
 				9067B3552AACEEFB00A8FA29 /* NMRNucleus.swift in Sources */,
 				907A0D592AACF5A900EA68BB /* AtomicElementView.swift in Sources */,
 				9067B35A2AACEF9900A8FA29 /* NuclearListView.swift in Sources */,
-				9067B35C2AACF00A00A8FA29 /* NMRCalc2ViewModel.swift in Sources */,
+				9067B35C2AACF00A00A8FA29 /* NMRCalculator2.swift in Sources */,
 				9067B35D2AACF07600A8FA29 /* NMRPeriodicTableData.swift in Sources */,
 				9067B35F2AACF29E00A8FA29 /* NucleusView.swift in Sources */,
 				9067B32D2AACED2900A8FA29 /* NMRCalculator2App.swift in Sources */,
@@ -1991,6 +1992,7 @@
 				CODE_SIGN_ENTITLEMENTS = NMRCalculator2/NMRCalculator2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NMRCalculator2/Preview Content\"";
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2038,6 +2040,7 @@
 				CODE_SIGN_ENTITLEMENTS = NMRCalculator2/NMRCalculator2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NMRCalculator2/Preview Content\"";
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2082,6 +2085,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2114,6 +2118,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2143,6 +2148,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2174,6 +2180,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
