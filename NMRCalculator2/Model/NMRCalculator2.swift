@@ -462,7 +462,7 @@ class NMRCalculator2: ObservableObject {
     var relativePower: Double {
         didSet {
             if relativePower != oldValue {
-                updated.toggle()
+                updated.toggle() // TODO: 
                 update(.pulse2Amplitude, to: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
             }
         }
@@ -517,6 +517,7 @@ class NMRCalculator2: ObservableObject {
                                            unit: .dB,
                                            formatter: relativePowerFormatter) { newValue in
             self.relativePower = newValue
+            self.updated.toggle() // TODO:
         }
         
         items.append(relativePower)
@@ -636,17 +637,14 @@ class NMRCalculator2: ObservableObject {
                 item.value = self.spectralWidth
             case .pulse1Duration:
                 item.value = self.duration1
-                logger.log("amplitude1=\(self.duration1, privacy: .public)")
             case .pulse2Duration:
                 item.value = self.duration2
             case .pulse1FlipAngle:
                 item.value = self.flipAngle1
-                logger.log("amplitude1=\(self.flipAngle1, privacy: .public)")
             case .pulse2FlipAngle:
                 item.value = self.flipAngle2
             case .pulse1Amplitude:
                 item.value = self.amplitude1
-                logger.log("amplitude1=\(self.amplitude1, privacy: .public)")
             case .pulse2Amplitude:
                 item.value = self.amplitude2
             case .ernstAngle:
@@ -657,7 +655,6 @@ class NMRCalculator2: ObservableObject {
                 item.value = self.relaxationTime
             case .pulse1AmplitudeInT:
                 item.value = self.amplitude1InT
-                logger.log("amplitude1=\(self.amplitude1InT, privacy: .public)")
             case .relativePower:
                 item.value = self.relativePower
             }
