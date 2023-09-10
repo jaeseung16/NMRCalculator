@@ -47,11 +47,24 @@ struct NucleusDetailView: View {
                 
                 Spacer()
                 
-                LarmorFrequencyView(larmorFrequency: calculator.larmorFrequency,
-                                    protonFrequency: calculator.protonFrequency,
-                                    electronFrequency: calculator.electronFrequency,
-                                    externalField: calculator.externalField)
-                    .environmentObject(calculator)
+                ScrollView {
+                    VStack {
+                        Section(header: Text("Larmor Frequencies")) {
+                            LarmorFrequencyView(larmorFrequency: calculator.larmorFrequency,
+                                                protonFrequency: calculator.protonFrequency,
+                                                electronFrequency: calculator.electronFrequency,
+                                                externalField: calculator.externalField)
+                            .environmentObject(calculator)
+                        }
+                        
+                        Section(header: Text("Ernst Angle")) {
+                            ErnstAngleView(repetitionTime: calculator.repetitionTime,
+                                           relaxationTime: calculator.relaxationTime,
+                                           ernstAngle: calculator.ernstAngle)
+                            .environmentObject(calculator)
+                        }
+                    }
+                }
                 
                 Spacer()
             }
