@@ -243,6 +243,7 @@
 		90F69E992AAE3FE1001FB5F0 /* CalculatorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F69E982AAE3FE1001FB5F0 /* CalculatorItem.swift */; };
 		90F69E9B2AAE413F001FB5F0 /* CalculatorItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F69E9A2AAE413F001FB5F0 /* CalculatorItems.swift */; };
 		90F69E9D2AAE4464001FB5F0 /* NMRCalcItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F69E9C2AAE4464001FB5F0 /* NMRCalcItemView.swift */; };
+		90F69E9F2AAE5AAE001FB5F0 /* UpdatePulseAmplitudeInT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F69E9E2AAE5AAE001FB5F0 /* UpdatePulseAmplitudeInT.swift */; };
 		90FFBA2623CB8C52000A9BC9 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA2423CB8C52000A9BC9 /* Interface.storyboard */; };
 		90FFBA2823CB8C55000A9BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90FFBA2723CB8C55000A9BC9 /* Assets.xcassets */; };
 		90FFBA2F23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 90FFBA2E23CB8C55000A9BC9 /* WatchNMRCalculator Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -489,6 +490,7 @@
 		90F69E982AAE3FE1001FB5F0 /* CalculatorItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorItem.swift; sourceTree = "<group>"; };
 		90F69E9A2AAE413F001FB5F0 /* CalculatorItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorItems.swift; sourceTree = "<group>"; };
 		90F69E9C2AAE4464001FB5F0 /* NMRCalcItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalcItemView.swift; sourceTree = "<group>"; };
+		90F69E9E2AAE5AAE001FB5F0 /* UpdatePulseAmplitudeInT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePulseAmplitudeInT.swift; sourceTree = "<group>"; };
 		90FFBA2223CB8C52000A9BC9 /* WatchNMRCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchNMRCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FFBA2523CB8C52000A9BC9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		90FFBA2723CB8C55000A9BC9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -935,6 +937,7 @@
 				90847FAD29450E460079CCB0 /* UpdateRepetitionTime.swift */,
 				90847FB1294512960079CCB0 /* UpdateRelaxationTime.swift */,
 				90847FB5294518E80079CCB0 /* NMRCalcCommandName.swift */,
+				90F69E9E2AAE5AAE001FB5F0 /* UpdatePulseAmplitudeInT.swift */,
 			);
 			path = Command;
 			sourceTree = "<group>";
@@ -1528,6 +1531,7 @@
 				90F69E952AAE1280001FB5F0 /* Pulse2View.swift in Sources */,
 				9034BA032AAD227700E9DAE0 /* NMRCalculatorItemView.swift in Sources */,
 				9067B35D2AACF07600A8FA29 /* NMRPeriodicTableData.swift in Sources */,
+				90F69E9F2AAE5AAE001FB5F0 /* UpdatePulseAmplitudeInT.swift in Sources */,
 				90F69E862AAE0AC6001FB5F0 /* DwellAcquisitionTimeConverter.swift in Sources */,
 				9034BA072AAD252100E9DAE0 /* NMRCalcCommand.swift in Sources */,
 				9067B35F2AACF29E00A8FA29 /* NucleusView.swift in Sources */,

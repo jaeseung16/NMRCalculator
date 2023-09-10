@@ -109,6 +109,8 @@ class MacNMRCalculatorViewModel: ObservableObject {
             pulse2Updated.toggle()
         case .ernstAngle, .repetitionTime, .relaxationTime:
             ernstAngleUpdated.toggle()
+        default:
+            return
         }
     }
     

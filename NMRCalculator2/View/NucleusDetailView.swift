@@ -65,10 +65,7 @@ struct NucleusDetailView: View {
                         }
                         
                         Section(header: Text("Pulse 1")) {
-                            Pulse1View(duration1: calculator.duration1,
-                                      flipAngle1: calculator.flipAngle1,
-                                      amplitude1: calculator.amplitude1,
-                                      amplitude1InT: calculator.amplitude1InT)
+                            NMRCalculatorSectionView(calculatorItems: calculator.pulse1Fields)
                             .environmentObject(calculator)
                         }
                         

@@ -19,6 +19,7 @@ struct NMRCalculatorSectionView: View {
                 .environmentObject(calculator)
         }
         .onChange(of: calculator.updated) { _ in
+            print("refreshing")
             calculator.refresh(calculatorItems)
         }
     }

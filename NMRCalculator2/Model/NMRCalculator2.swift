@@ -63,7 +63,8 @@ class NMRCalculator2: ObservableObject {
         commands[.pulse1Duration] = UpdatePulseDuration(pulse1)
         commands[.pulse1Amplitude] = UpdatePulseAmplitude(pulse1)
         commands[.pulse1FlipAngle] = UpdatePulseFlipAngle(pulse1)
-        self.commandsForPulse1 = [.pulse1Duration, .pulse1Amplitude, .pulse1FlipAngle]
+        commands[.pulse1AmplitudeInT] = UpdatePulseAmplitudeInT(pulse1)
+        self.commandsForPulse1 = [.pulse1Duration, .pulse1Amplitude, .pulse1FlipAngle, .pulse1AmplitudeInT]
         
         self.pulse2 = Pulse(duration: 1000.0, flipAngle: 90.0)
         commands[.pulse2Duration] = UpdatePulseDuration(pulse2)
@@ -103,6 +104,7 @@ class NMRCalculator2: ObservableObject {
     }
     
     func update(_ commandName: NMRCalcCommandName, to value: Double) -> Void {
+        logger.log("command=\(commandName.rawValue, privacy: .public)")
         if let command = commands[commandName] {
             command.execute(with: value)
             
@@ -114,6 +116,7 @@ class NMRCalculator2: ObservableObject {
             }
             
             updated.toggle()
+            logger.log("updated=\(self.updated, privacy: .public)")
         } else {
             logger.log("Can't find any command named \(commandName.rawValue, privacy: .public)")
         }
@@ -344,10 +347,6 @@ class NMRCalculator2: ObservableObject {
         return CalculatorItems(items: items)
     }
     // MARK: - Pulse
-    
-    @Published var pulse1Updated = false
-    @Published var pulse2Updated = false
-    
     var duration1: Double {
         pulse1.duration
     }
@@ -366,7 +365,89 @@ class NMRCalculator2: ObservableObject {
         update(.pulse1Amplitude, to: pulse1AmplitudeInT * γNucleus)
         updateAmplitude1InT()
         updateRelativePower()
-        updateFromPulse1()
+    }
+    
+    private var amplitudeFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var durationFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var relativePowerFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    var pulse1Fields: CalculatorItems {
+        var items = [CalculatorItem]()
+        
+        let duration1 = CalculatorItem(command: .pulse1Duration,
+                                       title: "Pulse duration",
+                                       font: .body,
+                                       value: duration1,
+                                       unit: .μs,
+                                       formatter: durationFormatter) { newValue in
+            self.logger.log("updateing pulse1Duration")
+            if self.isPositive(newValue) {
+                self.update(.pulse1Duration, to: newValue)
+            }
+        }
+        
+        items.append(duration1)
+        
+        let flipAngle1 = CalculatorItem(command: .pulse1FlipAngle,
+                                        title: "Flip angle",
+                                        font: .body,
+                                        value: flipAngle1,
+                                        unit: .degree,
+                                        formatter: flipAngleFormatter) { newValue in
+            self.logger.log("updateing pulse1FlipAngle")
+            if self.isPositive(newValue) {
+                self.update(.pulse1FlipAngle, to: newValue)
+            }
+        }
+        
+        items.append(flipAngle1)
+        
+        let amplitude1 = CalculatorItem(command: .pulse1Amplitude,
+                                        title: "RF Amplitude",
+                                        font: .body,
+                                        value: amplitude1,
+                                        unit: .Hz,
+                                        formatter: amplitudeFormatter) { newValue in
+            self.logger.log("updateing pulse1Amplitude")
+            if self.isPositive(newValue) {
+                self.update(.pulse1Amplitude, to: newValue)
+            }
+        }
+        
+        items.append(amplitude1)
+        
+        let amplitude1InT = CalculatorItem(command: .pulse1AmplitudeInT,
+                                           title: "RF Amplitude in μT",
+                                           font: .body,
+                                           value: amplitude1InT,
+                                           unit: .μT,
+                                           formatter: amplitudeFormatter) { newValue in
+            self.logger.log("updateing pulse1AmplitudeInT")
+            if self.isPositive(abs(newValue)) {
+                self.update(pulse1AmplitudeInT: self.γNucleus >= 0 ? abs(newValue) : -abs(newValue))
+            }
+        }
+        
+        items.append(amplitude1InT)
+        
+        return CalculatorItems(items: items)
     }
     
     var duration2: Double {
@@ -384,6 +465,7 @@ class NMRCalculator2: ObservableObject {
     var relativePower: Double {
         didSet {
             if relativePower != oldValue {
+                updated.toggle()
                 update(.pulse2Amplitude, to: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
             }
         }
@@ -395,14 +477,6 @@ class NMRCalculator2: ObservableObject {
     
     private func updateAmplitude1InT() {
         amplitude1InT = amplitude1 / γNucleus
-    }
-    
-    func updateFromPulse1() -> Void {
-        pulse1Updated.toggle()
-    }
-    
-    func updateFromPulse2() -> Void {
-        pulse2Updated.toggle()
     }
     
     // MARK: - Ernst Angle
@@ -509,14 +583,17 @@ class NMRCalculator2: ObservableObject {
                 item.value = self.spectralWidth
             case .pulse1Duration:
                 item.value = self.duration1
+                logger.log("amplitude1=\(self.duration1, privacy: .public)")
             case .pulse2Duration:
                 item.value = self.duration2
             case .pulse1FlipAngle:
                 item.value = self.flipAngle1
+                logger.log("amplitude1=\(self.flipAngle1, privacy: .public)")
             case .pulse2FlipAngle:
                 item.value = self.flipAngle2
             case .pulse1Amplitude:
                 item.value = self.amplitude1
+                logger.log("amplitude1=\(self.amplitude1, privacy: .public)")
             case .pulse2Amplitude:
                 item.value = self.amplitude2
             case .ernstAngle:
@@ -525,6 +602,9 @@ class NMRCalculator2: ObservableObject {
                 item.value = self.repetitionTime
             case .relaxationTime:
                 item.value = self.relaxationTime
+            case .pulse1AmplitudeInT:
+                item.value = self.amplitude1InT
+                logger.log("amplitude1=\(self.amplitude1InT, privacy: .public)")
             }
         }
     }
