@@ -50,10 +50,7 @@ struct NucleusDetailView: View {
                 ScrollView {
                     VStack {
                         Section(header: Text("Larmor Frequencies")) {
-                            LarmorFrequencyView(larmorFrequency: calculator.larmorFrequency,
-                                                protonFrequency: calculator.protonFrequency,
-                                                electronFrequency: calculator.electronFrequency,
-                                                externalField: calculator.externalField)
+                            NMRCalculatorSectionView(calculatorItems: calculator.larmorFrequencies)
                             .environmentObject(calculator)
                         }
                         

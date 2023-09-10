@@ -143,6 +143,73 @@ class NMRCalculator2: ObservableObject {
         larmorFrequencyCalculator.electroFrequency
     }
     
+    private var externalFieldFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var frequencyFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 6
+        return formatter
+    }
+    
+    var larmorFrequencies: CalculatorItems {
+        var items = [CalculatorItem]()
+        
+        let externalField = CalculatorItem(command: .magneticField,
+                                            title: NMRPeriodicTableData.Property.externalField.rawValue,
+                                            font: .callout,
+                                            value: externalField,
+                                            unit: .T,
+                                            formatter: externalFieldFormatter) { newValue in
+            if self.validate(externalField: newValue) {
+                self.update(.magneticField, to: newValue)
+            }
+        }
+        
+        items.append(externalField)
+        
+        let larmorFrequency = CalculatorItem(command: .larmorFrequency,
+                                            title: NMRPeriodicTableData.Property.larmorFrequency.rawValue,
+                                            font: .callout,
+                                            value: larmorFrequency,
+                                            unit: .MHz,
+                                            formatter: frequencyFormatter) { newValue in
+            self.update(.larmorFrequency, to: newValue)
+        }
+        
+        items.append(larmorFrequency)
+        
+        let protonFrequency = CalculatorItem(command: .protonFrequency,
+                                            title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
+                                            font: .callout,
+                                            value: protonFrequency,
+                                            unit: .MHz,
+                                            formatter: frequencyFormatter) { newValue in
+            self.update(.protonFrequency, to: newValue)
+        }
+        
+        items.append(protonFrequency)
+        
+        
+        let electronFrequency = CalculatorItem(command: .electronFrequency,
+                                            title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
+                                            font: .callout,
+                                            value: electronFrequency,
+                                            unit: .GHz,
+                                            formatter: frequencyFormatter) { newValue in
+            self.update(.electronFrequency, to: newValue)
+        }
+        
+        items.append(electronFrequency)
+        
+        return CalculatorItems(items: items)
+    }
+    
     // MARK: - Signal
     
     @Published var timeDomainUpdated = false
@@ -306,7 +373,6 @@ class NMRCalculator2: ObservableObject {
         
         items.append(ernstAngle)
         
-        logger.log("ernstAngles=\(items)")
         return CalculatorItems(items: items)
     }
     
