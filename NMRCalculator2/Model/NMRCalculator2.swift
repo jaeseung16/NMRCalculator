@@ -17,6 +17,8 @@ class NMRCalculator2: ObservableObject {
     private let nucleus: NMRNucleus
     
     private let larmorFrequencyCalculator: LarmorFrequencyMagneticFieldConverter
+    private let timeDomainCalculator: DwellAcquisitionTimeConverter
+    private let frequencyDomainCalculator: SpectralWidthFrequencyResolutionConverter
     private let ernstAngleCalculator: ErnstAngleCalculator
     
     private var commands: [NMRCalcCommandName: NMRCalcCommand]
@@ -37,6 +39,19 @@ class NMRCalculator2: ObservableObject {
         commands[.ernstAngle] = UpdateErnstAngle(ernstAngleCalculator)
         commands[.repetitionTime] = UpdateRepetitionTime(ernstAngleCalculator)
         commands[.relaxationTime] = UpdateRelaxationTime(ernstAngleCalculator)
+        
+        self.timeDomainCalculator = DwellAcquisitionTimeConverter(acqusitionTime: 1.0, numberOfPoints: 1000)
+        commands[.acquisitionTime] = UpdateAcquisitionTime(timeDomainCalculator)
+        commands[.dwellTime] = UpdateDwellTime(timeDomainCalculator)
+        commands[.dwellTimeInμs] = UpdateDwellTimeInμs(timeDomainCalculator)
+        commands[.acquisitionSize] = UpdateAcquisitionSize(timeDomainCalculator)
+        
+        self.frequencyDomainCalculator = SpectralWidthFrequencyResolutionConverter(spectralWidth: 1000.0, numberOfPoints: 1000)
+        commands[.spectrumSize] = UpdateSpectrumSize(frequencyDomainCalculator)
+        commands[.frequencyResolution] = UpdateFrequencyResolution(frequencyDomainCalculator)
+        commands[.spectralWidth] = UpdateSpectralWidth(frequencyDomainCalculator)
+        commands[.spectralWidthInkHz] = UpdateSpectralWidthInkHz(frequencyDomainCalculator)
+        
     }
     
     // MARK: - Validation
@@ -94,6 +109,36 @@ class NMRCalculator2: ObservableObject {
         larmorFrequencyCalculator.electroFrequency
     }
     
+    // MARK: - Signal
+    
+    @Published var timeDomainUpdated = false
+    
+    var numberOfTimeDataPoints: Double {
+        Double(timeDomainCalculator.numberOfPoints)
+    }
+    
+    var acquisitionDuration: Double {
+        timeDomainCalculator.acqusitionTime
+    }
+    
+    var dwellTime: Double {
+        timeDomainCalculator.dwellInμs
+    }
+    
+    @Published var frequencyDomainUpdated = false
+    
+    var numberOfFrequencyDataPoints: Double {
+        Double(frequencyDomainCalculator.numberOfPoints)
+    }
+    
+    var spectralWidth: Double {
+        frequencyDomainCalculator.spectralWidthInkHz
+    }
+    
+    var frequencyResolution: Double {
+        frequencyDomainCalculator.frequencyResolution
+    }
+
     // MARK: - Ernst Angle
     @Published var ernstAngleUpdated = false
     

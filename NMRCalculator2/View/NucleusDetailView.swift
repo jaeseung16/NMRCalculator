@@ -57,6 +57,20 @@ struct NucleusDetailView: View {
                             .environmentObject(calculator)
                         }
                         
+                        Section(header: Text("Time Domain")) {
+                            TimeDomainView(numberOfTimeDataPoints: calculator.numberOfTimeDataPoints,
+                                           acquisitionDuration: calculator.acquisitionDuration,
+                                           dwellTime: calculator.dwellTime)
+                            .environmentObject(calculator)
+                        }
+                        
+                        Section(header: Text("Frequency Domain")) {
+                            FrequencyDomainView(numberOfFrequencyDataPoints: calculator.numberOfFrequencyDataPoints,
+                                                spectralWidth: calculator.spectralWidth,
+                                                frequencyResolution: calculator.frequencyResolution)
+                            .environmentObject(calculator)
+                        }
+                        
                         Section(header: Text("Ernst Angle")) {
                             ErnstAngleView(repetitionTime: calculator.repetitionTime,
                                            relaxationTime: calculator.relaxationTime,
