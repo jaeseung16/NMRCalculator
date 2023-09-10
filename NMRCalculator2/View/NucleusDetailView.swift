@@ -53,11 +53,9 @@ struct NucleusDetailView: View {
                             NMRCalculatorSectionView(calculatorItems: calculator.larmorFrequencies)
                             .environmentObject(calculator)
                         }
-                        
+
                         Section(header: Text("Time Domain")) {
-                            TimeDomainView(numberOfTimeDataPoints: calculator.numberOfTimeDataPoints,
-                                           acquisitionDuration: calculator.acquisitionDuration,
-                                           dwellTime: calculator.dwellTime)
+                            NMRCalculatorSectionView(calculatorItems: calculator.timeDomainFields)
                             .environmentObject(calculator)
                         }
                         

@@ -226,6 +226,65 @@ class NMRCalculator2: ObservableObject {
         timeDomainCalculator.dwellInμs
     }
     
+    private var dataPointsFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }
+    
+    private var durationTimeFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    var timeDomainFields: CalculatorItems {
+        var items = [CalculatorItem]()
+        
+        let numberOfTimeDataPoints = CalculatorItem(command: .acquisitionSize,
+                                            title: "Number of data points",
+                                            font: .body,
+                                            value: numberOfTimeDataPoints,
+                                            unit: .none,
+                                            formatter: dataPointsFormatter) { newValue in
+            if self.validate(numberOfDataPoints: newValue) {
+                self.update(.acquisitionSize, to: newValue)
+            }
+        }
+        
+        items.append(numberOfTimeDataPoints)
+        
+        let acquisitionDuration = CalculatorItem(command: .acquisitionTime,
+                                            title: "Acquisition duration",
+                                            font: .body,
+                                            value: acquisitionDuration,
+                                            unit: .sec,
+                                            formatter: durationTimeFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.acquisitionTime, to: newValue)
+            }
+        }
+        
+        items.append(acquisitionDuration)
+        
+        let dwellTime = CalculatorItem(command: .dwellTimeInμs,
+                                            title: "Dwell time",
+                                            font: .body,
+                                            value: dwellTime,
+                                            unit: .μs,
+                                            formatter: durationTimeFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.dwellTimeInμs, to: newValue)
+            }
+        }
+        
+        items.append(dwellTime)
+        
+        return CalculatorItems(items: items)
+    }
+    
     @Published var frequencyDomainUpdated = false
     
     var numberOfFrequencyDataPoints: Double {
