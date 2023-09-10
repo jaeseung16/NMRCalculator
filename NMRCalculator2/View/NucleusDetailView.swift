@@ -60,9 +60,7 @@ struct NucleusDetailView: View {
                         }
                         
                         Section(header: Text("Frequency Domain")) {
-                            FrequencyDomainView(numberOfFrequencyDataPoints: calculator.numberOfFrequencyDataPoints,
-                                                spectralWidth: calculator.spectralWidth,
-                                                frequencyResolution: calculator.frequencyResolution)
+                            NMRCalculatorSectionView(calculatorItems: calculator.frequencyDomainFields)
                             .environmentObject(calculator)
                         }
                         

@@ -299,6 +299,50 @@ class NMRCalculator2: ObservableObject {
         frequencyDomainCalculator.frequencyResolution
     }
 
+    var frequencyDomainFields: CalculatorItems {
+        var items = [CalculatorItem]()
+        
+        let numberOfFrequencyDataPoints = CalculatorItem(command: .spectrumSize,
+                                                    title: "Number of data points",
+                                                    font: .body,
+                                                    value: numberOfFrequencyDataPoints,
+                                                    unit: .none,
+                                                    formatter: dataPointsFormatter) { newValue in
+            if self.validate(numberOfDataPoints: newValue) {
+                self.update(.spectrumSize, to: newValue)
+            }
+        }
+        
+        items.append(numberOfFrequencyDataPoints)
+        
+        let spectralWidth = CalculatorItem(command: .spectralWidthInkHz,
+                                                 title: "Spectral width",
+                                                 font: .body,
+                                                 value: spectralWidth,
+                                                 unit: .kHz,
+                                                 formatter: durationTimeFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.spectralWidthInkHz, to: newValue)
+            }
+        }
+        
+        items.append(spectralWidth)
+        
+        let frequencyResolution = CalculatorItem(command: .frequencyResolution,
+                                       title: "Frequency resolution",
+                                       font: .body,
+                                       value: frequencyResolution,
+                                       unit: .Hz,
+                                       formatter: durationTimeFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.frequencyResolution, to: newValue)
+            }
+        }
+        
+        items.append(frequencyResolution)
+        
+        return CalculatorItems(items: items)
+    }
     // MARK: - Pulse
     
     @Published var pulse1Updated = false
