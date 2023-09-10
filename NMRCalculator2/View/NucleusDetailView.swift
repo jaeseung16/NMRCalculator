@@ -88,9 +88,7 @@ struct NucleusDetailView: View {
                         }
                         
                         Section(header: Text("Ernst Angle")) {
-                            ErnstAngleView(repetitionTime: calculator.repetitionTime,
-                                           relaxationTime: calculator.relaxationTime,
-                                           ernstAngle: calculator.ernstAngle)
+                            NMRCalculatorSectionView(calculatorItems: calculator.ernstAngles)
                             .environmentObject(calculator)
                         }
                     }

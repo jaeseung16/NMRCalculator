@@ -102,8 +102,6 @@ class NMRCalculator2: ObservableObject {
         return ernstAngle > 0.0 && ernstAngle < 90.0
     }
     
-    
-    
     func update(_ commandName: NMRCalcCommandName, to value: Double) -> Void {
         if let command = commands[commandName] {
             command.execute(with: value)
@@ -251,4 +249,115 @@ class NMRCalculator2: ObservableObject {
     var ernstAngle: Double {
         ernstAngleCalculator.ernstAngle
     }
+    
+    private var relaxationTimeFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var flipAngleFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    var ernstAngles: CalculatorItems {
+        var items = [CalculatorItem]()
+        
+        let repetitionItem = CalculatorItem(command: .repetitionTime,
+                                            title: "Repetition Time",
+                                            font: .body,
+                                            value: repetitionTime,
+                                            unit: .sec,
+                                            formatter: relaxationTimeFormatter) { newValue in
+            if self.isNonNegative(newValue) {
+                self.update(.repetitionTime, to: newValue)
+            }
+        }
+        
+        items.append(repetitionItem)
+        
+        let relaxationTime = CalculatorItem(command: .relaxationTime,
+                                            title: "Relaxation Time",
+                                            font: .body,
+                                            value: relaxationTime,
+                                            unit: .sec,
+                                            formatter: relaxationTimeFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.relaxationTime, to: newValue)
+            }
+        }
+        
+        items.append(relaxationTime)
+        
+        let ernstAngle = CalculatorItem(command: .ernstAngle,
+                                            title: "Ernst Angle",
+                                            font: .body,
+                                            value: ernstAngle,
+                                            unit: .degree,
+                                            formatter: flipAngleFormatter) { newValue in
+            if self.validate(ernstAngle: newValue) {
+                self.update(.ernstAngle, to: newValue)
+            }
+        }
+        
+        items.append(ernstAngle)
+        
+        logger.log("ernstAngles=\(items)")
+        return CalculatorItems(items: items)
+    }
+    
+    // MARK: - Update values
+    func refresh(_ items: CalculatorItems) {
+        items.items.forEach { item in
+            switch item.id {
+            case .acquisitionSize:
+                item.value = self.numberOfTimeDataPoints
+            case .magneticField:
+                item.value = self.externalField
+            case .larmorFrequency:
+                item.value = self.larmorFrequency
+            case .protonFrequency:
+                item.value = self.protonFrequency
+            case .electronFrequency:
+                item.value = self.electronFrequency
+            case .acquisitionTime:
+                item.value = self.acquisitionDuration
+            case .dwellTime:
+                item.value = self.timeDomainCalculator.dwell
+            case .dwellTimeInμs:
+                item.value = self.dwellTime
+            case .spectrumSize:
+                item.value = self.numberOfFrequencyDataPoints
+            case .frequencyResolution:
+                item.value = self.frequencyResolution
+            case .spectralWidth:
+                item.value = self.frequencyDomainCalculator.spectralWidth
+            case .spectralWidthInkHz:
+                item.value = self.spectralWidth
+            case .pulse1Duration:
+                item.value = self.duration1
+            case .pulse2Duration:
+                item.value = self.duration2
+            case .pulse1FlipAngle:
+                item.value = self.flipAngle1
+            case .pulse2FlipAngle:
+                item.value = self.flipAngle2
+            case .pulse1Amplitude:
+                item.value = self.amplitude1
+            case .pulse2Amplitude:
+                item.value = self.amplitude2
+            case .ernstAngle:
+                item.value = self.ernstAngle
+            case .repetitionTime:
+                item.value = self.repetitionTime
+            case .relaxationTime:
+                item.value = self.relaxationTime
+            }
+        }
+    }
+    
 }
