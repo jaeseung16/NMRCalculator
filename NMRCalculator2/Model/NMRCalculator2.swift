@@ -70,6 +70,7 @@ class NMRCalculator2: ObservableObject {
         commands[.pulse2Duration] = UpdatePulseDuration(pulse2)
         commands[.pulse2Amplitude] = UpdatePulseAmplitude(pulse2)
         commands[.pulse2FlipAngle] = UpdatePulseFlipAngle(pulse2)
+        commands[.relativePower] = UpdateRelativePower(pulse2)
         self.commandsForPulse2 = [.pulse2Duration, .pulse2Amplitude, .pulse2FlipAngle]
         
         self.decibelCalculator = DecibelCalculator()
@@ -397,7 +398,6 @@ class NMRCalculator2: ObservableObject {
                                        value: duration1,
                                        unit: .μs,
                                        formatter: durationFormatter) { newValue in
-            self.logger.log("updateing pulse1Duration")
             if self.isPositive(newValue) {
                 self.update(.pulse1Duration, to: newValue)
             }
@@ -411,7 +411,6 @@ class NMRCalculator2: ObservableObject {
                                         value: flipAngle1,
                                         unit: .degree,
                                         formatter: flipAngleFormatter) { newValue in
-            self.logger.log("updateing pulse1FlipAngle")
             if self.isPositive(newValue) {
                 self.update(.pulse1FlipAngle, to: newValue)
             }
@@ -425,7 +424,6 @@ class NMRCalculator2: ObservableObject {
                                         value: amplitude1,
                                         unit: .Hz,
                                         formatter: amplitudeFormatter) { newValue in
-            self.logger.log("updateing pulse1Amplitude")
             if self.isPositive(newValue) {
                 self.update(.pulse1Amplitude, to: newValue)
             }
@@ -439,7 +437,6 @@ class NMRCalculator2: ObservableObject {
                                            value: amplitude1InT,
                                            unit: .μT,
                                            formatter: amplitudeFormatter) { newValue in
-            self.logger.log("updateing pulse1AmplitudeInT")
             if self.isPositive(abs(newValue)) {
                 self.update(pulse1AmplitudeInT: self.γNucleus >= 0 ? abs(newValue) : -abs(newValue))
             }
@@ -469,6 +466,62 @@ class NMRCalculator2: ObservableObject {
                 update(.pulse2Amplitude, to: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
             }
         }
+    }
+    
+    var pulse2Fields: CalculatorItems {
+        var items = [CalculatorItem]()
+        
+        let duration2 = CalculatorItem(command: .pulse2Duration,
+                                       title: "Pulse duration",
+                                       font: .body,
+                                       value: duration2,
+                                       unit: .μs,
+                                       formatter: durationFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.pulse2Duration, to: newValue)
+            }
+        }
+        
+        items.append(duration2)
+        
+        let flipAngle2 = CalculatorItem(command: .pulse2FlipAngle,
+                                        title: "Flip angle",
+                                        font: .body,
+                                        value: flipAngle2,
+                                        unit: .degree,
+                                        formatter: flipAngleFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.pulse2FlipAngle, to: newValue)
+            }
+        }
+        
+        items.append(flipAngle2)
+        
+        let amplitude2 = CalculatorItem(command: .pulse2Amplitude,
+                                        title: "RF Amplitude",
+                                        font: .body,
+                                        value: amplitude2,
+                                        unit: .Hz,
+                                        formatter: amplitudeFormatter) { newValue in
+            if self.isPositive(newValue) {
+                self.update(.pulse2Amplitude, to: newValue)
+            }
+        }
+        
+        items.append(amplitude2)
+        
+        let relativePower = CalculatorItem(command: .relativePower,
+                                           title: "RF power relateve to Pulse 1",
+                                           font: .body,
+                                           value: relativePower,
+                                           unit: .dB,
+                                           formatter: relativePowerFormatter) { newValue in
+            self.relativePower = newValue
+        }
+        
+        items.append(relativePower)
+        
+        return CalculatorItems(items: items)
     }
     
     private func updateRelativePower() -> Void {
@@ -605,7 +658,10 @@ class NMRCalculator2: ObservableObject {
             case .pulse1AmplitudeInT:
                 item.value = self.amplitude1InT
                 logger.log("amplitude1=\(self.amplitude1InT, privacy: .public)")
+            case .relativePower:
+                item.value = self.relativePower
             }
+            
         }
     }
     

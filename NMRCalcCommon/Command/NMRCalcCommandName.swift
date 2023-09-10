@@ -31,6 +31,7 @@ enum NMRCalcCommandName: String {
     case pulse1Amplitude
     case pulse1AmplitudeInT
     case pulse2Amplitude
+    case relativePower
     
     case ernstAngle
     case repetitionTime

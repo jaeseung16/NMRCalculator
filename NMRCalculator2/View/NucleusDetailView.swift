@@ -70,10 +70,7 @@ struct NucleusDetailView: View {
                         }
                         
                         Section(header: Text("Pulse 2")) {
-                            Pulse2View(duration2: calculator.duration2,
-                                      flipAngle2: calculator.flipAngle2,
-                                      amplitude2: calculator.amplitude2,
-                                      relativePower: calculator.relativePower)
+                            NMRCalculatorSectionView(calculatorItems: calculator.pulse2Fields)
                             .environmentObject(calculator)
                         }
                         
