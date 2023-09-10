@@ -71,6 +71,22 @@ struct NucleusDetailView: View {
                             .environmentObject(calculator)
                         }
                         
+                        Section(header: Text("Pulse 1")) {
+                            Pulse1View(duration1: calculator.duration1,
+                                      flipAngle1: calculator.flipAngle1,
+                                      amplitude1: calculator.amplitude1,
+                                      amplitude1InT: calculator.amplitude1InT)
+                            .environmentObject(calculator)
+                        }
+                        
+                        Section(header: Text("Pulse 2")) {
+                            Pulse2View(duration2: calculator.duration2,
+                                      flipAngle2: calculator.flipAngle2,
+                                      amplitude2: calculator.amplitude2,
+                                      relativePower: calculator.relativePower)
+                            .environmentObject(calculator)
+                        }
+                        
                         Section(header: Text("Ernst Angle")) {
                             ErnstAngleView(repetitionTime: calculator.repetitionTime,
                                            relaxationTime: calculator.relaxationTime,

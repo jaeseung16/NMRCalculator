@@ -20,8 +20,15 @@ class NMRCalculator2: ObservableObject {
     private let timeDomainCalculator: DwellAcquisitionTimeConverter
     private let frequencyDomainCalculator: SpectralWidthFrequencyResolutionConverter
     private let ernstAngleCalculator: ErnstAngleCalculator
+    private let decibelCalculator: DecibelCalculator
+    
+    private let pulse1: Pulse
+    private let pulse2: Pulse
     
     private var commands: [NMRCalcCommandName: NMRCalcCommand]
+    
+    private var commandsForPulse1: Set<NMRCalcCommandName>
+    private var commandsForPulse2: Set<NMRCalcCommandName>
     
     @Published var updated = false
     
@@ -52,6 +59,25 @@ class NMRCalculator2: ObservableObject {
         commands[.spectralWidth] = UpdateSpectralWidth(frequencyDomainCalculator)
         commands[.spectralWidthInkHz] = UpdateSpectralWidthInkHz(frequencyDomainCalculator)
         
+        self.pulse1 = Pulse(duration: 10.0, flipAngle: 90.0)
+        commands[.pulse1Duration] = UpdatePulseDuration(pulse1)
+        commands[.pulse1Amplitude] = UpdatePulseAmplitude(pulse1)
+        commands[.pulse1FlipAngle] = UpdatePulseFlipAngle(pulse1)
+        self.commandsForPulse1 = [.pulse1Duration, .pulse1Amplitude, .pulse1FlipAngle]
+        
+        self.pulse2 = Pulse(duration: 1000.0, flipAngle: 90.0)
+        commands[.pulse2Duration] = UpdatePulseDuration(pulse2)
+        commands[.pulse2Amplitude] = UpdatePulseAmplitude(pulse2)
+        commands[.pulse2FlipAngle] = UpdatePulseFlipAngle(pulse2)
+        self.commandsForPulse2 = [.pulse2Duration, .pulse2Amplitude, .pulse2FlipAngle]
+        
+        self.decibelCalculator = DecibelCalculator()
+        amplitude1InT = self.pulse1.amplitude / NMRCalcConstants.gammaProton
+        relativePower = self.decibelCalculator.dB(measuredAmplitude: self.pulse2.amplitude, referenceAmplitude: self.pulse1.amplitude)
+    }
+    
+    var nucleusName: String {
+        nucleus.nameNucleus
     }
     
     // MARK: - Validation
@@ -76,9 +102,19 @@ class NMRCalculator2: ObservableObject {
         return ernstAngle > 0.0 && ernstAngle < 90.0
     }
     
+    
+    
     func update(_ commandName: NMRCalcCommandName, to value: Double) -> Void {
         if let command = commands[commandName] {
             command.execute(with: value)
+            
+            if commandsForPulse1.contains(commandName) {
+                updateAmplitude1InT()
+                updateRelativePower()
+            } else if commandsForPulse2.contains(commandName) {
+                updateRelativePower()
+            }
+            
             updated.toggle()
         } else {
             logger.log("Can't find any command named \(commandName.rawValue, privacy: .public)")
@@ -139,6 +175,68 @@ class NMRCalculator2: ObservableObject {
         frequencyDomainCalculator.frequencyResolution
     }
 
+    // MARK: - Pulse
+    
+    @Published var pulse1Updated = false
+    @Published var pulse2Updated = false
+    
+    var duration1: Double {
+        pulse1.duration
+    }
+    
+    var flipAngle1: Double {
+        pulse1.flipAngle
+    }
+
+    var amplitude1: Double {
+        pulse1.amplitude
+    }
+
+    var amplitude1InT: Double
+    
+    func update(pulse1AmplitudeInT: Double) -> Void {
+        update(.pulse1Amplitude, to: pulse1AmplitudeInT * γNucleus)
+        updateAmplitude1InT()
+        updateRelativePower()
+        updateFromPulse1()
+    }
+    
+    var duration2: Double {
+        pulse2.duration
+    }
+    
+    var flipAngle2: Double {
+        pulse2.flipAngle
+    }
+    
+    var amplitude2: Double {
+        pulse2.amplitude
+    }
+    
+    var relativePower: Double {
+        didSet {
+            if relativePower != oldValue {
+                update(.pulse2Amplitude, to: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
+            }
+        }
+    }
+    
+    private func updateRelativePower() -> Void {
+        relativePower = decibelCalculator.dB(measuredAmplitude: amplitude2, referenceAmplitude: amplitude1)
+    }
+    
+    private func updateAmplitude1InT() {
+        amplitude1InT = amplitude1 / γNucleus
+    }
+    
+    func updateFromPulse1() -> Void {
+        pulse1Updated.toggle()
+    }
+    
+    func updateFromPulse2() -> Void {
+        pulse2Updated.toggle()
+    }
+    
     // MARK: - Ernst Angle
     @Published var ernstAngleUpdated = false
     
