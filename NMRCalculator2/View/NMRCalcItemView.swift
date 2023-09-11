@@ -29,6 +29,7 @@ struct NMRCalcItemView: View {
                 .onSubmit { calculatorItem.callback(calculatorItem.value) }
                 .multilineTextAlignment(.trailing)
                 .font(Font.body.weight(.semibold))
+                .minimumScaleFactor(0.75)
                 .frame(width: defaultTextFieldWidth)
                 .foregroundColor(numberColor)
         
