@@ -16,7 +16,7 @@ struct NMRCalcItemView: View {
     private let defaultLabel = "0.0"
     private let defaultTextFieldWidth: CGFloat = 120
     private let defaultUnitTextWidth: CGFloat = 40
-    private let numberColor: Color = .purple
+    private let numberColor: Color = .accentColor
 
     var body: some View {
         HStack(alignment: .center) {
@@ -28,10 +28,10 @@ struct NMRCalcItemView: View {
             TextField(defaultLabel, value: $calculatorItem.value, formatter: calculatorItem.formatter)
                 .onSubmit { calculatorItem.callback(calculatorItem.value) }
                 .multilineTextAlignment(.trailing)
-                .font(Font.body.weight(.semibold))
+                .fontWeight(.semibold)
                 .minimumScaleFactor(0.75)
-                .frame(width: defaultTextFieldWidth)
                 .foregroundColor(numberColor)
+                .frame(width: defaultTextFieldWidth)
         
             Text(calculatorItem.unit.rawValue)
                 .font(.body)

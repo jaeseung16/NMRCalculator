@@ -69,7 +69,6 @@ class Pulse {
     
     private func updateAmplitude() {
         self.amplitude = flipAnlgeInRotation / durationInSec
-        print("\(amplitude)")
     }
 
     public func set(duration: Double) -> Void {

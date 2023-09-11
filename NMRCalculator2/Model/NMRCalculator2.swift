@@ -76,7 +76,7 @@ class NMRCalculator2: ObservableObject {
         self.commandsForPulse2 = [.pulse2Duration, .pulse2Amplitude, .pulse2FlipAngle]
         
         self.decibelCalculator = DecibelCalculator()
-        amplitude1InT = self.pulse1.amplitude / NMRCalcConstants.gammaProton
+        amplitude1InT = self.pulse1.amplitude / nucleus.γ
         relativePower = self.decibelCalculator.dB(measuredAmplitude: self.pulse2.amplitude, referenceAmplitude: self.pulse1.amplitude)
     }
     
