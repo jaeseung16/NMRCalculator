@@ -26,8 +26,5 @@ struct NuclearListView: View {
                     .id(selected)
             }
         }
-        .onChange(of: selected) { _ in
-            print("selected=\(String(describing: selected))")
-        }
     }
 }

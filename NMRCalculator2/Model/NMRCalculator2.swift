@@ -31,6 +31,8 @@ class NMRCalculator2: ObservableObject {
     private var commandsForPulse2: Set<NMRCalcCommandName>
     
     @Published var updated = false
+    @Published var showAlert = false
+    var alertMessage = ""
     
     init(nucleus: NMRNucleus) {
         self.nucleus = nucleus
@@ -172,6 +174,9 @@ class NMRCalculator2: ObservableObject {
                                             formatter: externalFieldFormatter) { newValue in
             if self.validate(externalField: newValue) {
                 self.update(.magneticField, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBeBetweenNegativeOneThousandAndOneThousand.rawValue
             }
         }
         
@@ -255,6 +260,9 @@ class NMRCalculator2: ObservableObject {
                                             formatter: dataPointsFormatter) { newValue in
             if self.validate(numberOfDataPoints: newValue) {
                 self.update(.acquisitionSize, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBeNaturalNumber.rawValue
             }
         }
         
@@ -268,6 +276,9 @@ class NMRCalculator2: ObservableObject {
                                             formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.acquisitionTime, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -281,6 +292,9 @@ class NMRCalculator2: ObservableObject {
                                             formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.dwellTimeInμs, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -314,6 +328,9 @@ class NMRCalculator2: ObservableObject {
                                                     formatter: dataPointsFormatter) { newValue in
             if self.validate(numberOfDataPoints: newValue) {
                 self.update(.spectrumSize, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBeNaturalNumber.rawValue
             }
         }
         
@@ -327,6 +344,9 @@ class NMRCalculator2: ObservableObject {
                                                  formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.spectralWidthInkHz, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -340,6 +360,9 @@ class NMRCalculator2: ObservableObject {
                                        formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.frequencyResolution, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -400,6 +423,9 @@ class NMRCalculator2: ObservableObject {
                                        formatter: durationFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.pulse1Duration, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -413,6 +439,9 @@ class NMRCalculator2: ObservableObject {
                                         formatter: flipAngleFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.pulse1FlipAngle, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -426,6 +455,9 @@ class NMRCalculator2: ObservableObject {
                                         formatter: amplitudeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.pulse1Amplitude, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -439,6 +471,9 @@ class NMRCalculator2: ObservableObject {
                                            formatter: amplitudeFormatter) { newValue in
             if self.isPositive(abs(newValue)) {
                 self.update(pulse1AmplitudeInT: self.γNucleus >= 0 ? abs(newValue) : -abs(newValue))
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -479,6 +514,9 @@ class NMRCalculator2: ObservableObject {
                                        formatter: durationFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.pulse2Duration, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -492,6 +530,9 @@ class NMRCalculator2: ObservableObject {
                                         formatter: flipAngleFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.pulse2FlipAngle, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -505,6 +546,9 @@ class NMRCalculator2: ObservableObject {
                                         formatter: amplitudeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.pulse2Amplitude, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -573,6 +617,9 @@ class NMRCalculator2: ObservableObject {
                                             formatter: relaxationTimeFormatter) { newValue in
             if self.isNonNegative(newValue) {
                 self.update(.repetitionTime, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -586,6 +633,9 @@ class NMRCalculator2: ObservableObject {
                                             formatter: relaxationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.relaxationTime, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBePositiveValue.rawValue
             }
         }
         
@@ -599,6 +649,9 @@ class NMRCalculator2: ObservableObject {
                                             formatter: flipAngleFormatter) { newValue in
             if self.validate(ernstAngle: newValue) {
                 self.update(.ernstAngle, to: newValue)
+            } else {
+                self.showAlert.toggle()
+                self.alertMessage = CalculatorErrorMessage.shouldBeBetweenZeroAndNinety.rawValue
             }
         }
         

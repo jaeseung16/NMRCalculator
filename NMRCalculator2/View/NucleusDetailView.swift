@@ -11,6 +11,8 @@ import SwiftUI
 struct NucleusDetailView: View {
     @EnvironmentObject private var calculator: NMRCalculator2
     
+    @State private var showAlert = false
+    
     var nucleus: NMRNucleus
     
     private var proton: NMRNucleus {
@@ -80,10 +82,24 @@ struct NucleusDetailView: View {
                         }
                     }
                 }
+                .padding()
                 
                 Spacer()
             }
             .frame(width: geometry.size.width, alignment: .center)
+            .alert(calculator.alertMessage, isPresented: $showAlert) {
+                Button("OK") {
+                    showAlert.toggle()
+                    if !showAlert {
+                        calculator.showAlert = showAlert
+                    }
+                }
+            }
+            .onChange(of: calculator.showAlert) { newValue in
+                if newValue {
+                    showAlert = newValue
+                }
+            }
         }
     }
     
