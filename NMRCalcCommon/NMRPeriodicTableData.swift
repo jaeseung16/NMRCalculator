@@ -18,7 +18,7 @@ final class NMRPeriodicTableData: ObservableObject {
         return NMRPeriodicTable.shared.nuclei[0].γ
     }
     
-    enum Focus {
+    enum Focus: Hashable, Equatable {
         case ExternalField, ProtonFrequency
     }
     

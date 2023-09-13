@@ -35,9 +35,3 @@ struct LarmorFrequencyView: View {
         }
     }
 }
-
-struct LarmorFrequencyView_Previews: PreviewProvider {
-    static var previews: some View {
-        LarmorFrequencyView(externalField: 1.0, gyromatneticRatio: 42.56)
-    }
-}

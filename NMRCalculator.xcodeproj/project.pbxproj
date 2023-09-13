@@ -116,6 +116,24 @@
 		906EBD2825E47DFF00ED8641 /* NumberColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906EBD2725E47DFF00ED8641 /* NumberColor.swift */; };
 		90732BBF2129E9E70027DFBD /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
 		9073F03B213B36F100406056 /* IPadSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9073F03A213B36F100406056 /* IPadSplitViewController.swift */; };
+		9079EC5E2AB253D4005A802E /* WatchNMRCalculator2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC5D2AB253D4005A802E /* WatchNMRCalculator2App.swift */; };
+		9079EC602AB253D4005A802E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC5F2AB253D4005A802E /* ContentView.swift */; };
+		9079EC622AB253D5005A802E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9079EC612AB253D5005A802E /* Assets.xcassets */; };
+		9079EC652AB253D5005A802E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9079EC642AB253D5005A802E /* Preview Assets.xcassets */; };
+		9079EC682AB253D5005A802E /* WatchNMRCalculator2 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9079EC6E2AB256BD005A802E /* WatchNucleusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC6D2AB256BD005A802E /* WatchNucleusView.swift */; };
+		9079EC702AB256F7005A802E /* WatchNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */; };
+		9079EC712AB25707005A802E /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
+		9079EC722AB25716005A802E /* AtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* AtomicElementView.swift */; };
+		9079EC732AB2573E005A802E /* NMRNucleus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */; };
+		9079EC742AB25769005A802E /* NMRCalcConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A0A21325CB6C7C001DA889 /* NMRCalcConstants.swift */; };
+		9079EC762AB25771005A802E /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
+		9079EC772AB2578C005A802E /* NMRPeriodicTableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */; };
+		9079EC792AB25819005A802E /* WatchNucleusDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC782AB25819005A802E /* WatchNucleusDetailView.swift */; };
+		9079EC7A2AB25845005A802E /* NuclearSpinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67B23CFF59C00599931 /* NuclearSpinView.swift */; };
+		9079EC7B2AB25854005A802E /* LarmorFrequencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F1F86723DDE588004A144A /* LarmorFrequencyView.swift */; };
+		9079EC7C2AB25857005A802E /* ProtonFrequencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F1F86423DDE420004A144A /* ProtonFrequencyView.swift */; };
+		9079EC7D2AB25A9C005A802E /* NMRFreqTable.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */; };
 		907A0D582AACF54F00EA68BB /* NMRFreqTable.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */; };
 		907A0D592AACF5A900EA68BB /* AtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* AtomicElementView.swift */; };
 		907A0D5A2AACF5D900EA68BB /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
@@ -301,6 +319,13 @@
 			remoteGlobalIDString = 9067B3292AACED2900A8FA29;
 			remoteInfo = NMRCalculator2;
 		};
+		9079EC662AB253D5005A802E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B6ACEF71D08E87F00D7D342 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9079EC5A2AB253D4005A802E;
+			remoteInfo = "WatchNMRCalculator2 Watch App";
+		};
 		90E7527B239DA575003D3A88 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B6ACEF71D08E87F00D7D342 /* Project object */;
@@ -325,6 +350,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		9079EC692AB253D5005A802E /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				9079EC682AB253D5005A802E /* WatchNMRCalculator2 Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90FFBA4723CB8C56000A9BC9 /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -435,6 +471,13 @@
 		906EBD2725E47DFF00ED8641 /* NumberColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberColor.swift; sourceTree = "<group>"; };
 		90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRPeriodicTable.swift; sourceTree = "<group>"; };
 		9073F03A213B36F100406056 /* IPadSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadSplitViewController.swift; sourceTree = "<group>"; };
+		9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchNMRCalculator2 Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9079EC5D2AB253D4005A802E /* WatchNMRCalculator2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNMRCalculator2App.swift; sourceTree = "<group>"; };
+		9079EC5F2AB253D4005A802E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9079EC612AB253D5005A802E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9079EC642AB253D5005A802E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9079EC6D2AB256BD005A802E /* WatchNucleusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusView.swift; sourceTree = "<group>"; };
+		9079EC782AB25819005A802E /* WatchNucleusDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusDetailView.swift; sourceTree = "<group>"; };
 		90833A8F2943F5CF00FC14DA /* UpdateAcquisitionTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateAcquisitionTime.swift; sourceTree = "<group>"; };
 		90833A932943F60400FC14DA /* UpdateDwellTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDwellTime.swift; sourceTree = "<group>"; };
 		90833A972943F6F700FC14DA /* UpdateDwellTimeInμs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpdateDwellTimeInμs.swift"; sourceTree = "<group>"; };
@@ -565,6 +608,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9079EC582AB253D4005A802E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		909C112125BF908A00E8C285 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -658,6 +708,7 @@
 				9067B32B2AACED2900A8FA29 /* NMRCalculator2 */,
 				9067B33D2AACED2A00A8FA29 /* NMRCalculator2Tests */,
 				9067B3472AACED2A00A8FA29 /* NMRCalculator2UITests */,
+				9079EC5C2AB253D4005A802E /* WatchNMRCalculator2 Watch App */,
 				0B6ACF001D08E88000D7D342 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -676,6 +727,7 @@
 				9067B32A2AACED2900A8FA29 /* NMRCalculator2.app */,
 				9067B33A2AACED2A00A8FA29 /* NMRCalculator2Tests.xctest */,
 				9067B3442AACED2A00A8FA29 /* NMRCalculator2UITests.xctest */,
+				9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -857,6 +909,35 @@
 				9028827627D966BB00795259 /* MacNMRCalculatorViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		9079EC5C2AB253D4005A802E /* WatchNMRCalculator2 Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				9079EC6F2AB256E9005A802E /* Views */,
+				9079EC5D2AB253D4005A802E /* WatchNMRCalculator2App.swift */,
+				9079EC5F2AB253D4005A802E /* ContentView.swift */,
+				9079EC612AB253D5005A802E /* Assets.xcassets */,
+				9079EC632AB253D5005A802E /* Preview Content */,
+			);
+			path = "WatchNMRCalculator2 Watch App";
+			sourceTree = "<group>";
+		};
+		9079EC632AB253D5005A802E /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				9079EC642AB253D5005A802E /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		9079EC6F2AB256E9005A802E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9079EC6D2AB256BD005A802E /* WatchNucleusView.swift */,
+				9079EC782AB25819005A802E /* WatchNucleusDetailView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		909ACA3025CF5BFC00C92C2F /* Views */ = {
@@ -1089,10 +1170,12 @@
 				9067B3262AACED2900A8FA29 /* Sources */,
 				9067B3272AACED2900A8FA29 /* Frameworks */,
 				9067B3282AACED2900A8FA29 /* Resources */,
+				9079EC692AB253D5005A802E /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9079EC672AB253D5005A802E /* PBXTargetDependency */,
 			);
 			name = NMRCalculator2;
 			productName = NMRCalculator2;
@@ -1134,6 +1217,23 @@
 			productName = NMRCalculator2UITests;
 			productReference = 9067B3442AACED2A00A8FA29 /* NMRCalculator2UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		9079EC5A2AB253D4005A802E /* WatchNMRCalculator2 Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9079EC6C2AB253D5005A802E /* Build configuration list for PBXNativeTarget "WatchNMRCalculator2 Watch App" */;
+			buildPhases = (
+				9079EC572AB253D4005A802E /* Sources */,
+				9079EC582AB253D4005A802E /* Frameworks */,
+				9079EC592AB253D4005A802E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "WatchNMRCalculator2 Watch App";
+			productName = "WatchNMRCalculator2 Watch App";
+			productReference = 9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */;
+			productType = "com.apple.product-type.application";
 		};
 		909C112325BF908A00E8C285 /* NMRCalc */ = {
 			isa = PBXNativeTarget;
@@ -1245,6 +1345,9 @@
 						CreatedOnToolsVersion = 14.3.1;
 						TestTargetID = 9067B3292AACED2900A8FA29;
 					};
+					9079EC5A2AB253D4005A802E = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
 					909C112325BF908A00E8C285 = {
 						CreatedOnToolsVersion = 12.3;
 					};
@@ -1285,6 +1388,7 @@
 				9067B3292AACED2900A8FA29 /* NMRCalculator2 */,
 				9067B3392AACED2A00A8FA29 /* NMRCalculator2Tests */,
 				9067B3432AACED2A00A8FA29 /* NMRCalculator2UITests */,
+				9079EC5A2AB253D4005A802E /* WatchNMRCalculator2 Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -1347,6 +1451,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9079EC592AB253D4005A802E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9079EC7D2AB25A9C005A802E /* NMRFreqTable.txt in Resources */,
+				9079EC652AB253D5005A802E /* Preview Assets.xcassets in Resources */,
+				9079EC622AB253D5005A802E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1572,6 +1686,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9079EC572AB253D4005A802E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9079EC762AB25771005A802E /* NMRPeriodicTable.swift in Sources */,
+				9079EC602AB253D4005A802E /* ContentView.swift in Sources */,
+				9079EC6E2AB256BD005A802E /* WatchNucleusView.swift in Sources */,
+				9079EC7A2AB25845005A802E /* NuclearSpinView.swift in Sources */,
+				9079EC702AB256F7005A802E /* WatchNucleusInfoView.swift in Sources */,
+				9079EC5E2AB253D4005A802E /* WatchNMRCalculator2App.swift in Sources */,
+				9079EC732AB2573E005A802E /* NMRNucleus.swift in Sources */,
+				9079EC722AB25716005A802E /* AtomicElementView.swift in Sources */,
+				9079EC7B2AB25854005A802E /* LarmorFrequencyView.swift in Sources */,
+				9079EC792AB25819005A802E /* WatchNucleusDetailView.swift in Sources */,
+				9079EC742AB25769005A802E /* NMRCalcConstants.swift in Sources */,
+				9079EC7C2AB25857005A802E /* ProtonFrequencyView.swift in Sources */,
+				9079EC712AB25707005A802E /* Fraction.swift in Sources */,
+				9079EC772AB2578C005A802E /* NMRPeriodicTableData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		909C112025BF908A00E8C285 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1721,6 +1856,11 @@
 			isa = PBXTargetDependency;
 			target = 9067B3292AACED2900A8FA29 /* NMRCalculator2 */;
 			targetProxy = 9067B3452AACED2A00A8FA29 /* PBXContainerItemProxy */;
+		};
+		9079EC672AB253D5005A802E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9079EC5A2AB253D4005A802E /* WatchNMRCalculator2 Watch App */;
+			targetProxy = 9079EC662AB253D5005A802E /* PBXContainerItemProxy */;
 		};
 		90E7527C239DA575003D3A88 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2102,6 +2242,7 @@
 		9067B34C2AACED2A00A8FA29 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2150,6 +2291,7 @@
 		9067B34D2AACED2A00A8FA29 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2316,6 +2458,82 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = NMRCalculator2;
+			};
+			name = Release;
+		};
+		9079EC6A2AB253D5005A802E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchNMRCalculator2 Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = RWVTTVMWBE;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchNMRCalculator2;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.resonance.jlee.NMRCalculator2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.NMRCalculator2.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
+			};
+			name = Debug;
+		};
+		9079EC6B2AB253D5005A802E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchNMRCalculator2 Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = RWVTTVMWBE;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchNMRCalculator2;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.resonance.jlee.NMRCalculator2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.NMRCalculator2.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
 			};
 			name = Release;
 		};
@@ -2667,6 +2885,15 @@
 			buildConfigurations = (
 				9067B3502AACED2A00A8FA29 /* Debug */,
 				9067B3512AACED2A00A8FA29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9079EC6C2AB253D5005A802E /* Build configuration list for PBXNativeTarget "WatchNMRCalculator2 Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9079EC6A2AB253D5005A802E /* Debug */,
+				9079EC6B2AB253D5005A802E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
