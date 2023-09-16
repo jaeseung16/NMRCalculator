@@ -47,7 +47,9 @@ struct NucleusDetailView: View {
                 displayInfo()
                     .frame(minWidth: 0.5 * geometry.size.width, maxWidth: 0.8 * geometry.size.width, alignment: .center)
                 
-                Spacer()
+                Divider()
+                    .frame(height: 1)
+                    .overlay(Color.secondary)
                 
                 ScrollView {
                     VStack {
