@@ -18,6 +18,8 @@ struct ContentView: View {
                     NavigationLink(value: nucleus) {
                         WatchNucleusView(nucleus: nucleus)
                     }
+                    .navigationTitle("NMR Calculator 2")
+                    .navigationBarTitleDisplayMode(.inline)
                     .frame(width: geometry.size.width * 0.88, height: geometry.size.height * 0.7)
                 }
                 .navigationDestination(for: NMRNucleus.self) { nucleus in

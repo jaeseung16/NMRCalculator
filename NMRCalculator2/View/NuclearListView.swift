@@ -19,6 +19,9 @@ struct NuclearListView: View {
             List(nuclei, selection: $selected) {
                 NucleusView(nucleus: $0)
             }
+            .listStyle(.plain)
+            .navigationTitle("NMR Calculator 2")
+            .navigationBarTitleDisplayMode(.inline)
         } detail: {
             if let selected, let nucleus = NMRPeriodicTable.shared.nucleiById[selected] {
                 NucleusDetailView(nucleus: nucleus)
