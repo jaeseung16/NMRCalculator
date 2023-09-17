@@ -22,16 +22,6 @@ final class NMRPeriodicTableData: ObservableObject {
         case ExternalField, ProtonFrequency
     }
     
-    enum Property: String {
-        case nuclearSpin = "Nuclear Spin"
-        case gyromagneticRatio = "Gyromagnetic Ratio (MHz/T)"
-        case naturalAbundance = "Natural Abundance (%)"
-        case externalField = "External Field"
-        case larmorFrequency = "Larmor Frequency"
-        case protonFrequency = "Proton Frequency"
-        case electronFrequency = "Electron Frequency"
-    }
-    
     enum Unit: String {
         case T
         case MHz

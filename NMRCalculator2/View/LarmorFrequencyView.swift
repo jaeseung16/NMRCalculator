@@ -35,7 +35,7 @@ struct LarmorFrequencyView: View {
     
     var body: some View {
         VStack {
-            NMRCalculatorItemView(title: NMRPeriodicTableData.Property.externalField.rawValue,
+            NMRCalculatorItemView(title: NMRCalcConstants.Title.externalField.rawValue,
                                titleFont: .callout,
                                value: $externalField,
                                unit: NMRCalcUnit.T,
@@ -47,7 +47,7 @@ struct LarmorFrequencyView: View {
                 }
             }
            
-            NMRCalculatorItemView(title: NMRPeriodicTableData.Property.larmorFrequency.rawValue,
+            NMRCalculatorItemView(title: NMRCalcConstants.Title.larmorFrequency.rawValue,
                                titleFont: .callout,
                                value: $larmorFrequency,
                                unit: NMRCalcUnit.MHz,
@@ -55,7 +55,7 @@ struct LarmorFrequencyView: View {
                 calculator.update(.larmorFrequency, to: larmorFrequency)
             }
             
-            NMRCalculatorItemView(title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
+            NMRCalculatorItemView(title: NMRCalcConstants.Title.protonFrequency.rawValue,
                                titleFont: .callout,
                                value: $protonFrequency,
                                unit: NMRCalcUnit.MHz,
@@ -63,7 +63,7 @@ struct LarmorFrequencyView: View {
                 calculator.update(.protonFrequency, to: protonFrequency)
             }
             
-            NMRCalculatorItemView(title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
+            NMRCalculatorItemView(title: NMRCalcConstants.Title.electronFrequency.rawValue,
                                titleFont: .callout,
                                value: $electronFrequency,
                                unit: NMRCalcUnit.GHz,

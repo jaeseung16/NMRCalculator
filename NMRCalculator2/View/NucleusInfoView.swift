@@ -23,10 +23,8 @@ struct NucleusInfoView: View {
             Spacer()
             
             VStack(alignment: .trailing) {
-                getInfoView(title: NMRCalcConstants.naturalAbundance,
-                            value: nucleus.naturalAbundance)
-                getInfoView(title: NMRCalcConstants.nuclearSpin,
-                            value: nuclearSpin)
+                getInfoView(title: NMRCalcConstants.naturalAbundance, value: nucleus.naturalAbundance)
+                getInfoView(title: NMRCalcConstants.nuclearSpin, value: nuclearSpin)
             }
         }
     }

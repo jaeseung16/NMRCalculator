@@ -167,7 +167,7 @@ class NMRCalculator2: ObservableObject {
         var items = [CalculatorItem]()
         
         let externalField = CalculatorItem(command: .magneticField,
-                                            title: NMRPeriodicTableData.Property.externalField.rawValue,
+                                            title: NMRCalcConstants.Title.externalField.rawValue,
                                             font: .callout,
                                             value: externalField,
                                             unit: .T,
@@ -183,7 +183,7 @@ class NMRCalculator2: ObservableObject {
         items.append(externalField)
         
         let larmorFrequency = CalculatorItem(command: .larmorFrequency,
-                                            title: NMRPeriodicTableData.Property.larmorFrequency.rawValue,
+                                            title: NMRCalcConstants.Title.larmorFrequency.rawValue,
                                             font: .callout,
                                             value: larmorFrequency,
                                             unit: .MHz,
@@ -194,7 +194,7 @@ class NMRCalculator2: ObservableObject {
         items.append(larmorFrequency)
         
         let protonFrequency = CalculatorItem(command: .protonFrequency,
-                                            title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
+                                            title: NMRCalcConstants.Title.protonFrequency.rawValue,
                                             font: .callout,
                                             value: protonFrequency,
                                             unit: .MHz,
@@ -206,7 +206,7 @@ class NMRCalculator2: ObservableObject {
         
         
         let electronFrequency = CalculatorItem(command: .electronFrequency,
-                                            title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
+                                            title: NMRCalcConstants.Title.electronFrequency.rawValue,
                                             font: .callout,
                                             value: electronFrequency,
                                             unit: .GHz,

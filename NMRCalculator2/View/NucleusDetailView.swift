@@ -27,12 +27,8 @@ struct NucleusDetailView: View {
         return UInt(nucleus.atomicWeight)!
     }
     
-    private var gyromagneticRatio: Double {
-        return Double(nucleus.gyromagneticRatio)!
-    }
-    
     private var nuclearSpin: String {
-        return nucleus.nuclearSpin
+        return Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription
     }
     
     private var naturalAbundance: String {
@@ -53,34 +49,46 @@ struct NucleusDetailView: View {
                 
                 ScrollView {
                     VStack {
-                        Section(header: Text("Larmor Frequencies")) {
+                        Section {
                             NMRCalculatorSectionView(calculatorItems: calculator.larmorFrequencies)
-                            .environmentObject(calculator)
+                                .environmentObject(calculator)
+                        } header: {
+                            Text(CalculationType.larmorFrequency.rawValue)
+                        }
+                        
+                        Section {
+                            NMRCalculatorSectionView(calculatorItems: calculator.timeDomainFields)
+                                .environmentObject(calculator)
+                        } header: {
+                            Text(CalculationType.timeDomain.rawValue)
+                        }
+                        
+                        Section {
+                            NMRCalculatorSectionView(calculatorItems: calculator.frequencyDomainFields)
+                                .environmentObject(calculator)
+                        } header: {
+                            Text(CalculationType.frequencyDomain.rawValue)
                         }
 
-                        Section(header: Text("Time Domain")) {
-                            NMRCalculatorSectionView(calculatorItems: calculator.timeDomainFields)
-                            .environmentObject(calculator)
-                        }
-                        
-                        Section(header: Text("Frequency Domain")) {
-                            NMRCalculatorSectionView(calculatorItems: calculator.frequencyDomainFields)
-                            .environmentObject(calculator)
-                        }
-                        
-                        Section(header: Text("Pulse 1")) {
+                        Section {
                             NMRCalculatorSectionView(calculatorItems: calculator.pulse1Fields)
-                            .environmentObject(calculator)
+                                .environmentObject(calculator)
+                        } header: {
+                            Text(CalculationType.pulse1.rawValue)
                         }
-                        
-                        Section(header: Text("Pulse 2")) {
+
+                        Section {
                             NMRCalculatorSectionView(calculatorItems: calculator.pulse2Fields)
-                            .environmentObject(calculator)
+                                .environmentObject(calculator)
+                        } header: {
+                            Text(CalculationType.pulse2.rawValue)
                         }
                         
-                        Section(header: Text("Ernst Angle")) {
+                        Section {
                             NMRCalculatorSectionView(calculatorItems: calculator.ernstAngles)
-                            .environmentObject(calculator)
+                                .environmentObject(calculator)
+                        } header: {
+                            Text(CalculationType.ernstAngle.rawValue)
                         }
                     }
                 }
@@ -107,18 +115,13 @@ struct NucleusDetailView: View {
     
     private func displayInfo() -> some View {
         VStack {
-            getInfoView(title: .nuclearSpin,
-                        value: Fraction(from: nuclearSpin, isPositive: gyromagneticRatio > 0).inlineDescription)
-            
-            getInfoView(title: .gyromagneticRatio,
-                        value: "\(String(format: "%.6f", abs(gyromagneticRatio)))")
-            
-            getInfoView(title: .naturalAbundance,
-                        value: "\(naturalAbundance)")
+            getInfoView(title: .nuclearSpin, value: nuclearSpin)
+            getInfoView(title: .gyromagneticRatio, value: String(format: "%.6f", abs(nucleus.γ)))
+            getInfoView(title: .naturalAbundance, value: naturalAbundance)
         }
     }
     
-    private func getInfoView(title: NMRPeriodicTableData.Property, value: String) -> some View {
+    private func getInfoView(title: NMRCalcConstants.Title, value: String) -> some View {
         HStack(alignment: .center) {
             Text(title.rawValue)
                 .font(.callout)

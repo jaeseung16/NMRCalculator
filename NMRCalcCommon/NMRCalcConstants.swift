@@ -14,4 +14,14 @@ struct NMRCalcConstants {
     
     static let nuclearSpin = "Nuclear Spin"
     static let naturalAbundance = "NA"
+    
+    enum Title: String {
+        case nuclearSpin = "Nuclear Spin"
+        case gyromagneticRatio = "Gyromagnetic Ratio (MHz/T)"
+        case naturalAbundance = "Natural Abundance (%)"
+        case externalField = "External Field"
+        case larmorFrequency = "Larmor Frequency"
+        case protonFrequency = "Proton Frequency"
+        case electronFrequency = "Electron Frequency"
+    }
 }
