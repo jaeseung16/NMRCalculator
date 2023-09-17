@@ -23,5 +23,19 @@ struct NMRCalcConstants {
         case larmorFrequency = "Larmor Frequency"
         case protonFrequency = "Proton Frequency"
         case electronFrequency = "Electron Frequency"
+        
+        case numberOfDataPoints = "Number of Data Points"
+        case acquisitionDuration = "Acquisition Duration"
+        case dwellTime = "Dwell Time"
+        case spectralWidth = "Spectral Width"
+        case frequencyResolution = "Frequency Resolution"
+        case pulseDuration = "Pulse Duration"
+        case flipAngle = "Flip Angle"
+        case rfAmplitude = "RF Amplitude"
+        case rfAmplitudeInμT = "RF Amplitude in μT"
+        case rfPowerRelativeToPulse1 = "RF Power Relative to Pulse 1"
+        case repetitionTime = "Repetition Time"
+        case relaxationTime = "Relaxation Time"
+        case ernstAngle = "Ernst Angle"
     }
 }

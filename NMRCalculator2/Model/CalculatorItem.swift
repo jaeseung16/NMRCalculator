@@ -32,9 +32,9 @@ class CalculatorItem: ObservableObject, Identifiable, Hashable, CustomDebugStrin
     let formatter: NumberFormatter
     let callback: (Double) -> Void
     
-    init(command: NMRCalcCommandName, title: String, font: Font, value: Double, unit: NMRCalcUnit, formatter: NumberFormatter, callback: @escaping (Double) -> Void) {
+    init(command: NMRCalcCommandName, title: NMRCalcConstants.Title, font: Font, value: Double, unit: NMRCalcUnit, formatter: NumberFormatter, callback: @escaping (Double) -> Void) {
         self.command = command
-        self.title = title
+        self.title = title.rawValue
         self.font = font
         self.value = value
         self.unit = unit

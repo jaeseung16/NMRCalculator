@@ -167,7 +167,7 @@ class NMRCalculator2: ObservableObject {
         var items = [CalculatorItem]()
         
         let externalField = CalculatorItem(command: .magneticField,
-                                            title: NMRCalcConstants.Title.externalField.rawValue,
+                                            title: NMRCalcConstants.Title.externalField,
                                             font: .callout,
                                             value: externalField,
                                             unit: .T,
@@ -183,7 +183,7 @@ class NMRCalculator2: ObservableObject {
         items.append(externalField)
         
         let larmorFrequency = CalculatorItem(command: .larmorFrequency,
-                                            title: NMRCalcConstants.Title.larmorFrequency.rawValue,
+                                            title: NMRCalcConstants.Title.larmorFrequency,
                                             font: .callout,
                                             value: larmorFrequency,
                                             unit: .MHz,
@@ -194,7 +194,7 @@ class NMRCalculator2: ObservableObject {
         items.append(larmorFrequency)
         
         let protonFrequency = CalculatorItem(command: .protonFrequency,
-                                            title: NMRCalcConstants.Title.protonFrequency.rawValue,
+                                            title: NMRCalcConstants.Title.protonFrequency,
                                             font: .callout,
                                             value: protonFrequency,
                                             unit: .MHz,
@@ -206,7 +206,7 @@ class NMRCalculator2: ObservableObject {
         
         
         let electronFrequency = CalculatorItem(command: .electronFrequency,
-                                            title: NMRCalcConstants.Title.electronFrequency.rawValue,
+                                            title: NMRCalcConstants.Title.electronFrequency,
                                             font: .callout,
                                             value: electronFrequency,
                                             unit: .GHz,
@@ -253,11 +253,11 @@ class NMRCalculator2: ObservableObject {
         var items = [CalculatorItem]()
         
         let numberOfTimeDataPoints = CalculatorItem(command: .acquisitionSize,
-                                            title: "Number of data points",
-                                            font: .body,
-                                            value: numberOfTimeDataPoints,
-                                            unit: .none,
-                                            formatter: dataPointsFormatter) { newValue in
+                                                    title: NMRCalcConstants.Title.numberOfDataPoints,
+                                                    font: .body,
+                                                    value: numberOfTimeDataPoints,
+                                                    unit: .none,
+                                                    formatter: dataPointsFormatter) { newValue in
             if self.validate(numberOfDataPoints: newValue) {
                 self.update(.acquisitionSize, to: newValue)
             } else {
@@ -269,11 +269,11 @@ class NMRCalculator2: ObservableObject {
         items.append(numberOfTimeDataPoints)
         
         let acquisitionDuration = CalculatorItem(command: .acquisitionTime,
-                                            title: "Acquisition duration",
-                                            font: .body,
-                                            value: acquisitionDuration,
-                                            unit: .sec,
-                                            formatter: durationTimeFormatter) { newValue in
+                                                 title: NMRCalcConstants.Title.acquisitionDuration,
+                                                 font: .body,
+                                                 value: acquisitionDuration,
+                                                 unit: .sec,
+                                                 formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.acquisitionTime, to: newValue)
             } else {
@@ -285,11 +285,11 @@ class NMRCalculator2: ObservableObject {
         items.append(acquisitionDuration)
         
         let dwellTime = CalculatorItem(command: .dwellTimeInμs,
-                                            title: "Dwell time",
-                                            font: .body,
-                                            value: dwellTime,
-                                            unit: .μs,
-                                            formatter: durationTimeFormatter) { newValue in
+                                       title: NMRCalcConstants.Title.dwellTime,
+                                       font: .body,
+                                       value: dwellTime,
+                                       unit: .μs,
+                                       formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.dwellTimeInμs, to: newValue)
             } else {
@@ -321,11 +321,11 @@ class NMRCalculator2: ObservableObject {
         var items = [CalculatorItem]()
         
         let numberOfFrequencyDataPoints = CalculatorItem(command: .spectrumSize,
-                                                    title: "Number of data points",
-                                                    font: .body,
-                                                    value: numberOfFrequencyDataPoints,
-                                                    unit: .none,
-                                                    formatter: dataPointsFormatter) { newValue in
+                                                         title: NMRCalcConstants.Title.numberOfDataPoints,
+                                                         font: .body,
+                                                         value: numberOfFrequencyDataPoints,
+                                                         unit: .none,
+                                                         formatter: dataPointsFormatter) { newValue in
             if self.validate(numberOfDataPoints: newValue) {
                 self.update(.spectrumSize, to: newValue)
             } else {
@@ -337,11 +337,11 @@ class NMRCalculator2: ObservableObject {
         items.append(numberOfFrequencyDataPoints)
         
         let spectralWidth = CalculatorItem(command: .spectralWidthInkHz,
-                                                 title: "Spectral width",
-                                                 font: .body,
-                                                 value: spectralWidth,
-                                                 unit: .kHz,
-                                                 formatter: durationTimeFormatter) { newValue in
+                                           title: NMRCalcConstants.Title.spectralWidth,
+                                           font: .body,
+                                           value: spectralWidth,
+                                           unit: .kHz,
+                                           formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.spectralWidthInkHz, to: newValue)
             } else {
@@ -353,11 +353,11 @@ class NMRCalculator2: ObservableObject {
         items.append(spectralWidth)
         
         let frequencyResolution = CalculatorItem(command: .frequencyResolution,
-                                       title: "Frequency resolution",
-                                       font: .body,
-                                       value: frequencyResolution,
-                                       unit: .Hz,
-                                       formatter: durationTimeFormatter) { newValue in
+                                                 title: NMRCalcConstants.Title.frequencyResolution,
+                                                 font: .body,
+                                                 value: frequencyResolution,
+                                                 unit: .Hz,
+                                                 formatter: durationTimeFormatter) { newValue in
             if self.isPositive(newValue) {
                 self.update(.frequencyResolution, to: newValue)
             } else {
@@ -416,7 +416,7 @@ class NMRCalculator2: ObservableObject {
         var items = [CalculatorItem]()
         
         let duration1 = CalculatorItem(command: .pulse1Duration,
-                                       title: "Pulse duration",
+                                       title: NMRCalcConstants.Title.pulseDuration,
                                        font: .body,
                                        value: duration1,
                                        unit: .μs,
@@ -432,7 +432,7 @@ class NMRCalculator2: ObservableObject {
         items.append(duration1)
         
         let flipAngle1 = CalculatorItem(command: .pulse1FlipAngle,
-                                        title: "Flip angle",
+                                        title: NMRCalcConstants.Title.flipAngle,
                                         font: .body,
                                         value: flipAngle1,
                                         unit: .degree,
@@ -448,7 +448,7 @@ class NMRCalculator2: ObservableObject {
         items.append(flipAngle1)
         
         let amplitude1 = CalculatorItem(command: .pulse1Amplitude,
-                                        title: "RF Amplitude",
+                                        title: NMRCalcConstants.Title.rfAmplitude,
                                         font: .body,
                                         value: amplitude1,
                                         unit: .Hz,
@@ -464,7 +464,7 @@ class NMRCalculator2: ObservableObject {
         items.append(amplitude1)
         
         let amplitude1InT = CalculatorItem(command: .pulse1AmplitudeInT,
-                                           title: "RF Amplitude in μT",
+                                           title: NMRCalcConstants.Title.rfAmplitudeInμT,
                                            font: .body,
                                            value: amplitude1InT,
                                            unit: .μT,
@@ -507,7 +507,7 @@ class NMRCalculator2: ObservableObject {
         var items = [CalculatorItem]()
         
         let duration2 = CalculatorItem(command: .pulse2Duration,
-                                       title: "Pulse duration",
+                                       title: NMRCalcConstants.Title.pulseDuration,
                                        font: .body,
                                        value: duration2,
                                        unit: .μs,
@@ -523,7 +523,7 @@ class NMRCalculator2: ObservableObject {
         items.append(duration2)
         
         let flipAngle2 = CalculatorItem(command: .pulse2FlipAngle,
-                                        title: "Flip angle",
+                                        title: NMRCalcConstants.Title.flipAngle,
                                         font: .body,
                                         value: flipAngle2,
                                         unit: .degree,
@@ -539,7 +539,7 @@ class NMRCalculator2: ObservableObject {
         items.append(flipAngle2)
         
         let amplitude2 = CalculatorItem(command: .pulse2Amplitude,
-                                        title: "RF Amplitude",
+                                        title: NMRCalcConstants.Title.rfAmplitude,
                                         font: .body,
                                         value: amplitude2,
                                         unit: .Hz,
@@ -555,7 +555,7 @@ class NMRCalculator2: ObservableObject {
         items.append(amplitude2)
         
         let relativePower = CalculatorItem(command: .relativePower,
-                                           title: "RF power relateve to Pulse 1",
+                                           title: NMRCalcConstants.Title.rfPowerRelativeToPulse1,
                                            font: .body,
                                            value: relativePower,
                                            unit: .dB,
@@ -610,7 +610,7 @@ class NMRCalculator2: ObservableObject {
         var items = [CalculatorItem]()
         
         let repetitionItem = CalculatorItem(command: .repetitionTime,
-                                            title: "Repetition Time",
+                                            title: NMRCalcConstants.Title.repetitionTime,
                                             font: .body,
                                             value: repetitionTime,
                                             unit: .sec,
@@ -626,7 +626,7 @@ class NMRCalculator2: ObservableObject {
         items.append(repetitionItem)
         
         let relaxationTime = CalculatorItem(command: .relaxationTime,
-                                            title: "Relaxation Time",
+                                            title: NMRCalcConstants.Title.relaxationTime,
                                             font: .body,
                                             value: relaxationTime,
                                             unit: .sec,
@@ -642,11 +642,11 @@ class NMRCalculator2: ObservableObject {
         items.append(relaxationTime)
         
         let ernstAngle = CalculatorItem(command: .ernstAngle,
-                                            title: "Ernst Angle",
-                                            font: .body,
-                                            value: ernstAngle,
-                                            unit: .degree,
-                                            formatter: flipAngleFormatter) { newValue in
+                                        title: NMRCalcConstants.Title.ernstAngle,
+                                        font: .body,
+                                        value: ernstAngle,
+                                        unit: .degree,
+                                        formatter: flipAngleFormatter) { newValue in
             if self.validate(ernstAngle: newValue) {
                 self.update(.ernstAngle, to: newValue)
             } else {
