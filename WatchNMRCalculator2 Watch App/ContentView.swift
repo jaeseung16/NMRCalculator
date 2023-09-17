@@ -9,12 +9,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var userData: NMRPeriodicTableData
+    @EnvironmentObject var calculator: WatchNMRCalculator2
     
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
-                List(userData.nuclei) { nucleus in
+                List(calculator.nuclei) { nucleus in
                     NavigationLink(value: nucleus) {
                         WatchNucleusView(nucleus: nucleus)
                     }
@@ -24,6 +24,7 @@ struct ContentView: View {
                 }
                 .navigationDestination(for: NMRNucleus.self) { nucleus in
                     WatchNucleusDetailView(nucleus: nucleus)
+                        .environmentObject(calculator)
                 }
             }
         }

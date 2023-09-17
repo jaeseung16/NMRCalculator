@@ -9,31 +9,25 @@
 import SwiftUI
 
 struct WatchNucleusView: View {
-    @EnvironmentObject var userData: NMRPeriodicTableData
-    
     var nucleus: NMRNucleus
     
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .center, spacing: 0) {
-                AtomicElementView(
-                    elementSymbol: self.nucleus.symbolNucleus,
-                    massNumber: UInt(self.nucleus.atomicWeight)!)
-                .scaledToFill()
-                .frame(width: geometry.size.width * 0.35)
-                .foregroundColor(Color.green)
+                AtomicElementView(elementSymbol: nucleus.symbolNucleus, massNumber: UInt(nucleus.atomicWeight)!)
+                    .scaledToFill()
+                    .frame(width: geometry.size.width * 0.35)
+                    .foregroundColor(Color.green)
                 
                 Spacer()
                 
                 VStack(alignment: .trailing) {
-                    WatchNucleusInfoView(title: "Nuclear Spin",
-                                         item: Fraction(from: self.nucleus.nuclearSpin, isPositive: self.nucleus.γ > 0).inlineDescription)
-                    
-                    WatchNucleusInfoView(title: "MHz/T",
-                                         item: "\(String(format: "%.2f", abs(self.nucleus.γ)))")
-                    
-                    WatchNucleusInfoView(title: "NA",
-                                         item: self.nucleus.naturalAbundance)
+                    WatchNucleusInfoView(title: WatchNMRCalculatorConstant.nuclearSpin.rawValue,
+                                         item: Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription)
+                    WatchNucleusInfoView(title: WatchNMRCalculatorConstant.megahertzPerTesla.rawValue,
+                                         item: "\(String(format: "%.2f", abs(nucleus.γ)))")
+                    WatchNucleusInfoView(title: WatchNMRCalculatorConstant.naturalAbundance.rawValue,
+                                         item: nucleus.naturalAbundance)
                 }
                 .scaledToFill()
             }

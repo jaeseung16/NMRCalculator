@@ -10,12 +10,12 @@ import SwiftUI
 
 @main
 struct WatchNMRCalculator2_Watch_AppApp: App {
-    private let userData = NMRPeriodicTableData()
+    private let calculator = WatchNMRCalculator2()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(userData)
+                .environmentObject(calculator)
         }
     }
 }

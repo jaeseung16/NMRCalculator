@@ -9,31 +9,34 @@
 import SwiftUI
 
 struct WatchNucleusDetailView: View {
-    @EnvironmentObject var userData: NMRPeriodicTableData
-    
-    @State var scrollAmountToFieldFactor: Double = 1
+    @EnvironmentObject var calculator: WatchNMRCalculator2
     
     var nucleus: NMRNucleus
     
     private var externalField: Double {
-        return userData.focus == .ExternalField ? userData.scrollAmount  : userData.scrollAmount / NMRPeriodicTableData.γProton
+        return calculator.focus == .ExternalField ? calculator.scrollAmount : calculator.scrollAmount / WatchNMRCalculator2.γProton
     }
     private var protonFrequency: Double {
-        return userData.focus == .ProtonFrequency ? userData.scrollAmount : userData.scrollAmount * NMRPeriodicTableData.γProton
+        return calculator.focus == .ProtonFrequency ? calculator.scrollAmount : calculator.scrollAmount * WatchNMRCalculator2.γProton
     }
     
     private let minValue = 0.0
     private var maxValue: Double {
-        return self.userData.focus == .ExternalField ? 100 : 2000
+        return calculator.focus == .ExternalField ? 100 : 2000
+    }
+    
+    private var larmorFrequencyFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
     }
     
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .trailing, spacing: 0) {
                 HStack(alignment: .center) {
-                    AtomicElementView(
-                        elementSymbol: nucleus.symbolNucleus,
-                        massNumber: UInt(nucleus.atomicWeight)!)
+                    AtomicElementView(elementSymbol: nucleus.symbolNucleus, massNumber: UInt(nucleus.atomicWeight)!)
                         .padding(.leading, 8)
                     
                     Spacer()
@@ -52,58 +55,57 @@ struct WatchNucleusDetailView: View {
                 
                 VStack(alignment: .trailing, spacing: 0) {
                     HStack(alignment: .top) {
-                        Text(String(format: "%.4f", externalField * nucleus.γ))
+                        Text("\(externalField * nucleus.γ, specifier: "%.4f")")
                             .font(.headline)
-                        +
-                        Text(" MHz  ")
+                        Text(" \(NMRCalcUnit.MHz.rawValue)")
                             .font(.body)
                     }
                     
                     HStack(alignment: .top, spacing: 0) {
                         Text("@ ")
-                        Text(String(format: "%.3f", Double(externalField)))
+                        Text("\(Double(externalField), specifier: "%.3f")")
                             .font(.headline)
-                        Text(" T")
+                        Text(" \(NMRCalcUnit.T.rawValue)")
                             .font(.body)
                     }
                 }
-                .foregroundColor(userData.focus == .ProtonFrequency ? .secondary : .primary)
+                .foregroundColor(calculator.focus == .ProtonFrequency ? .secondary : .primary)
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.33)
                 .onTapGesture {
                     change(focus: .ExternalField)
                 }
                 
                 VStack(alignment: .center, spacing: 0) {
-                    Text("Proton")
+                    Text("\(WatchNMRCalculatorConstant.proton.rawValue)")
                         .font(.caption)
 
                     HStack(alignment: .center, spacing: 0) {
-                        Text(String(format: "%6.4f", protonFrequency))
+                        Text("\(protonFrequency, specifier: "%6.4f")")
                             .font(.headline)
-                        Text(" MHz")
+                        Text(" \(NMRCalcUnit.MHz.rawValue)")
                             .font(.body)
                     }
                 }
-                .foregroundColor(userData.focus == .ProtonFrequency ? .primary : .secondary)
+                .foregroundColor(calculator.focus == .ProtonFrequency ? .primary : .secondary)
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.33)
                 .onTapGesture {
                     change(focus: .ProtonFrequency)
                 }
             }
             .focusable()
-            .digitalCrownRotation($userData.scrollAmount, from: minValue, through: maxValue, by: 0.01, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: false)
+            .digitalCrownRotation($calculator.scrollAmount, from: minValue, through: maxValue, by: 0.01, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: false)
             .frame(width: geometry.size.width, height: geometry.size.height)
             .background(Color.black)
         }
     }
     
-    private func change(focus: NMRPeriodicTableData.Focus) -> Void {
-        userData.focus = focus
+    private func change(focus: Focus) -> Void {
+        calculator.focus = focus
         switch focus {
         case .ExternalField:
-            userData.scrollAmount /= NMRPeriodicTableData.γProton
+            calculator.scrollAmount /= WatchNMRCalculator2.γProton
         case .ProtonFrequency:
-            userData.scrollAmount *= NMRPeriodicTableData.γProton
+            calculator.scrollAmount *= WatchNMRCalculator2.γProton
         }
     }
 
