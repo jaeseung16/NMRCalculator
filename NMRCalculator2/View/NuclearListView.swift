@@ -17,7 +17,7 @@ struct NuclearListView: View {
     var body: some View {
         NavigationSplitView {
             List(nuclei, selection: $selected) {
-                NucleusView(nucleus: $0)
+                NucleusInfoView(nucleus: $0)
             }
             .listStyle(.plain)
             .navigationTitle("NMR Calculator 2")

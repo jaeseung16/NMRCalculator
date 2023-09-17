@@ -8,8 +8,12 @@
 
 import SwiftUI
 
-struct NucleusView: View {
+struct NucleusInfoView: View {
     var nucleus: NMRNucleus
+    
+    private var nuclearSpin: String {
+        Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription
+    }
     
     var body: some View {
         HStack {
@@ -19,9 +23,10 @@ struct NucleusView: View {
             Spacer()
             
             VStack(alignment: .trailing) {
-                getInfoView(title: "NA", value: nucleus.naturalAbundance)
-                
-                getInfoView(title: "Nuclear Spin", value: Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription)
+                getInfoView(title: NMRCalcConstants.naturalAbundance,
+                            value: nucleus.naturalAbundance)
+                getInfoView(title: NMRCalcConstants.nuclearSpin,
+                            value: nuclearSpin)
             }
         }
     }
