@@ -49,46 +49,13 @@ struct NucleusDetailView: View {
                 
                 ScrollView {
                     VStack {
-                        Section {
-                            NMRCalculatorSectionView(calculatorItems: calculator.larmorFrequencies)
-                                .environmentObject(calculator)
-                        } header: {
-                            Text(CalculationType.larmorFrequency.rawValue)
-                        }
-                        
-                        Section {
-                            NMRCalculatorSectionView(calculatorItems: calculator.timeDomainFields)
-                                .environmentObject(calculator)
-                        } header: {
-                            Text(CalculationType.timeDomain.rawValue)
-                        }
-                        
-                        Section {
-                            NMRCalculatorSectionView(calculatorItems: calculator.frequencyDomainFields)
-                                .environmentObject(calculator)
-                        } header: {
-                            Text(CalculationType.frequencyDomain.rawValue)
-                        }
-
-                        Section {
-                            NMRCalculatorSectionView(calculatorItems: calculator.pulse1Fields)
-                                .environmentObject(calculator)
-                        } header: {
-                            Text(CalculationType.pulse1.rawValue)
-                        }
-
-                        Section {
-                            NMRCalculatorSectionView(calculatorItems: calculator.pulse2Fields)
-                                .environmentObject(calculator)
-                        } header: {
-                            Text(CalculationType.pulse2.rawValue)
-                        }
-                        
-                        Section {
-                            NMRCalculatorSectionView(calculatorItems: calculator.ernstAngles)
-                                .environmentObject(calculator)
-                        } header: {
-                            Text(CalculationType.ernstAngle.rawValue)
+                        ForEach(CalculationType.allCases) { calculationType in
+                            Section {
+                                NMRCalculatorSectionView(calculatorItems: calculator.items(for: calculationType))
+                                    .environmentObject(calculator)
+                            } header: {
+                                Text(calculationType.rawValue)
+                            }
                         }
                     }
                 }

@@ -8,7 +8,11 @@
 
 import Foundation
 
-enum CalculationType: String {
+enum CalculationType: String, Identifiable, CaseIterable {
+    var id: Self {
+        return self
+    }
+    
     case larmorFrequency = "Larmor Frequencies"
     case timeDomain = "Time Domain"
     case frequencyDomain = "Frequency Domain"

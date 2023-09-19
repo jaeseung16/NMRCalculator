@@ -715,4 +715,21 @@ class NMRCalculator2: ObservableObject {
         }
     }
     
+    func items(for calculationType: CalculationType) -> CalculatorItems {
+        switch calculationType {
+        case .larmorFrequency:
+            return larmorFrequencies
+        case .timeDomain:
+            return timeDomainFields
+        case .frequencyDomain:
+            return frequencyDomainFields
+        case .pulse1:
+            return pulse1Fields
+        case .pulse2:
+            return pulse2Fields
+        case .ernstAngle:
+            return ernstAngles
+        }
+    }
+    
 }
