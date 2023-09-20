@@ -140,7 +140,6 @@
 		907A0D582AACF54F00EA68BB /* NMRFreqTable.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B6ACF261D08ED4200D7D342 /* NMRFreqTable.txt */; };
 		907A0D592AACF5A900EA68BB /* AtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* AtomicElementView.swift */; };
 		907A0D5A2AACF5D900EA68BB /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
-		908249A32ABB9C0C0081319C /* NMRPeriodicTableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */; };
 		90833A902943F5CF00FC14DA /* UpdateAcquisitionTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90833A8F2943F5CF00FC14DA /* UpdateAcquisitionTime.swift */; };
 		90833A912943F5CF00FC14DA /* UpdateAcquisitionTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90833A8F2943F5CF00FC14DA /* UpdateAcquisitionTime.swift */; };
 		90833A922943F5CF00FC14DA /* UpdateAcquisitionTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90833A8F2943F5CF00FC14DA /* UpdateAcquisitionTime.swift */; };
@@ -1633,7 +1632,6 @@
 				9034BA0E2AAD261700E9DAE0 /* NMRCalcCommandName.swift in Sources */,
 				90F69E7D2AAE0AA5001FB5F0 /* UpdateAcquisitionTime.swift in Sources */,
 				9034BA0C2AAD254000E9DAE0 /* UpdateElectronFrequency.swift in Sources */,
-				908249A32ABB9C0C0081319C /* NMRPeriodicTableData.swift in Sources */,
 				9067B3552AACEEFB00A8FA29 /* NMRNucleus.swift in Sources */,
 				90F69E822AAE0AB3001FB5F0 /* UpdateFrequencyResolution.swift in Sources */,
 				907A0D592AACF5A900EA68BB /* AtomicElementView.swift in Sources */,

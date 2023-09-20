@@ -12,8 +12,6 @@ import os
 class NMRCalculator2: ObservableObject {
     private let logger = Logger()
     
-    private let periodicTable = NMRPeriodicTableData()
-    
     private let nucleus: NMRNucleus
     
     private let larmorFrequencyCalculator: LarmorFrequencyMagneticFieldConverter
