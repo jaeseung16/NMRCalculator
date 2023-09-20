@@ -6,7 +6,7 @@ date: 2021-03-07
 
 # NMR Calculator
 
-[<img src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg">](https://itunes.apple.com/us/app/nmr-calculator/id1146296877?mt=8)
+[<img src="./assets/images/App_Store_Badge.svg">](https://itunes.apple.com/us/app/nmr-calculator/id1146296877?mt=8)
 
 <img src="./assets/images/NMRCalcIcon.png" alt="NMR Calculator Icon" width="256" align="center"/>
 
