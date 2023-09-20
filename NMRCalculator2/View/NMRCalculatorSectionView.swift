@@ -15,7 +15,7 @@ struct NMRCalculatorSectionView: View {
     
     var body: some View {
         ForEach(calculatorItems.items) { calculatorItem in
-            NMRCalcItemView(calculatorItem: calculatorItem)
+            NMRCalculatorItemView(calculatorItem: calculatorItem)
                 .environmentObject(calculator)
         }
         .onChange(of: calculator.updated) { _ in

@@ -1,45 +1,44 @@
 //
-//  NMRCalculatorItemView.swift
+//  NMRCalcItemView.swift
 //  NMRCalculator2
 //
-//  Created by Jae Seung Lee on 9/9/23.
+//  Created by Jae Seung Lee on 9/10/23.
 //  Copyright © 2023 Jae-Seung Lee. All rights reserved.
 //
 
 import SwiftUI
 
 struct NMRCalculatorItemView: View {
+    @EnvironmentObject private var calculator: NMRCalculator2
+    
+    @StateObject var calculatorItem: CalculatorItem
+    
     private let defaultLabel = "0.0"
     private let defaultTextFieldWidth: CGFloat = 120
     private let defaultUnitTextWidth: CGFloat = 40
-    private let numberColor: Color = .purple
-    
-    var title: String
-    var titleFont: Font
-    @Binding var value: Double
-    var unit: NMRCalcUnit
-    var formatter: NumberFormatter
-    var onSubmit: () -> Void
-    
+    private let numberColor: Color = .accentColor
+
     var body: some View {
         HStack(alignment: .center) {
-            Text(title)
-                .font(titleFont)
+            Text(calculatorItem.title)
+                .font(calculatorItem.font)
         
             Spacer()
         
-            TextField(defaultLabel, value: $value, formatter: formatter)
-                .onSubmit { onSubmit() }
+            TextField(defaultLabel, value: $calculatorItem.value, formatter: calculatorItem.formatter)
+                .keyboardType(.numbersAndPunctuation)
+                .onSubmit { calculatorItem.callback(calculatorItem.value) }
                 .multilineTextAlignment(.trailing)
-                .font(Font.body.weight(.semibold))
-                .frame(width: defaultTextFieldWidth)
+                .fontWeight(.semibold)
+                .minimumScaleFactor(0.75)
                 .foregroundColor(numberColor)
+                .frame(width: defaultTextFieldWidth)
         
-            Text(unit.rawValue)
+            Text(calculatorItem.unit.rawValue)
                 .font(.body)
                 .frame(width: defaultUnitTextWidth, alignment: .leading)
         }
         .foregroundColor(Color.secondary)
     }
-    
+
 }
