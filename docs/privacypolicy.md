@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Privacy Policy"
-description: Privacy Policy for NMR Caluclator
+description: Support Site for NMR Calculator
 date: 2021-03-07
 ---
 
