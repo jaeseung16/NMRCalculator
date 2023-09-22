@@ -18,46 +18,32 @@ struct MacNMRCalcItemView: View {
     private var numberColor: NumberColor = .systemPurple
     
     var title: String
-    @Binding var value: Double?
-    var unit: String
-    var onCommit: () -> Void
+    var titleFont: Font
+    @Binding var value: Double
+    var unit: NMRCalcUnit
+    var formatter: NumberFormatter
+    var onSubmit: () -> Void
     
     var body: some View {
         HStack(alignment: .center) {
             Text(title)
-                .font(.body)
+                .font(titleFont)
         
             Spacer()
         
-            TextField(defaultLabel, value: $value, formatter: numberFormatter) { isEditing in
-                self.isEditing = isEditing
-            } onCommit: {
-                onCommit()
-            }
-            .multilineTextAlignment(.trailing)
-            .font(Font.body.weight(.semibold))
-            .frame(width: defaultTextFieldWidth)
-            .foregroundColor(numberColor.getColor())
+            TextField(defaultLabel, value: $value, formatter: formatter)
+                .onSubmit { onSubmit() }
+                .multilineTextAlignment(.trailing)
+                .font(Font.body.weight(.semibold))
+                .frame(width: defaultTextFieldWidth)
+                .foregroundColor(numberColor.getColor())
         
-            Text(unit)
+            Text(unit.rawValue)
                 .font(.body)
                 .frame(width: defaultUnitTextWidth, alignment: .leading)
         }
         .foregroundColor(Color.secondary)
     }
     
-    private var numberFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 4
-        formatter.maximumFractionDigits = 4
-        return formatter
-    }
 }
 
-struct MacSignalItemView_Previews: PreviewProvider {
-    @State static var value: Double? = 1.0
-    static var previews: some View {
-        MacNMRCalcItemView(title: "Dwell time", value: $value, unit: "μs") {
-        }
-    }
-}

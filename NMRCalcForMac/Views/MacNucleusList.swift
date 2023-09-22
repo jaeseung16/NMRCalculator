@@ -9,39 +9,92 @@
 import SwiftUI
 
 struct MacNucleusList: View {
-    let userData = NMRPeriodicTableData()
-    @ObservedObject var calculator = NucleusCalculatorViewModel()
-
-    let proton = NMRNucleus()
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
     
-    var nucleus: NMRNucleus {
-        return calculator.nucleus ?? proton
+    private let periodicTable = NMRPeriodicTableData()
+    private let proton = NMRNucleus()
+    
+    @State var selectedNucleus: NMRNucleus?
+    @State private var selectedSpin: Float = 0.0
+    
+    private let possibleSpins: [Float] = [-4.5, -4.0, -3.5, -2.5, -1.5, -0.5, 0.0, 0.5, 1.0, 1.5, 2.5, 3.0, 3.5, 4.5, 5.0, 6.0, 7.0]
+    
+    private var filteredNuclei: [NMRNucleus] {
+        if selectedSpin != 0 {
+            return periodicTable.nuclei.filter {
+                guard let gyromagneticRatio = Double($0.gyromagneticRatio) else {
+                    return false
+                }
+                return $0.nuclearSpin == label(for: abs(selectedSpin)) && gyromagneticRatio * Double(selectedSpin) >= 0.0
+            }
+        } else {
+            return periodicTable.nuclei
+        }
     }
     
     var body: some View {
         HStack(alignment: .center) {
-            MacLamorFrequencyView()
-                .environmentObject(calculator)
+            MacLamorFrequencyView(nucleus: $viewModel.nucleus,
+                                  larmorFrequency: viewModel.larmorFrequency,
+                                  protonFrequency: viewModel.protonFrequency,
+                                  electronFrequency: viewModel.electronFrequency,
+                                  externalField: viewModel.externalField)
                 .frame(width: 300, alignment: .center)
             
             Divider()
             
-            List(selection: $calculator.nucleus) {
-                ForEach(userData.nuclei, id: \.self) { nucleus in
-                    HStack {
-                        Spacer()
-                        MacNucleusView(nucleus: nucleus)
-                            .frame(width: 150, height: 100, alignment: .center)
-                            .tag(nucleus)
-                        Spacer()
-                    }
+            VStack {
+                FilterView()
+                    .padding(.horizontal, 8.0)
+                
+                Divider()
+                
+                ListView()
+            }
+        }
+    }
+    
+    private func label(for spin: Float) -> String {
+        guard spin != 0.0 else {
+            return "ALL"
+        }
+        
+        let temp = Int(abs(spin * 2.0))
+        if temp % 2 == 0 {
+            return Fraction(positive: spin > 0, numerator: UInt(abs(spin)), denominator: UInt(1)).inlineDescription
+        } else {
+            return Fraction(positive: spin > 0, numerator: UInt(temp), denominator: UInt(2)).inlineDescription
+        }
+    }
+    
+    private func FilterView() -> some View {
+        Picker(selection: $selectedSpin) {
+            ForEach(possibleSpins, id: \.self) {
+                Text(label(for: $0))
+            }
+        } label: {
+            Text("nuclear spin")
+                .foregroundColor(.secondary)
+        }
+        .pickerStyle(MenuPickerStyle())
+    }
+    
+    private func ListView() -> some View {
+        List(selection: $selectedNucleus) {
+            ForEach(filteredNuclei, id: \.self) { nucleus in
+                HStack {
+                    Spacer()
+                    MacNucleusView(nucleus: nucleus)
+                        .frame(width: 150, height: 100, alignment: .center)
+                        .tag(nucleus)
+                    Spacer()
                 }
             }
-            .listStyle(PlainListStyle())
-            .onChange(of: calculator.nucleus) { value in
-                _ = calculator.$nucleus.sink { nucleus in
-                    calculator.nucluesUpdated()
-                }
+        }
+        .listStyle(PlainListStyle())
+        .onChange(of: selectedNucleus) {
+            if let nucleus = $0 {
+                viewModel.nucleus = nucleus
             }
         }
     }

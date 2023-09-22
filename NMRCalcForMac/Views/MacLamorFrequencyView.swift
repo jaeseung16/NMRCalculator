@@ -9,12 +9,17 @@
 import SwiftUI
 
 struct MacLamorFrequencyView: View {
-    @EnvironmentObject var calculator: NucleusCalculatorViewModel
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
+    @AppStorage("NucleusView.elementColor") private var elementColor: ElementColor = .systemGreen
     
-    private let proton = NMRNucleus()
+    @Binding var nucleus: NMRNucleus
+    @State var larmorFrequency: Double
+    @State var protonFrequency: Double
+    @State var electronFrequency: Double
+    @State var externalField: Double
     
-    private var nucleus: NMRNucleus {
-        return  calculator.nucleus ?? proton
+    private var proton: NMRNucleus {
+        return viewModel.proton
     }
     
     private var elementSymbol: String {
@@ -37,81 +42,98 @@ struct MacLamorFrequencyView: View {
         return nucleus.naturalAbundance
     }
    
-    @AppStorage("NucleusView.elementColor")
-    private var elementColor: ElementColor = .systemGreen
+    @State private var showAlert = false
+    private let alertMessage = "Try a value between -1000 to 1000"
+    
+    private var externalFieldFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    
+    private var frequencyFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 6
+        return formatter
+    }
     
     var body: some View {
         VStack {
             AtomicElementView(elementSymbol: elementSymbol, massNumber: atomicWeight, weight: .semibold)
                 .foregroundColor(elementColor.getColor())
             
-            VStack() {
-                getInfoView(title: .nuclearSpin,
-                            value: Fraction(from: nuclearSpin,
-                                            isPositive: gyromagneticRatio > 0).inlineDescription
-                )
-                
-                getInfoView(title: .gyromagneticRatio,
-                            value: "\(String(format: "%.6f", abs(gyromagneticRatio)))"
-                )
-                
-                getInfoView(title: .naturalAbundance,
-                            value: "\(naturalAbundance)"
-                )
-            }
-            .padding()
+            displayInfo()
+                .padding()
             
             VStack {
-                MacCalculatorView(title: .externalField,
-                                  value: $calculator.externalField,
-                                  unit: .T) {
-                    _ = calculator.$externalField
-                        .filter() { (newValue) -> Bool in
-                            newValue != nil
-                        }
-                        .sink() {
-                            let externalField = $0 ?? 1.0
-                            if externalField < 0.0 {
-                                calculator.externalField = 0.0
-                            } else if externalField > 1000.0 {
-                                calculator.externalField = 1000.0
-                            }
-                            calculator.externalFieldUpdated()
-                        }
+                MacNMRCalcItemView(title: NMRPeriodicTableData.Property.externalField.rawValue,
+                                   titleFont: .callout,
+                                   value: $externalField,
+                                   unit: NMRCalcUnit.T,
+                                   formatter: externalFieldFormatter) {
+                    if viewModel.validate(externalField: externalField) {
+                        viewModel.update(.magneticField, to: externalField)
+                    } else {
+                        showAlert.toggle()
+                    }
                 }
                
-                MacCalculatorView(title: .larmorFrequency,
-                                  value: $calculator.larmorFrequency,
-                                  unit: .MHz) {
-                    _ = calculator.$larmorFrequency
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.larmorFrequencyUpdated()
-                        }
+                MacNMRCalcItemView(title: NMRPeriodicTableData.Property.larmorFrequency.rawValue,
+                                   titleFont: .callout,
+                                   value: $larmorFrequency,
+                                   unit: NMRCalcUnit.MHz,
+                                   formatter: frequencyFormatter) {
+                    viewModel.update(.larmorFrequency, to: larmorFrequency)
                 }
                 
-                MacCalculatorView(title: .protonFrequency,
-                                  value: $calculator.protonFrequency,
-                                  unit: .MHz) {
-                    _ = calculator.$protonFrequency
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.protonFrequencyUpdated()
-                        }
+                MacNMRCalcItemView(title: NMRPeriodicTableData.Property.protonFrequency.rawValue,
+                                   titleFont: .callout,
+                                   value: $protonFrequency,
+                                   unit: NMRCalcUnit.MHz,
+                                   formatter: frequencyFormatter) {
+                    viewModel.update(.protonFrequency, to: protonFrequency)
                 }
                 
-                MacCalculatorView(title: .electronFrequency,
-                                  value: $calculator.electronFrequency,
-                                  unit: .GHz) {
-                    _ = calculator.$electronFrequency
-                        .filter() { $0 != nil }
-                        .sink() { _ in
-                            calculator.electronFrequencyUpdated()
-                        }
+                MacNMRCalcItemView(title: NMRPeriodicTableData.Property.electronFrequency.rawValue,
+                                   titleFont: .callout,
+                                   value: $electronFrequency,
+                                   unit: NMRCalcUnit.GHz,
+                                   formatter: frequencyFormatter) {
+                    viewModel.update(.electronFrequency, to: electronFrequency)
                 }
-                
             }
             .padding()
+            .alert(alertMessage, isPresented: $showAlert) {
+                Button("OK") {
+                    externalField = viewModel.externalField
+                    showAlert.toggle()
+                }
+            }
+            .onReceive(viewModel.$nucleusUpdated) { _ in
+                larmorFrequency = viewModel.larmorFrequency
+                protonFrequency = viewModel.protonFrequency
+                electronFrequency = viewModel.electronFrequency
+                externalField = viewModel.externalField
+            }
+        }
+    }
+    
+    private func displayInfo() -> some View {
+        VStack() {
+            getInfoView(title: .nuclearSpin,
+                        value: Fraction(from: nuclearSpin,
+                                        isPositive: gyromagneticRatio > 0).inlineDescription
+            )
+            
+            getInfoView(title: .gyromagneticRatio,
+                        value: "\(String(format: "%.6f", abs(gyromagneticRatio)))"
+            )
+            
+            getInfoView(title: .naturalAbundance,
+                        value: "\(naturalAbundance)"
+            )
         }
     }
     
@@ -128,14 +150,5 @@ struct MacLamorFrequencyView: View {
                 .foregroundColor(Color.primary)
                 .fontWeight(.semibold)
         }
-    }
-}
-
-struct MacLamorFrequencyView_Previews: PreviewProvider {
-    @StateObject static var calculator = NucleusCalculatorViewModel()
-    
-    static var previews: some View {
-        MacLamorFrequencyView()
-            .environmentObject(calculator)
     }
 }

@@ -12,9 +12,7 @@ struct MacCalculatorView: View {
     var title: NMRPeriodicTableData.Property
     @Binding var value: Double?
     var unit: NMRPeriodicTableData.Unit
-    var onCommit: () -> Void
-    
-    @State private var isEditing = false
+    var onSubmit: () -> Void
     
     @AppStorage("NucleusView.numberColor")
     private var numberColor: NumberColor = .systemPurple
@@ -37,16 +35,12 @@ struct MacCalculatorView: View {
             
             Spacer()
             
-            TextField(defaultLabel, value: $value,
-                      formatter: numberFormatter) { isEditing in
-                self.isEditing = isEditing
-            } onCommit: {
-                onCommit()
-            }
-            .multilineTextAlignment(.trailing)
-            .frame(width: defaultTextFieldWidth)
-            .font(Font.body.weight(.semibold))
-            .foregroundColor(numberColor.getColor())
+            TextField(defaultLabel, value: $value, formatter: numberFormatter)
+                .onSubmit { onSubmit() }
+                .multilineTextAlignment(.trailing)
+                .frame(width: defaultTextFieldWidth)
+                .font(Font.body.weight(.semibold))
+                .foregroundColor(numberColor.getColor())
             
             Text(unit.rawValue)
                 .font(.body)

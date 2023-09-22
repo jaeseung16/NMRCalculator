@@ -15,11 +15,12 @@ struct NMRCalculatorApp: App {
     var body: some Scene {
         WindowGroup {
             MacNucleusContentView()
+                .environmentObject(MacNMRCalculatorViewModel())
         }
         .commands {
             CommandGroup(replacing: .help) {
                 Button(action: {
-                        NSApp.sendAction(#selector(AppDelegate.openHelpWindow), to: nil, from:nil)
+                        NSApp.sendAction(#selector(AppDelegate.openHelpWindow), to: nil, from: nil)
                 }) {
                     Text("NMR Calculator Guide")
                 }

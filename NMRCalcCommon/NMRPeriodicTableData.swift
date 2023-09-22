@@ -18,18 +18,8 @@ final class NMRPeriodicTableData: ObservableObject {
         return NMRPeriodicTable.shared.nuclei[0].γ
     }
     
-    enum Focus {
+    enum Focus: Hashable, Equatable {
         case ExternalField, ProtonFrequency
-    }
-    
-    enum Property: String {
-        case nuclearSpin = "Nuclear Spin"
-        case gyromagneticRatio = "Gyromagnetic Ratio (MHz/T)"
-        case naturalAbundance = "Natural Abundance (%)"
-        case externalField = "External Field"
-        case larmorFrequency = "Larmor Frequency"
-        case protonFrequency = "Proton Frequency"
-        case electronFrequency = "Electron Frequency"
     }
     
     enum Unit: String {

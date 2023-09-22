@@ -25,9 +25,3 @@ struct AtomicElementView: View {
         }
     }
 }
-
-struct AtomicElementView_Previews: PreviewProvider {
-    static var previews: some View {
-        AtomicElementView(elementSymbol: "Mg", massNumber: 24)
-    }
-}

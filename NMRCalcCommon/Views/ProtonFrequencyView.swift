@@ -27,8 +27,3 @@ struct ProtonFrequencyView: View {
     }
 }
 
-struct ProtonFrequencyView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProtonFrequencyView(protonFrquency: 42.0)
-    }
-}

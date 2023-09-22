@@ -9,27 +9,37 @@
 import SwiftUI
 
 struct MacNucleusContentView: View {
+    @EnvironmentObject private var viewModel: MacNMRCalculatorViewModel
+    
     var body: some View {
         TabView {
-            MacNucleusList()
+            MacNucleusList(selectedNucleus: viewModel.nucleus)
                 .tabItem {
                     Text("Nucleus")
                 }
             
-            MacNMRCalcSignalView()
-                .tabItem {
-                    Text("Signal")
-                }
+            MacNMRCalcSignalView(numberOfTimeDataPoints: viewModel.numberOfTimeDataPoints,
+                                 acquisitionDuration: viewModel.acquisitionDuration,
+                                 dwellTime: viewModel.dwellTime,
+                                 numberOfFrequencyDataPoints: viewModel.numberOfFrequencyDataPoints,
+                                 spectralWidth: viewModel.spectralWidth,
+                                 frequencyResolution: viewModel.frequencyResolution)
+            .tabItem { Text("Signal") }
             
-            MacNMRCalcPulseView()
-                .tabItem {
-                    Text("RF Pulse")
-                }
+            MacNMRCalcPulseView(duration1: viewModel.duration1,
+                                flipAngle1: viewModel.flipAngle1,
+                                amplitude1: viewModel.amplitude1,
+                                amplitude1InT: viewModel.amplitude1InT,
+                                duration2: viewModel.duration2,
+                                flipAngle2: viewModel.flipAngle2,
+                                amplitude2: viewModel.amplitude2,
+                                relativePower: viewModel.relativePower)
+            .tabItem { Text("RF Pulse") }
             
-            MacNMRCalcErnstAngleView()
-                .tabItem {
-                    Text("Ernst Angle")
-                }
+            MacNMRCalcErnstAngleView(repetitionTime: viewModel.repetitionTime,
+                                     relaxationTime: viewModel.relaxationTime,
+                                     ernstAngle: viewModel.ernstAngle)
+            .tabItem { Text("Ernst Angle") }
         }
         .frame(width: 500, height: 400, alignment: .center)
     }

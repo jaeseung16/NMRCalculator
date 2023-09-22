@@ -8,8 +8,9 @@
 
 import Foundation
 
-struct NMRNucleus: Hashable {
-    // MARK: Properties
+struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable {
+    var id: String
+    
     var identifier: String
     var nameNucleus: String
     var atomicNumber: String
@@ -25,7 +26,6 @@ struct NMRNucleus: Hashable {
         }
     }
     
-    // MARK: - Methods
     init() {
         identifier = "1H"
         nameNucleus = "Proton"
@@ -35,6 +35,8 @@ struct NMRNucleus: Hashable {
         naturalAbundance = "99.9885"
         nuclearSpin = "1/2"
         gyromagneticRatio = String( 26.7522128 / 2.0 / Double.pi * 10.0 )
+        
+        id = identifier
     }
     
     init(string: String) {
@@ -48,11 +50,12 @@ struct NMRNucleus: Hashable {
         naturalAbundance = items[5]
         nuclearSpin = items[6]
         gyromagneticRatio = String( Double(items[7])! / 2.0 / Double.pi * 10.0 )
+        
+        id = identifier
     }
     
-    func describe() -> String {
-        let string1 = "Nucleus: \(nameNucleus)"
-        let string2 = "gyromagneticratio = \(γ) MHz/T"
-        return string1 + "\n" + string2
+    var description: String {
+        "\(nameNucleus): gyromagneticratio = \(γ) MHz/T"
     }
+    
 }

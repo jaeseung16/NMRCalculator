@@ -33,9 +33,3 @@ struct NuclearSpinView: View {
             .font(.body)
     }
 }
-
-struct NuclearSpinView_Previews: PreviewProvider {
-    static var previews: some View {
-        NuclearSpinView(nucleus: NMRPeriodicTableData().nuclei[6])
-    }
-}
