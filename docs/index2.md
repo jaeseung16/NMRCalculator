@@ -6,7 +6,9 @@ date: 2023-09-23
 
 # NMR Calculator 2
 
+<!--
 [<img src="./assets/images/App_Store_Badge.svg">](https://itunes.apple.com/us/app/nmr-calculator/id1146296877?mt=8)
+-->
 
 <img src="./assets/images/NMRCalcIcon.png" alt="NMR Calculator Icon" width="256" align="center"/>
 
