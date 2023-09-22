@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Privacy Policy"
+description: Privacy Policy for NMR Caluclator
+date: 2021-03-07
+---
+
 # Privacy Policy
 
 The **NMR Calculator** app is built as a Free app. This SERVICE is provided by at no cost and is intended for use as is.
