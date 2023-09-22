@@ -28,22 +28,22 @@ For a chosen isotope, this section displays the atomic symbol with the mass numb
 ### Calculator section
 A user can update one of the parameters in each subsection to recalculate the others.
 
-#### Larmor frequencies
-The subsection displays the external field and the corresponding Larmor frequencies for the chosen isotope, the proton, and the free electron. 
+- Larmor frequencies
+  - The subsection displays the external field and the corresponding Larmor frequencies for the chosen isotope, the proton, and the free electron. 
 
-#### Time domain
-The subsection displays the parameters used for signal acquisition, such as the number of data points, acquisition duration, and dwell time.
+- Time domain
+  - The subsection displays the parameters used for signal acquisition, such as the number of data points, acquisition duration, and dwell time.
 
-#### Frequency domain
-The subsection displays the paramters describing a NMR specturm, such as the number of data points, spectral width, and frequency resolution.
+- Frequency domain
+  - The subsection displays the paramters describing a NMR specturm, such as the number of data points, spectral width, and frequency resolution.
 
-#### Pulse 1
-Ths subsection displays the parameters for a RF pulse, such as the pulse duration, flip angle, and RF amplitude in Hz and μT.
+- Pulse 1
+  - Ths subsection displays the parameters for a RF pulse, such as the pulse duration, flip angle, and RF amplitude in Hz and μT.
 
-#### Pulse 2
-The subsection displays the parameters for another RF pulse, such as the pulse duration, flip angle, RF amplitude in Hz, and the RF power relative to Pulse 1.
+- Pulse 2
+  - The subsection displays the parameters for another RF pulse, such as the pulse duration, flip angle, RF amplitude in Hz, and the RF power relative to Pulse 1.
 
-#### Ernst angle
+- Ernst angle
 The subsection displays the parameters related to the Ernst angle, such as the Ernst angle and repetition time for a given relaxation time.
 
 #### History
