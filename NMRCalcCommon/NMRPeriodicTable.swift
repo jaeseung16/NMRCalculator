@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 class NMRPeriodicTable {
     // MARK: - Properties
     static let shared = NMRPeriodicTable()

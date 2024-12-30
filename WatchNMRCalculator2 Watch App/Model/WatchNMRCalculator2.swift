@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 
+@MainActor
 class WatchNMRCalculator2: ObservableObject {
     @Published var nuclei = NMRPeriodicTable.shared.nuclei
     @Published var scrollAmount = 10.0
