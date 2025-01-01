@@ -1,4 +1,4 @@
-``mermaid
+```mermaid
 classDiagram
 
 class NMRCalculator2App {
