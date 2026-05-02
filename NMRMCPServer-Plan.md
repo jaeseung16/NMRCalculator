@@ -2,88 +2,94 @@
 
 ## Overview
 
-Add a new **macOS Command Line Tool** target (`NMRMCPServer`) to the existing Xcode project. It links against `NMRCalcCommon` and speaks the MCP stdio transport (newline-delimited JSON-RPC 2.0 over stdin/stdout).
+A new **macOS Command Line Tool** target (`NMRCalculatorMCPServer`) has been added to the existing Xcode project. It uses the official **MCP Swift SDK** for the protocol layer and calls into a self-contained copy of `NMRPeriodicTable` (plus `NMRNucleus` via Target Membership) for the physics data.
 
 ---
 
-## Phase 1 — Add the Xcode Target
+## Phase 1 — Xcode Target Setup ✅
 
-1. In Xcode: **File → New → Target → macOS → Command Line Tool**, name it `NMRMCPServer`.
-2. Set minimum macOS to **13.3** and Swift version to **Swift 6** (matching `NMRCalcForMac`).
-3. Under "Frameworks and Libraries", add **`NMRCalcCommon.framework`**.
-4. Fix the resource loading issue: `NMRPeriodicTable` currently calls `Bundle.main` to find `NMRFreqTable.txt`, which won't work from a CLI tool binary. Change one line in `NMRPeriodicTable.swift` to use `Bundle(for: NMRPeriodicTable.self)` instead — this points to the framework bundle where the file already lives, no file duplication needed.
+1. Added target: **`NMRCalculatorMCPServer`** (macOS Command Line Tool).
+2. Added `NMRNucleus.swift` (from `NMRCalcCommon`) to the target via **Target Membership**.
+3. Created a self-contained **`NMRPeriodicTable.swift`** in `NMRCalculatorMCPServer/` — already uses `Bundle(for: NMRPeriodicTable.self)` so no `Bundle.main` issue.
+
+**Remaining task — add `NMRFreqTable.txt` to Copy Bundle Resources:**
+- Select the `NMRCalculatorMCPServer` target → **Build Phases → Copy Bundle Resources → +**
+- Add `NMRCalcCommon/Assets/NMRFreqTable.txt`
+- This is required because `NMRPeriodicTable.self` is defined in the CLI executable, so `Bundle(for:)` resolves to `Bundle.main` (the executable's own bundle).
 
 ---
 
-## Phase 2 — Source Files (3 files)
+## Phase 2 — MCP Swift SDK Dependency
 
-**`main.swift`** — Entry point. Uses `@MainActor` to satisfy `NMRPeriodicTable`'s actor isolation, then runs the server loop.
+Add the official SDK via **File → Add Package Dependencies...**:
+
+| Field | Value |
+|---|---|
+| URL | `https://github.com/modelcontextprotocol/swift-sdk` |
+| Product to link | `MCP` |
+| Target | `NMRCalculatorMCPServer` |
+
+This replaces the originally planned from-scratch JSON-RPC implementation. The SDK handles the stdio transport, JSON-RPC framing, `initialize` handshake, and `notifications/initialized` automatically.
+
+---
+
+## Phase 3 — Source Files
+
+### `main.swift` ✅
 
 ```swift
 import Foundation
+import MCP
 
-// NMRPeriodicTable is @MainActor; warm it up here.
 await MainActor.run { _ = NMRPeriodicTable.shared }
-try await MCPServer().run()
+
+let server = Server(
+    name: "nmr-calculator",
+    version: "1.0.0",
+    capabilities: .init(tools: .init())
+)
+
+await server.withMethodHandler(ListTools.self) { _ in
+    ListTools.Result(tools: NMRTools.definitions)
+}
+
+await server.withMethodHandler(CallTool.self) { params in
+    try await NMRTools.handle(params)
+}
+
+let transport = StdioTransport()
+try await server.run(transport: transport)
 ```
 
-**`MCPServer.swift`** — The JSON-RPC 2.0 stdio loop.
-- Read a line from stdin.
-- Decode it as a `JSONRPCRequest` (using `Codable`).
-- Dispatch on `method`: `initialize`, `tools/list`, `tools/call`.
-- Encode and write the `JSONRPCResponse` to stdout, followed by a newline.
-- Log errors to **stderr** only (stdout is reserved for the MCP wire protocol).
+> Consult the SDK README for the exact `Server` initializer and handler registration API, as it evolves.
 
-**`NMRTools.swift`** — Tool definitions and implementations.
+### `NMRPeriodicTable.swift` ✅
+
+Self-contained copy in `NMRCalculatorMCPServer/`. Uses `Bundle(for: NMRPeriodicTable.self)` to locate `NMRFreqTable.txt`.
+
+### `NMRTools.swift` — **TODO**
+
+Holds two things:
+- `static var definitions: [Tool]` — array of tool definitions with JSON Schema for inputs
+- `static func handle(_ params: CallTool.Parameters) async throws -> CallTool.Result` — dispatches to the per-tool implementations below
 
 ---
 
-## Phase 3 — Tools to Expose
+## Phase 4 — Tools to Implement (in `NMRTools.swift`)
 
-| Tool name | Inputs | Output | Backed by |
+| Tool name | Inputs | Output | Physics |
 |---|---|---|---|
-| `calculate_larmor_frequency` | `nucleus` (e.g. `"1H"`), `magnetic_field` (T) | Larmor frequency in MHz | `LarmorFrequencyMagneticFieldConverter` |
-| `calculate_magnetic_field` | `nucleus`, `larmor_frequency` (MHz) | B₀ in T | `LarmorFrequencyMagneticFieldConverter` |
-| `get_nucleus_info` | `nucleus` | γ, spin, natural abundance | `NMRPeriodicTable.shared` |
-| `list_nuclei` | — | all 120 nuclei | `NMRPeriodicTable.shared` |
-| `calculate_ernst_angle` | `repetition_time` (s), `t1` (s) | Ernst angle in degrees | `ErnstAngleCalculator` |
-| `calculate_pulse_amplitude` | `duration` (μs), `flip_angle` (deg) | RF amplitude in Hz | `Pulse` |
-| `calculate_pulse_duration` | `flip_angle` (deg), `amplitude` (Hz) | duration in μs | `Pulse` |
+| `calculate_larmor_frequency` | `nucleus` (e.g. `"1H"`), `magnetic_field` (T) | Larmor frequency in MHz | ω = γ × B₀ |
+| `calculate_magnetic_field` | `nucleus`, `larmor_frequency` (MHz) | B₀ in T | B₀ = ω / γ |
+| `get_nucleus_info` | `nucleus` | γ, spin, natural abundance | `NMRPeriodicTable.shared` lookup |
+| `list_nuclei` | — | all 120 nuclei with identifier and γ | `NMRPeriodicTable.shared.nuclei` |
+| `calculate_ernst_angle` | `repetition_time` (s), `t1` (s) | Ernst angle in degrees | θ = arccos(exp(−TR/T₁)) |
+| `calculate_pulse_amplitude` | `duration` (μs), `flip_angle` (deg) | RF amplitude in Hz | A = (θ/360°) / τ |
+| `calculate_pulse_duration` | `flip_angle` (deg), `amplitude` (Hz) | duration in μs | τ = (θ/360°) / A |
 
-For the example question ("NMR frequency of hydrogen at 7 T"), `calculate_larmor_frequency` looks up ¹H's γ = 42.577 MHz/T from `NMRPeriodicTable`, multiplies by 7 T, and returns 297.90 MHz.
+**Example:** "NMR frequency of hydrogen at 7 T" → `calculate_larmor_frequency(nucleus: "1H", magnetic_field: 7.0)` → looks up ¹H γ = 42.577 MHz/T → returns **297.90 MHz**.
 
----
-
-## Phase 4 — MCP Protocol (no external dependencies)
-
-Implement from scratch with `Codable` structs and `Foundation`:
-
-```swift
-struct JSONRPCRequest: Decodable {
-    let jsonrpc: String
-    let id: JSONValue?        // String | Int | null
-    let method: String
-    let params: [String: JSONValue]?
-}
-
-struct JSONRPCResponse: Encodable {
-    let jsonrpc = "2.0"
-    let id: JSONValue?
-    let result: JSONValue?
-    let error: JSONRPCError?
-}
-```
-
-`JSONValue` is an indirect `enum` covering `string`, `double`, `bool`, `array`, `object`, `null` — about 30 lines of `Codable` boilerplate, nothing exotic.
-
-**Methods the server must handle:**
-
-| Method | Action |
-|---|---|
-| `initialize` | Return server name, version, and `{"tools": {}}` capability |
-| `notifications/initialized` | No response (it is a notification, not a request) |
-| `tools/list` | Return array of tool definitions with JSON Schema for their inputs |
-| `tools/call` | Execute the named tool, return `{"content": [{"type": "text", "text": "..."}]}` |
+Nucleus lookup accepts both identifier formats: `"1H"` (plain) and `"¹H"` (Unicode superscript), checking both `nucleiDictionary` and `nucleiById`.
 
 ---
 
@@ -91,20 +97,20 @@ struct JSONRPCResponse: Encodable {
 
 ```bash
 # Build release binary
-xcodebuild -scheme NMRMCPServer -destination 'platform=macOS' -configuration Release
+xcodebuild -scheme NMRCalculatorMCPServer -destination 'platform=macOS' -configuration Release
 
-# Copy binary to a stable path
-cp ~/Library/Developer/Xcode/DerivedData/NMRCalculator-.../NMRMCPServer \
-   /usr/local/bin/NMRMCPServer
+# Copy binary to a stable path (adjust DerivedData hash as needed)
+cp ~/Library/Developer/Xcode/DerivedData/NMRCalculator-.../NMRCalculatorMCPServer \
+   /usr/local/bin/NMRCalculatorMCPServer
 ```
 
-**Register with Claude Code** (add to `.claude/settings.json` in this repo, or to your global `~/.claude/settings.json`):
+**Register with Claude Code** (`.claude/settings.json` in this repo, or `~/.claude/settings.json` globally):
 
 ```json
 {
   "mcpServers": {
     "nmr-calculator": {
-      "command": "/usr/local/bin/NMRMCPServer",
+      "command": "/usr/local/bin/NMRCalculatorMCPServer",
       "type": "stdio"
     }
   }
@@ -117,7 +123,7 @@ cp ~/Library/Developer/Xcode/DerivedData/NMRCalculator-.../NMRMCPServer \
 {
   "mcpServers": {
     "nmr-calculator": {
-      "command": "/usr/local/bin/NMRMCPServer"
+      "command": "/usr/local/bin/NMRCalculatorMCPServer"
     }
   }
 }
@@ -129,8 +135,8 @@ cp ~/Library/Developer/Xcode/DerivedData/NMRCalculator-.../NMRMCPServer \
 
 | Decision | Rationale |
 |---|---|
-| Xcode target, not a separate Swift package | Reuses the existing `NMRCalcCommon` framework without duplicating physics logic |
-| No external MCP SDK | The stdio transport is ~100 lines; keeping it in-tree avoids SPM/Xcode integration friction |
-| `Bundle(for:)` fix | One-line change; avoids copying `NMRFreqTable.txt` into a second target |
-| `@MainActor` warm-up at startup | `NMRPeriodicTable.shared` parses the 120-nucleus file once on launch; subsequent tool calls are instant |
+| Self-contained `NMRPeriodicTable.swift` in the target | Avoids linking `NMRCalcCommon.framework`; only `NMRNucleus.swift` is shared via Target Membership |
+| Official MCP Swift SDK (`swift-sdk`) | Handles JSON-RPC framing, initialize handshake, and transport — no hand-rolled protocol code needed |
+| `Bundle(for: NMRPeriodicTable.self)` | Correct for a CLI executable where `Bundle.main` is the product directory; requires `NMRFreqTable.txt` in Copy Bundle Resources |
+| `@MainActor` warm-up at startup | `NMRPeriodicTable.shared` parses 120 nuclei once on launch; all subsequent tool calls are instant dictionary lookups |
 | stderr for logging | Keeps stdout clean for the MCP wire protocol |
