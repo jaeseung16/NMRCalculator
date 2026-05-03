@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -223,6 +223,8 @@
 		90AAD62225F42C48009252A4 /* NMRCalculatorInfo.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 90AAD62125F42C48009252A4 /* NMRCalculatorInfo.pdf */; };
 		90AAD62325F42C48009252A4 /* NMRCalculatorInfo.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 90AAD62125F42C48009252A4 /* NMRCalculatorInfo.pdf */; };
 		90AAD62425F42C48009252A4 /* NMRCalculatorInfo.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 90AAD62125F42C48009252A4 /* NMRCalculatorInfo.pdf */; };
+		90AD8D0B2FA16A62003E0DED /* NMRNucleus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFEB1271D0CA8FE00F37F1B /* NMRNucleus.swift */; };
+		90AD8D0E2FA16E2D003E0DED /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = 90AD8D0D2FA16E2D003E0DED /* MCP */; };
 		90B2A67C23CFF59C00599931 /* NuclearSpinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67B23CFF59C00599931 /* NuclearSpinView.swift */; };
 		90B2A67E23CFFC5E00599931 /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
 		90B8E84C23EF8E39004292B1 /* WatchNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */; };
@@ -353,6 +355,15 @@
 				9079EC682AB253D5005A802E /* WatchNMRCalculator2 Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90AD8D002FA169B7003E0DED /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		90FFBA4723CB8C56000A9BC9 /* Embed Watch Content */ = {
@@ -511,6 +522,7 @@
 		90AA3ED725F2FC48001BCF10 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		90AA3EEB25F2FF54001BCF10 /* MacNMRCalcHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacNMRCalcHelpView.swift; sourceTree = "<group>"; };
 		90AAD62125F42C48009252A4 /* NMRCalculatorInfo.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = NMRCalculatorInfo.pdf; sourceTree = "<group>"; };
+		90AD8D022FA169B7003E0DED /* NMRCalculatorMCPServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NMRCalculatorMCPServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		90B2A67B23CFF59C00599931 /* NuclearSpinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuclearSpinView.swift; sourceTree = "<group>"; };
 		90B2A67D23CFFC5E00599931 /* Fraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fraction.swift; sourceTree = "<group>"; };
 		90B8E84B23EF8E39004292B1 /* WatchNucleusInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusInfoView.swift; sourceTree = "<group>"; };
@@ -548,6 +560,10 @@
 		90FFBA5723CBA90C000A9BC9 /* NMRPeriodicTableData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRPeriodicTableData.swift; sourceTree = "<group>"; };
 		90FFBA5923CBAB45000A9BC9 /* WatchPeriodicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPeriodicTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		90AD8D032FA169B7003E0DED /* NMRCalculatorMCPServer */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = NMRCalculatorMCPServer; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		0B6ACEFC1D08E87F00D7D342 /* Frameworks */ = {
@@ -610,6 +626,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90AD8CFF2FA169B7003E0DED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90AD8D0E2FA16E2D003E0DED /* MCP in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -700,6 +724,7 @@
 				9067B33D2AACED2A00A8FA29 /* NMRCalculator2Tests */,
 				9067B3472AACED2A00A8FA29 /* NMRCalculator2UITests */,
 				9079EC5C2AB253D4005A802E /* WatchNMRCalculator2 Watch App */,
+				90AD8D032FA169B7003E0DED /* NMRCalculatorMCPServer */,
 				0B6ACF001D08E88000D7D342 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -719,6 +744,7 @@
 				9067B33A2AACED2A00A8FA29 /* NMRCalculator2Tests.xctest */,
 				9067B3442AACED2A00A8FA29 /* NMRCalculator2UITests.xctest */,
 				9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */,
+				90AD8D022FA169B7003E0DED /* NMRCalculatorMCPServer */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1248,6 +1274,29 @@
 			productReference = 909C112425BF908A00E8C285 /* NMR Calculator.app */;
 			productType = "com.apple.product-type.application";
 		};
+		90AD8D012FA169B7003E0DED /* NMRCalculatorMCPServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 90AD8D082FA169B7003E0DED /* Build configuration list for PBXNativeTarget "NMRCalculatorMCPServer" */;
+			buildPhases = (
+				90AD8CFE2FA169B7003E0DED /* Sources */,
+				90AD8CFF2FA169B7003E0DED /* Frameworks */,
+				90AD8D002FA169B7003E0DED /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				90AD8D032FA169B7003E0DED /* NMRCalculatorMCPServer */,
+			);
+			name = NMRCalculatorMCPServer;
+			packageProductDependencies = (
+				90AD8D0D2FA16E2D003E0DED /* MCP */,
+			);
+			productName = NMRCalculatorMCPServer;
+			productReference = 90AD8D022FA169B7003E0DED /* NMRCalculatorMCPServer */;
+			productType = "com.apple.product-type.tool";
+		};
 		90E75275239DA575003D3A88 /* NMRCalcTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 90E7527F239DA576003D3A88 /* Build configuration list for PBXNativeTarget "NMRCalcTests" */;
@@ -1307,7 +1356,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1430;
+				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = "Jae-Seung Lee";
 				TargetAttributes = {
@@ -1347,6 +1396,9 @@
 					909C112325BF908A00E8C285 = {
 						CreatedOnToolsVersion = 12.3;
 					};
+					90AD8D012FA169B7003E0DED = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
 					90E75275239DA575003D3A88 = {
 						CreatedOnToolsVersion = 11.2.1;
 						TestTargetID = 0B6ACEFE1D08E87F00D7D342;
@@ -1369,6 +1421,9 @@
 				Base,
 			);
 			mainGroup = 0B6ACEF61D08E87F00D7D342;
+			packageReferences = (
+				90AD8D0C2FA16E2D003E0DED /* XCRemoteSwiftPackageReference "swift-sdk" */,
+			);
 			productRefGroup = 0B6ACF001D08E88000D7D342 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1385,6 +1440,7 @@
 				9067B3392AACED2A00A8FA29 /* NMRCalculator2Tests */,
 				9067B3432AACED2A00A8FA29 /* NMRCalculator2UITests */,
 				9079EC5A2AB253D4005A802E /* WatchNMRCalculator2 Watch App */,
+				90AD8D012FA169B7003E0DED /* NMRCalculatorMCPServer */,
 			);
 		};
 /* End PBXProject section */
@@ -1758,6 +1814,14 @@
 				90A1DB08293EAEF900B8D105 /* NMRCalcCommand.swift in Sources */,
 				90D3935525C7343D000545FE /* MacLamorFrequencyView.swift in Sources */,
 				90847F942944D7240079CCB0 /* UpdateSpectralWidthInkHz.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90AD8CFE2FA169B7003E0DED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90AD8D0B2FA16A62003E0DED /* NMRNucleus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2611,6 +2675,56 @@
 			};
 			name = Release;
 		};
+		90AD8D062FA169B7003E0DED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = U8VSJXRJTQ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		90AD8D072FA169B7003E0DED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = U8VSJXRJTQ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		90E7527D239DA575003D3A88 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2903,6 +3017,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		90AD8D082FA169B7003E0DED /* Build configuration list for PBXNativeTarget "NMRCalculatorMCPServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90AD8D062FA169B7003E0DED /* Debug */,
+				90AD8D072FA169B7003E0DED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		90E7527F239DA576003D3A88 /* Build configuration list for PBXNativeTarget "NMRCalcTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2931,6 +3054,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		90AD8D0C2FA16E2D003E0DED /* XCRemoteSwiftPackageReference "swift-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/modelcontextprotocol/swift-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		90AD8D0D2FA16E2D003E0DED /* MCP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90AD8D0C2FA16E2D003E0DED /* XCRemoteSwiftPackageReference "swift-sdk" */;
+			productName = MCP;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0B6ACEF71D08E87F00D7D342 /* Project object */;
 }
