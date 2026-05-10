@@ -37,8 +37,17 @@ The app evaluates the values of some basic parameters used in nuclear magnetic r
 - The data source for NMR-enabled isotopes and formulas used in the app are presented.
 
 ---
+#### License
+This project is licensed under the [MIT License](LICENSE).
+
+---
 #### History
 - Version 1.0 / Aug 24, 2016
 - Version 1.1 / Sep 28, 2016
 - Version 1.2 / Nov 1, 2017
+- Version 1.3 / Mar 31, 2019
+- Version 1.3.1 / Dec 1, 2019
+- macOS 1.0 / Mar 7, 2021
+- macOS 1.1 / Mar 7, 2021
+- Version 2.0 / Sep 23, 2023
 
