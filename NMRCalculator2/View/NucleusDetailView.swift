@@ -72,9 +72,9 @@ struct NucleusDetailView: View {
                     }
                 }
             }
-            .onChange(of: calculator.showAlert) { newValue in
-                if newValue {
-                    showAlert = newValue
+            .onChange(of: calculator.showAlert) {
+                if calculator.showAlert {
+                    showAlert = true
                 }
             }
         }

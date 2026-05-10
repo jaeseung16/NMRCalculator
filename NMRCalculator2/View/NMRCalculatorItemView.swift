@@ -26,7 +26,9 @@ struct NMRCalculatorItemView: View {
             Spacer()
         
             TextField(defaultLabel, value: $calculatorItem.value, formatter: calculatorItem.formatter)
+                #if os(iOS)
                 .keyboardType(.numbersAndPunctuation)
+                #endif
                 .onSubmit { calculatorItem.callback(calculatorItem.value) }
                 .multilineTextAlignment(.trailing)
                 .fontWeight(.semibold)

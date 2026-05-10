@@ -17,10 +17,9 @@ struct LarmorFrequencyView: View {
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 0) {
-            HStack(alignment: .top) {
+            HStack(alignment: .top, spacing: 0) {
                 Text(String(format: externalFieldFormat, self.externalField * self.gyromatneticRatio))
                     .font(.headline)
-                +
                 Text(" MHz  ")
                     .font(.body)
             }

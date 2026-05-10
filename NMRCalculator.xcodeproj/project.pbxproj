@@ -39,7 +39,7 @@
 		9079EC602AB253D4005A802E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC5F2AB253D4005A802E /* ContentView.swift */; };
 		9079EC622AB253D5005A802E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9079EC612AB253D5005A802E /* Assets.xcassets */; };
 		9079EC652AB253D5005A802E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9079EC642AB253D5005A802E /* Preview Assets.xcassets */; };
-		9079EC682AB253D5005A802E /* WatchNMRCalculator2 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9079EC682AB253D5005A802E /* WatchNMRCalculator2 Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9079EC6E2AB256BD005A802E /* WatchNucleusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC6D2AB256BD005A802E /* WatchNucleusView.swift */; };
 		9079EC712AB25707005A802E /* Fraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B2A67D23CFFC5E00599931 /* Fraction.swift */; };
 		9079EC722AB25716005A802E /* AtomicElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F318F623D3D44E00B85FBC /* AtomicElementView.swift */; };
@@ -771,6 +771,7 @@
 		};
 		9079EC672AB253D5005A802E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 9079EC5A2AB253D4005A802E /* WatchNMRCalculator2 Watch App */;
 			targetProxy = 9079EC662AB253D5005A802E /* PBXContainerItemProxy */;
 		};
@@ -932,10 +933,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -984,10 +985,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.nmrcalculator;
@@ -1016,8 +1017,8 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1048,8 +1049,8 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.NMRCalculator2Tests;
@@ -1077,8 +1078,8 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1108,8 +1109,8 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.jlee.NMRCalculator2UITests;
@@ -1158,7 +1159,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
@@ -1195,7 +1196,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
