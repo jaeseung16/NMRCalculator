@@ -2,7 +2,7 @@
 layout: default
 title: "NMR Calculator"
 description: Support Site for NMR Caluclator
-date: 2021-03-07
+date: 2026-05-10
 ---
 
 # NMR Calculator
@@ -48,6 +48,8 @@ The app evaluates the values of some basic parameters used in nuclear magnetic r
 - [Wikipedia](https://en.wikipedia.org/wiki/Ernst_angle)
 
 #### History
+
+- **2.0** Sep 23, 2023
 
 - **1.3.2** Feb 10, 2020
   - Added WatchOS extension.
