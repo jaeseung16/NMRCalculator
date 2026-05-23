@@ -8,8 +8,8 @@
 
 import Foundation
 
-enum CalculationType: String, Identifiable, CaseIterable {
-    var id: Self {
+public enum CalculationType: String, Identifiable, CaseIterable {
+    public var id: Self {
         return self
     }
     

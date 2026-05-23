@@ -8,25 +8,25 @@
 
 import Foundation
 
-struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable {
-    var id: String
+public struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable {
+    public let id: String
     
-    var identifier: String
-    var nameNucleus: String
-    var atomicNumber: String
-    var atomicWeight: String
-    var symbolNucleus: String
-    var naturalAbundance: String
-    var nuclearSpin: String
-    var gyromagneticRatio: String
+    public let identifier: String
+    public let nameNucleus: String
+    public let atomicNumber: String
+    public let atomicWeight: String
+    public let symbolNucleus: String
+    public let naturalAbundance: String
+    public let nuclearSpin: String
+    public let gyromagneticRatio: String
     
-    var γ: Double {
+    public var γ: Double {
         get {
             return Double(gyromagneticRatio)!
         }
     }
     
-    init() {
+    public init() {
         identifier = "1H"
         nameNucleus = "Proton"
         atomicNumber = "1"
@@ -39,7 +39,7 @@ struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable {
         id = identifier
     }
     
-    init(string: String) {
+    public init(string: String) {
         let items = string.components(separatedBy: " ")
         
         identifier = items[0]
@@ -54,7 +54,7 @@ struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable {
         id = identifier
     }
     
-    var description: String {
+    public var description: String {
         "\(nameNucleus): gyromagneticratio = \(γ) MHz/T"
     }
     
