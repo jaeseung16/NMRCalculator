@@ -12,7 +12,7 @@ import Foundation
 public class ErnstAngleCalculator: NMRCalcDelegate {
     
     // TODO: - Remove methods except this
-    func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
+    public func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
         guard let request = request as? ErnstAngleRequest else {
             return .failure(.invalidInput)
         }
@@ -20,21 +20,21 @@ public class ErnstAngleCalculator: NMRCalcDelegate {
         switch (request.ernstAngleInDegree, request.repetitionTimeInSec, request.relaxationTimeInSec) {
         case (nil, let repetitionTimeInSec?, let resolution?):
             return .success(ErnstAngleResponse(
-                ernstAngleInDegree: acos( exp(-1.0 * repetitionTime / relaxationTime) ) * radianToDegree,
+                ernstAngleInDegree: acos( exp(-1.0 * repetitionTime / relaxationTime) ) * ErnstAngleCalculator.radianToDegree,
                 repetitionTimeInSec: repetitionTimeInSec,
                 relaxationTimeInSec: resolution
             ))
         case (let ernstAngleInDegree?, nil, let relaxationTimeInSec?):
             return .success(ErnstAngleResponse(
                 ernstAngleInDegree: ernstAngleInDegree,
-                repetitionTimeInSec: -1.0 * relaxationTimeInSec * log(cos(ernstAngleInDegree * degreeToRadian)),
+                repetitionTimeInSec: -1.0 * relaxationTimeInSec * log(cos(ernstAngleInDegree * ErnstAngleCalculator.degreeToRadian)),
                 relaxationTimeInSec: relaxationTimeInSec
             ))
         case (let ernstAngleInDegree?, let repetitionTimeInSec?, nil):
             return .success(ErnstAngleResponse(
                 ernstAngleInDegree: ernstAngleInDegree,
                 repetitionTimeInSec: repetitionTimeInSec,
-                relaxationTimeInSec: -1.0 * repetitionTimeInSec / log(cos(ernstAngleInDegree * degreeToRadian))
+                relaxationTimeInSec: -1.0 * repetitionTimeInSec / log(cos(ernstAngleInDegree * ErnstAngleCalculator.degreeToRadian))
             ))
         default:
             return .failure(.invalidInput)
