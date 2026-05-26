@@ -36,7 +36,7 @@ class NMRCalculator2: ObservableObject {
     init(nucleus: NMRNucleus) {
         self.nucleus = nucleus
         
-        self.larmorFrequencyCalculator = LarmorFrequencyMagneticFieldConverter(magneticField: 1.0, gyromagneticRatio: nucleus.γ)
+        self.larmorFrequencyCalculator = LarmorFrequencyMagneticFieldConverter(nucleus: nucleus, magneticField: 1.0)
         commands = [NMRCalcCommandName: NMRCalcCommand]()
         commands[.larmorFrequency] = UpdateLarmorFrequency(larmorFrequencyCalculator)
         commands[.magneticField] = UpdateMagneticField(larmorFrequencyCalculator)
@@ -145,7 +145,7 @@ class NMRCalculator2: ObservableObject {
     }
     
     var electronFrequency: Double {
-        larmorFrequencyCalculator.electroFrequency
+        larmorFrequencyCalculator.electronFrequency
     }
     
     private var externalFieldFormatter: NumberFormatter {

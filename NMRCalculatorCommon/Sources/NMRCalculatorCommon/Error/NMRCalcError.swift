@@ -8,5 +8,6 @@
 
 public enum NMRCalcError: Error {
     case invalidInput
+    case invalidOutput
     case invalidOperation
 }
