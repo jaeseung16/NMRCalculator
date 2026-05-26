@@ -8,6 +8,7 @@
 
 import Foundation
 import os
+import NMRCalculatorCommon
 
 class NMRCalculator2: ObservableObject {
     private let logger = Logger()

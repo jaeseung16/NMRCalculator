@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import NMRCalculatorCommon
 
 struct WatchNucleusView: View {
     var nucleus: NMRNucleus

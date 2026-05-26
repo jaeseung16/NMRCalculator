@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NMRCalculatorCommon
 
 @MainActor
 class NMRPeriodicTable {

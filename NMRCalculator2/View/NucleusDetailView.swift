@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import NMRCalculatorCommon
 
 struct NucleusDetailView: View {
     @EnvironmentObject private var calculator: NMRCalculator2

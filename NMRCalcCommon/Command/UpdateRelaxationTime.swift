@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import NMRCalculatorCommon
+
 class UpdateRelaxationTime: NMRCalcCommand {
     let ernstAngleCalculator: ErnstAngleCalculator
 

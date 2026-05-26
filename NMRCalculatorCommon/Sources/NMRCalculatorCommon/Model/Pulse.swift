@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Pulse {
+public class Pulse {
     private static let radianToDegree = 180.0 / Double.pi
     private static var degreeToRadian: Double {
         return 1.0 / radianToDegree

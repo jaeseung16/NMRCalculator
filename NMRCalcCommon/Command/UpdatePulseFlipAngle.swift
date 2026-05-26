@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NMRCalculatorCommon
 
 class UpdatePulseFlipAngle: NMRCalcCommand {
     let pulse: Pulse

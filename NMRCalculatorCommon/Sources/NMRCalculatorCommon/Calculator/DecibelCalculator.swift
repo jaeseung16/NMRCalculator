@@ -10,6 +10,10 @@ import Foundation
 
 public class DecibelCalculator: NMRCalcDelegate {
     
+    public init() {
+        
+    }
+    
     public func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
         guard let request = request as? DecibelCalcualtionRequest else {
             return .failure(.invalidInput)

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NMRCalculatorCommon
 
 class UpdatePulseAmplitudeInT: NMRCalcCommand {
     let pulse: Pulse

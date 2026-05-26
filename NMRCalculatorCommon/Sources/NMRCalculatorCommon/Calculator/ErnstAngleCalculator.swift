@@ -58,6 +58,12 @@ public class ErnstAngleCalculator: NMRCalcDelegate {
     public var repetitionTime: Double // sec
     public var relaxationTime: Double // sec
     
+    public init() {
+        ernstAngle = 0
+        repetitionTime = 0
+        relaxationTime = 0
+    }
+    
     public init(repetitionTime: Double, relaxationTime: Double) {
         self.repetitionTime = repetitionTime
         self.relaxationTime = relaxationTime

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NMRCalculatorCommon
 
 class UpdateErnstAngle: NMRCalcCommand {
     let ernstAngleCalculator: ErnstAngleCalculator
