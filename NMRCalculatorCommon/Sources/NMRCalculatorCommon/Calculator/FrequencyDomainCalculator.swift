@@ -14,22 +14,22 @@ public class FrequencyDomainCalculator: NMRCalcDelegate {
 
         switch (request.spectralWidthInHz, request.numberOfPoints, request.frequencyResolutionInHz) {
         case (nil, let n?, let resolution?):
-            return .success(TimeDomainResponse(
-                acqusitionTimeInSec: Double(n) * resolution,
+            return .success(FrequencyDomainResponse(
+                spectralWidthInHz: Double(n) * resolution,
                 numberOfPoints: n,
-                dwellInSec: resolution
+                frequencyResolutionInHz: resolution
             ))
         case (let spectralWidth?, nil, let resolution?):
-            return .success(TimeDomainResponse(
-                acqusitionTimeInSec: spectralWidth,
+            return .success(FrequencyDomainResponse(
+                spectralWidthInHz: spectralWidth,
                 numberOfPoints: Int(spectralWidth / resolution),
-                dwellInSec: resolution
+                frequencyResolutionInHz: resolution
             ))
         case (let spectralWidth?, let n?, nil):
-            return .success(TimeDomainResponse(
-                acqusitionTimeInSec: spectralWidth,
+            return .success(FrequencyDomainResponse(
+                spectralWidthInHz: spectralWidth,
                 numberOfPoints: n,
-                dwellInSec: spectralWidth / Double(n)
+                frequencyResolutionInHz: spectralWidth / Double(n)
             ))
         default:
             return .failure(.invalidInput)

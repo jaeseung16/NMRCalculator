@@ -6,7 +6,7 @@
 //  Copyright © 2026 Jae-Seung Lee. All rights reserved.
 //
 
-public struct FrequencyDomainRespons: NMRCalcResponse {
+public struct FrequencyDomainResponse: NMRCalcResponse {
     public var calculationType = CalculatorType.frequency
     
     public let spectralWidthInHz: Double
