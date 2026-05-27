@@ -34,6 +34,7 @@
 		907688092AB7459700E72F99 /* WatchNucleusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907688082AB7459700E72F99 /* WatchNucleusInfoView.swift */; };
 		9076880D2AB74F6300E72F99 /* WatchNMRCalculatorConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9076880C2AB74F6300E72F99 /* WatchNMRCalculatorConstant.swift */; };
 		9076880F2AB75BBA00E72F99 /* CalculationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9076880E2AB75BBA00E72F99 /* CalculationType.swift */; };
+		9078AC172FC6499700EA0812 /* ErnstAngleConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9078AC162FC6498E00EA0812 /* ErnstAngleConverter.swift */; };
 		9079EC5E2AB253D4005A802E /* WatchNMRCalculator2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC5D2AB253D4005A802E /* WatchNMRCalculator2App.swift */; };
 		9079EC602AB253D4005A802E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9079EC5F2AB253D4005A802E /* ContentView.swift */; };
 		9079EC622AB253D5005A802E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9079EC612AB253D5005A802E /* Assets.xcassets */; };
@@ -156,6 +157,7 @@
 		907688082AB7459700E72F99 /* WatchNucleusInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNucleusInfoView.swift; sourceTree = "<group>"; };
 		9076880C2AB74F6300E72F99 /* WatchNMRCalculatorConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNMRCalculatorConstant.swift; sourceTree = "<group>"; };
 		9076880E2AB75BBA00E72F99 /* CalculationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationType.swift; sourceTree = "<group>"; };
+		9078AC162FC6498E00EA0812 /* ErnstAngleConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErnstAngleConverter.swift; sourceTree = "<group>"; };
 		9079EC5B2AB253D4005A802E /* WatchNMRCalculator2 Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchNMRCalculator2 Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9079EC5D2AB253D4005A802E /* WatchNMRCalculator2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNMRCalculator2App.swift; sourceTree = "<group>"; };
 		9079EC5F2AB253D4005A802E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 		900C3A692FB6946600FE60C4 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				9078AC162FC6498E00EA0812 /* ErnstAngleConverter.swift */,
 				900AFCC0287F793400F30039 /* DwellAcquisitionTimeConverter.swift */,
 				904693A6287CCDFB005B8FFA /* LarmorFrequencyMagneticFieldConverter.swift */,
 				904693A8287CD09A005B8FFA /* SpectralWidthFrequencyResolutionConverter.swift */,
@@ -688,6 +691,7 @@
 				9034BA0C2AAD254000E9DAE0 /* UpdateElectronFrequency.swift in Sources */,
 				90F69E822AAE0AB3001FB5F0 /* UpdateFrequencyResolution.swift in Sources */,
 				907A0D592AACF5A900EA68BB /* AtomicElementView.swift in Sources */,
+				9078AC172FC6499700EA0812 /* ErnstAngleConverter.swift in Sources */,
 				90F69E852AAE0AC0001FB5F0 /* SpectralWidthFrequencyResolutionConverter.swift in Sources */,
 				90F69E8E2AAE0FAB001FB5F0 /* UpdatePulseFlipAngle.swift in Sources */,
 				9067B35A2AACEF9900A8FA29 /* NuclearListView.swift in Sources */,

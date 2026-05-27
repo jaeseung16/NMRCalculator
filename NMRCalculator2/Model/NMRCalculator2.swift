@@ -18,7 +18,7 @@ class NMRCalculator2: ObservableObject {
     private let larmorFrequencyCalculator: LarmorFrequencyMagneticFieldConverter
     private let timeDomainCalculator: DwellAcquisitionTimeConverter
     private let frequencyDomainCalculator: SpectralWidthFrequencyResolutionConverter
-    private let ernstAngleCalculator: ErnstAngleCalculator
+    private let ernstAngleCalculator: ErnstAngleConverter
     private let decibelCalculator: DecibelCalculator
     
     private let pulse1: Pulse
@@ -43,7 +43,7 @@ class NMRCalculator2: ObservableObject {
         commands[.protonFrequency] = UpdateProtonFrequency(larmorFrequencyCalculator)
         commands[.electronFrequency] = UpdateElectronFrequency(larmorFrequencyCalculator)
         
-        self.ernstAngleCalculator = ErnstAngleCalculator(repetitionTime: 1.0, relaxationTime: 1.0)
+        self.ernstAngleCalculator = ErnstAngleConverter(repetitionTime: 1.0, relaxationTime: 1.0)
         commands[.ernstAngle] = UpdateErnstAngle(ernstAngleCalculator)
         commands[.repetitionTime] = UpdateRepetitionTime(ernstAngleCalculator)
         commands[.relaxationTime] = UpdateRelaxationTime(ernstAngleCalculator)
