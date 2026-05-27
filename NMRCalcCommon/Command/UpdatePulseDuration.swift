@@ -10,13 +10,13 @@ import Foundation
 import NMRCalculatorCommon
 
 class UpdatePulseDuration: NMRCalcCommand {
-    let pulse: Pulse
+    let pulseParameterConverter: PulseParameterConverter
     
-    init(_ pulse: Pulse) {
-        self.pulse = pulse
+    init(_ pulseParameterConverter: PulseParameterConverter) {
+        self.pulseParameterConverter = pulseParameterConverter
     }
     
     func execute(with value: Double) {
-        pulse.set(duration: value)
+        pulseParameterConverter.set(duration: value)
     }
 }

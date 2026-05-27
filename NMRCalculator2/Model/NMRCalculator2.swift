@@ -20,6 +20,8 @@ class NMRCalculator2: ObservableObject {
     private let frequencyDomainCalculator: SpectralWidthFrequencyResolutionConverter
     private let ernstAngleCalculator: ErnstAngleConverter
     private let decibelCalculator: DecibelConverter
+    private let pulseParameterCalculator1: PulseParameterConverter
+    private let pulseParameterCalculator2: PulseParameterConverter
     
     private let pulse1: Pulse
     private let pulse2: Pulse
@@ -61,22 +63,22 @@ class NMRCalculator2: ObservableObject {
         commands[.spectralWidthInkHz] = UpdateSpectralWidthInkHz(frequencyDomainCalculator)
         
         self.pulse1 = Pulse(duration: 10.0, flipAngle: 90.0)
-        commands[.pulse1Duration] = UpdatePulseDuration(pulse1)
-        commands[.pulse1Amplitude] = UpdatePulseAmplitude(pulse1)
-        commands[.pulse1FlipAngle] = UpdatePulseFlipAngle(pulse1)
-        commands[.pulse1AmplitudeInT] = UpdatePulseAmplitudeInT(pulse1)
+        self.pulseParameterCalculator1 = PulseParameterConverter(pulse: pulse1, nucleus: nucleus)
+        commands[.pulse1Duration] = UpdatePulseDuration(pulseParameterCalculator1)
+        commands[.pulse1Amplitude] = UpdatePulseAmplitude(pulseParameterCalculator1)
+        commands[.pulse1FlipAngle] = UpdatePulseFlipAngle(pulseParameterCalculator1)
+        commands[.pulse1AmplitudeInT] = UpdatePulseAmplitudeInT(pulseParameterCalculator1)
         self.commandsForPulse1 = [.pulse1Duration, .pulse1Amplitude, .pulse1FlipAngle, .pulse1AmplitudeInT]
         
         self.pulse2 = Pulse(duration: 1000.0, flipAngle: 90.0)
-        commands[.pulse2Duration] = UpdatePulseDuration(pulse2)
-        commands[.pulse2Amplitude] = UpdatePulseAmplitude(pulse2)
-        commands[.pulse2FlipAngle] = UpdatePulseFlipAngle(pulse2)
+        self.pulseParameterCalculator2 = PulseParameterConverter(pulse: pulse2, nucleus: nucleus)
+        commands[.pulse2Duration] = UpdatePulseDuration(pulseParameterCalculator2)
+        commands[.pulse2Amplitude] = UpdatePulseAmplitude(pulseParameterCalculator2)
+        commands[.pulse2FlipAngle] = UpdatePulseFlipAngle(pulseParameterCalculator2)
         commands[.relativePower] = UpdateRelativePower(pulse2)
         self.commandsForPulse2 = [.pulse2Duration, .pulse2Amplitude, .pulse2FlipAngle]
         
         self.decibelCalculator = DecibelConverter(measured: pulse2.amplitude, reference: pulse1.amplitude, mode: .amplitude)
-        amplitude1InT = self.pulse1.amplitude / nucleus.γ
-        relativePower = self.decibelCalculator.dB
     }
     
     var nucleusName: String {
@@ -109,14 +111,7 @@ class NMRCalculator2: ObservableObject {
         logger.log("command=\(commandName.rawValue, privacy: .public)")
         if let command = commands[commandName] {
             command.execute(with: value)
-            
-            if commandsForPulse1.contains(commandName) {
-                updateAmplitude1InT()
-                updateRelativePower()
-            } else if commandsForPulse2.contains(commandName) {
-                updateRelativePower()
-            }
-            
+            updateRelativePower()
             updated.toggle()
             logger.log("updated=\(self.updated, privacy: .public)")
         } else {
@@ -218,9 +213,7 @@ class NMRCalculator2: ObservableObject {
         return CalculatorItems(items: items)
     }
     
-    // MARK: - Signal
-    
-    @Published var timeDomainUpdated = false
+    // MARK: - Time Domain
     
     var numberOfTimeDataPoints: Double {
         Double(timeDomainCalculator.numberOfPoints)
@@ -302,7 +295,7 @@ class NMRCalculator2: ObservableObject {
         return CalculatorItems(items: items)
     }
     
-    @Published var frequencyDomainUpdated = false
+    // MARK: - Frequency Domain
     
     var numberOfFrequencyDataPoints: Double {
         Double(frequencyDomainCalculator.numberOfPoints)
@@ -369,6 +362,7 @@ class NMRCalculator2: ObservableObject {
         
         return CalculatorItems(items: items)
     }
+    
     // MARK: - Pulse
     var duration1: Double {
         pulse1.duration
@@ -382,12 +376,12 @@ class NMRCalculator2: ObservableObject {
         pulse1.amplitude
     }
 
-    var amplitude1InT: Double
+    var amplitude1InT: Double {
+        pulse1.amplitude / γNucleus
+    }
     
     func update(pulse1AmplitudeInT: Double) -> Void {
         update(.pulse1Amplitude, to: pulse1AmplitudeInT * γNucleus)
-        updateAmplitude1InT()
-        updateRelativePower()
     }
     
     private var amplitudeFormatter: NumberFormatter {
@@ -494,13 +488,7 @@ class NMRCalculator2: ObservableObject {
     }
     
     var relativePower: Double {
-        didSet {
-            if relativePower != oldValue {
-                decibelCalculator.set(dB: relativePower, mode: .amplitude)
-                print("measured: \(decibelCalculator.measured)")
-                update(.pulse2Amplitude, to: decibelCalculator.measured)
-            }
-        }
+        decibelCalculator.dB
     }
     
     var pulse2Fields: CalculatorItems {
@@ -560,8 +548,8 @@ class NMRCalculator2: ObservableObject {
                                            value: relativePower,
                                            unit: .dB,
                                            formatter: relativePowerFormatter) { newValue in
-            self.relativePower = newValue
-            self.updated.toggle() // TODO:
+            self.decibelCalculator.set(dB: newValue, mode: .amplitude)
+            self.update(.pulse2Amplitude, to: self.decibelCalculator.measured)
         }
         
         items.append(relativePower)
@@ -571,16 +559,9 @@ class NMRCalculator2: ObservableObject {
     
     private func updateRelativePower() -> Void {
         decibelCalculator.update(measured: amplitude2, reference: amplitude1, mode: .amplitude)
-        relativePower = decibelCalculator.dB
-    }
-    
-    private func updateAmplitude1InT() {
-        amplitude1InT = amplitude1 / γNucleus
     }
     
     // MARK: - Ernst Angle
-    @Published var ernstAngleUpdated = false
-    
     var repetitionTime: Double {
         ernstAngleCalculator.repetitionTime
     }

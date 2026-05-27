@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Pulse {
+public class Pulse: CustomStringConvertible {
     private static let radianToDegree = 180.0 / Double.pi
     private static var degreeToRadian: Double {
         return 1.0 / radianToDegree
@@ -24,6 +24,10 @@ public class Pulse {
     public var duration: Double // μs
     public var flipAngle: Double // degree
     public var amplitude: Double // Hz
+    
+    public var description: String {
+        return "duration: \(duration) μs, flipAngle: \(flipAngle)°, amplitude: \(amplitude) Hz"
+    }
     
     public var durationInSec: Double {
         duration * Pulse.μsToSec

@@ -10,13 +10,13 @@ import Foundation
 import NMRCalculatorCommon
 
 class UpdatePulseFlipAngle: NMRCalcCommand {
-    let pulse: Pulse
+    let pulseParameterConverter: PulseParameterConverter
     
-    init(_ pulse: Pulse) {
-        self.pulse = pulse
+    init(_ pulseParameterConverter: PulseParameterConverter) {
+        self.pulseParameterConverter = pulseParameterConverter
     }
     
     func execute(with value: Double) {
-        pulse.set(flipAngle: value)
+        pulseParameterConverter.set(flipAngle: value)
     }
 }
