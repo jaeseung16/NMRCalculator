@@ -19,7 +19,7 @@ class NMRCalculator2: ObservableObject {
     private let timeDomainCalculator: DwellAcquisitionTimeConverter
     private let frequencyDomainCalculator: SpectralWidthFrequencyResolutionConverter
     private let ernstAngleCalculator: ErnstAngleConverter
-    private let decibelCalculator: DecibelCalculator
+    private let decibelCalculator: DecibelConverter
     
     private let pulse1: Pulse
     private let pulse2: Pulse
@@ -74,9 +74,9 @@ class NMRCalculator2: ObservableObject {
         commands[.relativePower] = UpdateRelativePower(pulse2)
         self.commandsForPulse2 = [.pulse2Duration, .pulse2Amplitude, .pulse2FlipAngle]
         
-        self.decibelCalculator = DecibelCalculator()
+        self.decibelCalculator = DecibelConverter(measured: pulse2.amplitude, reference: pulse1.amplitude, mode: .amplitude)
         amplitude1InT = self.pulse1.amplitude / nucleus.γ
-        relativePower = self.decibelCalculator.dB(measuredAmplitude: self.pulse2.amplitude, referenceAmplitude: self.pulse1.amplitude)
+        relativePower = self.decibelCalculator.dB
     }
     
     var nucleusName: String {
@@ -496,8 +496,9 @@ class NMRCalculator2: ObservableObject {
     var relativePower: Double {
         didSet {
             if relativePower != oldValue {
-                updated.toggle() // TODO: 
-                update(.pulse2Amplitude, to: decibelCalculator.amplitude(dB: relativePower, referenceAmplitude: amplitude1))
+                decibelCalculator.set(dB: relativePower, mode: .amplitude)
+                print("measured: \(decibelCalculator.measured)")
+                update(.pulse2Amplitude, to: decibelCalculator.measured)
             }
         }
     }
@@ -569,7 +570,8 @@ class NMRCalculator2: ObservableObject {
     }
     
     private func updateRelativePower() -> Void {
-        relativePower = decibelCalculator.dB(measuredAmplitude: amplitude2, referenceAmplitude: amplitude1)
+        decibelCalculator.update(measured: amplitude2, reference: amplitude1, mode: .amplitude)
+        relativePower = decibelCalculator.dB
     }
     
     private func updateAmplitude1InT() {
