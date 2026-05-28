@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable {
+public struct NMRNucleus: Hashable, CustomStringConvertible, Identifiable, Sendable {
     public let id: String
     
     public let identifier: String

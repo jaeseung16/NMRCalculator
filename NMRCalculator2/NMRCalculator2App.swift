@@ -10,9 +10,12 @@ import SwiftUI
 
 @main
 struct NMRCalculator2App: App {
+    @State private var navigationState = NMRAssistantNavigationState()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(navigationState)
         }
     }
 }
