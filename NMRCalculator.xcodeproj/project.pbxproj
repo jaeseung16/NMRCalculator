@@ -61,6 +61,7 @@
 		90AD8D0E2FA16E2D003E0DED /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = 90AD8D0D2FA16E2D003E0DED /* MCP */; };
 		90C1D9CA2FC761E5009246D9 /* DecibelConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C1D9C92FC761D8009246D9 /* DecibelConverter.swift */; };
 		90C1D9D42FC76B69009246D9 /* PulseParameterConveter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C1D9D32FC76B63009246D9 /* PulseParameterConveter.swift */; };
+		90C1D9DE2FC77C35009246D9 /* NMRCalculatorCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 90C1D9DD2FC77C35009246D9 /* NMRCalculatorCommon */; };
 		90F69E782AADFDBB001FB5F0 /* UpdateRelaxationTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847FB1294512960079CCB0 /* UpdateRelaxationTime.swift */; };
 		90F69E792AADFDBD001FB5F0 /* UpdateRepetitionTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847FAD29450E460079CCB0 /* UpdateRepetitionTime.swift */; };
 		90F69E7A2AADFDC0001FB5F0 /* UpdateErnstAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90847FA9294508BC0079CCB0 /* UpdateErnstAngle.swift */; };
@@ -251,6 +252,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				90AD8D0E2FA16E2D003E0DED /* MCP in Frameworks */,
+				90C1D9DE2FC77C35009246D9 /* NMRCalculatorCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,6 +577,7 @@
 			name = NMRCalculatorMCPServer;
 			packageProductDependencies = (
 				90AD8D0D2FA16E2D003E0DED /* MCP */,
+				90C1D9DD2FC77C35009246D9 /* NMRCalculatorCommon */,
 			);
 			productName = NMRCalculatorMCPServer;
 			productReference = 90AD8D022FA169B7003E0DED /* NMRCalculatorMCPServer */;
@@ -928,7 +931,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = NMRCalculator2/NMRCalculator2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NMRCalculator2/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
@@ -953,7 +956,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.nmrcalculator;
@@ -980,7 +983,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = NMRCalculator2/NMRCalculator2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"NMRCalculator2/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
@@ -1005,7 +1008,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.nmrcalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1359,6 +1362,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 90AD8D0C2FA16E2D003E0DED /* XCRemoteSwiftPackageReference "swift-sdk" */;
 			productName = MCP;
+		};
+		90C1D9DD2FC77C35009246D9 /* NMRCalculatorCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NMRCalculatorCommon;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

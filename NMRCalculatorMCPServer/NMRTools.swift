@@ -8,6 +8,7 @@
 
 import Foundation
 import MCP
+import NMRCalculatorCommon
 
 enum NMRTools {
 
