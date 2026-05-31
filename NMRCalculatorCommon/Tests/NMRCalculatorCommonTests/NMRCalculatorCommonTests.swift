@@ -1,8 +1,15 @@
 import Testing
 @testable import NMRCalculatorCommon
 
-@Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    // Swift Testing Documentation
-    // https://developer.apple.com/documentation/testing
+@Test func testNMRNucleusTableLoader() async throws {
+    let loader = await NMRNucleusTableLoader.shared
+    
+    #expect(loader.loaded)
+    #expect(loader.nmrNucleusTable().count == 120, "Expected 120 entries in the table")
+}
+
+@Test func testNMRNucleusTable() async throws {
+    let table = await NMRNucleusTable()
+    
+    #expect(table.nuclei[0] == NMRNucleus())
 }

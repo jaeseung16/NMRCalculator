@@ -12,11 +12,20 @@ let package = Package(
             targets: ["NMRCalculatorCommon"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-log", from: "1.13.1")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "NMRCalculatorCommon"
+            name: "NMRCalculatorCommon",
+            dependencies: [
+                .product(name: "Logging", package: "swift-log")
+            ],
+            resources: [
+                .process("Resources/NMRFreqTable_2026.csv")
+            ],
         ),
         .testTarget(
             name: "NMRCalculatorCommonTests",
