@@ -6,10 +6,13 @@
 import Foundation
 import FoundationModels
 import Observation
+import os
 
 @MainActor
 @Observable
 final class NMRAssistantService {
+    private static let logger = Logger()
+    
     private var session: LanguageModelSession?
     var messages: [NMRAssistantMessage] = []
     var isProcessing = false
@@ -69,6 +72,23 @@ final class NMRAssistantService {
             messages.append(NMRAssistantMessage(id: UUID(), role: .assistant, text: response.content))
         } catch {
             messages.append(NMRAssistantMessage(id: UUID(), role: .assistant, text: "Error: \(error.localizedDescription)"))
+        }
+        
+        session.transcript.forEach {
+            switch $0 {
+            case .instructions(let instructions):
+                Self.logger.info("Instructions: \(instructions)")
+            case .prompt(let prompt):
+                Self.logger.info("Prompt: \(prompt)")
+            case .toolCalls(let call):
+                Self.logger.info("ToolCall: \(call)")
+            case .toolOutput(let output):
+                Self.logger.info("ToolOutput: \(output)")
+            case .response(let response):
+                Self.logger.info("Response: \(response)")
+            @unknown default:
+                Self.logger.info("unknown: \($0)")
+            }
         }
     }
 }

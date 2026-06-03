@@ -26,7 +26,7 @@ struct LarmorFrequencyTool: Tool {
 
     func call(arguments: Arguments) async throws -> String {
         guard let nucleus = await MainActor.run(body: {
-            NMRPeriodicTable.shared.nucleiById[arguments.nucleusIdentifier]
+            NMRPeriodicTable.shared.nucleus(matching: arguments.nucleusIdentifier)
         }) else {
             return "Nucleus '\(arguments.nucleusIdentifier)' not found. Use list_nuclei to find valid identifiers."
         }

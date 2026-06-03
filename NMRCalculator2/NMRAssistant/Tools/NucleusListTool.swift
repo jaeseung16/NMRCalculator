@@ -17,13 +17,13 @@ struct NucleusListTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
-        let query = arguments.elementNameOrSymbol.lowercased()
-        let matches = await MainActor.run {
-            NMRPeriodicTable.shared.nuclei.filter {
-                $0.nameNucleus.lowercased() == query || $0.symbolNucleus.lowercased() == query
-            }
+        let normalized = await MainActor.run {
+            NMRPeriodicTable.shared.normalizedElementKey(for: arguments.elementNameOrSymbol)
         }
-        guard !matches.isEmpty else {
+        let matches = await MainActor.run {
+            NMRPeriodicTable.shared.nucleiByElement[normalized]
+        }
+        guard let matches = matches, !matches.isEmpty else {
             return "No NMR-active isotopes found for '\(arguments.elementNameOrSymbol)'."
         }
         let lines = matches.map { n in
