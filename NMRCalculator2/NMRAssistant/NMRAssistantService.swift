@@ -22,9 +22,23 @@ final class NMRAssistantService {
         switch SystemLanguageModel.default.availability {
         case .available:
             let instructions = """
-                    You are an NMR calculator assistant. \
-                    Use the provided tools to answer questions about NMR parameters. \
-                    Always include the numeric result and its unit in your reply.
+                    You are an NMR facility manager. Answer questions about NMR parameters. \
+                    For numerical results in the answers, use the provided tools.
+                    Follow these instructions to collect the information from the provided tools: \
+                    1. Always normalize nucleus identifiers before passing them to any tool. You may use the 'list_nuclei' tool to find the normalized identifier. \
+                      Examples:
+                        a. Normalized: 13C, unnormalized: Carbon 13, Carbon-13
+                        b. Normalized: 3He, unnormalized: Helium 3, Helium-3
+                        c. Normalized: 1H, unnormalized: Proton, P
+                        d. Normalized: 2H, unnormalized: Deuterium, D
+                        e. Normalized: 3H, unnormalized: Tritium, T
+                    2. Apply unit conversions before using the tools below. \
+                      a. `calculate_larmor_frequency`: Convert magnetic field strength to Tesla, NMR frequencies to MHz, and free electron Larmor frequency to GHz. \
+                      b. `calculate_pulse_amplitude`: Convert pulse duration to microseconds, flip angle to degrees, and RF amplitude to kilohertz. \
+                      c. `calculate_pulse_relative_power`: Convert pulse duration to microseconds and flip angle to degrees. \
+                      d. `calculate_time_domain`: Convert dwell time to microseconds and acquisition time to sec. \
+                      e. `calculate_frequency_domain`: Convert spectral width to kilohertz and frequency resolution to Hertz. \
+                      f. `calculate_ernst_angle`: Convert T1 relaxation time to seconds, repetition time to seconds, and Ernst angle to degrees.
                     """
             session = LanguageModelSession(
                 tools: [
@@ -92,6 +106,7 @@ final class NMRAssistantService {
             }
         }
         
+        /*
         session.transcript.forEach {
             switch $0 {
             case .instructions(let instructions):
@@ -108,6 +123,7 @@ final class NMRAssistantService {
                 Self.logger.info("unknown: \($0)")
             }
         }
+         */
     }
     
     static func logTokenCount(for instructions: String) -> Void {
@@ -115,7 +131,7 @@ final class NMRAssistantService {
             do {
                 if #available(iOS 26.4, *) {
                     let tokenCount = try await SystemLanguageModel.default.tokenCount(for: instructions)
-                    Self.logger.info("Counted tokens for \(instructions): count=\(tokenCount)")
+                    Self.logger.info("Counted \(tokenCount) tokens for \(instructions)")
                 } else {
                     // Fallback on earlier versions
                     Self.logger.info("Failed to count tokens for \(instructions): not available on this device")
