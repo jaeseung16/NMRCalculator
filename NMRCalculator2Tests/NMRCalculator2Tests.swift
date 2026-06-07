@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import NMRCalculator2
 
 final class NMRCalculator2Tests: XCTestCase {
 
@@ -17,13 +18,18 @@ final class NMRCalculator2Tests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    @MainActor
+    func testNMRAssistantService() async throws {
+        let navigationState = NMRAssistantNavigationState()
+        let service = NMRAssistantService(navigationState: navigationState)
+        
+        await service.send("Which isotope of carbon are NMR active?")
+        
+        print("**********")
+        service.messages.forEach { print($0) }
+        print("**********")
+        //XCTAssertTrue(service.messages.isEmpty)
     }
 
     func testPerformanceExample() throws {
