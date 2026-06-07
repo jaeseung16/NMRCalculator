@@ -24,7 +24,7 @@ final class NMRCalculator2Tests: XCTestCase {
         let navigationState = NMRAssistantNavigationState()
         let service = NMRAssistantService(navigationState: navigationState)
         
-        await service.send("Which isotope of carbon are NMR active?")
+        await service.send("Which isotopes of carbon are NMR active?")
         
         print("**********")
         service.messages.forEach { print($0) }

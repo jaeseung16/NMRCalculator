@@ -5,8 +5,11 @@
 
 import FoundationModels
 import NMRCalculatorCommon
+import os
 
 struct PulseRelativePowerTool: Tool {
+    private static let logger = Logger()
+    
     let name = "calculate_pulse_relative_power"
     let description = "Calculates relative power in dB between two pulses defined by duration and flip angle."
 
@@ -48,6 +51,7 @@ struct PulseRelativePowerTool: Tool {
             guard let r = r as? DecibelCalcualtionResponse else { throw NMRCalcError.invalidOutput }
             return "Relative power: \(String(format: "%.4f", r.dB)) dB (ref: \(String(format: "%.2f", refResp.amplitudeInHz)) Hz, measured: \(String(format: "%.2f", measResp.amplitudeInHz)) Hz)"
         case .failure(let error):
+            Self.logger.error("Failed to process \(String(describing: dbRequest)): \(error.localizedDescription)")
             throw error
         }
     }

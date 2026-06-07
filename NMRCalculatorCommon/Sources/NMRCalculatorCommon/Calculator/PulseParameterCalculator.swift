@@ -6,8 +6,13 @@
 //  Copyright © 2026 Jae-Seung Lee. All rights reserved.
 //
 
+import Logging
+
 public class PulseParameterCalculator: NMRCalcDelegate {
+    private static let logger = Logger(label: "PulseParameterCalculator")
+    
     public func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
+        Self.logger.info("Processing \(String(describing: request))")
         guard let request = request as? PulseParameterRequest else {
             return .failure(.invalidInput)
         }
@@ -32,6 +37,7 @@ public class PulseParameterCalculator: NMRCalcDelegate {
                 amplitudeInHz: (flipAngleInDegree/360.0) / (durationInMicrosecond / 1_000_000.0)
             ))
         default:
+            Self.logger.info("\(String(describing: request.durationInMicrosecond)), \(String(describing: request.flipAngleInDegree)), \(String(describing: request.amplitudeInHz))")
             return .failure(.invalidInput)
         }
     }

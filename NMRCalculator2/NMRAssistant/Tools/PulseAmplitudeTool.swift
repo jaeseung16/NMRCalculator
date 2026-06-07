@@ -5,8 +5,11 @@
 
 import FoundationModels
 import NMRCalculatorCommon
+import os
 
 struct PulseAmplitudeTool: Tool {
+    private static let logger = Logger()
+    
     let name = "calculate_pulse_amplitude"
     let description = "Calculates RF pulse amplitude in Hz and µT for a nucleus. Provide the nucleus and two of: duration, flip angle, amplitude."
 
@@ -39,6 +42,7 @@ struct PulseAmplitudeTool: Tool {
             let b1InMicroTesla = r.amplitudeInHz / nucleus.γ
             return "Duration: \(String(format: "%.4f", r.durationInMicrosecond)) µs, Flip angle: \(String(format: "%.2f", r.flipAngleInDegree))°, RF amplitude: \(String(format: "%.2f", r.amplitudeInHz)) Hz (\(String(format: "%.4f", b1InMicroTesla)) µT)"
         case .failure(let error):
+            Self.logger.error("Failed to process \(String(describing: request)): \(error.localizedDescription)")
             throw error
         }
     }

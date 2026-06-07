@@ -7,13 +7,16 @@
 //
 
 import Foundation
+import Logging
 
 public class ErnstAngleCalculator: NMRCalcDelegate {
+    private static let logger = Logger(label: "ErnstAngleCalculator")
     
     private static let radianToDegree = 180.0 / Double.pi
     private static let degreeToRadian = Double.pi / 180.0
     
     public func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
+        Self.logger.info("Processing \(String(describing: request))")
         guard let request = request as? ErnstAngleRequest else {
             return .failure(.invalidInput)
         }
@@ -38,6 +41,7 @@ public class ErnstAngleCalculator: NMRCalcDelegate {
                 relaxationTimeInSec: -1.0 * repetitionTimeInSec / log(cos(ernstAngleInDegree * Self.degreeToRadian))
             ))
         default:
+            Self.logger.info("\(String(describing: request.ernstAngleInDegree)), \(String(describing: request.repetitionTimeInSec)), \(String(describing: request.relaxationTimeInSec))")
             return .failure(.invalidInput)
         }
     }

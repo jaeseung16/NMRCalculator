@@ -6,11 +6,16 @@
 //  Copyright © 2026 Jae-Seung Lee. All rights reserved.
 //
 
+import Logging
+
 public class LarmorFrequencyCalculator: NMRCalcDelegate {
+    private static let logger = Logger(label: "LarmorFrequencyCalculator")
+    
     private static let γProton = NMRCalcConstants.gammaProton
     private static let γElectron = NMRCalcConstants.gammaElectron
     
     public func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
+        Self.logger.info("Processing \(String(describing: request))")
         guard let request = request as? LarmorFrequencyRequest,
               let magneticField = magneticField(from: request) else {
             return .failure(.invalidInput)

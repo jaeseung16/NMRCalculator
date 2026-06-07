@@ -6,8 +6,13 @@
 //  Copyright © 2026 Jae-Seung Lee. All rights reserved.
 //
 
+import Logging
+
 public class FrequencyDomainCalculator: NMRCalcDelegate {
+    private static let logger = Logger(label: "FrequencyDomainCalculator")
+    
     public func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
+        Self.logger.info("Processing \(String(describing: request))")
         guard let request = request as? FrequencyDomainRequest else {
             return .failure(.invalidInput)
         }
@@ -32,6 +37,7 @@ public class FrequencyDomainCalculator: NMRCalcDelegate {
                 frequencyResolutionInHz: spectralWidth / Double(n)
             ))
         default:
+            Self.logger.info("\(String(describing: request.spectralWidthInHz)), \(String(describing: request.numberOfPoints)), \(String(describing: request.frequencyResolutionInHz))")
             return .failure(.invalidInput)
         }
     }

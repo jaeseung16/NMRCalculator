@@ -5,8 +5,11 @@
 
 import FoundationModels
 import NMRCalculatorCommon
+import os
 
 struct FrequencyDomainTool: Tool {
+    private static let logger = Logger()
+    
     let name = "calculate_frequency_domain"
     let description = "Calculates spectral width, frequency resolution, or number of spectrum points. Provide two; the third is calculated."
 
@@ -31,6 +34,7 @@ struct FrequencyDomainTool: Tool {
             guard let r = r as? FrequencyDomainResponse else { throw NMRCalcError.invalidOutput }
             return "Spectral width: \(String(format: "%.4f", r.spectralWidthInHz / 1000.0)) kHz, Points: \(r.numberOfPoints), Resolution: \(String(format: "%.4f", r.frequencyResolutionInHz)) Hz"
         case .failure(let error):
+            Self.logger.error("Failed to process \(String(describing: request)): \(error.localizedDescription)")
             throw error
         }
     }

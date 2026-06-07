@@ -7,14 +7,17 @@
 //
 
 import Foundation
+import Logging
 
 public class DecibelCalculator: NMRCalcDelegate {
+    private static let logger = Logger(label: "DecibelCalculator")
     
     public init() {
         
     }
     
     public func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError> {
+        Self.logger.info("Processing \(String(describing: request))")
         guard let request = request as? DecibelCalcualtionRequest else {
             return .failure(.invalidInput)
         }
@@ -35,6 +38,7 @@ public class DecibelCalculator: NMRCalcDelegate {
                 mode: request.mode
             ))
         default:
+            Self.logger.info("\(String(describing: request.dB)), \(String(describing: request.measured)), \(String(describing: request.reference))")
             return .failure(.invalidInput)
         }
     }

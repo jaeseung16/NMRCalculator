@@ -5,8 +5,11 @@
 
 import FoundationModels
 import NMRCalculatorCommon
+import os
 
 struct LarmorFrequencyTool: Tool {
+    private static let logger = Logger()
+    
     let name = "calculate_larmor_frequency"
     let description = "Calculates Larmor frequency, magnetic field, or proton frequency for a nucleus. Provide one input."
 
@@ -42,6 +45,7 @@ struct LarmorFrequencyTool: Tool {
             guard let r = r as? LarmorFrequencyResponse else { throw NMRCalcError.invalidOutput }
             return "\(nucleus.identifier) Larmor frequency: \(String(format: "%.4f", r.larmorFrequency)) MHz, B0: \(String(format: "%.4f", r.magneticField)) T, Proton frequency: \(String(format: "%.4f", r.protonFrequency)) MHz"
         case .failure(let error):
+            Self.logger.error("Failed to process \(String(describing: request)): \(error.localizedDescription)")
             throw error
         }
     }

@@ -5,8 +5,11 @@
 
 import FoundationModels
 import NMRCalculatorCommon
+import os
 
 struct TimeDomainTool: Tool {
+    private static let logger = Logger()
+    
     let name = "calculate_time_domain"
     let description = "Calculates acquisition time, dwell time, or number of acquisition points. Provide two; the third is calculated."
 
@@ -26,11 +29,13 @@ struct TimeDomainTool: Tool {
             numberOfPoints: arguments.numberOfPoints,
             dwellInSec: arguments.dwellTimeInMicrosec.map { $0 / 1_000_000.0 }
         )
+        Self.logger.info("Processing \(String(describing: request))")
         switch NMRCalcFactory.shared.create(.time).process(request) {
         case .success(let r):
             guard let r = r as? TimeDomainResponse else { throw NMRCalcError.invalidOutput }
             return "Acquisition time: \(String(format: "%.6f", r.acqusitionTimeInSec)) s, Points: \(r.numberOfPoints), Dwell time: \(String(format: "%.4f", r.dwellInSec * 1_000_000.0)) µs"
         case .failure(let error):
+            Self.logger.error("Failed to process \(String(describing: request)): \(error.localizedDescription)")
             throw error
         }
     }

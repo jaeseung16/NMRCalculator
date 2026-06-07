@@ -5,10 +5,13 @@
 
 import FoundationModels
 import NMRCalculatorCommon
+import os
 
 struct ErnstAngleTool: Tool {
+    private static let logger = Logger()
+    
     let name = "calculate_ernst_angle"
-    let description = "Calculates Ernst angle (°) or repetition time (s). Provide T1 and one of: repetition time or Ernst angle."
+    let description = "Calculates Ernst angle or repetition time. Provide T1 relaxation time and one of: repetition time or Ernst angle."
 
     @Generable
     struct Arguments {
@@ -27,10 +30,11 @@ struct ErnstAngleTool: Tool {
             relaxationTimeInSec: arguments.relaxationTimeT1InSec
         )
         switch NMRCalcFactory.shared.create(.ernst).process(request) {
-        case .success(let r):
-            guard let r = r as? ErnstAngleResponse else { throw NMRCalcError.invalidOutput }
-            return "Ernst angle: \(String(format: "%.4f", r.ernstAngleInDegree))°, Repetition time: \(String(format: "%.4f", r.repetitionTimeInSec)) s, T1: \(String(format: "%.4f", r.relaxationTimeInSec)) s"
+        case .success(let response):
+            guard let response = response as? ErnstAngleResponse else { throw NMRCalcError.invalidOutput }
+            return "Ernst angle: \(String(format: "%.4f", response.ernstAngleInDegree))°, Repetition time: \(String(format: "%.4f", response.repetitionTimeInSec)) s, T1: \(String(format: "%.4f", response.relaxationTimeInSec)) s"
         case .failure(let error):
+            Self.logger.error("Failed to process \(String(describing: request)): \(error.localizedDescription)")
             throw error
         }
     }

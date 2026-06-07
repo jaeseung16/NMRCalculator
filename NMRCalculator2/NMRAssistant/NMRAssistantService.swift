@@ -87,6 +87,9 @@ final class NMRAssistantService {
             messages.append(
                 NMRAssistantMessage(id: UUID(), role: .assistant, text: "Error: \(error.localizedDescription)")
             )
+            if let error = error as? LanguageModelSession.GenerationError {
+                Self.logger.error("failureReason: \(error.failureReason ?? ""), errorDescription: \(error.errorDescription ?? ""), recoverySuggestion: \(error.recoverySuggestion ?? "")")
+            }
         }
         
         session.transcript.forEach {
