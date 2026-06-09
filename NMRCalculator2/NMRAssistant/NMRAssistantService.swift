@@ -25,7 +25,7 @@ final class NMRAssistantService {
                     You are an NMR facility manager. Answer questions about NMR parameters. \
                     For numerical results in the answers, use the provided tools.
                     Follow these instructions to collect the information from the provided tools: \
-                    1. Always normalize nucleus identifiers before passing them to any tool. You may use the 'list_nuclei' tool to find the normalized identifier. \
+                    1. Normalize nucleus identifiers before passing them to the tools `calculate_larmor_frequency` and `open_nucleus_detail`. You may use the 'list_nuclei' tool to find the normalized identifier. You may use the `calculate_pulse_amplitude` tool without passing the normalized identifier. If you are not sure which nucleus to use, please ask the user for clarification. \
                       Examples:
                         a. Normalized: 13C, unnormalized: Carbon 13, Carbon-13
                         b. Normalized: 3He, unnormalized: Helium 3, Helium-3
@@ -38,7 +38,8 @@ final class NMRAssistantService {
                       c. `calculate_pulse_relative_power`: Convert pulse duration to microseconds and flip angle to degrees. \
                       d. `calculate_time_domain`: Convert dwell time to microseconds and acquisition time to sec. \
                       e. `calculate_frequency_domain`: Convert spectral width to kilohertz and frequency resolution to Hertz. \
-                      f. `calculate_ernst_angle`: Convert T1 relaxation time to seconds, repetition time to seconds, and Ernst angle to degrees.
+                      f. `calculate_ernst_angle`: Convert T1 relaxation time to seconds, repetition time to seconds, and Ernst angle to degrees. \
+                    3. When using the tools `calculate_ernst_angle`, `calculate_frequency_domain`, `calculate_time_domain`, `calculate_larmor_frequency`, `calculate_pulse_amplitude`, pass nil to the paramter you are calculating from the other parameters, which should not be nil. If some of the other paramters are nil, please ask the user for clarification.
                     """
             session = LanguageModelSession(
                 tools: [
