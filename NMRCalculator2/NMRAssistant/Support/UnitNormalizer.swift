@@ -47,11 +47,50 @@ enum AngleUnit: String, CaseIterable {
     }
 }
 
+@Generable
+enum FrequencyUnit: String, CaseIterable {
+    case hertz
+    case kilohertz
+    case megahertz
+    case gigahertz
+    case unrecognized
+
+    var hertzPerUnit: Double? {
+        switch self {
+        case .hertz: return 1.0
+        case .kilohertz: return 1.0e3
+        case .megahertz: return 1.0e6
+        case .gigahertz: return 1.0e9
+        case .unrecognized: return nil
+        }
+    }
+}
+
+@Generable
+enum MagneticFieldUnit: String, CaseIterable {
+    case tesla
+    case millitesla
+    case microtesla
+    case gauss
+    case unrecognized
+
+    var teslaPerUnit: Double? {
+        switch self {
+        case .tesla: return 1.0
+        case .millitesla: return 1.0e-3
+        case .microtesla: return 1.0e-6
+        case .gauss: return 1.0e-4
+        case .unrecognized: return nil
+        }
+    }
+}
+
 /// Converts user-stated quantities to the canonical units the calculators expect.
 /// Unit spellings are resolved with a lookup table first; a dedicated
 /// `LanguageModelSession` classifies the spelling (guided generation onto a unit
 /// enum) only when the table misses. All numeric conversion is done in Swift —
-/// no numbers pass through the model.
+/// no numbers pass through the model. A nil or blank unit is taken as the
+/// `assuming` unit of the calling tool's parameter.
 struct UnitNormalizer {
     private static let logger = Logger()
 
@@ -72,9 +111,23 @@ struct UnitNormalizer {
         "rad": .radians, "rads": .radians, "radian": .radians, "radians": .radians
     ]
 
-    /// Converts a time value to seconds. A nil or blank unit is taken as seconds.
-    static func seconds(from value: Double, unit: String?) async throws -> Double {
-        guard let key = normalizedKey(unit) else { return value }
+    private static let frequencyUnits: [String: FrequencyUnit] = [
+        "hz": .hertz, "hertz": .hertz,
+        "khz": .kilohertz, "kilohertz": .kilohertz,
+        "mhz": .megahertz, "megahertz": .megahertz,
+        "ghz": .gigahertz, "gigahertz": .gigahertz
+    ]
+
+    private static let magneticFieldUnits: [String: MagneticFieldUnit] = [
+        "t": .tesla, "tesla": .tesla, "teslas": .tesla,
+        "mt": .millitesla, "millitesla": .millitesla, "milliteslas": .millitesla,
+        "ut": .microtesla, "µt": .microtesla, "μt": .microtesla,
+        "microtesla": .microtesla, "microteslas": .microtesla,
+        "g": .gauss, "gauss": .gauss
+    ]
+
+    static func seconds(from value: Double, unit: String?, assuming defaultUnit: TimeUnit = .seconds) async throws -> Double {
+        guard let key = normalizedKey(unit) else { return value * (defaultUnit.secondsPerUnit ?? 1.0) }
         let timeUnit: TimeUnit
         if let match = timeUnits[key] {
             timeUnit = match
@@ -87,9 +140,8 @@ struct UnitNormalizer {
         return value * secondsPerUnit
     }
 
-    /// Converts an angle value to degrees. A nil or blank unit is taken as degrees.
-    static func degrees(from value: Double, unit: String?) async throws -> Double {
-        guard let key = normalizedKey(unit) else { return value }
+    static func degrees(from value: Double, unit: String?, assuming defaultUnit: AngleUnit = .degrees) async throws -> Double {
+        guard let key = normalizedKey(unit) else { return value * (defaultUnit.degreesPerUnit ?? 1.0) }
         let angleUnit: AngleUnit
         if let match = angleUnits[key] {
             angleUnit = match
@@ -100,6 +152,34 @@ struct UnitNormalizer {
             throw UnitNormalizationError.unrecognizedUnit(key)
         }
         return value * degreesPerUnit
+    }
+
+    static func hertz(from value: Double, unit: String?, assuming defaultUnit: FrequencyUnit = .hertz) async throws -> Double {
+        guard let key = normalizedKey(unit) else { return value * (defaultUnit.hertzPerUnit ?? 1.0) }
+        let frequencyUnit: FrequencyUnit
+        if let match = frequencyUnits[key] {
+            frequencyUnit = match
+        } else {
+            frequencyUnit = try await classify(key, as: FrequencyUnit.self, dimension: "frequency")
+        }
+        guard let hertzPerUnit = frequencyUnit.hertzPerUnit else {
+            throw UnitNormalizationError.unrecognizedUnit(key)
+        }
+        return value * hertzPerUnit
+    }
+
+    static func tesla(from value: Double, unit: String?, assuming defaultUnit: MagneticFieldUnit = .tesla) async throws -> Double {
+        guard let key = normalizedKey(unit) else { return value * (defaultUnit.teslaPerUnit ?? 1.0) }
+        let fieldUnit: MagneticFieldUnit
+        if let match = magneticFieldUnits[key] {
+            fieldUnit = match
+        } else {
+            fieldUnit = try await classify(key, as: MagneticFieldUnit.self, dimension: "magnetic field strength")
+        }
+        guard let teslaPerUnit = fieldUnit.teslaPerUnit else {
+            throw UnitNormalizationError.unrecognizedUnit(key)
+        }
+        return value * teslaPerUnit
     }
 
     private static func normalizedKey(_ raw: String?) -> String? {

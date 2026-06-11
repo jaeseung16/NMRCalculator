@@ -9,34 +9,80 @@ import os
 
 struct TimeDomainTool: Tool {
     private static let logger = Logger()
-    
+
     let name = "calculate_time_domain"
-    let description = "Calculates acquisition time, dwell time, or number of acquisition points. Provide two; the third is calculated."
+    let description = "Calculates acquisition time, dwell time, or number of acquisition points. Provide exactly two of the three, with units as the user stated; omit the one to calculate."
 
     @Generable
     struct Arguments {
-        @Guide(description: "Acquisition time in seconds; omit to calculate it")
-        var acquisitionTimeInSec: Double?
+        @Guide(description: "Acquisition time; omit to calculate it")
+        var acquisitionTime: Double?
+        @Guide(description: "Acquisition time unit as the user stated it, e.g. 's', 'ms'")
+        var acquisitionTimeUnit: String?
         @Guide(description: "Number of data points; omit to calculate it")
         var numberOfPoints: Int?
-        @Guide(description: "Dwell time in microseconds; omit to calculate it")
-        var dwellTimeInMicrosec: Double?
+        @Guide(description: "Dwell time; omit to calculate it")
+        var dwellTime: Double?
+        @Guide(description: "Dwell time unit as the user stated it, e.g. 'µs', 'ms'")
+        var dwellTimeUnit: String?
     }
 
     func call(arguments: Arguments) async throws -> String {
+        let providedCount = [arguments.acquisitionTime != nil,
+                             arguments.numberOfPoints != nil,
+                             arguments.dwellTime != nil].filter { $0 }.count
+        guard providedCount == 2 else {
+            return "Provide exactly two of: acquisition time, number of points, dwell time; omit the one to calculate."
+        }
+
+        let acquisitionTimeInSec: Double?
+        let dwellInSec: Double?
+        do {
+            acquisitionTimeInSec = try await Self.seconds(arguments.acquisitionTime, unit: arguments.acquisitionTimeUnit, assuming: .seconds)
+            dwellInSec = try await Self.seconds(arguments.dwellTime, unit: arguments.dwellTimeUnit, assuming: .microseconds)
+        } catch UnitNormalizationError.unrecognizedUnit(let unit) {
+            return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time unit."
+        }
+
+        let calculated: ToolResponseEvaluator.TimeDomainParameter = acquisitionTimeInSec == nil
+            ? .acquisitionTime
+            : (arguments.numberOfPoints == nil ? .numberOfPoints : .dwellTime)
+
         let request = TimeDomainRequest(
-            acqusitionTimeInSec: arguments.acquisitionTimeInSec,
+            acqusitionTimeInSec: acquisitionTimeInSec,
             numberOfPoints: arguments.numberOfPoints,
-            dwellInSec: arguments.dwellTimeInMicrosec.map { $0 / 1_000_000.0 }
+            dwellInSec: dwellInSec
         )
-        Self.logger.info("Processing \(String(describing: request))")
         switch NMRCalcFactory.shared.create(.time).process(request) {
-        case .success(let r):
-            guard let r = r as? TimeDomainResponse else { throw NMRCalcError.invalidOutput }
-            return "Acquisition time: \(String(format: "%.6f", r.acqusitionTimeInSec)) s, Points: \(r.numberOfPoints), Dwell time: \(String(format: "%.4f", r.dwellInSec * 1_000_000.0)) µs"
+        case .success(let response):
+            guard let response = response as? TimeDomainResponse else { throw NMRCalcError.invalidOutput }
+            guard ToolResponseEvaluator.verify(response, calculated: calculated) else {
+                Self.logger.error("Round-trip verification failed for \(String(describing: response))")
+                throw NMRCalcError.invalidOutput
+            }
+            return Self.format(response, calculated: calculated)
         case .failure(let error):
             Self.logger.error("Failed to process \(String(describing: request)): \(error.localizedDescription)")
             throw error
+        }
+    }
+
+    private static func seconds(_ value: Double?, unit: String?, assuming defaultUnit: TimeUnit) async throws -> Double? {
+        guard let value else { return nil }
+        return try await UnitNormalizer.seconds(from: value, unit: unit, assuming: defaultUnit)
+    }
+
+    private static func format(_ response: TimeDomainResponse, calculated: ToolResponseEvaluator.TimeDomainParameter) -> String {
+        let acquisition = "acquisition time = \(String(format: "%.6f", response.acqusitionTimeInSec)) s"
+        let points = "number of points = \(response.numberOfPoints)"
+        let dwell = "dwell time = \(String(format: "%.4f", response.dwellInSec * 1_000_000.0)) µs"
+        switch calculated {
+        case .acquisitionTime:
+            return "Calculated \(acquisition) (given \(points), \(dwell))"
+        case .numberOfPoints:
+            return "Calculated \(points) (given \(acquisition), \(dwell))"
+        case .dwellTime:
+            return "Calculated \(dwell) (given \(acquisition), \(points))"
         }
     }
 }

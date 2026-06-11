@@ -32,13 +32,7 @@ final class NMRAssistantService {
                         c. Normalized: 1H, unnormalized: Proton, P
                         d. Normalized: 2H, unnormalized: Deuterium, D
                         e. Normalized: 3H, unnormalized: Tritium, T
-                    2. Apply unit conversions before using the tools below. \
-                      a. `calculate_larmor_frequency`: Convert magnetic field strength to Tesla, NMR frequencies to MHz, and free electron Larmor frequency to GHz. \
-                      b. `calculate_pulse_amplitude`: Convert pulse duration to microseconds, flip angle to degrees, and RF amplitude to kilohertz. \
-                      c. `calculate_pulse_relative_power`: Convert pulse duration to microseconds and flip angle to degrees. \
-                      d. `calculate_time_domain`: Convert dwell time to microseconds and acquisition time to sec. \
-                      e. `calculate_frequency_domain`: Convert spectral width to kilohertz and frequency resolution to Hertz. \
-                      f. `calculate_ernst_angle`: Do not convert units; pass each value with the unit the user stated. \
+                    2. Do not convert units; pass each numerical value to the tools together with the unit the user stated. \
                     3. When using the tools `calculate_ernst_angle`, `calculate_frequency_domain`, `calculate_time_domain`, `calculate_larmor_frequency`, `calculate_pulse_amplitude`, pass nil to the paramter you are calculating from the other parameters, which should not be nil. If some of the other paramters are nil, please ask the user for clarification.
                     """
             session = LanguageModelSession(

@@ -291,20 +291,25 @@ Binds to `NMRAssistantService` via `@State` (owned here) or passed in via the en
 
 ## Phase 1 — Shared support layer (`NMRAssistant/Support/`) ✅
 
-- `UnitNormalizer.swift` ✅ — `@Generable` enums `TimeUnit` and `AngleUnit` (each with an `unrecognized` case so the classifier can express "not a unit of this dimension"); lookup tables; LLM fallback classifier; `seconds(from:unit:)` / `degrees(from:unit:)`. A nil/blank unit is taken as the canonical unit. Extend with `FrequencyUnit` (Hz, kHz, MHz, GHz) and `MagneticFieldUnit` (T, mT, G) when fanning out to the other tools.
-- `ToolResponseEvaluator.swift` ✅ — round-trip verification; currently `verify(_:calculated:)` for `ErnstAngleResponse`, to be extended per calculator type.
+- `UnitNormalizer.swift` ✅ — `@Generable` enums `TimeUnit`, `AngleUnit`, `FrequencyUnit`, `MagneticFieldUnit` (each with an `unrecognized` case so the classifier can express "not a unit of this dimension"); lookup tables; LLM fallback classifier; `seconds(from:unit:assuming:)` / `degrees(…)` / `hertz(…)` / `tesla(…)`. A nil/blank unit is taken as the calling parameter's `assuming` unit (e.g. µs for dwell time, MHz for Larmor frequency), matching the units the tools previously documented in their argument guides.
+- `ToolResponseEvaluator.swift` ✅ — round-trip verification for all calculator types: `ErnstAngleResponse`, `FrequencyDomainResponse`, `TimeDomainResponse` (the number-of-points cases use a one-step tolerance because the calculator truncates `N` to an integer), `LarmorFrequencyResponse` (keyed by the *given* parameter, since all others are derived from it), `PulseParameterResponse`, and `DecibelCalcualtionResponse`.
 
-## Phase 2 — Tool argument & flow changes (✅ `ErnstAngleTool`; other tools pending)
+## Phase 2 — Tool argument & flow changes ✅
 
 Pipeline in each calculation tool's `call(arguments:)`:
 validate exactly-one-parameter-omitted → `UnitNormalizer` converts each input to canonical units → build request → process via `NMRCalcFactory` → `ToolResponseEvaluator` round-trip check → return explicit `"Calculated …"` string. Validation problems and unrecognized units return instructive strings (so the model can ask the user); calculator/verification failures throw.
 
 - `ErnstAngleTool` ✅ — arguments are now value + unit-string pairs (`relaxationTimeT1`/`relaxationTimeT1Unit`, `repetitionTime`/`repetitionTimeUnit`, `ernstAngle`/`ernstAngleUnit`), all optional; exactly two must be provided and the third is calculated (the calculator also supports solving for T1, so the tool now exposes that too).
-- Pending: `FrequencyDomainTool`, `TimeDomainTool`, `LarmorFrequencyTool`, `PulseAmplitudeTool`, `PulseRelativePowerTool`. `NucleusListTool` and `OpenNucleusDetailTool` need no changes (no units).
+- `FrequencyDomainTool` ✅ — `spectralWidth`/`spectralWidthUnit` (blank unit ⇒ kHz), `numberOfPoints`, `frequencyResolution`/`frequencyResolutionUnit` (blank ⇒ Hz); exactly two of three.
+- `TimeDomainTool` ✅ — `acquisitionTime`/unit (blank ⇒ s), `numberOfPoints`, `dwellTime`/unit (blank ⇒ µs); exactly two of three.
+- `LarmorFrequencyTool` ✅ — nucleus plus exactly one of `magneticField` (blank ⇒ T), `larmorFrequency` (blank ⇒ MHz), `protonFrequency` (blank ⇒ MHz), `electronFrequency` (blank ⇒ GHz), each with a unit field; the output names the given parameter and lists the calculated ones.
+- `PulseAmplitudeTool` ✅ — nucleus plus exactly two of `duration` (blank ⇒ µs), `flipAngle` (blank ⇒ degrees), `amplitude` (blank ⇒ Hz), each with a unit field; the calculated direction is labeled and the amplitude is always reported in both Hz and µT.
+- `PulseRelativePowerTool` ✅ — the four pulse parameters each gained a unit field (durations blank ⇒ µs, angles blank ⇒ degrees); both intermediate pulse-amplitude responses and the final dB response are round-trip verified.
+- `NucleusListTool` and `OpenNucleusDetailTool` — no changes needed (no units).
 
-## Phase 3 — Slim down the main session (pending)
+## Phase 3 — Slim down the main session (partially done)
 
-- Delete the unit-conversion instruction block (item 2) once all calculation tools normalize their own units; replace with one line: *"Pass values with the units exactly as the user stated them; the tools handle conversion."* (Item 2f for `calculate_ernst_angle` has already been rewritten this way.)
+- ✅ The unit-conversion instruction block (item 2, six sub-rules) has been replaced with one line: *"Do not convert units; pass each numerical value to the tools together with the unit the user stated."*
 - Keep persona, nucleus-normalization rules, and the omit-the-calculated-parameter rule.
 - Optional: a post-response **answer evaluator** session in `send(_:)` that compares the final `response.content` numbers against the latest tool outputs in `session.transcript` — the only place an LLM evaluator adds value beyond the deterministic check.
 
