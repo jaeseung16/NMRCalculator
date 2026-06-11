@@ -98,10 +98,13 @@ struct UnitNormalizer {
         "s": .seconds, "sec": .seconds, "secs": .seconds, "second": .seconds, "seconds": .seconds,
         "ms": .milliseconds, "msec": .milliseconds, "msecs": .milliseconds,
         "millisecond": .milliseconds, "milliseconds": .milliseconds,
+        "millisec": .milliseconds, "millisecs": .milliseconds,
         "us": .microseconds, "usec": .microseconds, "usecs": .microseconds,
         "µs": .microseconds, "µsec": .microseconds, "μs": .microseconds, "μsec": .microseconds,
+        "microsec": .microseconds, "microsecs": .microseconds,
         "microsecond": .microseconds, "microseconds": .microseconds,
         "ns": .nanoseconds, "nsec": .nanoseconds, "nsecs": .nanoseconds,
+        "nanosec": .nanoseconds, "nanosecs": .nanoseconds,
         "nanosecond": .nanoseconds, "nanoseconds": .nanoseconds,
         "min": .minutes, "mins": .minutes, "minute": .minutes, "minutes": .minutes
     ]
@@ -184,13 +187,20 @@ struct UnitNormalizer {
 
     private static func normalizedKey(_ raw: String?) -> String? {
         guard let raw else { return nil }
-        let key = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        // Strip separators so spelling variants like "micro second", "micro-second",
+        // or "µsec." resolve through the lookup table instead of the classifier.
+        let key = raw.lowercased().filter { !$0.isWhitespace && $0 != "-" && $0 != "." }
         return key.isEmpty ? nil : key
     }
 
     private static func classify<U: Generable>(_ unit: String, as type: U.Type, dimension: String) async throws -> U {
         let session = LanguageModelSession(
-            instructions: "Identify the unit of \(dimension) named by the user. Choose 'unrecognized' if the input is not a unit of \(dimension)."
+            instructions: """
+                Identify the unit of \(dimension) named by the user. \
+                Pay close attention to SI prefixes: milli (m) means one thousandth, micro (µ or u) means one millionth, \
+                nano (n) means one billionth, kilo (k) means one thousand, mega (M) means one million, giga (G) means one billion. \
+                Choose 'unrecognized' if the input is not a unit of \(dimension).
+                """
         )
         let response = try await session.respond(to: unit, generating: U.self)
         Self.logger.info("Classified unit '\(unit)' as \(String(describing: response.content))")

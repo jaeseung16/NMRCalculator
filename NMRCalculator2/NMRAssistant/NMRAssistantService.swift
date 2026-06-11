@@ -32,7 +32,7 @@ final class NMRAssistantService {
                         c. Normalized: 1H, unnormalized: Proton, P
                         d. Normalized: 2H, unnormalized: Deuterium, D
                         e. Normalized: 3H, unnormalized: Tritium, T
-                    2. Do not convert units; pass each numerical value to the tools together with the unit the user stated. \
+                    2. Do not convert units; pass each numerical value to the tools together with the unit the user stated. Never pass 0 or 0.0 as a placeholder for a value the user did not provide; omit that parameter instead. \
                     3. When using the tools `calculate_ernst_angle`, `calculate_frequency_domain`, `calculate_time_domain`, `calculate_larmor_frequency`, `calculate_pulse_amplitude`, pass nil to the paramter you are calculating from the other parameters, which should not be nil. If some of the other paramters are nil, please ask the user for clarification.
                     """
             session = LanguageModelSession(

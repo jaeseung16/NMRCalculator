@@ -30,6 +30,7 @@ struct ErnstAngleTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
+        Self.logger.info("\(name): \(String(describing: arguments))")
         let providedCount = [arguments.relaxationTimeT1 != nil,
                              arguments.repetitionTime != nil,
                              arguments.ernstAngle != nil].filter { $0 }.count
@@ -46,6 +47,16 @@ struct ErnstAngleTool: Tool {
             ernstAngleInDegree = try await Self.degrees(arguments.ernstAngle, unit: arguments.ernstAngleUnit)
         } catch UnitNormalizationError.unrecognizedUnit(let unit) {
             return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time or angle unit."
+        }
+
+        if let relaxationTimeInSec, relaxationTimeInSec <= 0 {
+            return "Invalid T1 relaxation time \(relaxationTimeInSec) s: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let repetitionTimeInSec, repetitionTimeInSec <= 0 {
+            return "Invalid repetition time \(repetitionTimeInSec) s: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let ernstAngleInDegree, ernstAngleInDegree <= 0 || ernstAngleInDegree >= 90 {
+            return "Invalid Ernst angle \(ernstAngleInDegree) degrees: it must be between 0 and 90 degrees, exclusive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
         }
 
         let calculated: ToolResponseEvaluator.ErnstAngleParameter = ernstAngleInDegree == nil

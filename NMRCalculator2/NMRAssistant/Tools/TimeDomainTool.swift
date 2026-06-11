@@ -19,7 +19,7 @@ struct TimeDomainTool: Tool {
         var acquisitionTime: Double?
         @Guide(description: "Acquisition time unit as the user stated it, e.g. 's', 'ms'")
         var acquisitionTimeUnit: String?
-        @Guide(description: "Number of data points; omit to calculate it")
+        @Guide(description: "Number of data points; omit to calculate it", .minimum(1))
         var numberOfPoints: Int?
         @Guide(description: "Dwell time; omit to calculate it")
         var dwellTime: Double?
@@ -28,6 +28,7 @@ struct TimeDomainTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
+        Self.logger.info("\(name): \(String(describing: arguments))")
         let providedCount = [arguments.acquisitionTime != nil,
                              arguments.numberOfPoints != nil,
                              arguments.dwellTime != nil].filter { $0 }.count
@@ -42,6 +43,16 @@ struct TimeDomainTool: Tool {
             dwellInSec = try await Self.seconds(arguments.dwellTime, unit: arguments.dwellTimeUnit, assuming: .microseconds)
         } catch UnitNormalizationError.unrecognizedUnit(let unit) {
             return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time unit."
+        }
+
+        if let acquisitionTimeInSec, acquisitionTimeInSec <= 0 {
+            return "Invalid acquisition time \(acquisitionTimeInSec) s: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let numberOfPoints = arguments.numberOfPoints, numberOfPoints < 1 {
+            return "Invalid number of points \(numberOfPoints): it must be a positive integer. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let dwellInSec, dwellInSec <= 0 {
+            return "Invalid dwell time \(dwellInSec) s: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
         }
 
         let calculated: ToolResponseEvaluator.TimeDomainParameter = acquisitionTimeInSec == nil

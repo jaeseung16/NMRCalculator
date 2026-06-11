@@ -19,7 +19,7 @@ struct FrequencyDomainTool: Tool {
         var spectralWidth: Double?
         @Guide(description: "Spectral width unit as the user stated it, e.g. 'kHz', 'Hz'")
         var spectralWidthUnit: String?
-        @Guide(description: "Number of data points; omit to calculate it")
+        @Guide(description: "Number of data points; omit to calculate it", .minimum(1))
         var numberOfPoints: Int?
         @Guide(description: "Frequency resolution; omit to calculate it")
         var frequencyResolution: Double?
@@ -28,6 +28,7 @@ struct FrequencyDomainTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
+        Self.logger.info("\(name): \(String(describing: arguments))")
         let providedCount = [arguments.spectralWidth != nil,
                              arguments.numberOfPoints != nil,
                              arguments.frequencyResolution != nil].filter { $0 }.count
@@ -42,6 +43,16 @@ struct FrequencyDomainTool: Tool {
             frequencyResolutionInHz = try await Self.hertz(arguments.frequencyResolution, unit: arguments.frequencyResolutionUnit, assuming: .hertz)
         } catch UnitNormalizationError.unrecognizedUnit(let unit) {
             return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard frequency unit."
+        }
+
+        if let spectralWidthInHz, spectralWidthInHz <= 0 {
+            return "Invalid spectral width \(spectralWidthInHz) Hz: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let numberOfPoints = arguments.numberOfPoints, numberOfPoints < 1 {
+            return "Invalid number of points \(numberOfPoints): it must be a positive integer. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let frequencyResolutionInHz, frequencyResolutionInHz <= 0 {
+            return "Invalid frequency resolution \(frequencyResolutionInHz) Hz: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
         }
 
         let calculated: ToolResponseEvaluator.FrequencyDomainParameter = spectralWidthInHz == nil

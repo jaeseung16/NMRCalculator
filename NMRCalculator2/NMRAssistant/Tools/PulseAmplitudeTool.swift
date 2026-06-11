@@ -32,6 +32,7 @@ struct PulseAmplitudeTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
+        Self.logger.info("\(name): \(String(describing: arguments))")
         guard let nucleus = await MainActor.run(body: {
             NMRPeriodicTable.shared.nucleus(matching: arguments.nucleusIdentifier)
         }) else {
@@ -54,6 +55,16 @@ struct PulseAmplitudeTool: Tool {
             amplitudeInHz = try await Self.hertz(arguments.amplitude, unit: arguments.amplitudeUnit)
         } catch UnitNormalizationError.unrecognizedUnit(let unit) {
             return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time, angle, or frequency unit."
+        }
+
+        if let durationInMicrosec, durationInMicrosec <= 0 {
+            return "Invalid pulse duration \(durationInMicrosec) µs: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let flipAngleInDegree, flipAngleInDegree <= 0 {
+            return "Invalid flip angle \(flipAngleInDegree) degrees: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        }
+        if let amplitudeInHz, amplitudeInHz <= 0 {
+            return "Invalid RF amplitude \(amplitudeInHz) Hz: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
         }
 
         let calculated: ToolResponseEvaluator.PulseParameter = durationInMicrosec == nil

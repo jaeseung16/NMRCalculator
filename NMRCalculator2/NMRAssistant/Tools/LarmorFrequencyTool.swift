@@ -36,6 +36,7 @@ struct LarmorFrequencyTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
+        Self.logger.info("\(name): \(String(describing: arguments))")
         guard let nucleus = await MainActor.run(body: {
             NMRPeriodicTable.shared.nucleus(matching: arguments.nucleusIdentifier)
         }) else {
@@ -61,6 +62,11 @@ struct LarmorFrequencyTool: Tool {
             electronFrequencyInGHz = try await Self.gigahertz(arguments.electronFrequency, unit: arguments.electronFrequencyUnit, assuming: .gigahertz)
         } catch UnitNormalizationError.unrecognizedUnit(let unit) {
             return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard frequency or magnetic field unit."
+        }
+
+        if let providedValue = magneticFieldInTesla ?? larmorFrequencyInMHz ?? protonFrequencyInMHz ?? electronFrequencyInGHz,
+           providedValue <= 0 {
+            return "Invalid input \(providedValue): it must be positive. Pass the user's stated value; never pass 0 as a placeholder."
         }
 
         let given: ToolResponseEvaluator.LarmorFrequencyGivenParameter

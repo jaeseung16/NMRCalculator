@@ -34,6 +34,7 @@ struct PulseRelativePowerTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
+        Self.logger.info("\(name): \(String(describing: arguments))")
         let referenceDurationInMicrosec: Double
         let referenceFlipAngleInDegree: Double
         let measuredDurationInMicrosec: Double
@@ -45,6 +46,11 @@ struct PulseRelativePowerTool: Tool {
             measuredFlipAngleInDegree = try await UnitNormalizer.degrees(from: arguments.measuredPulseFlipAngle, unit: arguments.measuredPulseFlipAngleUnit)
         } catch UnitNormalizationError.unrecognizedUnit(let unit) {
             return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time or angle unit."
+        }
+
+        guard referenceDurationInMicrosec > 0, referenceFlipAngleInDegree > 0,
+              measuredDurationInMicrosec > 0, measuredFlipAngleInDegree > 0 else {
+            return "Invalid pulse parameters: durations and flip angles must all be positive. Pass the user's stated values; never pass 0 as a placeholder."
         }
 
         let referenceResponse = try Self.amplitude(durationInMicrosec: referenceDurationInMicrosec, flipAngleInDegree: referenceFlipAngleInDegree)
