@@ -60,6 +60,8 @@
 		90A096512FC23B7800E2E633 /* NMRCalculatorCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 90A096502FC23B7800E2E633 /* NMRCalculatorCommon */; };
 		90A227332FC8D44800AD3C28 /* NMRAssistantNavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A227322FC8D44800AD3C28 /* NMRAssistantNavigationState.swift */; };
 		90A227362FC8D7CA00AD3C28 /* ErnstAngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A227352FC8D7CA00AD3C28 /* ErnstAngleTool.swift */; };
+		90B3C1022FD9A00000AD3C28 /* UnitNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B3C1012FD9A00000AD3C28 /* UnitNormalizer.swift */; };
+		90B3C1042FD9A00000AD3C28 /* ToolResponseEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B3C1032FD9A00000AD3C28 /* ToolResponseEvaluator.swift */; };
 		90A227382FC8D7D700AD3C28 /* FrequencyDomainTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A227372FC8D7D700AD3C28 /* FrequencyDomainTool.swift */; };
 		90A2273A2FC8D7E600AD3C28 /* TimeDomainTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A227392FC8D7E600AD3C28 /* TimeDomainTool.swift */; };
 		90A2273C2FC8D7F400AD3C28 /* PulseRelativePowerTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A2273B2FC8D7F400AD3C28 /* PulseRelativePowerTool.swift */; };
@@ -206,6 +208,8 @@
 		90A1DB12293EB5BC00B8D105 /* UpdateElectronFrequency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateElectronFrequency.swift; sourceTree = "<group>"; };
 		90A227322FC8D44800AD3C28 /* NMRAssistantNavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRAssistantNavigationState.swift; sourceTree = "<group>"; };
 		90A227352FC8D7CA00AD3C28 /* ErnstAngleTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErnstAngleTool.swift; sourceTree = "<group>"; };
+		90B3C1012FD9A00000AD3C28 /* UnitNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitNormalizer.swift; sourceTree = "<group>"; };
+		90B3C1032FD9A00000AD3C28 /* ToolResponseEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResponseEvaluator.swift; sourceTree = "<group>"; };
 		90A227372FC8D7D700AD3C28 /* FrequencyDomainTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyDomainTool.swift; sourceTree = "<group>"; };
 		90A227392FC8D7E600AD3C28 /* TimeDomainTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDomainTool.swift; sourceTree = "<group>"; };
 		90A2273B2FC8D7F400AD3C28 /* PulseRelativePowerTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseRelativePowerTool.swift; sourceTree = "<group>"; };
@@ -515,6 +519,7 @@
 			children = (
 				90A227322FC8D44800AD3C28 /* NMRAssistantNavigationState.swift */,
 				90A227342FC8D7AE00AD3C28 /* Tools */,
+				90B3C1002FD9A00000AD3C28 /* Support */,
 				90A227452FC8D96300AD3C28 /* NMRAssistantMessage.swift */,
 				90A227472FC8D97700AD3C28 /* NMRAssistantService.swift */,
 			);
@@ -534,6 +539,15 @@
 				90A227432FC8D82600AD3C28 /* OpenNucleusDetailTool.swift */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		90B3C1002FD9A00000AD3C28 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				90B3C1012FD9A00000AD3C28 /* UnitNormalizer.swift */,
+				90B3C1032FD9A00000AD3C28 /* ToolResponseEvaluator.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -746,6 +760,8 @@
 				90A227442FC8D82600AD3C28 /* OpenNucleusDetailTool.swift in Sources */,
 				90A227482FC8D97700AD3C28 /* NMRAssistantService.swift in Sources */,
 				90A227362FC8D7CA00AD3C28 /* ErnstAngleTool.swift in Sources */,
+				90B3C1022FD9A00000AD3C28 /* UnitNormalizer.swift in Sources */,
+				90B3C1042FD9A00000AD3C28 /* ToolResponseEvaluator.swift in Sources */,
 				90F69EA12AAE66A9001FB5F0 /* UpdateRelativePower.swift in Sources */,
 				9067B3562AACEF0B00A8FA29 /* NMRPeriodicTable.swift in Sources */,
 				90F69E8F2AAE0FAE001FB5F0 /* UpdatePulseAmplitude.swift in Sources */,

@@ -38,7 +38,7 @@ final class NMRAssistantService {
                       c. `calculate_pulse_relative_power`: Convert pulse duration to microseconds and flip angle to degrees. \
                       d. `calculate_time_domain`: Convert dwell time to microseconds and acquisition time to sec. \
                       e. `calculate_frequency_domain`: Convert spectral width to kilohertz and frequency resolution to Hertz. \
-                      f. `calculate_ernst_angle`: Convert T1 relaxation time to seconds, repetition time to seconds, and Ernst angle to degrees. \
+                      f. `calculate_ernst_angle`: Do not convert units; pass each value with the unit the user stated. \
                     3. When using the tools `calculate_ernst_angle`, `calculate_frequency_domain`, `calculate_time_domain`, `calculate_larmor_frequency`, `calculate_pulse_amplitude`, pass nil to the paramter you are calculating from the other parameters, which should not be nil. If some of the other paramters are nil, please ask the user for clarification.
                     """
             session = LanguageModelSession(
