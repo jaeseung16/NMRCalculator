@@ -311,6 +311,7 @@ validate exactly-one-parameter-omitted → `UnitNormalizer` converts each input 
 
 - ✅ The unit-conversion instruction block (item 2, six sub-rules) has been replaced with one line: *"Do not convert units; pass each numerical value to the tools together with the unit the user stated."*
 - Keep persona, nucleus-normalization rules, and the omit-the-calculated-parameter rule.
+- ✅ Token measurement: `testTokenCount()` in `NMRCalculator2Tests` token-counts the instructions and each tool's name/description/argument schema (schema JSON is an approximation of the runtime's private rendering; use for relative comparisons). First measurement (2026-06-11): instructions 365; tools 2,119 (ernst 311, frequency 247, time 257, relative power 370, larmor 427, pulse amplitude 315, list_nuclei 99, open_detail 93); estimated total ≈ 2,484. The tool schemas, not the instructions, now dominate the prompt overhead — slimming candidates are the larmor and relative-power schemas (most unit-enum fields) and shorter argument descriptions.
 - Optional: a post-response **answer evaluator** session in `send(_:)` that compares the final `response.content` numbers against the latest tool outputs in `session.transcript` — the only place an LLM evaluator adds value beyond the deterministic check.
 
 ## Phase 4 — Tests (pending)

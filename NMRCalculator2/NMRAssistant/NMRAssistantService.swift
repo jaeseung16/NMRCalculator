@@ -18,38 +18,43 @@ final class NMRAssistantService {
     var isProcessing = false
     var modelUnavailableReason: String?
 
+    static let instructions = """
+            You are an NMR facility manager. Answer questions about NMR parameters. \
+            For numerical results in the answers, use the provided tools.
+            Follow these instructions to collect the information from the provided tools: \
+            1. Normalize nucleus identifiers before passing them to the tools `calculate_larmor_frequency` and `open_nucleus_detail`. You may use the 'list_nuclei' tool to find the normalized identifier. You may use the `calculate_pulse_amplitude` tool without passing the normalized identifier. If you are not sure which nucleus to use, please ask the user for clarification. \
+              Examples:
+                a. Normalized: 13C, unnormalized: Carbon 13, Carbon-13
+                b. Normalized: 3He, unnormalized: Helium 3, Helium-3
+                c. Normalized: 1H, unnormalized: Proton, P
+                d. Normalized: 2H, unnormalized: Deuterium, D
+                e. Normalized: 3H, unnormalized: Tritium, T
+            2. Do not convert units; pass each numerical value to the tools together with the unit the user stated. Never pass 0 or 0.0 as a placeholder for a value the user did not provide; omit that parameter instead. \
+            3. When using the tools `calculate_ernst_angle`, `calculate_frequency_domain`, `calculate_time_domain`, `calculate_larmor_frequency`, `calculate_pulse_amplitude`, pass nil to the paramter you are calculating from the other parameters, which should not be nil. If some of the other paramters are nil, please ask the user for clarification.
+            """
+
+    static func makeTools(navigationState: NMRAssistantNavigationState) -> [any Tool] {
+        [
+            ErnstAngleTool(),
+            FrequencyDomainTool(),
+            TimeDomainTool(),
+            PulseRelativePowerTool(),
+            LarmorFrequencyTool(),
+            PulseAmplitudeTool(),
+            NucleusListTool(),
+            OpenNucleusDetailTool(navigationState: navigationState)
+        ]
+    }
+
     init(navigationState: NMRAssistantNavigationState) {
         switch SystemLanguageModel.default.availability {
         case .available:
-            let instructions = """
-                    You are an NMR facility manager. Answer questions about NMR parameters. \
-                    For numerical results in the answers, use the provided tools.
-                    Follow these instructions to collect the information from the provided tools: \
-                    1. Normalize nucleus identifiers before passing them to the tools `calculate_larmor_frequency` and `open_nucleus_detail`. You may use the 'list_nuclei' tool to find the normalized identifier. You may use the `calculate_pulse_amplitude` tool without passing the normalized identifier. If you are not sure which nucleus to use, please ask the user for clarification. \
-                      Examples:
-                        a. Normalized: 13C, unnormalized: Carbon 13, Carbon-13
-                        b. Normalized: 3He, unnormalized: Helium 3, Helium-3
-                        c. Normalized: 1H, unnormalized: Proton, P
-                        d. Normalized: 2H, unnormalized: Deuterium, D
-                        e. Normalized: 3H, unnormalized: Tritium, T
-                    2. Do not convert units; pass each numerical value to the tools together with the unit the user stated. Never pass 0 or 0.0 as a placeholder for a value the user did not provide; omit that parameter instead. \
-                    3. When using the tools `calculate_ernst_angle`, `calculate_frequency_domain`, `calculate_time_domain`, `calculate_larmor_frequency`, `calculate_pulse_amplitude`, pass nil to the paramter you are calculating from the other parameters, which should not be nil. If some of the other paramters are nil, please ask the user for clarification.
-                    """
             session = LanguageModelSession(
-                tools: [
-                    ErnstAngleTool(),
-                    FrequencyDomainTool(),
-                    TimeDomainTool(),
-                    PulseRelativePowerTool(),
-                    LarmorFrequencyTool(),
-                    PulseAmplitudeTool(),
-                    NucleusListTool(),
-                    OpenNucleusDetailTool(navigationState: navigationState)
-                ],
-                instructions: instructions
+                tools: Self.makeTools(navigationState: navigationState),
+                instructions: Self.instructions
             )
             modelUnavailableReason = nil
-            Self.logTokenCount(for: instructions)
+            Self.logTokenCount(for: Self.instructions)
         case .unavailable(let reason):
             session = nil
             switch reason {

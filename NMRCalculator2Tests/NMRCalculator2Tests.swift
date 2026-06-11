@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import FoundationModels
 @testable import NMRCalculator2
 
 final class NMRCalculator2Tests: XCTestCase {
@@ -48,6 +49,46 @@ final class NMRCalculator2Tests: XCTestCase {
         service.messages.forEach { print($0) }
         print("**********")
         //XCTAssertTrue(service.messages.isEmpty)
+    }
+
+    /// Estimates the prompt overhead of the NMR assistant's main session:
+    /// the instructions plus each tool's name, description, and argument schema.
+    /// The runtime renders tool definitions in a private format, so the schema
+    /// JSON used here is an approximation — absolute numbers are estimates,
+    /// but before/after comparisons of the same components are meaningful.
+    @MainActor
+    func testTokenCount() async throws {
+        guard #available(iOS 26.4, *) else {
+            throw XCTSkip("SystemLanguageModel.tokenCount(for:) requires iOS 26.4")
+        }
+        guard case .available = SystemLanguageModel.default.availability else {
+            throw XCTSkip("The language model is unavailable")
+        }
+        let model = SystemLanguageModel.default
+
+        func pad(_ name: String) -> String {
+            name.padding(toLength: 36, withPad: " ", startingAt: 0)
+        }
+
+        let instructionTokens = try await model.tokenCount(for: NMRAssistantService.instructions)
+        var lines = ["[TokenCount] \(pad("instructions")) \(instructionTokens)"]
+        var total = instructionTokens
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let tools = NMRAssistantService.makeTools(navigationState: NMRAssistantNavigationState())
+        for tool in tools {
+            let schema = String(data: try encoder.encode(tool.parameters), encoding: .utf8) ?? ""
+            let rendered = "\(tool.name): \(tool.description)\n\(schema)"
+            let tokens = try await model.tokenCount(for: rendered)
+            lines.append("[TokenCount] \(pad(tool.name)) \(tokens)")
+            total += tokens
+        }
+        lines.append("[TokenCount] \(pad("estimated total")) \(total)")
+        print(lines.joined(separator: "\n"))
+
+        XCTAssertGreaterThan(instructionTokens, 0)
+        XCTAssertGreaterThan(total, instructionTokens)
     }
 
     func testPerformanceExample() throws {
