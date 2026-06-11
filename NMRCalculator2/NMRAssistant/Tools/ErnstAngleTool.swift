@@ -17,16 +17,16 @@ struct ErnstAngleTool: Tool {
     struct Arguments {
         @Guide(description: "T1 relaxation time; omit to calculate it")
         var relaxationTimeT1: Double?
-        @Guide(description: "T1 unit as the user stated it, e.g. 's', 'ms', 'min'")
-        var relaxationTimeT1Unit: String?
+        @Guide(description: "Unit of the T1 relaxation time; omit if not stated")
+        var relaxationTimeT1Unit: TimeUnit?
         @Guide(description: "Repetition time; omit to calculate it")
         var repetitionTime: Double?
-        @Guide(description: "Repetition time unit as the user stated it, e.g. 's', 'ms'")
-        var repetitionTimeUnit: String?
+        @Guide(description: "Unit of the repetition time; omit if not stated")
+        var repetitionTimeUnit: TimeUnit?
         @Guide(description: "Ernst angle; omit to calculate it")
         var ernstAngle: Double?
-        @Guide(description: "Ernst angle unit as the user stated it, e.g. 'degree', 'radian'")
-        var ernstAngleUnit: String?
+        @Guide(description: "Unit of the Ernst angle; omit if not stated")
+        var ernstAngleUnit: AngleUnit?
     }
 
     func call(arguments: Arguments) async throws -> String {
@@ -42,11 +42,11 @@ struct ErnstAngleTool: Tool {
         let repetitionTimeInSec: Double?
         let ernstAngleInDegree: Double?
         do {
-            relaxationTimeInSec = try await Self.seconds(arguments.relaxationTimeT1, unit: arguments.relaxationTimeT1Unit)
-            repetitionTimeInSec = try await Self.seconds(arguments.repetitionTime, unit: arguments.repetitionTimeUnit)
-            ernstAngleInDegree = try await Self.degrees(arguments.ernstAngle, unit: arguments.ernstAngleUnit)
-        } catch UnitNormalizationError.unrecognizedUnit(let unit) {
-            return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time or angle unit."
+            relaxationTimeInSec = try Self.seconds(arguments.relaxationTimeT1, unit: arguments.relaxationTimeT1Unit)
+            repetitionTimeInSec = try Self.seconds(arguments.repetitionTime, unit: arguments.repetitionTimeUnit)
+            ernstAngleInDegree = try Self.degrees(arguments.ernstAngle, unit: arguments.ernstAngleUnit)
+        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
+            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
         if let relaxationTimeInSec, relaxationTimeInSec <= 0 {
@@ -82,14 +82,14 @@ struct ErnstAngleTool: Tool {
         }
     }
 
-    private static func seconds(_ value: Double?, unit: String?) async throws -> Double? {
+    private static func seconds(_ value: Double?, unit: TimeUnit?) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.seconds(from: value, unit: unit)
+        return try UnitNormalizer.seconds(from: value, unit: unit)
     }
 
-    private static func degrees(_ value: Double?, unit: String?) async throws -> Double? {
+    private static func degrees(_ value: Double?, unit: AngleUnit?) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.degrees(from: value, unit: unit)
+        return try UnitNormalizer.degrees(from: value, unit: unit)
     }
 
     private static func format(_ response: ErnstAngleResponse, calculated: ToolResponseEvaluator.ErnstAngleParameter) -> String {

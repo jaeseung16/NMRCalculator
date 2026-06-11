@@ -5,10 +5,9 @@
 
 import Foundation
 import FoundationModels
-import os
 
 enum UnitNormalizationError: Error {
-    case unrecognizedUnit(String)
+    case unrecognizedUnit(dimension: String)
 }
 
 @Generable
@@ -86,124 +85,38 @@ enum MagneticFieldUnit: String, CaseIterable {
 }
 
 /// Converts user-stated quantities to the canonical units the calculators expect.
-/// Unit spellings are resolved with a lookup table first; a dedicated
-/// `LanguageModelSession` classifies the spelling (guided generation onto a unit
-/// enum) only when the table misses. All numeric conversion is done in Swift —
-/// no numbers pass through the model. A nil or blank unit is taken as the
-/// `assuming` unit of the calling tool's parameter.
+/// The tools declare their unit arguments as the `@Generable` enums above, so the
+/// model selects a unit by constrained decoding while generating the tool call —
+/// free-form unit strings proved unreliable (the model abbreviated "microsecond"
+/// as "ms"). A nil unit is taken as the `assuming` unit of the calling tool's
+/// parameter; `unrecognized` means the user's spelling was not a unit of the
+/// dimension at all. All numeric conversion is done in Swift.
 struct UnitNormalizer {
-    private static let logger = Logger()
-
-    private static let timeUnits: [String: TimeUnit] = [
-        "s": .seconds, "sec": .seconds, "secs": .seconds, "second": .seconds, "seconds": .seconds,
-        "ms": .milliseconds, "msec": .milliseconds, "msecs": .milliseconds,
-        "millisecond": .milliseconds, "milliseconds": .milliseconds,
-        "millisec": .milliseconds, "millisecs": .milliseconds,
-        "us": .microseconds, "usec": .microseconds, "usecs": .microseconds,
-        "µs": .microseconds, "µsec": .microseconds, "μs": .microseconds, "μsec": .microseconds,
-        "microsec": .microseconds, "microsecs": .microseconds,
-        "microsecond": .microseconds, "microseconds": .microseconds,
-        "ns": .nanoseconds, "nsec": .nanoseconds, "nsecs": .nanoseconds,
-        "nanosec": .nanoseconds, "nanosecs": .nanoseconds,
-        "nanosecond": .nanoseconds, "nanoseconds": .nanoseconds,
-        "min": .minutes, "mins": .minutes, "minute": .minutes, "minutes": .minutes
-    ]
-
-    private static let angleUnits: [String: AngleUnit] = [
-        "deg": .degrees, "degs": .degrees, "degree": .degrees, "degrees": .degrees, "°": .degrees,
-        "rad": .radians, "rads": .radians, "radian": .radians, "radians": .radians
-    ]
-
-    private static let frequencyUnits: [String: FrequencyUnit] = [
-        "hz": .hertz, "hertz": .hertz,
-        "khz": .kilohertz, "kilohertz": .kilohertz,
-        "mhz": .megahertz, "megahertz": .megahertz,
-        "ghz": .gigahertz, "gigahertz": .gigahertz
-    ]
-
-    private static let magneticFieldUnits: [String: MagneticFieldUnit] = [
-        "t": .tesla, "tesla": .tesla, "teslas": .tesla,
-        "mt": .millitesla, "millitesla": .millitesla, "milliteslas": .millitesla,
-        "ut": .microtesla, "µt": .microtesla, "μt": .microtesla,
-        "microtesla": .microtesla, "microteslas": .microtesla,
-        "g": .gauss, "gauss": .gauss
-    ]
-
-    static func seconds(from value: Double, unit: String?, assuming defaultUnit: TimeUnit = .seconds) async throws -> Double {
-        guard let key = normalizedKey(unit) else { return value * (defaultUnit.secondsPerUnit ?? 1.0) }
-        let timeUnit: TimeUnit
-        if let match = timeUnits[key] {
-            timeUnit = match
-        } else {
-            timeUnit = try await classify(key, as: TimeUnit.self, dimension: "time")
-        }
-        guard let secondsPerUnit = timeUnit.secondsPerUnit else {
-            throw UnitNormalizationError.unrecognizedUnit(key)
+    static func seconds(from value: Double, unit: TimeUnit?, assuming defaultUnit: TimeUnit = .seconds) throws -> Double {
+        guard let secondsPerUnit = (unit ?? defaultUnit).secondsPerUnit else {
+            throw UnitNormalizationError.unrecognizedUnit(dimension: "time")
         }
         return value * secondsPerUnit
     }
 
-    static func degrees(from value: Double, unit: String?, assuming defaultUnit: AngleUnit = .degrees) async throws -> Double {
-        guard let key = normalizedKey(unit) else { return value * (defaultUnit.degreesPerUnit ?? 1.0) }
-        let angleUnit: AngleUnit
-        if let match = angleUnits[key] {
-            angleUnit = match
-        } else {
-            angleUnit = try await classify(key, as: AngleUnit.self, dimension: "angle")
-        }
-        guard let degreesPerUnit = angleUnit.degreesPerUnit else {
-            throw UnitNormalizationError.unrecognizedUnit(key)
+    static func degrees(from value: Double, unit: AngleUnit?, assuming defaultUnit: AngleUnit = .degrees) throws -> Double {
+        guard let degreesPerUnit = (unit ?? defaultUnit).degreesPerUnit else {
+            throw UnitNormalizationError.unrecognizedUnit(dimension: "angle")
         }
         return value * degreesPerUnit
     }
 
-    static func hertz(from value: Double, unit: String?, assuming defaultUnit: FrequencyUnit = .hertz) async throws -> Double {
-        guard let key = normalizedKey(unit) else { return value * (defaultUnit.hertzPerUnit ?? 1.0) }
-        let frequencyUnit: FrequencyUnit
-        if let match = frequencyUnits[key] {
-            frequencyUnit = match
-        } else {
-            frequencyUnit = try await classify(key, as: FrequencyUnit.self, dimension: "frequency")
-        }
-        guard let hertzPerUnit = frequencyUnit.hertzPerUnit else {
-            throw UnitNormalizationError.unrecognizedUnit(key)
+    static func hertz(from value: Double, unit: FrequencyUnit?, assuming defaultUnit: FrequencyUnit = .hertz) throws -> Double {
+        guard let hertzPerUnit = (unit ?? defaultUnit).hertzPerUnit else {
+            throw UnitNormalizationError.unrecognizedUnit(dimension: "frequency")
         }
         return value * hertzPerUnit
     }
 
-    static func tesla(from value: Double, unit: String?, assuming defaultUnit: MagneticFieldUnit = .tesla) async throws -> Double {
-        guard let key = normalizedKey(unit) else { return value * (defaultUnit.teslaPerUnit ?? 1.0) }
-        let fieldUnit: MagneticFieldUnit
-        if let match = magneticFieldUnits[key] {
-            fieldUnit = match
-        } else {
-            fieldUnit = try await classify(key, as: MagneticFieldUnit.self, dimension: "magnetic field strength")
-        }
-        guard let teslaPerUnit = fieldUnit.teslaPerUnit else {
-            throw UnitNormalizationError.unrecognizedUnit(key)
+    static func tesla(from value: Double, unit: MagneticFieldUnit?, assuming defaultUnit: MagneticFieldUnit = .tesla) throws -> Double {
+        guard let teslaPerUnit = (unit ?? defaultUnit).teslaPerUnit else {
+            throw UnitNormalizationError.unrecognizedUnit(dimension: "magnetic field strength")
         }
         return value * teslaPerUnit
-    }
-
-    private static func normalizedKey(_ raw: String?) -> String? {
-        guard let raw else { return nil }
-        // Strip separators so spelling variants like "micro second", "micro-second",
-        // or "µsec." resolve through the lookup table instead of the classifier.
-        let key = raw.lowercased().filter { !$0.isWhitespace && $0 != "-" && $0 != "." }
-        return key.isEmpty ? nil : key
-    }
-
-    private static func classify<U: Generable>(_ unit: String, as type: U.Type, dimension: String) async throws -> U {
-        let session = LanguageModelSession(
-            instructions: """
-                Identify the unit of \(dimension) named by the user. \
-                Pay close attention to SI prefixes: milli (m) means one thousandth, micro (µ or u) means one millionth, \
-                nano (n) means one billionth, kilo (k) means one thousand, mega (M) means one million, giga (G) means one billion. \
-                Choose 'unrecognized' if the input is not a unit of \(dimension).
-                """
-        )
-        let response = try await session.respond(to: unit, generating: U.self)
-        Self.logger.info("Classified unit '\(unit, privacy: .public)' as \(String(describing: response.content), privacy: .public)")
-        return response.content
     }
 }

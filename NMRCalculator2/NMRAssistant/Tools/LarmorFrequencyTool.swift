@@ -19,20 +19,20 @@ struct LarmorFrequencyTool: Tool {
         var nucleusIdentifier: String
         @Guide(description: "External magnetic field; omit if providing a frequency")
         var magneticField: Double?
-        @Guide(description: "Magnetic field unit as the user stated it, e.g. 'T'")
-        var magneticFieldUnit: String?
+        @Guide(description: "Unit of the magnetic field; omit if not stated")
+        var magneticFieldUnit: MagneticFieldUnit?
         @Guide(description: "Larmor frequency of the nucleus; omit if providing another input")
         var larmorFrequency: Double?
-        @Guide(description: "Larmor frequency unit as the user stated it, e.g. 'MHz'")
-        var larmorFrequencyUnit: String?
+        @Guide(description: "Unit of the Larmor frequency; omit if not stated")
+        var larmorFrequencyUnit: FrequencyUnit?
         @Guide(description: "Proton (1H) NMR frequency; omit if providing another input")
         var protonFrequency: Double?
-        @Guide(description: "Proton frequency unit as the user stated it, e.g. 'MHz'")
-        var protonFrequencyUnit: String?
+        @Guide(description: "Unit of the proton frequency; omit if not stated")
+        var protonFrequencyUnit: FrequencyUnit?
         @Guide(description: "Free electron Larmor frequency; omit if providing another input")
         var electronFrequency: Double?
-        @Guide(description: "Electron frequency unit as the user stated it, e.g. 'GHz'")
-        var electronFrequencyUnit: String?
+        @Guide(description: "Unit of the electron frequency; omit if not stated")
+        var electronFrequencyUnit: FrequencyUnit?
     }
 
     func call(arguments: Arguments) async throws -> String {
@@ -56,12 +56,12 @@ struct LarmorFrequencyTool: Tool {
         let protonFrequencyInMHz: Double?
         let electronFrequencyInGHz: Double?
         do {
-            magneticFieldInTesla = try await Self.tesla(arguments.magneticField, unit: arguments.magneticFieldUnit)
-            larmorFrequencyInMHz = try await Self.megahertz(arguments.larmorFrequency, unit: arguments.larmorFrequencyUnit, assuming: .megahertz)
-            protonFrequencyInMHz = try await Self.megahertz(arguments.protonFrequency, unit: arguments.protonFrequencyUnit, assuming: .megahertz)
-            electronFrequencyInGHz = try await Self.gigahertz(arguments.electronFrequency, unit: arguments.electronFrequencyUnit, assuming: .gigahertz)
-        } catch UnitNormalizationError.unrecognizedUnit(let unit) {
-            return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard frequency or magnetic field unit."
+            magneticFieldInTesla = try Self.tesla(arguments.magneticField, unit: arguments.magneticFieldUnit)
+            larmorFrequencyInMHz = try Self.megahertz(arguments.larmorFrequency, unit: arguments.larmorFrequencyUnit, assuming: .megahertz)
+            protonFrequencyInMHz = try Self.megahertz(arguments.protonFrequency, unit: arguments.protonFrequencyUnit, assuming: .megahertz)
+            electronFrequencyInGHz = try Self.gigahertz(arguments.electronFrequency, unit: arguments.electronFrequencyUnit, assuming: .gigahertz)
+        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
+            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
         if let providedValue = magneticFieldInTesla ?? larmorFrequencyInMHz ?? protonFrequencyInMHz ?? electronFrequencyInGHz,
@@ -101,19 +101,19 @@ struct LarmorFrequencyTool: Tool {
         }
     }
 
-    private static func tesla(_ value: Double?, unit: String?) async throws -> Double? {
+    private static func tesla(_ value: Double?, unit: MagneticFieldUnit?) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.tesla(from: value, unit: unit, assuming: .tesla)
+        return try UnitNormalizer.tesla(from: value, unit: unit, assuming: .tesla)
     }
 
-    private static func megahertz(_ value: Double?, unit: String?, assuming defaultUnit: FrequencyUnit) async throws -> Double? {
+    private static func megahertz(_ value: Double?, unit: FrequencyUnit?, assuming defaultUnit: FrequencyUnit) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.hertz(from: value, unit: unit, assuming: defaultUnit) / 1.0e6
+        return try UnitNormalizer.hertz(from: value, unit: unit, assuming: defaultUnit) / 1.0e6
     }
 
-    private static func gigahertz(_ value: Double?, unit: String?, assuming defaultUnit: FrequencyUnit) async throws -> Double? {
+    private static func gigahertz(_ value: Double?, unit: FrequencyUnit?, assuming defaultUnit: FrequencyUnit) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.hertz(from: value, unit: unit, assuming: defaultUnit) / 1.0e9
+        return try UnitNormalizer.hertz(from: value, unit: unit, assuming: defaultUnit) / 1.0e9
     }
 
     private static func format(_ response: LarmorFrequencyResponse, given: ToolResponseEvaluator.LarmorFrequencyGivenParameter) -> String {

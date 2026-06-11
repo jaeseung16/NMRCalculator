@@ -283,15 +283,15 @@ Binds to `NMRAssistantService` via `@State` (owned here) or passed in via the en
 
 ## Design principles
 
-- **The on-device model never does arithmetic.** Per-tool `LanguageModelSession`s are used only for *classification*: mapping a free-form unit spelling (e.g. `"msec"`) onto a `@Generable` unit enum via guided generation (`respond(to:generating:)`). All numeric conversion and verification is deterministic Swift.
-- **Deterministic-first.** A lookup table resolves common unit spellings; the classifier session is created (short-lived, per call) only on a table miss. This keeps latency low and avoids session-contention/Sendable issues in the `Tool` structs.
+- **The on-device model never does arithmetic.** All numeric conversion and verification is deterministic Swift.
+- **Units are selected by constrained decoding, not generated as strings.** Each tool's unit arguments are the `@Generable` unit enums themselves (`TimeUnit?`, `AngleUnit?`, `FrequencyUnit?`, `MagneticFieldUnit?`), so the model picks among explicit case names (`microseconds`, `milliseconds`, …) while generating the tool call. *History:* the first design used free-form unit strings resolved by a lookup table with a per-tool classifier-session fallback; in practice the main model abbreviated "microsecond" to "ms" (a 1000× error the table faithfully honored), so the string layer, the table, and the classifier session were removed. Each enum keeps an `unrecognized` case so the model can flag a spelling that is not a unit of that dimension, which the tool turns into a clarification request. Per-tool sessions remain an option for normalization tasks that aren't enumerable (e.g. nucleus identifiers).
 - **Round-trip output evaluation.** The calculated value is fed back into the calculator to solve for one of the *given* parameters (exercising a different code path); the result must reproduce the given value within a relative tolerance (1e-6). On failure the tool throws instead of returning a wrong number.
 - **Explicit calculated parameter.** Tool output strings have the uniform shape `"Calculated <parameter> = <value> <unit> (given <inputs with units>)"`.
 - **Context trade-off.** Adding unit fields grows each tool's argument schema (which also lives in the main session context), but deleting the unit-conversion instruction block more than compensates. Measure with `logTokenCount`; if schemas grow too much, collapse each value/unit pair into a single string argument (e.g. `"1.5 ms"`) parsed tool-side.
 
 ## Phase 1 — Shared support layer (`NMRAssistant/Support/`) ✅
 
-- `UnitNormalizer.swift` ✅ — `@Generable` enums `TimeUnit`, `AngleUnit`, `FrequencyUnit`, `MagneticFieldUnit` (each with an `unrecognized` case so the classifier can express "not a unit of this dimension"); lookup tables; LLM fallback classifier; `seconds(from:unit:assuming:)` / `degrees(…)` / `hertz(…)` / `tesla(…)`. A nil/blank unit is taken as the calling parameter's `assuming` unit (e.g. µs for dwell time, MHz for Larmor frequency), matching the units the tools previously documented in their argument guides.
+- `UnitNormalizer.swift` ✅ — `@Generable` enums `TimeUnit`, `AngleUnit`, `FrequencyUnit`, `MagneticFieldUnit` used directly as tool argument types, plus synchronous converters `seconds(from:unit:assuming:)` / `degrees(…)` / `hertz(…)` / `tesla(…)`. A nil unit is taken as the calling parameter's `assuming` unit (e.g. µs for dwell time, MHz for Larmor frequency), matching the units the tools previously documented in their argument guides.
 - `ToolResponseEvaluator.swift` ✅ — round-trip verification for all calculator types: `ErnstAngleResponse`, `FrequencyDomainResponse`, `TimeDomainResponse` (the number-of-points cases use a one-step tolerance because the calculator truncates `N` to an integer), `LarmorFrequencyResponse` (keyed by the *given* parameter, since all others are derived from it), `PulseParameterResponse`, and `DecibelCalcualtionResponse`.
 
 ## Phase 2 — Tool argument & flow changes ✅
@@ -321,6 +321,5 @@ validate exactly-one-parameter-omitted → `UnitNormalizer` converts each input 
 
 ## Risks / open points
 
-- **Latency**: an LLM fallback inside a tool call adds a model round-trip while the main session is mid-`respond`. Deterministic-first keeps this rare; verify nested-session behavior on device.
-- **Schema growth vs. instruction shrinkage**: confirm net token reduction with `tokenCount` after Phase 3.
+- **Schema growth vs. instruction shrinkage**: confirm net token reduction with `tokenCount` after Phase 3 (the unit enums list their case names in each tool schema).
 - Nucleus-identifier normalization (instruction item 1) could later move tool-side the same way, further shrinking the main instructions.

@@ -17,20 +17,20 @@ struct PulseRelativePowerTool: Tool {
     struct Arguments {
         @Guide(description: "Reference pulse duration")
         var referencePulseDuration: Double
-        @Guide(description: "Reference pulse duration unit as the user stated it, e.g. 'µs', 'ms'")
-        var referencePulseDurationUnit: String?
+        @Guide(description: "Unit of the reference pulse duration; omit if not stated")
+        var referencePulseDurationUnit: TimeUnit?
         @Guide(description: "Reference pulse flip angle")
         var referencePulseFlipAngle: Double
-        @Guide(description: "Reference pulse flip angle unit as the user stated it, e.g. 'degree'")
-        var referencePulseFlipAngleUnit: String?
+        @Guide(description: "Unit of the reference pulse flip angle; omit if not stated")
+        var referencePulseFlipAngleUnit: AngleUnit?
         @Guide(description: "Measured pulse duration")
         var measuredPulseDuration: Double
-        @Guide(description: "Measured pulse duration unit as the user stated it, e.g. 'µs', 'ms'")
-        var measuredPulseDurationUnit: String?
+        @Guide(description: "Unit of the measured pulse duration; omit if not stated")
+        var measuredPulseDurationUnit: TimeUnit?
         @Guide(description: "Measured pulse flip angle")
         var measuredPulseFlipAngle: Double
-        @Guide(description: "Measured pulse flip angle unit as the user stated it, e.g. 'degree'")
-        var measuredPulseFlipAngleUnit: String?
+        @Guide(description: "Unit of the measured pulse flip angle; omit if not stated")
+        var measuredPulseFlipAngleUnit: AngleUnit?
     }
 
     func call(arguments: Arguments) async throws -> String {
@@ -40,12 +40,12 @@ struct PulseRelativePowerTool: Tool {
         let measuredDurationInMicrosec: Double
         let measuredFlipAngleInDegree: Double
         do {
-            referenceDurationInMicrosec = try await UnitNormalizer.seconds(from: arguments.referencePulseDuration, unit: arguments.referencePulseDurationUnit, assuming: .microseconds) * 1_000_000.0
-            referenceFlipAngleInDegree = try await UnitNormalizer.degrees(from: arguments.referencePulseFlipAngle, unit: arguments.referencePulseFlipAngleUnit)
-            measuredDurationInMicrosec = try await UnitNormalizer.seconds(from: arguments.measuredPulseDuration, unit: arguments.measuredPulseDurationUnit, assuming: .microseconds) * 1_000_000.0
-            measuredFlipAngleInDegree = try await UnitNormalizer.degrees(from: arguments.measuredPulseFlipAngle, unit: arguments.measuredPulseFlipAngleUnit)
-        } catch UnitNormalizationError.unrecognizedUnit(let unit) {
-            return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time or angle unit."
+            referenceDurationInMicrosec = try UnitNormalizer.seconds(from: arguments.referencePulseDuration, unit: arguments.referencePulseDurationUnit, assuming: .microseconds) * 1_000_000.0
+            referenceFlipAngleInDegree = try UnitNormalizer.degrees(from: arguments.referencePulseFlipAngle, unit: arguments.referencePulseFlipAngleUnit)
+            measuredDurationInMicrosec = try UnitNormalizer.seconds(from: arguments.measuredPulseDuration, unit: arguments.measuredPulseDurationUnit, assuming: .microseconds) * 1_000_000.0
+            measuredFlipAngleInDegree = try UnitNormalizer.degrees(from: arguments.measuredPulseFlipAngle, unit: arguments.measuredPulseFlipAngleUnit)
+        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
+            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
         guard referenceDurationInMicrosec > 0, referenceFlipAngleInDegree > 0,

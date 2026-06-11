@@ -17,14 +17,14 @@ struct FrequencyDomainTool: Tool {
     struct Arguments {
         @Guide(description: "Spectral width; omit to calculate it")
         var spectralWidth: Double?
-        @Guide(description: "Spectral width unit as the user stated it, e.g. 'kHz', 'Hz'")
-        var spectralWidthUnit: String?
+        @Guide(description: "Unit of the spectral width; omit if not stated")
+        var spectralWidthUnit: FrequencyUnit?
         @Guide(description: "Number of data points; omit to calculate it", .minimum(1))
         var numberOfPoints: Int?
         @Guide(description: "Frequency resolution; omit to calculate it")
         var frequencyResolution: Double?
-        @Guide(description: "Frequency resolution unit as the user stated it, e.g. 'Hz'")
-        var frequencyResolutionUnit: String?
+        @Guide(description: "Unit of the frequency resolution; omit if not stated")
+        var frequencyResolutionUnit: FrequencyUnit?
     }
 
     func call(arguments: Arguments) async throws -> String {
@@ -39,10 +39,10 @@ struct FrequencyDomainTool: Tool {
         let spectralWidthInHz: Double?
         let frequencyResolutionInHz: Double?
         do {
-            spectralWidthInHz = try await Self.hertz(arguments.spectralWidth, unit: arguments.spectralWidthUnit, assuming: .kilohertz)
-            frequencyResolutionInHz = try await Self.hertz(arguments.frequencyResolution, unit: arguments.frequencyResolutionUnit, assuming: .hertz)
-        } catch UnitNormalizationError.unrecognizedUnit(let unit) {
-            return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard frequency unit."
+            spectralWidthInHz = try Self.hertz(arguments.spectralWidth, unit: arguments.spectralWidthUnit, assuming: .kilohertz)
+            frequencyResolutionInHz = try Self.hertz(arguments.frequencyResolution, unit: arguments.frequencyResolutionUnit, assuming: .hertz)
+        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
+            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
         if let spectralWidthInHz, spectralWidthInHz <= 0 {
@@ -78,9 +78,9 @@ struct FrequencyDomainTool: Tool {
         }
     }
 
-    private static func hertz(_ value: Double?, unit: String?, assuming defaultUnit: FrequencyUnit) async throws -> Double? {
+    private static func hertz(_ value: Double?, unit: FrequencyUnit?, assuming defaultUnit: FrequencyUnit) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.hertz(from: value, unit: unit, assuming: defaultUnit)
+        return try UnitNormalizer.hertz(from: value, unit: unit, assuming: defaultUnit)
     }
 
     private static func format(_ response: FrequencyDomainResponse, calculated: ToolResponseEvaluator.FrequencyDomainParameter) -> String {

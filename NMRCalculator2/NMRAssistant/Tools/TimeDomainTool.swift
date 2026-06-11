@@ -17,14 +17,14 @@ struct TimeDomainTool: Tool {
     struct Arguments {
         @Guide(description: "Acquisition time; omit to calculate it")
         var acquisitionTime: Double?
-        @Guide(description: "Acquisition time unit as the user stated it, e.g. 's', 'ms'")
-        var acquisitionTimeUnit: String?
+        @Guide(description: "Unit of the acquisition time; omit if not stated")
+        var acquisitionTimeUnit: TimeUnit?
         @Guide(description: "Number of data points; omit to calculate it", .minimum(1))
         var numberOfPoints: Int?
         @Guide(description: "Dwell time; omit to calculate it")
         var dwellTime: Double?
-        @Guide(description: "Dwell time unit as the user stated it, e.g. 'µs', 'ms'")
-        var dwellTimeUnit: String?
+        @Guide(description: "Unit of the dwell time; omit if not stated")
+        var dwellTimeUnit: TimeUnit?
     }
 
     func call(arguments: Arguments) async throws -> String {
@@ -39,10 +39,10 @@ struct TimeDomainTool: Tool {
         let acquisitionTimeInSec: Double?
         let dwellInSec: Double?
         do {
-            acquisitionTimeInSec = try await Self.seconds(arguments.acquisitionTime, unit: arguments.acquisitionTimeUnit, assuming: .seconds)
-            dwellInSec = try await Self.seconds(arguments.dwellTime, unit: arguments.dwellTimeUnit, assuming: .microseconds)
-        } catch UnitNormalizationError.unrecognizedUnit(let unit) {
-            return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time unit."
+            acquisitionTimeInSec = try Self.seconds(arguments.acquisitionTime, unit: arguments.acquisitionTimeUnit, assuming: .seconds)
+            dwellInSec = try Self.seconds(arguments.dwellTime, unit: arguments.dwellTimeUnit, assuming: .microseconds)
+        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
+            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
         if let acquisitionTimeInSec, acquisitionTimeInSec <= 0 {
@@ -78,9 +78,9 @@ struct TimeDomainTool: Tool {
         }
     }
 
-    private static func seconds(_ value: Double?, unit: String?, assuming defaultUnit: TimeUnit) async throws -> Double? {
+    private static func seconds(_ value: Double?, unit: TimeUnit?, assuming defaultUnit: TimeUnit) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.seconds(from: value, unit: unit, assuming: defaultUnit)
+        return try UnitNormalizer.seconds(from: value, unit: unit, assuming: defaultUnit)
     }
 
     private static func format(_ response: TimeDomainResponse, calculated: ToolResponseEvaluator.TimeDomainParameter) -> String {

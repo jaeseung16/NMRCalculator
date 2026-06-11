@@ -19,16 +19,16 @@ struct PulseAmplitudeTool: Tool {
         var nucleusIdentifier: String
         @Guide(description: "Pulse duration; omit to calculate it")
         var duration: Double?
-        @Guide(description: "Pulse duration unit as the user stated it, e.g. 'µs', 'ms'")
-        var durationUnit: String?
+        @Guide(description: "Unit of the pulse duration; omit if not stated")
+        var durationUnit: TimeUnit?
         @Guide(description: "Flip angle; omit to calculate it")
         var flipAngle: Double?
-        @Guide(description: "Flip angle unit as the user stated it, e.g. 'degree'")
-        var flipAngleUnit: String?
+        @Guide(description: "Unit of the flip angle; omit if not stated")
+        var flipAngleUnit: AngleUnit?
         @Guide(description: "RF amplitude; omit to calculate it")
         var amplitude: Double?
-        @Guide(description: "RF amplitude unit as the user stated it, e.g. 'Hz', 'kHz'")
-        var amplitudeUnit: String?
+        @Guide(description: "Unit of the RF amplitude; omit if not stated")
+        var amplitudeUnit: FrequencyUnit?
     }
 
     func call(arguments: Arguments) async throws -> String {
@@ -50,11 +50,11 @@ struct PulseAmplitudeTool: Tool {
         let flipAngleInDegree: Double?
         let amplitudeInHz: Double?
         do {
-            durationInMicrosec = try await Self.microseconds(arguments.duration, unit: arguments.durationUnit)
-            flipAngleInDegree = try await Self.degrees(arguments.flipAngle, unit: arguments.flipAngleUnit)
-            amplitudeInHz = try await Self.hertz(arguments.amplitude, unit: arguments.amplitudeUnit)
-        } catch UnitNormalizationError.unrecognizedUnit(let unit) {
-            return "The unit '\(unit)' was not recognized. Ask the user to restate the value with a standard time, angle, or frequency unit."
+            durationInMicrosec = try Self.microseconds(arguments.duration, unit: arguments.durationUnit)
+            flipAngleInDegree = try Self.degrees(arguments.flipAngle, unit: arguments.flipAngleUnit)
+            amplitudeInHz = try Self.hertz(arguments.amplitude, unit: arguments.amplitudeUnit)
+        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
+            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
         if let durationInMicrosec, durationInMicrosec <= 0 {
@@ -90,19 +90,19 @@ struct PulseAmplitudeTool: Tool {
         }
     }
 
-    private static func microseconds(_ value: Double?, unit: String?) async throws -> Double? {
+    private static func microseconds(_ value: Double?, unit: TimeUnit?) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.seconds(from: value, unit: unit, assuming: .microseconds) * 1_000_000.0
+        return try UnitNormalizer.seconds(from: value, unit: unit, assuming: .microseconds) * 1_000_000.0
     }
 
-    private static func degrees(_ value: Double?, unit: String?) async throws -> Double? {
+    private static func degrees(_ value: Double?, unit: AngleUnit?) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.degrees(from: value, unit: unit)
+        return try UnitNormalizer.degrees(from: value, unit: unit)
     }
 
-    private static func hertz(_ value: Double?, unit: String?) async throws -> Double? {
+    private static func hertz(_ value: Double?, unit: FrequencyUnit?) throws -> Double? {
         guard let value else { return nil }
-        return try await UnitNormalizer.hertz(from: value, unit: unit, assuming: .hertz)
+        return try UnitNormalizer.hertz(from: value, unit: unit, assuming: .hertz)
     }
 
     private static func format(_ response: PulseParameterResponse, calculated: ToolResponseEvaluator.PulseParameter, nucleus: NMRNucleus) -> String {
