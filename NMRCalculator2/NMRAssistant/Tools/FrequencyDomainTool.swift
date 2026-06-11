@@ -28,7 +28,7 @@ struct FrequencyDomainTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
-        Self.logger.info("\(name): \(String(describing: arguments))")
+        Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
         let providedCount = [arguments.spectralWidth != nil,
                              arguments.numberOfPoints != nil,
                              arguments.frequencyResolution != nil].filter { $0 }.count

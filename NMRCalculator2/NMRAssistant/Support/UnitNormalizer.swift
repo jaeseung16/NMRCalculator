@@ -203,7 +203,7 @@ struct UnitNormalizer {
                 """
         )
         let response = try await session.respond(to: unit, generating: U.self)
-        Self.logger.info("Classified unit '\(unit)' as \(String(describing: response.content))")
+        Self.logger.info("Classified unit '\(unit, privacy: .public)' as \(String(describing: response.content), privacy: .public)")
         return response.content
     }
 }

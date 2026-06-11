@@ -34,7 +34,7 @@ struct PulseRelativePowerTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
-        Self.logger.info("\(name): \(String(describing: arguments))")
+        Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
         let referenceDurationInMicrosec: Double
         let referenceFlipAngleInDegree: Double
         let measuredDurationInMicrosec: Double

@@ -32,7 +32,7 @@ struct PulseAmplitudeTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
-        Self.logger.info("\(name): \(String(describing: arguments))")
+        Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
         guard let nucleus = await MainActor.run(body: {
             NMRPeriodicTable.shared.nucleus(matching: arguments.nucleusIdentifier)
         }) else {

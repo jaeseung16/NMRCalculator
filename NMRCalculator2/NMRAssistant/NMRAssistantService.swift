@@ -79,11 +79,13 @@ final class NMRAssistantService {
             )
             return
         }
+        Self.logger.info("User message: \(text, privacy: .public)")
         messages.append(NMRAssistantMessage(id: UUID(), role: .user, text: text))
         isProcessing = true
         defer { isProcessing = false }
         do {
             let response = try await session.respond(to: text)
+            Self.logger.info("Assistant response: \(response.content, privacy: .public)")
             messages.append(NMRAssistantMessage(id: UUID(), role: .assistant, text: response.content))
         } catch LanguageModelSession.GenerationError.exceededContextWindowSize {
             messages.append(

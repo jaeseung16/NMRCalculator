@@ -28,7 +28,7 @@ struct TimeDomainTool: Tool {
     }
 
     func call(arguments: Arguments) async throws -> String {
-        Self.logger.info("\(name): \(String(describing: arguments))")
+        Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
         let providedCount = [arguments.acquisitionTime != nil,
                              arguments.numberOfPoints != nil,
                              arguments.dwellTime != nil].filter { $0 }.count
