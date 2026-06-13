@@ -20,13 +20,28 @@ final class NMRCalculator2Tests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
+    /// Availability can report `.available` while generation still fails in
+    /// this environment (e.g. a simulator without usable host model assets),
+    /// so probe an actual response before running model-dependent tests.
+    private func skipUnlessModelResponds() async throws {
+        guard case .available = SystemLanguageModel.default.availability else {
+            throw XCTSkip("The language model is unavailable")
+        }
+        do {
+            _ = try await LanguageModelSession().respond(to: "Reply with the word ready.")
+        } catch {
+            throw XCTSkip("The language model cannot generate in this environment: \(error)")
+        }
+    }
+
     @MainActor
     func testNMRAssistantService() async throws {
+        try await skipUnlessModelResponds()
         let navigationState = NMRAssistantNavigationState()
         let service = NMRAssistantService(navigationState: navigationState)
-        
+
         await service.send("Which isotopes of carbon are NMR active?")
-        
+
         /*
          Questions:
          Which isotopes of Carbon are NMR active?
@@ -44,11 +59,39 @@ final class NMRCalculator2Tests: XCTestCase {
          What it the duration of a 10-microsecond 90-deg pulse?
          What is the RF amplitude of 10-microsecond 90-deg pulse?
          */
-        
+
         print("**********")
         service.messages.forEach { print($0) }
         print("**********")
         //XCTAssertTrue(service.messages.isEmpty)
+    }
+
+    /// Unit-bearing phrasings from the question list: each question states a
+    /// value with an explicit unit that the tools (not the model) must convert.
+    /// One session per question so a long transcript cannot exceed the context
+    /// window. Skipped when the on-device model is unavailable.
+    @MainActor
+    func testNMRAssistantServiceUnitBearingPhrasings() async throws {
+        try await skipUnlessModelResponds()
+        let questions = [
+            "What is the Ernst angle when T1 is 1500 ms and the repetition time is 1 s?",
+            "What is the resonance frequency of C-13 when the proton NMR frequency is 600 MHz?",
+            "What is the duration of a 90-degree pulse when the RF amplitude is 1 kHz?",
+            "What is the acquisition time when the dwell time is 10 microseconds and there are 1024 points?"
+        ]
+        let navigationState = NMRAssistantNavigationState()
+        for question in questions {
+            let service = NMRAssistantService(navigationState: navigationState)
+            await service.send(question)
+
+            XCTAssertEqual(service.messages.count, 2, "Expected a reply to: \(question)")
+            guard let reply = service.messages.last, reply.role == .assistant else {
+                XCTFail("Missing assistant reply to: \(question)")
+                continue
+            }
+            XCTAssertFalse(reply.text.hasPrefix("Error:"), "Assistant failed on: \(question) — \(reply.text)")
+            print("**********\nQ: \(question)\nA: \(reply.text)\n**********")
+        }
     }
 
     /// Estimates the prompt overhead of the NMR assistant's main session:

@@ -21,6 +21,9 @@
 		9067B3312AACED2A00A8FA29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9067B3302AACED2A00A8FA29 /* Assets.xcassets */; };
 		9067B3352AACED2A00A8FA29 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9067B3342AACED2A00A8FA29 /* Preview Assets.xcassets */; };
 		9067B33F2AACED2A00A8FA29 /* NMRCalculator2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B33E2AACED2A00A8FA29 /* NMRCalculator2Tests.swift */; };
+		FA00AA012E0000010000AA01 /* UnitNormalizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00AA042E0000010000AA04 /* UnitNormalizerTests.swift */; };
+		FA00AA022E0000010000AA02 /* ToolResponseEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00AA052E0000010000AA05 /* ToolResponseEvaluatorTests.swift */; };
+		FA00AA032E0000010000AA03 /* NMRAssistantToolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00AA062E0000010000AA06 /* NMRAssistantToolTests.swift */; };
 		9067B3492AACED2A00A8FA29 /* NMRCalculator2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B3482AACED2A00A8FA29 /* NMRCalculator2UITests.swift */; };
 		9067B34B2AACED2A00A8FA29 /* NMRCalculator2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9067B34A2AACED2A00A8FA29 /* NMRCalculator2UITestsLaunchTests.swift */; };
 		9067B3562AACEF0B00A8FA29 /* NMRPeriodicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90732BBE2129E9E70027DFBD /* NMRPeriodicTable.swift */; };
@@ -161,6 +164,9 @@
 		9067B3342AACED2A00A8FA29 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9067B33A2AACED2A00A8FA29 /* NMRCalculator2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NMRCalculator2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9067B33E2AACED2A00A8FA29 /* NMRCalculator2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculator2Tests.swift; sourceTree = "<group>"; };
+		FA00AA042E0000010000AA04 /* UnitNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitNormalizerTests.swift; sourceTree = "<group>"; };
+		FA00AA052E0000010000AA05 /* ToolResponseEvaluatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResponseEvaluatorTests.swift; sourceTree = "<group>"; };
+		FA00AA062E0000010000AA06 /* NMRAssistantToolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRAssistantToolTests.swift; sourceTree = "<group>"; };
 		9067B3442AACED2A00A8FA29 /* NMRCalculator2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NMRCalculator2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9067B3482AACED2A00A8FA29 /* NMRCalculator2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculator2UITests.swift; sourceTree = "<group>"; };
 		9067B34A2AACED2A00A8FA29 /* NMRCalculator2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRCalculator2UITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -364,6 +370,9 @@
 			isa = PBXGroup;
 			children = (
 				9067B33E2AACED2A00A8FA29 /* NMRCalculator2Tests.swift */,
+				FA00AA042E0000010000AA04 /* UnitNormalizerTests.swift */,
+				FA00AA052E0000010000AA05 /* ToolResponseEvaluatorTests.swift */,
+				FA00AA062E0000010000AA06 /* NMRAssistantToolTests.swift */,
 			);
 			path = NMRCalculator2Tests;
 			sourceTree = "<group>";
@@ -813,6 +822,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9067B33F2AACED2A00A8FA29 /* NMRCalculator2Tests.swift in Sources */,
+				FA00AA012E0000010000AA01 /* UnitNormalizerTests.swift in Sources */,
+				FA00AA022E0000010000AA02 /* ToolResponseEvaluatorTests.swift in Sources */,
+				FA00AA032E0000010000AA03 /* NMRAssistantToolTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
