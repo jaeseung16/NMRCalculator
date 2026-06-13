@@ -17,15 +17,15 @@ struct PulseAmplitudeTool: Tool {
     struct Arguments {
         @Guide(description: "Nucleus identifier, e.g. '1H', '13C'")
         var nucleusIdentifier: String
-        @Guide(description: "Pulse duration; omit to calculate it")
+        @Guide(description: "Pulse duration; omit if duration is what the user wants to calculate")
         var duration: Double?
         @Guide(description: "Unit of the pulse duration; omit if not stated")
         var durationUnit: TimeUnit?
-        @Guide(description: "Flip angle; omit to calculate it")
+        @Guide(description: "Flip angle; omit if flip angle is what the user wants to calculate")
         var flipAngle: Double?
         @Guide(description: "Unit of the flip angle; omit if not stated")
         var flipAngleUnit: AngleUnit?
-        @Guide(description: "RF amplitude; omit to calculate it")
+        @Guide(description: "RF amplitude; omit if RF amplitude is what the user wants to calculate")
         var amplitude: Double?
         @Guide(description: "Unit of the RF amplitude; omit if not stated")
         var amplitudeUnit: FrequencyUnit?
@@ -39,20 +39,24 @@ struct PulseAmplitudeTool: Tool {
             return "Nucleus '\(arguments.nucleusIdentifier)' not found. Use list_nuclei to find valid identifiers."
         }
 
-        let providedCount = [arguments.duration != nil,
-                             arguments.flipAngle != nil,
-                             arguments.amplitude != nil].filter { $0 }.count
+        let duration = arguments.duration.flatMap { $0 == 0.0 ? nil : $0 }
+        let flipAngle = arguments.flipAngle.flatMap { $0 == 0.0 ? nil : $0 }
+        let amplitude = arguments.amplitude.flatMap { $0 == 0.0 ? nil : $0 }
+
+        let providedCount = [duration != nil,
+                             flipAngle != nil,
+                             amplitude != nil].filter { $0 }.count
         guard providedCount == 2 else {
-            return "Provide exactly two of: pulse duration, flip angle, RF amplitude; omit the one to calculate."
+            return "Provide exactly two of: pulse duration, flip angle, RF amplitude; set to nil the one to calculate."
         }
 
         let durationInMicrosec: Double?
         let flipAngleInDegree: Double?
         let amplitudeInHz: Double?
         do {
-            durationInMicrosec = try Self.microseconds(arguments.duration, unit: arguments.durationUnit)
-            flipAngleInDegree = try Self.degrees(arguments.flipAngle, unit: arguments.flipAngleUnit)
-            amplitudeInHz = try Self.hertz(arguments.amplitude, unit: arguments.amplitudeUnit)
+            durationInMicrosec = try Self.microseconds(duration, unit: arguments.durationUnit)
+            flipAngleInDegree = try Self.degrees(flipAngle, unit: arguments.flipAngleUnit)
+            amplitudeInHz = try Self.hertz(amplitude, unit: arguments.amplitudeUnit)
         } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }

@@ -15,13 +15,13 @@ struct FrequencyDomainTool: Tool {
 
     @Generable
     struct Arguments {
-        @Guide(description: "Spectral width; omit to calculate it")
+        @Guide(description: "Spectral width; omit if spectral width is what the user wants to calculate")
         var spectralWidth: Double?
         @Guide(description: "Unit of the spectral width; omit if not stated")
         var spectralWidthUnit: FrequencyUnit?
-        @Guide(description: "Number of data points; omit to calculate it", .minimum(1))
+        @Guide(description: "Number of data points; omit if point count is what the user wants to calculate", .minimum(1))
         var numberOfPoints: Int?
-        @Guide(description: "Frequency resolution; omit to calculate it")
+        @Guide(description: "Frequency resolution; omit if frequency resolution is what the user wants to calculate")
         var frequencyResolution: Double?
         @Guide(description: "Unit of the frequency resolution; omit if not stated")
         var frequencyResolutionUnit: FrequencyUnit?
@@ -29,9 +29,13 @@ struct FrequencyDomainTool: Tool {
 
     func call(arguments: Arguments) async throws -> String {
         Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
-        let providedCount = [arguments.spectralWidth != nil,
-                             arguments.numberOfPoints != nil,
-                             arguments.frequencyResolution != nil].filter { $0 }.count
+        let spectralWidth = arguments.spectralWidth.flatMap { $0 == 0.0 ? nil : $0 }
+        let numberOfPoints = arguments.numberOfPoints.flatMap { $0 == 0 ? nil : $0 }
+        let frequencyResolution = arguments.frequencyResolution.flatMap { $0 == 0.0 ? nil : $0 }
+
+        let providedCount = [spectralWidth != nil,
+                             numberOfPoints != nil,
+                             frequencyResolution != nil].filter { $0 }.count
         guard providedCount == 2 else {
             return "Provide exactly two of: spectral width, number of points, frequency resolution; omit the one to calculate."
         }
@@ -39,8 +43,8 @@ struct FrequencyDomainTool: Tool {
         let spectralWidthInHz: Double?
         let frequencyResolutionInHz: Double?
         do {
-            spectralWidthInHz = try Self.hertz(arguments.spectralWidth, unit: arguments.spectralWidthUnit, assuming: .kilohertz)
-            frequencyResolutionInHz = try Self.hertz(arguments.frequencyResolution, unit: arguments.frequencyResolutionUnit, assuming: .hertz)
+            spectralWidthInHz = try Self.hertz(spectralWidth, unit: arguments.spectralWidthUnit, assuming: .kilohertz)
+            frequencyResolutionInHz = try Self.hertz(frequencyResolution, unit: arguments.frequencyResolutionUnit, assuming: .hertz)
         } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
@@ -57,11 +61,11 @@ struct FrequencyDomainTool: Tool {
 
         let calculated: ToolResponseEvaluator.FrequencyDomainParameter = spectralWidthInHz == nil
             ? .spectralWidth
-            : (arguments.numberOfPoints == nil ? .numberOfPoints : .frequencyResolution)
+            : (numberOfPoints == nil ? .numberOfPoints : .frequencyResolution)
 
         let request = FrequencyDomainRequest(
             spectralWidthInHz: spectralWidthInHz,
-            numberOfPoints: arguments.numberOfPoints,
+            numberOfPoints: numberOfPoints,
             frequencyResolutionInHz: frequencyResolutionInHz
         )
         switch NMRCalcFactory.shared.create(.frequency).process(request) {

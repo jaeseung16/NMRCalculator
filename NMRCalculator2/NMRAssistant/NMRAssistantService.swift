@@ -26,11 +26,10 @@ final class NMRAssistantService {
               Examples:
                 a. Normalized: 13C, unnormalized: Carbon 13, Carbon-13
                 b. Normalized: 3He, unnormalized: Helium 3, Helium-3
-                c. Normalized: 1H, unnormalized: Proton, P
+                c. Normalized: 1H, unnormalized: Proton
                 d. Normalized: 2H, unnormalized: Deuterium, D
                 e. Normalized: 3H, unnormalized: Tritium, T
-            2. Do not convert units; pass each numerical value to the tools together with the unit the user stated. Never pass 0 or 0.0 as a placeholder for a value the user did not provide; omit that parameter instead. \
-            3. When using the tools `calculate_ernst_angle`, `calculate_frequency_domain`, `calculate_time_domain`, `calculate_larmor_frequency`, `calculate_pulse_amplitude`, pass nil to the paramter you are calculating from the other parameters, which should not be nil. If some of the other paramters are nil, please ask the user for clarification.
+            2. Pass each numerical value with the unit the user stated; do not convert units. Do not set any parameter the user didn't provide. For calculate_ernst_angle, calculate_larmor_frequency, and calculate_pulse_amplitude, also do not set the one parameter you want the tool to compute. If any required input is missing, ask the user.
             """
 
     static func makeTools(navigationState: NMRAssistantNavigationState) -> [any Tool] {
@@ -96,12 +95,12 @@ final class NMRAssistantService {
             messages.append(
                 NMRAssistantMessage(id: UUID(),
                                     role: .assistant,
-                                    text: "Error: Exceeded context window size. Please restart the assistant."
+                                    text: "Exceeded context window size. Please restart the assistant."
                                    )
             )
         } catch {
             messages.append(
-                NMRAssistantMessage(id: UUID(), role: .assistant, text: "Error: \(error.localizedDescription)")
+                NMRAssistantMessage(id: UUID(), role: .assistant, text: "Encountered an error. Please restart the assistant.")
             )
             if let error = error as? LanguageModelSession.GenerationError {
                 Self.logger.error("failureReason: \(error.failureReason ?? ""), errorDescription: \(error.errorDescription ?? ""), recoverySuggestion: \(error.recoverySuggestion ?? "")")

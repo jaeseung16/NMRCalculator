@@ -314,13 +314,37 @@ validate exactly-one-parameter-omitted → `UnitNormalizer` converts each input 
 - ✅ Token measurement: `testTokenCount()` in `NMRCalculator2Tests` token-counts the instructions and each tool's name/description/argument schema (schema JSON is an approximation of the runtime's private rendering; use for relative comparisons). First measurement (2026-06-11): instructions 365; tools 2,119 (ernst 311, frequency 247, time 257, relative power 370, larmor 427, pulse amplitude 315, list_nuclei 99, open_detail 93); estimated total ≈ 2,484. The tool schemas, not the instructions, now dominate the prompt overhead — slimming candidates are the larmor and relative-power schemas (most unit-enum fields) and shorter argument descriptions.
 - Optional: a post-response **answer evaluator** session in `send(_:)` that compares the final `response.content` numbers against the latest tool outputs in `session.transcript` — the only place an LLM evaluator adds value beyond the deterministic check.
 
-## Phase 4 — Tests (pending)
+## Phase 4 — Tests ✅
 
-- Unit tests for `UnitNormalizer`'s deterministic table and conversions (no model required).
-- Direct `call(arguments:)` tests per tool: calculated-parameter labeling, unit conversion (e.g. T1 = 1500 ms → 1.5 s), behavior on under-/over-specified arguments, evaluator rejection.
-- Extend `testNMRAssistantService()` with unit-bearing phrasings from the existing question list.
+All in the `NMRCalculator2Tests` target (56 deterministic tests, no model required):
+
+- `UnitNormalizerTests.swift` ✅ — every enum case of the four unit dimensions, nil-unit `assuming` defaults (including parameter-specific defaults like µs/MHz), unit-overrides-assumption, and `unrecognized` throwing with the right dimension name.
+- `ToolResponseEvaluatorTests.swift` ✅ — for each calculator type: consistent responses pass for every `calculated`/`given` case, corrupted responses are rejected, and the truncated-point-count one-step tolerance is exercised (`SW = 10 kHz`, `res = 9.7 Hz` → `N = 1030`).
+- `NMRAssistantToolTests.swift` ✅ — direct `call(arguments:)` per tool, with `Arguments` decoded from JSON via `GeneratedContent(json:)` (the same decoding path the FoundationModels runtime uses). Covers calculated-parameter labeling for every direction, unit conversion (T1 = 1500 ms → 1.5 s, radians, mT, kHz, MHz, Gauss-free defaults), under-/over-specified arguments, placeholder-zero rejection, unrecognized units, unknown nuclei, and `OpenNucleusDetailTool` navigation-state writes.
+- `testNMRAssistantServiceUnitBearingPhrasings()` ✅ — unit-bearing phrasings from the question list, one fresh session per question; asserts a non-error assistant reply. Model-dependent: both service tests first probe an actual `respond(to:)` and skip if generation fails — in the simulator `SystemLanguageModel.default.availability` can report `.available` while every request fails with `GenerationError error -1`, so availability alone is not a sufficient guard. Run on a device (or a host with working Apple Intelligence assets) to exercise them.
+
+## Phase 5 — Placeholder-zero mitigation (2026-06-13)
+
+**Problem:** The on-device constrained decoding generates `0.0` for `Double?` fields (and `0` for `Int?`) when the model intends to omit a parameter, rather than generating `nil`. This causes the `providedCount` guard to count the placeholder as a provided value, leading to a validation failure and a retry loop with the same wrong arguments.
+
+**Approaches tried:**
+1. Rephrasing `@Guide` descriptions and instructions from "omit" to "set to nil" — did not change model behavior.
+2. `@Generable(representNilExplicitlyInGeneratedContent: true)` — available from iOS 26.4 / macOS 26.4 (requires raising the minimum from 26.0); not yet applied.
+
+**Fix applied:** Each tool's `call()` normalizes `0.0 → nil` (and `0 → nil` for `Int?`) for all optional numeric parameters immediately before the `providedCount` check. A genuine user-supplied `0` is subsequently caught by the existing `<= 0` validation with a clear error message. Five tools updated:
+
+| Tool | Parameters normalized |
+|---|---|
+| `PulseAmplitudeTool` | `duration`, `flipAngle`, `amplitude` |
+| `ErnstAngleTool` | `relaxationTimeT1`, `repetitionTime`, `ernstAngle` |
+| `LarmorFrequencyTool` | `magneticField`, `larmorFrequency`, `protonFrequency`, `electronFrequency` |
+| `TimeDomainTool` | `acquisitionTime`, `numberOfPoints`, `dwellTime` |
+| `FrequencyDomainTool` | `spectralWidth`, `numberOfPoints`, `frequencyResolution` |
+
+**Instructions update:** Removed "never pass 0 or 0.0 as a placeholder" (now enforced in code). Phrasing revised to "Do not set any parameter the user didn't provide." Token counts should be re-measured with `testTokenCount()` on a device to update the 2026-06-11 baseline (365 instructions / ~2,484 total); the instructions are marginally shorter.
 
 ## Risks / open points
 
 - **Schema growth vs. instruction shrinkage**: confirm net token reduction with `tokenCount` after Phase 3 (the unit enums list their case names in each tool schema).
 - Nucleus-identifier normalization (instruction item 1) could later move tool-side the same way, further shrinking the main instructions.
+- `@Generable(representNilExplicitlyInGeneratedContent: true)` (iOS 26.4+) remains an alternative to the code-level 0→nil normalization; try if placeholder zeros reappear for other parameter types.

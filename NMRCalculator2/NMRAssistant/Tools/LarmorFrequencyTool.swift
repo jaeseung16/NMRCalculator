@@ -43,10 +43,15 @@ struct LarmorFrequencyTool: Tool {
             return "Nucleus '\(arguments.nucleusIdentifier)' not found. Use list_nuclei to find valid identifiers."
         }
 
-        let providedCount = [arguments.magneticField != nil,
-                             arguments.larmorFrequency != nil,
-                             arguments.protonFrequency != nil,
-                             arguments.electronFrequency != nil].filter { $0 }.count
+        let magneticField = arguments.magneticField.flatMap { $0 == 0.0 ? nil : $0 }
+        let larmorFrequency = arguments.larmorFrequency.flatMap { $0 == 0.0 ? nil : $0 }
+        let protonFrequency = arguments.protonFrequency.flatMap { $0 == 0.0 ? nil : $0 }
+        let electronFrequency = arguments.electronFrequency.flatMap { $0 == 0.0 ? nil : $0 }
+
+        let providedCount = [magneticField != nil,
+                             larmorFrequency != nil,
+                             protonFrequency != nil,
+                             electronFrequency != nil].filter { $0 }.count
         guard providedCount == 1 else {
             return "Provide exactly one of: magnetic field, Larmor frequency, proton frequency, free electron frequency."
         }
@@ -56,10 +61,10 @@ struct LarmorFrequencyTool: Tool {
         let protonFrequencyInMHz: Double?
         let electronFrequencyInGHz: Double?
         do {
-            magneticFieldInTesla = try Self.tesla(arguments.magneticField, unit: arguments.magneticFieldUnit)
-            larmorFrequencyInMHz = try Self.megahertz(arguments.larmorFrequency, unit: arguments.larmorFrequencyUnit, assuming: .megahertz)
-            protonFrequencyInMHz = try Self.megahertz(arguments.protonFrequency, unit: arguments.protonFrequencyUnit, assuming: .megahertz)
-            electronFrequencyInGHz = try Self.gigahertz(arguments.electronFrequency, unit: arguments.electronFrequencyUnit, assuming: .gigahertz)
+            magneticFieldInTesla = try Self.tesla(magneticField, unit: arguments.magneticFieldUnit)
+            larmorFrequencyInMHz = try Self.megahertz(larmorFrequency, unit: arguments.larmorFrequencyUnit, assuming: .megahertz)
+            protonFrequencyInMHz = try Self.megahertz(protonFrequency, unit: arguments.protonFrequencyUnit, assuming: .megahertz)
+            electronFrequencyInGHz = try Self.gigahertz(electronFrequency, unit: arguments.electronFrequencyUnit, assuming: .gigahertz)
         } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }

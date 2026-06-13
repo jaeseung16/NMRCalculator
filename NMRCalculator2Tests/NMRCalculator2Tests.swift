@@ -23,7 +23,7 @@ final class NMRCalculator2Tests: XCTestCase {
     /// Availability can report `.available` while generation still fails in
     /// this environment (e.g. a simulator without usable host model assets),
     /// so probe an actual response before running model-dependent tests.
-    private func skipUnlessModelResponds() async throws {
+    private static func skipUnlessModelResponds() async throws {
         guard case .available = SystemLanguageModel.default.availability else {
             throw XCTSkip("The language model is unavailable")
         }
@@ -36,7 +36,7 @@ final class NMRCalculator2Tests: XCTestCase {
 
     @MainActor
     func testNMRAssistantService() async throws {
-        try await skipUnlessModelResponds()
+        try await Self.skipUnlessModelResponds()
         let navigationState = NMRAssistantNavigationState()
         let service = NMRAssistantService(navigationState: navigationState)
 
@@ -54,10 +54,11 @@ final class NMRCalculator2Tests: XCTestCase {
          What is the gyromagnetic ratio of sodium nuclei?
          What is the NMR frequency of sodium when the proton frequency is 500 MHz?
          What is the magnetic field when the sodium NMR frequency is 100 MHz?
-         What would be the spectral widht when the number of data points is 1024 and the frequency resolution is 1 HZ?
+         What would be the spectral width when the number of data points is 1024 and the frequency resolution is 1 Hz?
          What is the duration of a 90-degree pulse when the RF ampliotude is 1 kHz?
          What it the duration of a 10-microsecond 90-deg pulse?
          What is the RF amplitude of 10-microsecond 90-deg pulse?
+         What is the RF amplitude of 10-μs 90-deg pulse?
          */
 
         print("**********")
@@ -72,7 +73,7 @@ final class NMRCalculator2Tests: XCTestCase {
     /// window. Skipped when the on-device model is unavailable.
     @MainActor
     func testNMRAssistantServiceUnitBearingPhrasings() async throws {
-        try await skipUnlessModelResponds()
+        try await Self.skipUnlessModelResponds()
         let questions = [
             "What is the Ernst angle when T1 is 1500 ms and the repetition time is 1 s?",
             "What is the resonance frequency of C-13 when the proton NMR frequency is 600 MHz?",

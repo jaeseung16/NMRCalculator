@@ -15,15 +15,15 @@ struct ErnstAngleTool: Tool {
 
     @Generable
     struct Arguments {
-        @Guide(description: "T1 relaxation time; omit to calculate it")
+        @Guide(description: "T1 relaxation time; omit if T1 is what the user wants to calculate")
         var relaxationTimeT1: Double?
         @Guide(description: "Unit of the T1 relaxation time; omit if not stated")
         var relaxationTimeT1Unit: TimeUnit?
-        @Guide(description: "Repetition time; omit to calculate it")
+        @Guide(description: "Repetition time; omit if repetition time is what the user wants to calculate")
         var repetitionTime: Double?
         @Guide(description: "Unit of the repetition time; omit if not stated")
         var repetitionTimeUnit: TimeUnit?
-        @Guide(description: "Ernst angle; omit to calculate it")
+        @Guide(description: "Ernst angle; omit if Ernst angle is what the user wants to calculate")
         var ernstAngle: Double?
         @Guide(description: "Unit of the Ernst angle; omit if not stated")
         var ernstAngleUnit: AngleUnit?
@@ -31,9 +31,13 @@ struct ErnstAngleTool: Tool {
 
     func call(arguments: Arguments) async throws -> String {
         Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
-        let providedCount = [arguments.relaxationTimeT1 != nil,
-                             arguments.repetitionTime != nil,
-                             arguments.ernstAngle != nil].filter { $0 }.count
+        let relaxationTimeT1 = arguments.relaxationTimeT1.flatMap { $0 == 0.0 ? nil : $0 }
+        let repetitionTime = arguments.repetitionTime.flatMap { $0 == 0.0 ? nil : $0 }
+        let ernstAngle = arguments.ernstAngle.flatMap { $0 == 0.0 ? nil : $0 }
+
+        let providedCount = [relaxationTimeT1 != nil,
+                             repetitionTime != nil,
+                             ernstAngle != nil].filter { $0 }.count
         guard providedCount == 2 else {
             return "Provide exactly two of: T1 relaxation time, repetition time, Ernst angle; omit the one to calculate."
         }
@@ -42,9 +46,9 @@ struct ErnstAngleTool: Tool {
         let repetitionTimeInSec: Double?
         let ernstAngleInDegree: Double?
         do {
-            relaxationTimeInSec = try Self.seconds(arguments.relaxationTimeT1, unit: arguments.relaxationTimeT1Unit)
-            repetitionTimeInSec = try Self.seconds(arguments.repetitionTime, unit: arguments.repetitionTimeUnit)
-            ernstAngleInDegree = try Self.degrees(arguments.ernstAngle, unit: arguments.ernstAngleUnit)
+            relaxationTimeInSec = try Self.seconds(relaxationTimeT1, unit: arguments.relaxationTimeT1Unit)
+            repetitionTimeInSec = try Self.seconds(repetitionTime, unit: arguments.repetitionTimeUnit)
+            ernstAngleInDegree = try Self.degrees(ernstAngle, unit: arguments.ernstAngleUnit)
         } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
