@@ -7,21 +7,30 @@ import FoundationModels
 import NMRCalculatorCommon
 import os
 
+@Generable
+enum TimeDomainTarget {
+    case acquisitionTime
+    case numberOfPoints
+    case dwellTime
+}
+
 struct TimeDomainTool: Tool {
     private static let logger = Logger()
 
     let name = "calculate_time_domain"
-    let description = "Calculates acquisition time, dwell time, or number of acquisition points. Provide exactly two of the three, with units as the user stated; omit the one to calculate."
+    let description = "Calculates acquisition time, dwell time, or number of acquisition points. Set 'calculate' to the parameter you want computed, then provide the other two with their units."
 
     @Generable
     struct Arguments {
-        @Guide(description: "Acquisition time; omit if acquisition time is what the user wants to calculate")
+        @Guide(description: "The parameter to calculate")
+        var calculate: TimeDomainTarget
+        @Guide(description: "Acquisition time")
         var acquisitionTime: Double?
         @Guide(description: "Unit of the acquisition time; omit if not stated")
         var acquisitionTimeUnit: TimeUnit?
-        @Guide(description: "Number of data points; omit if point count is what the user wants to calculate", .minimum(1))
+        @Guide(description: "Number of data points")
         var numberOfPoints: Int?
-        @Guide(description: "Dwell time; omit if dwell time is what the user wants to calculate")
+        @Guide(description: "Dwell time")
         var dwellTime: Double?
         @Guide(description: "Unit of the dwell time; omit if not stated")
         var dwellTimeUnit: TimeUnit?
@@ -29,16 +38,10 @@ struct TimeDomainTool: Tool {
 
     func call(arguments: Arguments) async throws -> String {
         Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
+
         let acquisitionTime = arguments.acquisitionTime.flatMap { $0 == 0.0 ? nil : $0 }
         let numberOfPoints = arguments.numberOfPoints.flatMap { $0 == 0 ? nil : $0 }
         let dwellTime = arguments.dwellTime.flatMap { $0 == 0.0 ? nil : $0 }
-
-        let providedCount = [acquisitionTime != nil,
-                             numberOfPoints != nil,
-                             dwellTime != nil].filter { $0 }.count
-        guard providedCount == 2 else {
-            return "Provide exactly two of: acquisition time, number of points, dwell time; set to nil the one to calculate."
-        }
 
         let acquisitionTimeInSec: Double?
         let dwellInSec: Double?
@@ -49,25 +52,41 @@ struct TimeDomainTool: Tool {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
-        if let acquisitionTimeInSec, acquisitionTimeInSec <= 0 {
-            return "Invalid acquisition time \(acquisitionTimeInSec) s: it must be positive. Pass the user's stated value, or set it to nil to calculate it; never pass 0 as a placeholder."
-        }
-        if let numberOfPoints, numberOfPoints < 1 {
-            return "Invalid number of points \(numberOfPoints): it must be a positive integer. Pass the user's stated value, or set it to nil to calculate it; never pass 0 as a placeholder."
-        }
-        if let dwellInSec, dwellInSec <= 0 {
-            return "Invalid dwell time \(dwellInSec) s: it must be positive. Pass the user's stated value, or set it to nil to calculate it; never pass 0 as a placeholder."
+        let calculated: ToolResponseEvaluator.TimeDomainParameter
+        let request: TimeDomainRequest
+
+        switch arguments.calculate {
+        case .acquisitionTime:
+            guard let n = numberOfPoints, n > 0 else {
+                return "Number of points is required to calculate acquisition time. Provide a positive integer."
+            }
+            guard let dwell = dwellInSec, dwell > 0 else {
+                return "Dwell time is required to calculate acquisition time. Provide a positive value with its unit."
+            }
+            calculated = .acquisitionTime
+            request = TimeDomainRequest(acqusitionTimeInSec: nil, numberOfPoints: n, dwellInSec: dwell)
+
+        case .numberOfPoints:
+            guard let acq = acquisitionTimeInSec, acq > 0 else {
+                return "Acquisition time is required to calculate number of points. Provide a positive value with its unit."
+            }
+            guard let dwell = dwellInSec, dwell > 0 else {
+                return "Dwell time is required to calculate number of points. Provide a positive value with its unit."
+            }
+            calculated = .numberOfPoints
+            request = TimeDomainRequest(acqusitionTimeInSec: acq, numberOfPoints: nil, dwellInSec: dwell)
+
+        case .dwellTime:
+            guard let acq = acquisitionTimeInSec, acq > 0 else {
+                return "Acquisition time is required to calculate dwell time. Provide a positive value with its unit."
+            }
+            guard let n = numberOfPoints, n > 0 else {
+                return "Number of points is required to calculate dwell time. Provide a positive integer."
+            }
+            calculated = .dwellTime
+            request = TimeDomainRequest(acqusitionTimeInSec: acq, numberOfPoints: n, dwellInSec: nil)
         }
 
-        let calculated: ToolResponseEvaluator.TimeDomainParameter = acquisitionTimeInSec == nil
-            ? .acquisitionTime
-            : (numberOfPoints == nil ? .numberOfPoints : .dwellTime)
-
-        let request = TimeDomainRequest(
-            acqusitionTimeInSec: acquisitionTimeInSec,
-            numberOfPoints: numberOfPoints,
-            dwellInSec: dwellInSec
-        )
         switch NMRCalcFactory.shared.create(.time).process(request) {
         case .success(let response):
             guard let response = response as? TimeDomainResponse else { throw NMRCalcError.invalidOutput }

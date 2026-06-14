@@ -7,25 +7,34 @@ import FoundationModels
 import NMRCalculatorCommon
 import os
 
+@Generable
+enum PulseAmplitudeTarget {
+    case duration
+    case flipAngle
+    case amplitude
+}
+
 struct PulseAmplitudeTool: Tool {
     private static let logger = Logger()
 
     let name = "calculate_pulse_amplitude"
-    let description = "Calculates RF pulse duration, flip angle, or amplitude for a nucleus. Provide the nucleus and exactly two of the three, with units as the user stated; omit the one to calculate."
+    let description = "Calculates RF pulse duration, flip angle, or amplitude for a nucleus. Set 'calculate' to the parameter you want computed, then provide the nucleus and the other two with their units."
 
     @Generable
     struct Arguments {
         @Guide(description: "Nucleus identifier, e.g. '1H', '13C'")
         var nucleusIdentifier: String
-        @Guide(description: "Pulse duration; omit if duration is what the user wants to calculate")
+        @Guide(description: "The parameter to calculate")
+        var calculate: PulseAmplitudeTarget
+        @Guide(description: "Pulse duration")
         var duration: Double?
         @Guide(description: "Unit of the pulse duration; omit if not stated")
         var durationUnit: TimeUnit?
-        @Guide(description: "Flip angle; omit if flip angle is what the user wants to calculate")
+        @Guide(description: "Flip angle")
         var flipAngle: Double?
         @Guide(description: "Unit of the flip angle; omit if not stated")
         var flipAngleUnit: AngleUnit?
-        @Guide(description: "RF amplitude; omit if RF amplitude is what the user wants to calculate")
+        @Guide(description: "RF amplitude")
         var amplitude: Double?
         @Guide(description: "Unit of the RF amplitude; omit if not stated")
         var amplitudeUnit: FrequencyUnit?
@@ -43,13 +52,6 @@ struct PulseAmplitudeTool: Tool {
         let flipAngle = arguments.flipAngle.flatMap { $0 == 0.0 ? nil : $0 }
         let amplitude = arguments.amplitude.flatMap { $0 == 0.0 ? nil : $0 }
 
-        let providedCount = [duration != nil,
-                             flipAngle != nil,
-                             amplitude != nil].filter { $0 }.count
-        guard providedCount == 2 else {
-            return "Provide exactly two of: pulse duration, flip angle, RF amplitude; set to nil the one to calculate."
-        }
-
         let durationInMicrosec: Double?
         let flipAngleInDegree: Double?
         let amplitudeInHz: Double?
@@ -61,25 +63,41 @@ struct PulseAmplitudeTool: Tool {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
-        if let durationInMicrosec, durationInMicrosec <= 0 {
-            return "Invalid pulse duration \(durationInMicrosec) µs: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
-        }
-        if let flipAngleInDegree, flipAngleInDegree <= 0 {
-            return "Invalid flip angle \(flipAngleInDegree) degrees: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
-        }
-        if let amplitudeInHz, amplitudeInHz <= 0 {
-            return "Invalid RF amplitude \(amplitudeInHz) Hz: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        let calculated: ToolResponseEvaluator.PulseParameter
+        let request: PulseParameterRequest
+
+        switch arguments.calculate {
+        case .duration:
+            guard let angle = flipAngleInDegree, angle > 0 else {
+                return "Flip angle is required to calculate pulse duration. Provide a positive value with its unit."
+            }
+            guard let amp = amplitudeInHz, amp > 0 else {
+                return "RF amplitude is required to calculate pulse duration. Provide a positive value with its unit."
+            }
+            calculated = .duration
+            request = PulseParameterRequest(durationInMicrosecond: nil, flipAngleInDegree: angle, amplitudeInHz: amp)
+
+        case .flipAngle:
+            guard let dur = durationInMicrosec, dur > 0 else {
+                return "Pulse duration is required to calculate flip angle. Provide a positive value with its unit."
+            }
+            guard let amp = amplitudeInHz, amp > 0 else {
+                return "RF amplitude is required to calculate flip angle. Provide a positive value with its unit."
+            }
+            calculated = .flipAngle
+            request = PulseParameterRequest(durationInMicrosecond: dur, flipAngleInDegree: nil, amplitudeInHz: amp)
+
+        case .amplitude:
+            guard let dur = durationInMicrosec, dur > 0 else {
+                return "Pulse duration is required to calculate RF amplitude. Provide a positive value with its unit."
+            }
+            guard let angle = flipAngleInDegree, angle > 0 else {
+                return "Flip angle is required to calculate RF amplitude. Provide a positive value with its unit."
+            }
+            calculated = .amplitude
+            request = PulseParameterRequest(durationInMicrosecond: dur, flipAngleInDegree: angle, amplitudeInHz: nil)
         }
 
-        let calculated: ToolResponseEvaluator.PulseParameter = durationInMicrosec == nil
-            ? .duration
-            : (flipAngleInDegree == nil ? .flipAngle : .amplitude)
-
-        let request = PulseParameterRequest(
-            durationInMicrosecond: durationInMicrosec,
-            flipAngleInDegree: flipAngleInDegree,
-            amplitudeInHz: amplitudeInHz
-        )
         switch NMRCalcFactory.shared.create(.pulse).process(request) {
         case .success(let response):
             guard let response = response as? PulseParameterResponse else { throw NMRCalcError.invalidOutput }

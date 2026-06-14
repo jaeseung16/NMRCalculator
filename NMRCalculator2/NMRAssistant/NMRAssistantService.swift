@@ -29,7 +29,7 @@ final class NMRAssistantService {
                 c. Normalized: 1H, unnormalized: Proton
                 d. Normalized: 2H, unnormalized: Deuterium, D
                 e. Normalized: 3H, unnormalized: Tritium, T
-            2. Pass each numerical value with the unit the user stated; do not convert units. Do not set any parameter the user didn't provide. For calculate_ernst_angle, calculate_larmor_frequency, and calculate_pulse_amplitude, also do not set the one parameter you want the tool to compute. If any required input is missing, ask the user.
+            2. Pass each numerical value with the unit the user stated; do not convert units. Do not set any numerical parameter the user didn't provide. For each calculation tool, set the 'calculate' field (or 'given' for calculate_larmor_frequency) to name the parameter the user wants computed, then supply the other inputs with their values and units. If any required input is missing, ask the user.
             """
 
     static func makeTools(navigationState: NMRAssistantNavigationState) -> [any Tool] {

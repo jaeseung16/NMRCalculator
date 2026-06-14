@@ -23,7 +23,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testErnstAngleToolCalculatesAngleAndConvertsMilliseconds() async throws {
         let tool = ErnstAngleTool()
         let output = try await tool.call(arguments: arguments("""
-            {"relaxationTimeT1": 1500.0, "relaxationTimeT1Unit": "milliseconds",
+            {"calculate": "ernstAngle",
+             "relaxationTimeT1": 1500.0, "relaxationTimeT1Unit": "milliseconds",
              "repetitionTime": 1.0, "repetitionTimeUnit": "seconds"}
             """))
         let expected = acos(exp(-1.0 / 1.5)) * 180.0 / Double.pi
@@ -34,7 +35,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testErnstAngleToolCalculatesRepetitionTimeFromRadians() async throws {
         let tool = ErnstAngleTool()
         let output = try await tool.call(arguments: arguments("""
-            {"relaxationTimeT1": 2.0, "ernstAngle": \(Double.pi / 4.0), "ernstAngleUnit": "radians"}
+            {"calculate": "repetitionTime",
+             "relaxationTimeT1": 2.0, "ernstAngle": \(Double.pi / 4.0), "ernstAngleUnit": "radians"}
             """))
         let expected = -2.0 * log(cos(Double.pi / 4.0))
         XCTAssertTrue(output.hasPrefix("Calculated repetition time = \(String(format: "%.4f", expected)) s"), output)
@@ -43,44 +45,47 @@ final class NMRAssistantToolTests: XCTestCase {
     func testErnstAngleToolCalculatesRelaxationTime() async throws {
         let tool = ErnstAngleTool()
         let output = try await tool.call(arguments: arguments("""
-            {"repetitionTime": 1.0, "ernstAngle": 45.0, "ernstAngleUnit": "degrees"}
+            {"calculate": "relaxationTimeT1",
+             "repetitionTime": 1.0, "ernstAngle": 45.0, "ernstAngleUnit": "degrees"}
             """))
         let expected = -1.0 / log(cos(45.0 * Double.pi / 180.0))
         XCTAssertTrue(output.hasPrefix("Calculated T1 relaxation time = \(String(format: "%.4f", expected)) s"), output)
     }
 
-    func testErnstAngleToolRejectsUnderAndOverSpecifiedArguments() async throws {
+    func testErnstAngleToolRejectsMissingInputs() async throws {
         let tool = ErnstAngleTool()
-        let underSpecified = try await tool.call(arguments: arguments("""
-            {"relaxationTimeT1": 1.5}
+        let missingTR = try await tool.call(arguments: arguments("""
+            {"calculate": "ernstAngle", "relaxationTimeT1": 1.5}
             """))
-        XCTAssertTrue(underSpecified.hasPrefix("Provide exactly two of"), underSpecified)
+        XCTAssertTrue(missingTR.hasPrefix("Repetition time is required to calculate the Ernst angle"), missingTR)
 
-        let overSpecified = try await tool.call(arguments: arguments("""
-            {"relaxationTimeT1": 1.5, "repetitionTime": 1.0, "ernstAngle": 45.0}
+        let missingT1 = try await tool.call(arguments: arguments("""
+            {"calculate": "repetitionTime", "ernstAngle": 45.0}
             """))
-        XCTAssertTrue(overSpecified.hasPrefix("Provide exactly two of"), overSpecified)
+        XCTAssertTrue(missingT1.hasPrefix("T1 relaxation time is required to calculate the repetition time"), missingT1)
     }
 
     func testErnstAngleToolRejectsUnrecognizedUnit() async throws {
         let tool = ErnstAngleTool()
         let output = try await tool.call(arguments: arguments("""
-            {"relaxationTimeT1": 1.5, "relaxationTimeT1Unit": "unrecognized", "repetitionTime": 1.0}
+            {"calculate": "ernstAngle",
+             "relaxationTimeT1": 1.5, "relaxationTimeT1Unit": "unrecognized", "repetitionTime": 1.0}
             """))
         XCTAssertTrue(output.contains("not recognized as a valid time unit"), output)
     }
 
     func testErnstAngleToolRejectsPlaceholderZeroAndOutOfRangeAngle() async throws {
         let tool = ErnstAngleTool()
+        // 0.0 is normalized to nil, so T1 is treated as missing.
         let zero = try await tool.call(arguments: arguments("""
-            {"relaxationTimeT1": 0.0, "repetitionTime": 1.0}
+            {"calculate": "ernstAngle", "relaxationTimeT1": 0.0, "repetitionTime": 1.0}
             """))
-        XCTAssertTrue(zero.hasPrefix("Invalid T1 relaxation time"), zero)
+        XCTAssertTrue(zero.hasPrefix("T1 relaxation time is required to calculate the Ernst angle"), zero)
 
         let outOfRange = try await tool.call(arguments: arguments("""
-            {"relaxationTimeT1": 1.5, "ernstAngle": 90.0}
+            {"calculate": "repetitionTime", "relaxationTimeT1": 1.5, "ernstAngle": 90.0}
             """))
-        XCTAssertTrue(outOfRange.hasPrefix("Invalid Ernst angle"), outOfRange)
+        XCTAssertTrue(outOfRange.hasPrefix("Ernst angle is required to calculate the repetition time"), outOfRange)
     }
 
     // MARK: - FrequencyDomainTool
@@ -89,7 +94,7 @@ final class NMRAssistantToolTests: XCTestCase {
         let tool = FrequencyDomainTool()
         // Spectral width without a unit is taken as kHz.
         let output = try await tool.call(arguments: arguments("""
-            {"spectralWidth": 10.0, "numberOfPoints": 1024}
+            {"calculate": "frequencyResolution", "spectralWidth": 10.0, "numberOfPoints": 1024}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated frequency resolution = 9.7656 Hz"), output)
         XCTAssertTrue(output.contains("given spectral width = 10.0000 kHz, number of points = 1024"), output)
@@ -98,7 +103,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testFrequencyDomainToolCalculatesSpectralWidth() async throws {
         let tool = FrequencyDomainTool()
         let output = try await tool.call(arguments: arguments("""
-            {"numberOfPoints": 1000, "frequencyResolution": 10.0, "frequencyResolutionUnit": "hertz"}
+            {"calculate": "spectralWidth",
+             "numberOfPoints": 1000, "frequencyResolution": 10.0, "frequencyResolutionUnit": "hertz"}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated spectral width = 10.0000 kHz"), output)
     }
@@ -106,7 +112,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testFrequencyDomainToolCalculatesNumberOfPoints() async throws {
         let tool = FrequencyDomainTool()
         let output = try await tool.call(arguments: arguments("""
-            {"spectralWidth": 10.0, "spectralWidthUnit": "kilohertz", "frequencyResolution": 9.7}
+            {"calculate": "numberOfPoints",
+             "spectralWidth": 10.0, "spectralWidthUnit": "kilohertz", "frequencyResolution": 9.7}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated number of points = 1030"), output)
     }
@@ -114,22 +121,24 @@ final class NMRAssistantToolTests: XCTestCase {
     func testFrequencyDomainToolConvertsMegahertz() async throws {
         let tool = FrequencyDomainTool()
         let output = try await tool.call(arguments: arguments("""
-            {"spectralWidth": 0.01, "spectralWidthUnit": "megahertz", "numberOfPoints": 1000}
+            {"calculate": "frequencyResolution",
+             "spectralWidth": 0.01, "spectralWidthUnit": "megahertz", "numberOfPoints": 1000}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated frequency resolution = 10.0000 Hz"), output)
     }
 
     func testFrequencyDomainToolRejectsInvalidArguments() async throws {
         let tool = FrequencyDomainTool()
-        let underSpecified = try await tool.call(arguments: arguments("""
-            {"numberOfPoints": 1000}
+        let missingSpectralWidth = try await tool.call(arguments: arguments("""
+            {"calculate": "frequencyResolution", "numberOfPoints": 1000}
             """))
-        XCTAssertTrue(underSpecified.hasPrefix("Provide exactly two of"), underSpecified)
+        XCTAssertTrue(missingSpectralWidth.hasPrefix("Spectral width is required to calculate frequency resolution"), missingSpectralWidth)
 
+        // 0.0 is normalized to nil, treated as missing.
         let zero = try await tool.call(arguments: arguments("""
-            {"spectralWidth": 0.0, "numberOfPoints": 1000}
+            {"calculate": "frequencyResolution", "spectralWidth": 0.0, "numberOfPoints": 1000}
             """))
-        XCTAssertTrue(zero.hasPrefix("Invalid spectral width"), zero)
+        XCTAssertTrue(zero.hasPrefix("Spectral width is required to calculate frequency resolution"), zero)
     }
 
     // MARK: - TimeDomainTool
@@ -138,7 +147,7 @@ final class NMRAssistantToolTests: XCTestCase {
         let tool = TimeDomainTool()
         // Dwell time without a unit is taken as µs.
         let output = try await tool.call(arguments: arguments("""
-            {"numberOfPoints": 1024, "dwellTime": 10.0}
+            {"calculate": "acquisitionTime", "numberOfPoints": 1024, "dwellTime": 10.0}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated acquisition time = 0.010240 s"), output)
         XCTAssertTrue(output.contains("given number of points = 1024, dwell time = 10.0000 µs"), output)
@@ -147,7 +156,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testTimeDomainToolCalculatesDwellTime() async throws {
         let tool = TimeDomainTool()
         let output = try await tool.call(arguments: arguments("""
-            {"acquisitionTime": 1.0, "acquisitionTimeUnit": "seconds", "numberOfPoints": 1000}
+            {"calculate": "dwellTime",
+             "acquisitionTime": 1.0, "acquisitionTimeUnit": "seconds", "numberOfPoints": 1000}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated dwell time = 1000.0000 µs"), output)
     }
@@ -155,7 +165,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testTimeDomainToolCalculatesNumberOfPointsAndConvertsMilliseconds() async throws {
         let tool = TimeDomainTool()
         let output = try await tool.call(arguments: arguments("""
-            {"acquisitionTime": 10.0, "acquisitionTimeUnit": "milliseconds",
+            {"calculate": "numberOfPoints",
+             "acquisitionTime": 10.0, "acquisitionTimeUnit": "milliseconds",
              "dwellTime": 10.0, "dwellTimeUnit": "microseconds"}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated number of points = 1000"), output)
@@ -163,13 +174,14 @@ final class NMRAssistantToolTests: XCTestCase {
 
     func testTimeDomainToolRejectsInvalidArguments() async throws {
         let tool = TimeDomainTool()
-        let overSpecified = try await tool.call(arguments: arguments("""
-            {"acquisitionTime": 1.0, "numberOfPoints": 1000, "dwellTime": 10.0}
+        let missingDwell = try await tool.call(arguments: arguments("""
+            {"calculate": "acquisitionTime", "numberOfPoints": 1000}
             """))
-        XCTAssertTrue(overSpecified.hasPrefix("Provide exactly two of"), overSpecified)
+        XCTAssertTrue(missingDwell.hasPrefix("Dwell time is required to calculate acquisition time"), missingDwell)
 
         let unrecognized = try await tool.call(arguments: arguments("""
-            {"acquisitionTime": 1.0, "acquisitionTimeUnit": "unrecognized", "numberOfPoints": 1000}
+            {"calculate": "dwellTime",
+             "acquisitionTime": 1.0, "acquisitionTimeUnit": "unrecognized", "numberOfPoints": 1000}
             """))
         XCTAssertTrue(unrecognized.contains("not recognized as a valid time unit"), unrecognized)
     }
@@ -181,7 +193,8 @@ final class NMRAssistantToolTests: XCTestCase {
         let nucleus = try XCTUnwrap(NMRPeriodicTable.shared.nucleus(matching: "1H"))
         let tool = LarmorFrequencyTool()
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "magneticField": 9.4, "magneticFieldUnit": "tesla"}
+            {"nucleusIdentifier": "1H", "given": "magneticField",
+             "magneticField": 9.4, "magneticFieldUnit": "tesla"}
             """))
         let expected = String(format: "%.4f", nucleus.γ * 9.4)
         XCTAssertTrue(output.hasPrefix("Calculated 1H Larmor frequency = \(expected) MHz"), output)
@@ -193,7 +206,8 @@ final class NMRAssistantToolTests: XCTestCase {
         let nucleus = try XCTUnwrap(NMRPeriodicTable.shared.nucleus(matching: "1H"))
         let tool = LarmorFrequencyTool()
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "magneticField": 9400.0, "magneticFieldUnit": "millitesla"}
+            {"nucleusIdentifier": "1H", "given": "magneticField",
+             "magneticField": 9400.0, "magneticFieldUnit": "millitesla"}
             """))
         let expected = String(format: "%.4f", nucleus.γ * 9.4)
         XCTAssertTrue(output.hasPrefix("Calculated 1H Larmor frequency = \(expected) MHz"), output)
@@ -205,7 +219,8 @@ final class NMRAssistantToolTests: XCTestCase {
         let tool = LarmorFrequencyTool()
         // "Carbon-13" exercises the nucleus(matching:) normalization path.
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "Carbon-13", "larmorFrequency": 100.0, "larmorFrequencyUnit": "megahertz"}
+            {"nucleusIdentifier": "Carbon-13", "given": "larmorFrequency",
+             "larmorFrequency": 100.0, "larmorFrequencyUnit": "megahertz"}
             """))
         let expected = String(format: "%.4f", 100.0 / nucleus.γ)
         XCTAssertTrue(output.hasPrefix("Calculated magnetic field B0 = \(expected) T"), output)
@@ -216,7 +231,7 @@ final class NMRAssistantToolTests: XCTestCase {
     func testLarmorFrequencyToolCalculatesFromProtonFrequency() async throws {
         let tool = LarmorFrequencyTool()
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "13C", "protonFrequency": 600.0}
+            {"nucleusIdentifier": "13C", "given": "protonFrequency", "protonFrequency": 600.0}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated 13C Larmor frequency = "), output)
         XCTAssertTrue(output.contains("given proton frequency = 600.0000 MHz"), output)
@@ -225,24 +240,15 @@ final class NMRAssistantToolTests: XCTestCase {
     func testLarmorFrequencyToolRejectsInvalidArguments() async throws {
         let tool = LarmorFrequencyTool()
         let unknown = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "123Xx", "magneticField": 9.4}
+            {"nucleusIdentifier": "123Xx", "given": "magneticField", "magneticField": 9.4}
             """))
         XCTAssertTrue(unknown.contains("not found"), unknown)
 
-        let overSpecified = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "magneticField": 9.4, "larmorFrequency": 400.0}
-            """))
-        XCTAssertTrue(overSpecified.hasPrefix("Provide exactly one of"), overSpecified)
-
-        let none = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H"}
-            """))
-        XCTAssertTrue(none.hasPrefix("Provide exactly one of"), none)
-
+        // 0.0 is normalized to nil, treated as missing.
         let zero = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "magneticField": 0.0}
+            {"nucleusIdentifier": "1H", "given": "magneticField", "magneticField": 0.0}
             """))
-        XCTAssertTrue(zero.hasPrefix("Invalid input"), zero)
+        XCTAssertTrue(zero.hasPrefix("Magnetic field is required"), zero)
     }
 
     // MARK: - PulseAmplitudeTool
@@ -253,7 +259,8 @@ final class NMRAssistantToolTests: XCTestCase {
         let tool = PulseAmplitudeTool()
         // Duration without a unit is taken as µs; flip angle as degrees.
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "duration": 10.0, "flipAngle": 90.0}
+            {"nucleusIdentifier": "1H", "calculate": "amplitude",
+             "duration": 10.0, "flipAngle": 90.0}
             """))
         let b1InMicroTesla = String(format: "%.4f", 25000.0 / nucleus.γ)
         XCTAssertTrue(output.hasPrefix("Calculated RF amplitude = 25000.00 Hz (\(b1InMicroTesla) µT)"), output)
@@ -263,7 +270,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testPulseAmplitudeToolCalculatesDurationFromKilohertz() async throws {
         let tool = PulseAmplitudeTool()
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "flipAngle": 90.0, "amplitude": 1.0, "amplitudeUnit": "kilohertz"}
+            {"nucleusIdentifier": "1H", "calculate": "duration",
+             "flipAngle": 90.0, "amplitude": 1.0, "amplitudeUnit": "kilohertz"}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated pulse duration = 250.0000 µs"), output)
     }
@@ -271,7 +279,8 @@ final class NMRAssistantToolTests: XCTestCase {
     func testPulseAmplitudeToolCalculatesFlipAngle() async throws {
         let tool = PulseAmplitudeTool()
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "duration": 10.0, "durationUnit": "microseconds",
+            {"nucleusIdentifier": "1H", "calculate": "flipAngle",
+             "duration": 10.0, "durationUnit": "microseconds",
              "amplitude": 25.0, "amplitudeUnit": "kilohertz"}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated flip angle = 90.00 degrees"), output)
@@ -280,19 +289,22 @@ final class NMRAssistantToolTests: XCTestCase {
     func testPulseAmplitudeToolRejectsInvalidArguments() async throws {
         let tool = PulseAmplitudeTool()
         let unknown = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "123Xx", "duration": 10.0, "flipAngle": 90.0}
+            {"nucleusIdentifier": "123Xx", "calculate": "amplitude",
+             "duration": 10.0, "flipAngle": 90.0}
             """))
         XCTAssertTrue(unknown.contains("not found"), unknown)
 
-        let underSpecified = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "duration": 10.0}
+        let missingFlipAngle = try await tool.call(arguments: arguments("""
+            {"nucleusIdentifier": "1H", "calculate": "amplitude", "duration": 10.0}
             """))
-        XCTAssertTrue(underSpecified.hasPrefix("Provide exactly two of"), underSpecified)
+        XCTAssertTrue(missingFlipAngle.hasPrefix("Flip angle is required to calculate RF amplitude"), missingFlipAngle)
 
+        // 0.0 is normalized to nil, treated as missing.
         let zero = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "duration": 10.0, "amplitude": 0.0}
+            {"nucleusIdentifier": "1H", "calculate": "flipAngle",
+             "duration": 10.0, "amplitude": 0.0}
             """))
-        XCTAssertTrue(zero.hasPrefix("Invalid RF amplitude"), zero)
+        XCTAssertTrue(zero.hasPrefix("RF amplitude is required to calculate flip angle"), zero)
     }
 
     // MARK: - PulseRelativePowerTool

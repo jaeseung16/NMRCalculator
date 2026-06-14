@@ -7,23 +7,32 @@ import FoundationModels
 import NMRCalculatorCommon
 import os
 
+@Generable
+enum ErnstAngleTarget {
+    case ernstAngle
+    case repetitionTime
+    case relaxationTimeT1
+}
+
 struct ErnstAngleTool: Tool {
     private static let logger = Logger()
 
     let name = "calculate_ernst_angle"
-    let description = "Calculates Ernst angle, repetition time, or T1 relaxation time. Provide exactly two of the three, each with the unit the user stated; omit the one to calculate."
+    let description = "Calculates Ernst angle, repetition time, or T1 relaxation time. Set 'calculate' to the parameter you want computed, then provide the other two with their units."
 
     @Generable
     struct Arguments {
-        @Guide(description: "T1 relaxation time; omit if T1 is what the user wants to calculate")
+        @Guide(description: "The parameter to calculate")
+        var calculate: ErnstAngleTarget
+        @Guide(description: "T1 relaxation time")
         var relaxationTimeT1: Double?
         @Guide(description: "Unit of the T1 relaxation time; omit if not stated")
         var relaxationTimeT1Unit: TimeUnit?
-        @Guide(description: "Repetition time; omit if repetition time is what the user wants to calculate")
+        @Guide(description: "Repetition time")
         var repetitionTime: Double?
         @Guide(description: "Unit of the repetition time; omit if not stated")
         var repetitionTimeUnit: TimeUnit?
-        @Guide(description: "Ernst angle; omit if Ernst angle is what the user wants to calculate")
+        @Guide(description: "Ernst angle")
         var ernstAngle: Double?
         @Guide(description: "Unit of the Ernst angle; omit if not stated")
         var ernstAngleUnit: AngleUnit?
@@ -31,16 +40,10 @@ struct ErnstAngleTool: Tool {
 
     func call(arguments: Arguments) async throws -> String {
         Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
+
         let relaxationTimeT1 = arguments.relaxationTimeT1.flatMap { $0 == 0.0 ? nil : $0 }
         let repetitionTime = arguments.repetitionTime.flatMap { $0 == 0.0 ? nil : $0 }
         let ernstAngle = arguments.ernstAngle.flatMap { $0 == 0.0 ? nil : $0 }
-
-        let providedCount = [relaxationTimeT1 != nil,
-                             repetitionTime != nil,
-                             ernstAngle != nil].filter { $0 }.count
-        guard providedCount == 2 else {
-            return "Provide exactly two of: T1 relaxation time, repetition time, Ernst angle; omit the one to calculate."
-        }
 
         let relaxationTimeInSec: Double?
         let repetitionTimeInSec: Double?
@@ -53,25 +56,41 @@ struct ErnstAngleTool: Tool {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
-        if let relaxationTimeInSec, relaxationTimeInSec <= 0 {
-            return "Invalid T1 relaxation time \(relaxationTimeInSec) s: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
-        }
-        if let repetitionTimeInSec, repetitionTimeInSec <= 0 {
-            return "Invalid repetition time \(repetitionTimeInSec) s: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
-        }
-        if let ernstAngleInDegree, ernstAngleInDegree <= 0 || ernstAngleInDegree >= 90 {
-            return "Invalid Ernst angle \(ernstAngleInDegree) degrees: it must be between 0 and 90 degrees, exclusive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        let calculated: ToolResponseEvaluator.ErnstAngleParameter
+        let request: ErnstAngleRequest
+
+        switch arguments.calculate {
+        case .ernstAngle:
+            guard let t1 = relaxationTimeInSec, t1 > 0 else {
+                return "T1 relaxation time is required to calculate the Ernst angle. Provide a positive value with its unit."
+            }
+            guard let tr = repetitionTimeInSec, tr > 0 else {
+                return "Repetition time is required to calculate the Ernst angle. Provide a positive value with its unit."
+            }
+            calculated = .ernstAngle
+            request = ErnstAngleRequest(ernstAngleInDegree: nil, repetitionTimeInSec: tr, relaxationTimeInSec: t1)
+
+        case .repetitionTime:
+            guard let t1 = relaxationTimeInSec, t1 > 0 else {
+                return "T1 relaxation time is required to calculate the repetition time. Provide a positive value with its unit."
+            }
+            guard let angle = ernstAngleInDegree, angle > 0, angle < 90 else {
+                return "Ernst angle is required to calculate the repetition time. Provide a value between 0 and 90 degrees (exclusive)."
+            }
+            calculated = .repetitionTime
+            request = ErnstAngleRequest(ernstAngleInDegree: angle, repetitionTimeInSec: nil, relaxationTimeInSec: t1)
+
+        case .relaxationTimeT1:
+            guard let tr = repetitionTimeInSec, tr > 0 else {
+                return "Repetition time is required to calculate T1. Provide a positive value with its unit."
+            }
+            guard let angle = ernstAngleInDegree, angle > 0, angle < 90 else {
+                return "Ernst angle is required to calculate T1. Provide a value between 0 and 90 degrees (exclusive)."
+            }
+            calculated = .relaxationTime
+            request = ErnstAngleRequest(ernstAngleInDegree: angle, repetitionTimeInSec: tr, relaxationTimeInSec: nil)
         }
 
-        let calculated: ToolResponseEvaluator.ErnstAngleParameter = ernstAngleInDegree == nil
-            ? .ernstAngle
-            : (repetitionTimeInSec == nil ? .repetitionTime : .relaxationTime)
-
-        let request = ErnstAngleRequest(
-            ernstAngleInDegree: ernstAngleInDegree,
-            repetitionTimeInSec: repetitionTimeInSec,
-            relaxationTimeInSec: relaxationTimeInSec
-        )
         switch NMRCalcFactory.shared.create(.ernst).process(request) {
         case .success(let response):
             guard let response = response as? ErnstAngleResponse else { throw NMRCalcError.invalidOutput }

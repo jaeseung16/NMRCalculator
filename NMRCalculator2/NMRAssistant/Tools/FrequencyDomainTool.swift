@@ -7,21 +7,30 @@ import FoundationModels
 import NMRCalculatorCommon
 import os
 
+@Generable
+enum FrequencyDomainTarget {
+    case spectralWidth
+    case numberOfPoints
+    case frequencyResolution
+}
+
 struct FrequencyDomainTool: Tool {
     private static let logger = Logger()
 
     let name = "calculate_frequency_domain"
-    let description = "Calculates spectral width, frequency resolution, or number of spectrum points. Provide exactly two of the three, with units as the user stated; omit the one to calculate."
+    let description = "Calculates spectral width, frequency resolution, or number of spectrum points. Set 'calculate' to the parameter you want computed, then provide the other two with their units."
 
     @Generable
     struct Arguments {
-        @Guide(description: "Spectral width; omit if spectral width is what the user wants to calculate")
+        @Guide(description: "The parameter to calculate")
+        var calculate: FrequencyDomainTarget
+        @Guide(description: "Spectral width")
         var spectralWidth: Double?
         @Guide(description: "Unit of the spectral width; omit if not stated")
         var spectralWidthUnit: FrequencyUnit?
-        @Guide(description: "Number of data points; omit if point count is what the user wants to calculate", .minimum(1))
+        @Guide(description: "Number of data points")
         var numberOfPoints: Int?
-        @Guide(description: "Frequency resolution; omit if frequency resolution is what the user wants to calculate")
+        @Guide(description: "Frequency resolution")
         var frequencyResolution: Double?
         @Guide(description: "Unit of the frequency resolution; omit if not stated")
         var frequencyResolutionUnit: FrequencyUnit?
@@ -29,16 +38,10 @@ struct FrequencyDomainTool: Tool {
 
     func call(arguments: Arguments) async throws -> String {
         Self.logger.info("\(name): \(String(describing: arguments), privacy: .public)")
+
         let spectralWidth = arguments.spectralWidth.flatMap { $0 == 0.0 ? nil : $0 }
         let numberOfPoints = arguments.numberOfPoints.flatMap { $0 == 0 ? nil : $0 }
         let frequencyResolution = arguments.frequencyResolution.flatMap { $0 == 0.0 ? nil : $0 }
-
-        let providedCount = [spectralWidth != nil,
-                             numberOfPoints != nil,
-                             frequencyResolution != nil].filter { $0 }.count
-        guard providedCount == 2 else {
-            return "Provide exactly two of: spectral width, number of points, frequency resolution; omit the one to calculate."
-        }
 
         let spectralWidthInHz: Double?
         let frequencyResolutionInHz: Double?
@@ -49,25 +52,41 @@ struct FrequencyDomainTool: Tool {
             return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
-        if let spectralWidthInHz, spectralWidthInHz <= 0 {
-            return "Invalid spectral width \(spectralWidthInHz) Hz: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
-        }
-        if let numberOfPoints = arguments.numberOfPoints, numberOfPoints < 1 {
-            return "Invalid number of points \(numberOfPoints): it must be a positive integer. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
-        }
-        if let frequencyResolutionInHz, frequencyResolutionInHz <= 0 {
-            return "Invalid frequency resolution \(frequencyResolutionInHz) Hz: it must be positive. Pass the user's stated value, or omit it to calculate it; never pass 0 as a placeholder."
+        let calculated: ToolResponseEvaluator.FrequencyDomainParameter
+        let request: FrequencyDomainRequest
+
+        switch arguments.calculate {
+        case .spectralWidth:
+            guard let n = numberOfPoints, n > 0 else {
+                return "Number of points is required to calculate spectral width. Provide a positive integer."
+            }
+            guard let res = frequencyResolutionInHz, res > 0 else {
+                return "Frequency resolution is required to calculate spectral width. Provide a positive value with its unit."
+            }
+            calculated = .spectralWidth
+            request = FrequencyDomainRequest(spectralWidthInHz: nil, numberOfPoints: n, frequencyResolutionInHz: res)
+
+        case .numberOfPoints:
+            guard let sw = spectralWidthInHz, sw > 0 else {
+                return "Spectral width is required to calculate number of points. Provide a positive value with its unit."
+            }
+            guard let res = frequencyResolutionInHz, res > 0 else {
+                return "Frequency resolution is required to calculate number of points. Provide a positive value with its unit."
+            }
+            calculated = .numberOfPoints
+            request = FrequencyDomainRequest(spectralWidthInHz: sw, numberOfPoints: nil, frequencyResolutionInHz: res)
+
+        case .frequencyResolution:
+            guard let sw = spectralWidthInHz, sw > 0 else {
+                return "Spectral width is required to calculate frequency resolution. Provide a positive value with its unit."
+            }
+            guard let n = numberOfPoints, n > 0 else {
+                return "Number of points is required to calculate frequency resolution. Provide a positive integer."
+            }
+            calculated = .frequencyResolution
+            request = FrequencyDomainRequest(spectralWidthInHz: sw, numberOfPoints: n, frequencyResolutionInHz: nil)
         }
 
-        let calculated: ToolResponseEvaluator.FrequencyDomainParameter = spectralWidthInHz == nil
-            ? .spectralWidth
-            : (numberOfPoints == nil ? .numberOfPoints : .frequencyResolution)
-
-        let request = FrequencyDomainRequest(
-            spectralWidthInHz: spectralWidthInHz,
-            numberOfPoints: numberOfPoints,
-            frequencyResolutionInHz: frequencyResolutionInHz
-        )
         switch NMRCalcFactory.shared.create(.frequency).process(request) {
         case .success(let response):
             guard let response = response as? FrequencyDomainResponse else { throw NMRCalcError.invalidOutput }
