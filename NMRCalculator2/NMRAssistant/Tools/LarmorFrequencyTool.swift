@@ -19,7 +19,7 @@ struct LarmorFrequencyTool: Tool {
     private static let logger = Logger()
 
     let name = "calculate_larmor_frequency"
-    let description = "Calculates Larmor frequency, magnetic field, and proton frequency for a nucleus. Set 'given' to the one parameter the user provided, then supply its value and unit."
+    let description = "Calculates Larmor frequency, magnetic field, and proton frequency for a nucleus. Set 'given' to the one parameter the user provided, then put its number in 'value' and its unit in the matching unit field."
 
     @Generable
     struct Arguments {
@@ -27,22 +27,12 @@ struct LarmorFrequencyTool: Tool {
         var nucleusIdentifier: String
         @Guide(description: "Which input the user provided")
         var given: LarmorFrequencyGiven
-        @Guide(description: "External magnetic field")
-        var magneticField: Double?
-        @Guide(description: "Unit of the magnetic field; omit if not stated")
+        @Guide(description: "The numeric value of the input named by 'given'")
+        var value: Double
+        @Guide(description: "Unit of the value when 'given' is magneticField; omit if not stated")
         var magneticFieldUnit: MagneticFieldUnit?
-        @Guide(description: "Larmor frequency of the nucleus")
-        var larmorFrequency: Double?
-        @Guide(description: "Unit of the Larmor frequency; omit if not stated")
-        var larmorFrequencyUnit: FrequencyUnit?
-        @Guide(description: "Proton (1H) NMR frequency")
-        var protonFrequency: Double?
-        @Guide(description: "Unit of the proton frequency; omit if not stated")
-        var protonFrequencyUnit: FrequencyUnit?
-        @Guide(description: "Free electron Larmor frequency")
-        var electronFrequency: Double?
-        @Guide(description: "Unit of the electron frequency; omit if not stated")
-        var electronFrequencyUnit: FrequencyUnit?
+        @Guide(description: "Unit of the value when 'given' is larmorFrequency, protonFrequency, or electronFrequency; omit if not stated")
+        var frequencyUnit: FrequencyUnit?
     }
 
     func call(arguments: Arguments) async throws -> String {
@@ -53,55 +43,45 @@ struct LarmorFrequencyTool: Tool {
             return "Nucleus '\(arguments.nucleusIdentifier)' not found. Use list_nuclei to find valid identifiers."
         }
 
-        let magneticField = arguments.magneticField.flatMap { $0 == 0.0 ? nil : $0 }
-        let larmorFrequency = arguments.larmorFrequency.flatMap { $0 == 0.0 ? nil : $0 }
-        let protonFrequency = arguments.protonFrequency.flatMap { $0 == 0.0 ? nil : $0 }
-        let electronFrequency = arguments.electronFrequency.flatMap { $0 == 0.0 ? nil : $0 }
-
-        let magneticFieldInTesla: Double?
-        let larmorFrequencyInMHz: Double?
-        let protonFrequencyInMHz: Double?
-        let electronFrequencyInGHz: Double?
-        do {
-            magneticFieldInTesla = try Self.tesla(magneticField, unit: arguments.magneticFieldUnit)
-            larmorFrequencyInMHz = try Self.megahertz(larmorFrequency, unit: arguments.larmorFrequencyUnit, assuming: .megahertz)
-            protonFrequencyInMHz = try Self.megahertz(protonFrequency, unit: arguments.protonFrequencyUnit, assuming: .megahertz)
-            electronFrequencyInGHz = try Self.gigahertz(electronFrequency, unit: arguments.electronFrequencyUnit, assuming: .gigahertz)
-        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
-            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
-        }
+        // The model fills a single `value` field disambiguated by `given`, which
+        // avoids the misrouting seen when each parameter had its own value field.
+        let value = arguments.value == 0.0 ? nil : arguments.value
 
         let given: ToolResponseEvaluator.LarmorFrequencyGivenParameter
         let request: LarmorFrequencyRequest
 
-        switch arguments.given {
-        case .magneticField:
-            guard let field = magneticFieldInTesla, field > 0 else {
-                return "Magnetic field is required. Provide a positive value with its unit."
-            }
-            given = .magneticField
-            request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: field, larmorFrequency: nil, protonFrequency: nil, electronFrequency: nil)
+        do {
+            switch arguments.given {
+            case .magneticField:
+                guard let field = try Self.tesla(value, unit: arguments.magneticFieldUnit), field > 0 else {
+                    return "Magnetic field is required. Provide a positive value with its unit."
+                }
+                given = .magneticField
+                request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: field, larmorFrequency: nil, protonFrequency: nil, electronFrequency: nil)
 
-        case .larmorFrequency:
-            guard let larmor = larmorFrequencyInMHz, larmor > 0 else {
-                return "Larmor frequency is required. Provide a positive value with its unit."
-            }
-            given = .larmorFrequency
-            request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: larmor, protonFrequency: nil, electronFrequency: nil)
+            case .larmorFrequency:
+                guard let larmor = try Self.megahertz(value, unit: arguments.frequencyUnit, assuming: .megahertz), larmor > 0 else {
+                    return "Larmor frequency is required. Provide a positive value with its unit."
+                }
+                given = .larmorFrequency
+                request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: larmor, protonFrequency: nil, electronFrequency: nil)
 
-        case .protonFrequency:
-            guard let proton = protonFrequencyInMHz, proton > 0 else {
-                return "Proton frequency is required. Provide a positive value with its unit."
-            }
-            given = .protonFrequency
-            request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: nil, protonFrequency: proton, electronFrequency: nil)
+            case .protonFrequency:
+                guard let proton = try Self.megahertz(value, unit: arguments.frequencyUnit, assuming: .megahertz), proton > 0 else {
+                    return "Proton frequency is required. Provide a positive value with its unit."
+                }
+                given = .protonFrequency
+                request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: nil, protonFrequency: proton, electronFrequency: nil)
 
-        case .electronFrequency:
-            guard let electron = electronFrequencyInGHz, electron > 0 else {
-                return "Electron frequency is required. Provide a positive value with its unit."
+            case .electronFrequency:
+                guard let electron = try Self.gigahertz(value, unit: arguments.frequencyUnit, assuming: .gigahertz), electron > 0 else {
+                    return "Electron frequency is required. Provide a positive value with its unit."
+                }
+                given = .electronFrequency
+                request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: nil, protonFrequency: nil, electronFrequency: electron)
             }
-            given = .electronFrequency
-            request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: nil, protonFrequency: nil, electronFrequency: electron)
+        } catch UnitNormalizationError.unrecognizedUnit(let dimension) {
+            return "A unit was not recognized as a valid \(dimension) unit. Ask the user to restate the value with a standard unit."
         }
 
         switch NMRCalcFactory.shared.create(.larmor).process(request) {

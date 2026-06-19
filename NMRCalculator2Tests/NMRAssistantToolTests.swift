@@ -194,7 +194,7 @@ final class NMRAssistantToolTests: XCTestCase {
         let tool = LarmorFrequencyTool()
         let output = try await tool.call(arguments: arguments("""
             {"nucleusIdentifier": "1H", "given": "magneticField",
-             "magneticField": 9.4, "magneticFieldUnit": "tesla"}
+             "value": 9.4, "magneticFieldUnit": "tesla"}
             """))
         let expected = String(format: "%.4f", nucleus.γ * 9.4)
         XCTAssertTrue(output.hasPrefix("Calculated 1H Larmor frequency = \(expected) MHz"), output)
@@ -207,7 +207,7 @@ final class NMRAssistantToolTests: XCTestCase {
         let tool = LarmorFrequencyTool()
         let output = try await tool.call(arguments: arguments("""
             {"nucleusIdentifier": "1H", "given": "magneticField",
-             "magneticField": 9400.0, "magneticFieldUnit": "millitesla"}
+             "value": 9400.0, "magneticFieldUnit": "millitesla"}
             """))
         let expected = String(format: "%.4f", nucleus.γ * 9.4)
         XCTAssertTrue(output.hasPrefix("Calculated 1H Larmor frequency = \(expected) MHz"), output)
@@ -220,7 +220,7 @@ final class NMRAssistantToolTests: XCTestCase {
         // "Carbon-13" exercises the nucleus(matching:) normalization path.
         let output = try await tool.call(arguments: arguments("""
             {"nucleusIdentifier": "Carbon-13", "given": "larmorFrequency",
-             "larmorFrequency": 100.0, "larmorFrequencyUnit": "megahertz"}
+             "value": 100.0, "frequencyUnit": "megahertz"}
             """))
         let expected = String(format: "%.4f", 100.0 / nucleus.γ)
         XCTAssertTrue(output.hasPrefix("Calculated magnetic field B0 = \(expected) T"), output)
@@ -231,7 +231,7 @@ final class NMRAssistantToolTests: XCTestCase {
     func testLarmorFrequencyToolCalculatesFromProtonFrequency() async throws {
         let tool = LarmorFrequencyTool()
         let output = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "13C", "given": "protonFrequency", "protonFrequency": 600.0}
+            {"nucleusIdentifier": "13C", "given": "protonFrequency", "value": 600.0}
             """))
         XCTAssertTrue(output.hasPrefix("Calculated 13C Larmor frequency = "), output)
         XCTAssertTrue(output.contains("given proton frequency = 600.0000 MHz"), output)
@@ -240,13 +240,13 @@ final class NMRAssistantToolTests: XCTestCase {
     func testLarmorFrequencyToolRejectsInvalidArguments() async throws {
         let tool = LarmorFrequencyTool()
         let unknown = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "123Xx", "given": "magneticField", "magneticField": 9.4}
+            {"nucleusIdentifier": "123Xx", "given": "magneticField", "value": 9.4}
             """))
         XCTAssertTrue(unknown.contains("not found"), unknown)
 
         // 0.0 is normalized to nil, treated as missing.
         let zero = try await tool.call(arguments: arguments("""
-            {"nucleusIdentifier": "1H", "given": "magneticField", "magneticField": 0.0}
+            {"nucleusIdentifier": "1H", "given": "magneticField", "value": 0.0}
             """))
         XCTAssertTrue(zero.hasPrefix("Magnetic field is required"), zero)
     }
