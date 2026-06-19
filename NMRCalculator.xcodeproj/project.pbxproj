@@ -72,6 +72,7 @@
 		90A2274A2FC8DA4300AD3C28 /* NMRAssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A227492FC8DA4300AD3C28 /* NMRAssistantView.swift */; };
 		90AD8D0E2FA16E2D003E0DED /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = 90AD8D0D2FA16E2D003E0DED /* MCP */; };
 		90B3C1022FD9A00000AD3C28 /* UnitNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B3C1012FD9A00000AD3C28 /* UnitNormalizer.swift */; };
+		90B3C1F02FD9A00000AD3C28 /* AssistantTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B3C1F12FD9A00000AD3C28 /* AssistantTextFormatter.swift */; };
 		90B3C1042FD9A00000AD3C28 /* ToolResponseEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B3C1032FD9A00000AD3C28 /* ToolResponseEvaluator.swift */; };
 		90C1D9CA2FC761E5009246D9 /* DecibelConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C1D9C92FC761D8009246D9 /* DecibelConverter.swift */; };
 		90C1D9D42FC76B69009246D9 /* PulseParameterConveter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C1D9D32FC76B63009246D9 /* PulseParameterConveter.swift */; };
@@ -101,6 +102,7 @@
 		FA00AA012E0000010000AA01 /* UnitNormalizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00AA042E0000010000AA04 /* UnitNormalizerTests.swift */; };
 		FA00AA022E0000010000AA02 /* ToolResponseEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00AA052E0000010000AA05 /* ToolResponseEvaluatorTests.swift */; };
 		FA00AA032E0000010000AA03 /* NMRAssistantToolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00AA062E0000010000AA06 /* NMRAssistantToolTests.swift */; };
+		FA00AA0A2E0000010000AA0A /* AssistantTextFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00AA0B2E0000010000AA0B /* AssistantTextFormatterTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +228,7 @@
 		90B2A67B23CFF59C00599931 /* NuclearSpinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuclearSpinView.swift; sourceTree = "<group>"; };
 		90B2A67D23CFFC5E00599931 /* Fraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fraction.swift; sourceTree = "<group>"; };
 		90B3C1012FD9A00000AD3C28 /* UnitNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitNormalizer.swift; sourceTree = "<group>"; };
+		90B3C1F12FD9A00000AD3C28 /* AssistantTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantTextFormatter.swift; sourceTree = "<group>"; };
 		90B3C1032FD9A00000AD3C28 /* ToolResponseEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResponseEvaluator.swift; sourceTree = "<group>"; };
 		90C1D9C92FC761D8009246D9 /* DecibelConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecibelConverter.swift; sourceTree = "<group>"; };
 		90C1D9D32FC76B63009246D9 /* PulseParameterConveter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseParameterConveter.swift; sourceTree = "<group>"; };
@@ -242,6 +245,7 @@
 		FA00AA042E0000010000AA04 /* UnitNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitNormalizerTests.swift; sourceTree = "<group>"; };
 		FA00AA052E0000010000AA05 /* ToolResponseEvaluatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolResponseEvaluatorTests.swift; sourceTree = "<group>"; };
 		FA00AA062E0000010000AA06 /* NMRAssistantToolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMRAssistantToolTests.swift; sourceTree = "<group>"; };
+		FA00AA0B2E0000010000AA0B /* AssistantTextFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantTextFormatterTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -373,6 +377,7 @@
 				FA00AA042E0000010000AA04 /* UnitNormalizerTests.swift */,
 				FA00AA052E0000010000AA05 /* ToolResponseEvaluatorTests.swift */,
 				FA00AA062E0000010000AA06 /* NMRAssistantToolTests.swift */,
+				FA00AA0B2E0000010000AA0B /* AssistantTextFormatterTests.swift */,
 			);
 			path = NMRCalculator2Tests;
 			sourceTree = "<group>";
@@ -554,6 +559,7 @@
 			isa = PBXGroup;
 			children = (
 				90B3C1012FD9A00000AD3C28 /* UnitNormalizer.swift */,
+				90B3C1F12FD9A00000AD3C28 /* AssistantTextFormatter.swift */,
 				90B3C1032FD9A00000AD3C28 /* ToolResponseEvaluator.swift */,
 			);
 			path = Support;
@@ -770,6 +776,7 @@
 				90A227482FC8D97700AD3C28 /* NMRAssistantService.swift in Sources */,
 				90A227362FC8D7CA00AD3C28 /* ErnstAngleTool.swift in Sources */,
 				90B3C1022FD9A00000AD3C28 /* UnitNormalizer.swift in Sources */,
+				90B3C1F02FD9A00000AD3C28 /* AssistantTextFormatter.swift in Sources */,
 				90B3C1042FD9A00000AD3C28 /* ToolResponseEvaluator.swift in Sources */,
 				90F69EA12AAE66A9001FB5F0 /* UpdateRelativePower.swift in Sources */,
 				9067B3562AACEF0B00A8FA29 /* NMRPeriodicTable.swift in Sources */,
@@ -825,6 +832,7 @@
 				FA00AA012E0000010000AA01 /* UnitNormalizerTests.swift in Sources */,
 				FA00AA022E0000010000AA02 /* ToolResponseEvaluatorTests.swift in Sources */,
 				FA00AA032E0000010000AA03 /* NMRAssistantToolTests.swift in Sources */,
+				FA00AA0A2E0000010000AA0A /* AssistantTextFormatterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

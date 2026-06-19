@@ -130,10 +130,16 @@ private struct MessageBubble: View {
 
     private var isUser: Bool { message.role == .user }
 
+    /// User text is shown as typed; assistant text is sanitized from the
+    /// model's LaTeX/Markdown markup into plain Unicode.
+    private var displayText: String {
+        isUser ? message.text : AssistantTextFormatter.plainText(from: message.text)
+    }
+
     var body: some View {
         HStack(alignment: .bottom) {
             if isUser { Spacer(minLength: 60) }
-            Text(message.text)
+            Text(verbatim: displayText)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .background(isUser ? Color.accentColor : Color.secondaryBackground)
