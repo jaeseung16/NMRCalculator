@@ -27,6 +27,16 @@ struct NMRAssistantView: View {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        service.reset()
+                    } label: {
+                        Label("New Conversation", systemImage: "square.and.pencil")
+                    }
+                    .disabled(service.isProcessing || service.messages.isEmpty)
+                }
+            }
         }
     }
 

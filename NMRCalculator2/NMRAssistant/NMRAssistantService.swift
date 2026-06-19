@@ -13,13 +13,28 @@ import os
 final class NMRAssistantService {
     private static let logger = Logger()
     
+    private let navigationState: NMRAssistantNavigationState
     private var session: LanguageModelSession?
     var messages: [NMRAssistantMessage] = []
     var isProcessing = false
     var modelUnavailableReason: String?
 
+    /// Number of user questions after which the assistant suggests an off-ramp
+    /// (opening a detail view or starting a new conversation) to keep the
+    /// on-device context window from overflowing.
+    private static let maxQuestions = 4
+
+    /// Count of user questions in the current conversation.
+    private var userQuestionCount: Int {
+        messages.lazy.filter { $0.role == .user }.count
+    }
+
     static let instructions = """
             You are an NMR facility manager. Answer questions about NMR parameters. \
+            You only help with NMR (nuclear magnetic resonance) topics: nuclei, NMR \
+            parameters, pulses, and the related physics. If a question is not about NMR, \
+            do not answer it — instead, politely say you can only help with NMR-related \
+            questions and invite the user to ask one. \
             For numerical results in the answers, use the provided tools.
             Follow these instructions to collect the information from the provided tools: \
             1. Normalize nucleus identifiers before passing them to the tools `calculate_larmor_frequency` and `open_nucleus_detail`. You may use the 'list_nuclei' tool to find the normalized identifier. You may use the `calculate_pulse_amplitude` tool without passing the normalized identifier. If you are not sure which nucleus to use, please ask the user for clarification. \
@@ -46,6 +61,19 @@ final class NMRAssistantService {
     }
 
     init(navigationState: NMRAssistantNavigationState) {
+        self.navigationState = navigationState
+        configureSession()
+    }
+
+    /// Clears the conversation and starts a fresh session, freeing the
+    /// accumulated transcript so the context window resets.
+    func reset() {
+        guard !isProcessing else { return }
+        messages.removeAll()
+        configureSession()
+    }
+
+    private func configureSession() {
         switch SystemLanguageModel.default.availability {
         case .available:
             session = LanguageModelSession(
@@ -91,6 +119,7 @@ final class NMRAssistantService {
             let response = try await session.respond(to: text)
             Self.logger.info("Assistant response: \(response.content, privacy: .public)")
             messages.append(NMRAssistantMessage(id: UUID(), role: .assistant, text: response.content))
+            appendOffRampSuggestionIfNeeded()
         } catch LanguageModelSession.GenerationError.exceededContextWindowSize {
             messages.append(
                 NMRAssistantMessage(id: UUID(),
@@ -127,6 +156,20 @@ final class NMRAssistantService {
          */
     }
     
+    /// Once the user has asked `maxQuestions`, gently suggest an off-ramp so
+    /// the on-device context window doesn't overflow mid-answer. Fires exactly
+    /// once (at the threshold); the user is free to keep asking afterwards.
+    private func appendOffRampSuggestionIfNeeded() {
+        guard userQuestionCount == Self.maxQuestions else { return }
+        messages.append(
+            NMRAssistantMessage(
+                id: UUID(),
+                role: .assistant,
+                text: "We've covered several questions. To keep responses fast and accurate, you can open a nucleus's detail view for more, or start a new conversation. You're welcome to keep asking, too."
+            )
+        )
+    }
+
     static func logTokenCount(for instructions: String) -> Void {
         Task {
             do {
