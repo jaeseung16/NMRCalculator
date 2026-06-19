@@ -17,37 +17,28 @@ You may clone or download the source from the GitHub [repository](https://github
 
 ## Description
 
-The app evaluates the values of some basic parameters used in nuclear magnetic resonance (NMR) spectroscopy.
+The app shows a list of isotopes with non-zero nuclear spin angular momentum. Select an isotope to view its NMR properties and calculate fundamental NMR parameters.
 
-### Nucleus
-- Select an isotope with non-zero nuclear spin to find out its nuclear spin, gyromagnetic ratio, and natural abundance.
-- For a chosen isotope, its Larmor frequency at a specified external magnetic field together with the Larmor frequencies of the proton and free electron will be shown.
-- One can change any of the Larmor frequency, external magnetic field, and proton’s Larmor frequency to find out the other two.
-- (**iPhone, iPad**) The information on the chosen isotope can be searched in Safari by pressing the "Search Web" button.
+### Information
+For a chosen isotope, this section displays the atomic symbol with mass number, nuclear spin angular momentum, gyromagnetic ratio, and natural abundance.
 
-### Signal
-- One of the number of data points, duration, and dwell time for signal acquisition is calculated when two of them are given.
-- One of the number of data points, spectral width, and frequency resolution for a NMR spectrum is calculated when two of them are given.
-- (**iPhone, iPad**) One of the items can be deactivated by tabbing the corresponding label. While deactivated, the value will not be changed, and the calculation will be performed accordingly.
+### Calculator
+Update any one parameter in a subsection to recalculate the others.
 
-### RF Pulse
-- One of the pulse duration, flip angle, and RF amplitude of a RF pulse is calculated when two of them are given.
-- The difference between the power levels of two RF pulses is presented in dB.
-- (**iPhone, iPad**) One of the items, except "RF power relative to 1st (dB)", can be deactivated by tabbing the corresponding label. While deactivated, the value will not be changed, and the calculation will be performed accordingly.
+- **Larmor frequencies:** External magnetic field and the corresponding Larmor frequencies for the chosen isotope, the proton, and the free electron.
+- **Time domain:** Number of data points, acquisition duration, and dwell time.
+- **Frequency domain:** Number of data points, spectral width, and frequency resolution.
+- **Pulse 1:** Pulse duration, flip angle, and RF amplitude in Hz and μT.
+- **Pulse 2:** Pulse duration, flip angle, RF amplitude in Hz, and RF power relative to Pulse 1.
+- **Ernst angle:** Ernst angle and repetition time for a given T₁ relaxation time.
 
-### Solution (iPhone, iPad)
-- The concentration of a sample solution is calculated when the molecular weight and the masses of the solute and solvent water are given.
-- The amount of the solute is calculated when the concentration is given.
-- The name of chemical can be entered.
-
-### Info (iPhone, iPad)
-- The data source for NMR-enabled isotopes and formulas used in the app are presented.
-
-### Enrst Angle (macOS)
-- One of the repetition time, relaxation time, and Ernst angle is calculated when two of them are given.
-- [Wikipedia](https://en.wikipedia.org/wiki/Ernst_angle)
+### NMR Assistant
+An on-device AI assistant scoped to NMR topics, available where Apple Intelligence is supported. Ask questions in plain language — the assistant answers using the same calculation engine that powers the calculator, so results are always physically consistent.
 
 #### History
+
+- **3.0** Jun 2026
+  - Introduced NMR Assistant — an on-device AI assistant powered by Apple Intelligence (where supported). Ask questions about NMR parameters in plain language and get calculated answers instantly. The assistant uses the same calculation engine as the built-in calculator, so all numerical results are physically consistent. Scoped strictly to NMR topics.
 
 - **2.0** Sep 23, 2023
 
