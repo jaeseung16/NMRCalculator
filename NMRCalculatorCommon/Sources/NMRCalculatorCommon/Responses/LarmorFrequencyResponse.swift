@@ -7,7 +7,7 @@
 //
 
 public struct LarmorFrequencyResponse: NMRCalcResponse {
-    public var calculationType = CalculatorType.larmor
+    public let calculationType = CalculatorType.larmor
     
     public let nucleus: NMRNucleus
     public let magneticField: Double

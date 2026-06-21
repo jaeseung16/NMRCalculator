@@ -7,11 +7,11 @@
 //
 
 public struct TimeDomainResponse: NMRCalcResponse {
-    public var calculationType = CalculatorType.time
+    public let calculationType = CalculatorType.time
     
-    public var acqusitionTimeInSec: Double
-    public var numberOfPoints: Int
-    public var dwellInSec: Double
+    public let acqusitionTimeInSec: Double
+    public let numberOfPoints: Int
+    public let dwellInSec: Double
     
     public init(acqusitionTimeInSec: Double,
                 numberOfPoints: Int,

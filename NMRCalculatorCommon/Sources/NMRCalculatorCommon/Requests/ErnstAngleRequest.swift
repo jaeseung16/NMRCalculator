@@ -7,7 +7,7 @@
 //
 
 public struct ErnstAngleRequest: NMRCalcRequest {
-    public var calculationType = CalculatorType.ernst
+    public let calculationType = CalculatorType.ernst
     
     public let ernstAngleInDegree: Double?
     public let repetitionTimeInSec: Double?

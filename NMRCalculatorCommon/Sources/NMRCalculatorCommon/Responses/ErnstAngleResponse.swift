@@ -7,11 +7,11 @@
 //
 
 public struct ErnstAngleResponse: NMRCalcResponse {
-    public var calculationType = CalculatorType.ernst
+    public let calculationType = CalculatorType.ernst
     
-    public var ernstAngleInDegree: Double
-    public var repetitionTimeInSec: Double
-    public var relaxationTimeInSec: Double
+    public let ernstAngleInDegree: Double
+    public let repetitionTimeInSec: Double
+    public let relaxationTimeInSec: Double
     
     public init(ernstAngleInDegree: Double,
                 repetitionTimeInSec: Double,

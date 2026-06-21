@@ -7,7 +7,7 @@
 //
 
 public struct DecibelCalcualtionRequest: NMRCalcRequest {
-    public var calculationType = CalculatorType.decibel
+    public let calculationType = CalculatorType.decibel
     
     public let dB: Double?
     public let measured: Double?

@@ -7,7 +7,7 @@
 //
 
 public struct PulseParameterResponse: NMRCalcResponse {
-    public var calculationType = CalculatorType.pulse
+    public let calculationType = CalculatorType.pulse
     
     public let durationInMicrosecond: Double
     public let flipAngleInDegree: Double

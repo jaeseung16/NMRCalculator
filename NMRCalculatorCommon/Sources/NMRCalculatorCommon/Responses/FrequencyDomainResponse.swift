@@ -7,7 +7,7 @@
 //
 
 public struct FrequencyDomainResponse: NMRCalcResponse {
-    public var calculationType = CalculatorType.frequency
+    public let calculationType = CalculatorType.frequency
     
     public let spectralWidthInHz: Double
     public let numberOfPoints: Int

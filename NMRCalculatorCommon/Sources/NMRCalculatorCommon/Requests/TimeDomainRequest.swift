@@ -7,7 +7,7 @@
 //
 
 public struct TimeDomainRequest: NMRCalcRequest {
-    public var calculationType = CalculatorType.time
+    public let calculationType = CalculatorType.time
     
     public let acqusitionTimeInSec: Double?
     public let numberOfPoints: Int?
