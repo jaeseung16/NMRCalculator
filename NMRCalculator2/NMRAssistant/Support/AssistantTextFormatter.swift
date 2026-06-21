@@ -126,25 +126,18 @@ enum AssistantTextFormatter {
     }
 
     private static func replace(_ input: String, pattern: String, captures: Int, transform: ([String]) -> String) -> String {
-        guard let regex = try? NSRegularExpression(pattern: pattern) else { return input }
-        let ns = input as NSString
-        let matches = regex.matches(in: input, range: NSRange(location: 0, length: ns.length))
-        guard !matches.isEmpty else { return input }
-
-        var result = ""
-        var lastEnd = 0
-        for match in matches {
-            result += ns.substring(with: NSRange(location: lastEnd, length: match.range.location - lastEnd))
+        guard let regex = try? Regex(pattern) else { return input }
+        return input.replacing(regex) { match in
+            let output = match.output
             var caps: [String] = []
-            for group in 1...max(captures, 1) {
-                guard group < match.numberOfRanges else { caps.append(""); continue }
-                let range = match.range(at: group)
-                caps.append(range.location == NSNotFound ? "" : ns.substring(with: range))
+            for i in 1...max(captures, 1) {
+                if i < output.count, let sub = output[i].substring {
+                    caps.append(String(sub))
+                } else {
+                    caps.append("")
+                }
             }
-            result += transform(caps)
-            lastEnd = match.range.location + match.range.length
+            return transform(caps)
         }
-        result += ns.substring(from: lastEnd)
-        return result
     }
 }
