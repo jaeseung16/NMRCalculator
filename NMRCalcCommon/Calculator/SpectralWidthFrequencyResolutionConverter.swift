@@ -70,18 +70,6 @@ class SpectralWidthFrequencyResolutionConverter {
             self.error = error
         }
     }
-    
-    private func updateNumberOfPoints() {
-        numberOfPoints = Int(spectralWidth / frequencyResolution)
-    }
-    
-    private func updateFrequencyResolution() {
-        frequencyResolution = spectralWidth / Double(numberOfPoints)
-    }
-    
-    private func updateSpectralWidth() {
-        spectralWidth = Double(numberOfPoints) * frequencyResolution
-    }
 
     public func set(spectralWidth: Double) -> Void {
         let request = FrequencyDomainRequest(spectralWidthInHz: spectralWidth, numberOfPoints: numberOfPoints)
