@@ -135,25 +135,6 @@ final class NMRAssistantService {
                 Self.logger.error("failureReason: \(error.failureReason ?? ""), errorDescription: \(error.errorDescription ?? ""), recoverySuggestion: \(error.recoverySuggestion ?? "")")
             }
         }
-        
-        /*
-        session.transcript.forEach {
-            switch $0 {
-            case .instructions(let instructions):
-                Self.logger.info("Instructions: \(instructions)")
-            case .prompt(let prompt):
-                Self.logger.info("Prompt: \(prompt)")
-            case .toolCalls(let call):
-                Self.logger.info("ToolCall: \(call)")
-            case .toolOutput(let output):
-                Self.logger.info("ToolOutput: \(output)")
-            case .response(let response):
-                Self.logger.info("Response: \(response)")
-            @unknown default:
-                Self.logger.info("unknown: \($0)")
-            }
-        }
-         */
     }
     
     /// Once the user has asked `maxQuestions`, gently suggest an off-ramp so
