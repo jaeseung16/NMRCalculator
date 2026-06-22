@@ -27,7 +27,7 @@ struct NucleusListTool: Tool {
             return "No NMR-active isotopes found for '\(arguments.elementNameOrSymbol)'."
         }
         let lines = matches.map { n in
-            "\(n.identifier): spin \(n.nuclearSpin), γ = \(String(format: "%.4f", abs(n.γ))) MHz/T, abundance \(n.naturalAbundance)%"
+            "\(n.identifier): spin \(n.nuclearSpin), γ = \(String(format: "%.4f", n.γ)) MHz/T, abundance \(n.naturalAbundance)%"
         }
         return lines.joined(separator: "\n")
     }

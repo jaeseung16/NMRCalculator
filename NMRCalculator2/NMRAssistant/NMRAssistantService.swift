@@ -45,6 +45,7 @@ final class NMRAssistantService {
                 d. Normalized: 2H, unnormalized: Deuterium, D
                 e. Normalized: 3H, unnormalized: Tritium, T
             2. Pass each numerical value with the unit the user stated; do not convert units. Do not set any numerical parameter the user didn't provide. For each calculation tool, set the 'calculate' field (or 'given' for calculate_larmor_frequency) to name the parameter the user wants computed, then supply the other inputs with their values and units. If any required input is missing, ask the user.
+            3. Some nuclei have a negative gyromagnetic ratio (e.g. 15N, 17O, 29Si). For these nuclei, the Larmor frequency (γ × B₀) is negative and the free-electron frequency is also negative. This is physically correct — do not treat negative results as errors. Report them as-is when presenting results to the user.
             """
 
     static func makeTools(navigationState: NMRAssistantNavigationState) -> [any Tool] {

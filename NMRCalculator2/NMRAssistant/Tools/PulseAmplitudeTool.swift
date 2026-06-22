@@ -128,7 +128,7 @@ struct PulseAmplitudeTool: Tool {
     }
 
     private static func format(_ response: PulseParameterResponse, calculated: ToolResponseEvaluator.PulseParameter, nucleus: NMRNucleus) -> String {
-        let b1InMicroTesla = response.amplitudeInHz / nucleus.γ
+        let b1InMicroTesla = response.amplitudeInHz / abs(nucleus.γ)
         let duration = "pulse duration = \(String(format: "%.4f", response.durationInMicrosecond)) µs"
         let flipAngle = "flip angle = \(String(format: "%.2f", response.flipAngleInDegree)) degrees"
         let amplitude = "RF amplitude = \(String(format: "%.2f", response.amplitudeInHz)) Hz (\(String(format: "%.4f", b1InMicroTesla)) µT)"

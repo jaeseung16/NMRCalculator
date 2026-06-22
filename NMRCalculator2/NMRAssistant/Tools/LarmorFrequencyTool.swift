@@ -60,8 +60,8 @@ struct LarmorFrequencyTool: Tool {
                 request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: field, larmorFrequency: nil, protonFrequency: nil, electronFrequency: nil)
 
             case .larmorFrequency:
-                guard let larmor = try Self.megahertz(value, unit: arguments.frequencyUnit, assuming: .megahertz), larmor > 0 else {
-                    return "Larmor frequency is required. Provide a positive value with its unit."
+                guard let larmor = try Self.megahertz(value, unit: arguments.frequencyUnit, assuming: .megahertz), larmor != 0 else {
+                    return "Larmor frequency is required. Provide a non-zero value with its unit (may be negative for nuclei with negative gyromagnetic ratio)."
                 }
                 given = .larmorFrequency
                 request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: larmor, protonFrequency: nil, electronFrequency: nil)
@@ -74,8 +74,8 @@ struct LarmorFrequencyTool: Tool {
                 request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: nil, protonFrequency: proton, electronFrequency: nil)
 
             case .electronFrequency:
-                guard let electron = try Self.gigahertz(value, unit: arguments.frequencyUnit, assuming: .gigahertz), electron > 0 else {
-                    return "Electron frequency is required. Provide a positive value with its unit."
+                guard let electron = try Self.gigahertz(value, unit: arguments.frequencyUnit, assuming: .gigahertz), electron != 0 else {
+                    return "Electron frequency is required. Provide a non-zero value with its unit (negative at any positive field because γ_electron < 0)."
                 }
                 given = .electronFrequency
                 request = LarmorFrequencyRequest(nucleus: nucleus, magneticField: nil, larmorFrequency: nil, protonFrequency: nil, electronFrequency: electron)
