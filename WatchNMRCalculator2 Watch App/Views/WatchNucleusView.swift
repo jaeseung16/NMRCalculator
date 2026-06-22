@@ -24,9 +24,9 @@ struct WatchNucleusView: View {
                 
                 VStack(alignment: .trailing) {
                     WatchNucleusInfoView(title: WatchNMRCalculatorConstant.nuclearSpin.rawValue,
-                                         item: Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription)
+                                         item: Fraction(from: nucleus.nuclearSpin, isPositive: true).inlineDescription)
                     WatchNucleusInfoView(title: WatchNMRCalculatorConstant.megahertzPerTesla.rawValue,
-                                         item: "\(String(format: "%.2f", abs(nucleus.γ)))")
+                                         item: "\(String(format: "%.2f", nucleus.γ))")
                     WatchNucleusInfoView(title: WatchNMRCalculatorConstant.naturalAbundance.rawValue,
                                          item: nucleus.naturalAbundance)
                 }

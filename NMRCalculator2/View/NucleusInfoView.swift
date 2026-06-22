@@ -13,7 +13,7 @@ struct NucleusInfoView: View {
     var nucleus: NMRNucleus
     
     private var nuclearSpin: String {
-        Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription
+        Fraction(from: nucleus.nuclearSpin, isPositive: true).inlineDescription
     }
     
     var body: some View {

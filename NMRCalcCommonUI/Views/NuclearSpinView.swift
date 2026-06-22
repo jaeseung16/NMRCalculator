@@ -14,7 +14,6 @@ struct NuclearSpinView: View {
     let nucleus: NMRNucleus
     
     var fraction: Fraction {
-        let isPositive = nucleus.γ > 0
         var numerator: UInt
         var denominator: UInt = 1
 
@@ -24,7 +23,7 @@ struct NuclearSpinView: View {
             numerator = UInt(nucleus.nuclearSpin)!
         }
 
-        return Fraction(positive: isPositive,
+        return Fraction(positive: true,
                         numerator: numerator,
                         denominator: denominator)
     }

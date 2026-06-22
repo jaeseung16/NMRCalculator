@@ -29,7 +29,7 @@ struct NucleusDetailView: View {
     }
     
     private var nuclearSpin: String {
-        return Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription
+        return Fraction(from: nucleus.nuclearSpin, isPositive: true).inlineDescription
     }
     
     private var naturalAbundance: String {
@@ -84,7 +84,7 @@ struct NucleusDetailView: View {
     private func displayInfo() -> some View {
         VStack {
             getInfoView(title: .nuclearSpin, value: nuclearSpin)
-            getInfoView(title: .gyromagneticRatio, value: String(format: "%.6f", abs(nucleus.γ)))
+            getInfoView(title: .gyromagneticRatio, value: String(format: "%.6f", nucleus.γ))
             getInfoView(title: .naturalAbundance, value: naturalAbundance)
         }
     }
