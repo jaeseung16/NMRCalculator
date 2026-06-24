@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import NMRCalculatorCommon
 
 struct NucleusDetailView: View {
     @EnvironmentObject private var calculator: NMRCalculator2
@@ -28,7 +29,7 @@ struct NucleusDetailView: View {
     }
     
     private var nuclearSpin: String {
-        return Fraction(from: nucleus.nuclearSpin, isPositive: nucleus.γ > 0).inlineDescription
+        return Fraction(from: nucleus.nuclearSpin, isPositive: true).inlineDescription
     }
     
     private var naturalAbundance: String {
@@ -72,9 +73,9 @@ struct NucleusDetailView: View {
                     }
                 }
             }
-            .onChange(of: calculator.showAlert) { newValue in
-                if newValue {
-                    showAlert = newValue
+            .onChange(of: calculator.showAlert) {
+                if calculator.showAlert {
+                    showAlert = true
                 }
             }
         }
@@ -83,7 +84,7 @@ struct NucleusDetailView: View {
     private func displayInfo() -> some View {
         VStack {
             getInfoView(title: .nuclearSpin, value: nuclearSpin)
-            getInfoView(title: .gyromagneticRatio, value: String(format: "%.6f", abs(nucleus.γ)))
+            getInfoView(title: .gyromagneticRatio, value: String(format: "%.6f", nucleus.γ))
             getInfoView(title: .naturalAbundance, value: naturalAbundance)
         }
     }

@@ -7,10 +7,12 @@
 //
 
 import Foundation
-class UpdateRelaxationTime: NMRCalcCommand {
-    let ernstAngleCalculator: ErnstAngleCalculator
+import NMRCalculatorCommon
 
-    init(_ ernstAngleCalculator: ErnstAngleCalculator) {
+class UpdateRelaxationTime: NMRCalcCommand {
+    let ernstAngleCalculator: ErnstAngleConverter
+
+    init(_ ernstAngleCalculator: ErnstAngleConverter) {
         self.ernstAngleCalculator = ernstAngleCalculator
     }
 

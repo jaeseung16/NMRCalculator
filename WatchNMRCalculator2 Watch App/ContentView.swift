@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import NMRCalculatorCommon
 
 struct ContentView: View {
     @EnvironmentObject var calculator: WatchNMRCalculator2

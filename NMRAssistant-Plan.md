@@ -1,0 +1,350 @@
+# NMR Assistant in NMRCalculator App
+
+## Overview
+
+An NMR Assistant chat interface embedded in the NMRCalculator2 iOS app. The user types a natural-language question; the assistant invokes the appropriate NMRCalculatorCommon calculator and replies with the numeric result. The feature is implemented using Apple's **Foundation Models** framework (`FoundationModels`, iOS 26+), which provides on-device LLM inference with structured **Tool** calling.
+
+The assistant is accessible from `NuclearListView` via a toolbar button. One use case (opening a nucleus detail view) triggers in-app navigation rather than returning a number.
+
+---
+
+## Existing Infrastructure (NMRCalculatorCommon)
+
+The shared framework already provides everything needed for calculation:
+
+| Use case | Calculator class | Request type | Key fields |
+|---|---|---|---|
+| Ernst angle, repetition time, T₁ | `ErnstAngleCalculator` | `ErnstAngleRequest` | `ernstAngleInDegree?`, `repetitionTimeInSec?`, `relaxationTimeInSec?` |
+| Spectral width / frequency resolution | `FrequencyDomainCalculator` | `FrequencyDomainRequest` | `spectralWidthInHz?`, `numberOfPoints?`, `frequencyResolutionInHz?` |
+| Acquisition time / dwell time | `TimeDomainCalculator` | `TimeDomainRequest` | `acqusitionTimeInSec?`, `numberOfPoints?`, `dwellInSec?` |
+| Relative pulse power (dB) | `DecibelCalculator` | `DecibelCalcualtionRequest` | `dB?`, `measured?`, `reference`, `mode` |
+| Larmor / proton / B₀ | `LarmorFrequencyCalculator` | `LarmorFrequencyRequest` | `nucleus`, `magneticField?`, `larmorFrequency?`, `protonFrequency?`, `electronFrequency?` |
+| Pulse RF amplitude / duration | `PulseParameterCalculator` | `PulseParameterRequest` | `durationInMicrosecond?`, `flipAngleInDegree?`, `amplitudeInHz?` |
+| Nucleus lookup | `NMRPeriodicTable.shared` | — | `nucleiBySymbol`, `nucleiById` |
+
+All calculators are reachable through `NMRCalcFactory.shared.create(_ type: CalculatorType)`.
+
+---
+
+## Architecture
+
+```
+NuclearListView (toolbar button)
+    └── sheet → NMRAssistantView
+                    ↕ @State / @Bindable
+              NMRAssistantService (@Observable)
+                    └── LanguageModelSession  (FoundationModels)
+                              ↕ Tool calls
+                    ┌─────────────────────────────┐
+                    │  NMRAssistant Tools         │
+                    │  (each conforms to Tool)    │
+                    │  · ErnstAngleTool           │
+                    │  · FrequencyDomainTool      │
+                    │  · TimeDomainTool           │
+                    │  · PulseRelativePowerTool   │
+                    │  · LarmorFrequencyTool      │
+                    │  · PulseAmplitudeTool       │
+                    │  · NucleusListTool          │
+                    │  · OpenNucleusDetailTool    │
+                    └─────────────────────────────┘
+                              ↓ calculation
+                    NMRCalcFactory  →  NMRCalculatorCommon Calculators
+                    NMRPeriodicTable.shared
+```
+
+**Navigation side-channel:** `OpenNucleusDetailTool` writes to a shared `NMRAssistantNavigationState` (`@Observable`). `NuclearListView` observes it and sets `selected` to trigger the `NavigationSplitView` detail pane.
+
+---
+
+## Platform Requirement
+
+`FoundationModels` is a system framework requiring **iOS 26.0+** / macOS 26.0+ — no entitlement needed. `NMRCalculator2`, `NMRCalcForMac`, and `WatchNMRCalculator2` all already target iOS/macOS/watchOS 26.0, so `@available` guards are not required and `FoundationModels` can be imported unconditionally in those targets.
+
+---
+
+## New Files
+
+All new files live inside `NMRCalculator2/NMRAssistant/`.
+
+### `NMRAssistant/NMRAssistantNavigationState.swift`
+
+```swift
+@Observable
+final class NMRAssistantNavigationState {
+    var requestedNucleusID: NMRNucleus.ID?
+}
+```
+
+Shared between `NMRAssistantService` (write) and `NuclearListView` (read). Passed through the environment.
+
+---
+
+### `NMRAssistant/NMRAssistantMessage.swift`
+
+```swift
+struct NMRAssistantMessage: Identifiable {
+    enum Role { case user, assistant }
+    let id: UUID
+    let role: Role
+    let text: String
+}
+```
+
+Used by `NMRAssistantView` to render the conversation history.
+
+---
+
+### `NMRAssistant/NMRAssistantService.swift`
+
+`@Observable` class.
+
+Responsibilities:
+- Creates and holds a `LanguageModelSession` configured with a system prompt describing the assistant's domain.
+- Instantiates all tools (see below), injecting `navigationState` into `OpenNucleusDetailTool`.
+- Exposes `messages: [NMRAssistantMessage]` and `isProcessing: Bool` for the view.
+- `send(_ text: String) async` — appends user message, calls `session.respond(to:)`, appends assistant message.
+
+System prompt summary: *"You are an NMR calculator assistant. Use the provided tools to answer questions about NMR parameters. Always include the numeric result and its unit in your reply."*
+
+---
+
+### `NMRAssistant/Tools/ErnstAngleTool.swift`
+
+Conforms to `Tool`. Handles use cases 1 and 2 (independent group).
+
+`Arguments` (`@Generable`):
+- `relaxationTimeT1InSec: Double` — the T₁ relaxation time
+- `repetitionTimeInSec: Double?` — provide to calculate Ernst angle
+- `ernstAngleInDegree: Double?` — provide to calculate repetition time
+
+Logic: build `ErnstAngleRequest` with the nil field absent, call `ErnstAngleCalculator().process(_:)`, return the computed field with unit.
+
+---
+
+### `NMRAssistant/Tools/FrequencyDomainTool.swift`
+
+Handles use cases 3 and 4 (frequency resolution ↔ spectral width).
+
+`Arguments`:
+- `spectralWidthInKHz: Double?`
+- `numberOfPoints: Int?`
+- `frequencyResolutionInHz: Double?`
+
+Exactly one of the three must be nil. Convert kHz→Hz before building `FrequencyDomainRequest`, convert result back to kHz for spectral width.
+
+---
+
+### `NMRAssistant/Tools/TimeDomainTool.swift`
+
+Handles use cases 5 and 6 (acquisition time ↔ dwell time).
+
+`Arguments`:
+- `acquisitionTimeInSec: Double?`
+- `numberOfPoints: Int?`
+- `dwellTimeInMicrosec: Double?`
+
+Convert µs→s before building `TimeDomainRequest`, convert result back.
+
+---
+
+### `NMRAssistant/Tools/PulseRelativePowerTool.swift`
+
+Handles use case 7 (relative power in dB).
+
+`Arguments`:
+- `referencePulseDurationInMicrosec: Double`
+- `referencePulseFlipAngleInDegree: Double`
+- `measuredPulseDurationInMicrosec: Double`
+- `measuredPulseFlipAngleInDegree: Double`
+
+Compute amplitudes for both pulses using `PulseParameterCalculator` (pass the other two fields, nil for amplitude), then feed into `DecibelCalcualtionRequest(measured: amp2, reference: amp1, mode: .amplitude)`.
+
+---
+
+### `NMRAssistant/Tools/NucleusListTool.swift`
+
+Handles nucleus use case 1 (list isotopes by element name or symbol).
+
+`Arguments`:
+- `elementNameOrSymbol: String`
+
+Query `NMRPeriodicTable.shared.nuclei` filtering by `nameNucleus` or `symbolNucleus` (case-insensitive). Return a formatted list with identifier, nuclear spin, and γ (MHz/T). If empty, reply "No NMR-active isotopes found."
+
+---
+
+### `NMRAssistant/Tools/LarmorFrequencyTool.swift`
+
+Handles nucleus use cases 2, 3, and 4 (Larmor frequency, B₀, proton frequency).
+
+`Arguments`:
+- `nucleusIdentifier: String` — e.g. `"1H"`, `"13C"`
+- `magneticFieldInTesla: Double?`
+- `larmorFrequencyInMHz: Double?`
+- `protonFrequencyInMHz: Double?`
+- `electronFrequencyInGHz: Double?`
+
+Look up `NMRNucleus` from `NMRPeriodicTable.shared.nucleiById[nucleusIdentifier]`. Build `LarmorFrequencyRequest`, call `LarmorFrequencyCalculator().process(_:)`. Return B₀ (T), Larmor frequency (MHz), proton frequency (MHz).
+
+---
+
+### `NMRAssistant/Tools/PulseAmplitudeTool.swift`
+
+Handles nucleus use case 5 (RF amplitude in Tesla/µT).
+
+`Arguments`:
+- `nucleusIdentifier: String`
+- `durationInMicrosec: Double?`
+- `flipAngleInDegree: Double?`
+- `amplitudeInHz: Double?`
+
+Look up nucleus for γ. Call `PulseParameterCalculator().process(_:)` to get `amplitudeInHz`. Convert to µT: `B1_µT = amplitudeInHz / γ_MHz_per_T` (since γ is in MHz/T = 10⁶ Hz/T, B1 in T = Hz / (γ × 10⁶), B1 in µT = Hz / γ). Return amplitude in both Hz and µT.
+
+---
+
+### `NMRAssistant/Tools/OpenNucleusDetailTool.swift`
+
+Handles nucleus use case 6 (navigate to nucleus detail view).
+
+`Arguments`:
+- `nucleusIdentifier: String`
+
+Sets `navigationState.requestedNucleusID = nucleusIdentifier` on the `@MainActor`. Returns a confirmation string to the model. The view layer observes this change and updates the split-view selection.
+
+---
+
+### `NMRAssistant/NMRAssistantView.swift`
+
+SwiftUI view.
+
+Layout:
+- `ScrollView` with `LazyVStack` of message bubbles (user right-aligned, assistant left-aligned)
+- `HStack` at bottom: `TextField` + send `Button`
+- Shows a `ProgressView` when `service.isProcessing`
+
+Binds to `NMRAssistantService` via `@State` (owned here) or passed in via the environment.
+
+---
+
+## Modified Files
+
+### `NMRCalculator2/View/NuclearListView.swift`
+
+1. Add `@Environment(NMRAssistantNavigationState.self)` binding.
+2. Add `@State private var showAssistant = false`.
+3. Add `.toolbar` with a button (SF Symbol: `bubble.left.and.text.bubble.right`).
+4. Add `.sheet(isPresented: $showAssistant)` presenting `NMRAssistantView`.
+5. Add `.onChange(of: navigationState.requestedNucleusID)` to set `selected` and dismiss the sheet.
+
+### `NMRCalculator2App.swift`
+
+1. Instantiate `NMRAssistantNavigationState` as a `@State` in the `App` struct.
+2. Inject it into the environment: `.environment(navigationState)` on `ContentView`.
+
+---
+
+## Use Case ↔ Tool Mapping
+
+| # | Use case | Tool |
+|---|---|---|
+| I-1 | Ernst angle from T₁ and TR | `ErnstAngleTool` (nil `ernstAngleInDegree`) |
+| I-2 | Repetition time from T₁ and Ernst angle | `ErnstAngleTool` (nil `repetitionTimeInSec`) |
+| I-3 | Frequency resolution from SW and N | `FrequencyDomainTool` (nil `frequencyResolutionInHz`) |
+| I-4 | Spectral width from freq resolution and N | `FrequencyDomainTool` (nil `spectralWidthInKHz`) |
+| I-5 | Acquisition duration from dwell and N | `TimeDomainTool` (nil `acquisitionTimeInSec`) |
+| I-6 | Dwell time from acq duration and N | `TimeDomainTool` (nil `dwellTimeInMicrosec`) |
+| I-7 | Relative power of two pulses | `PulseRelativePowerTool` |
+| N-1 | List NMR isotopes for an element | `NucleusListTool` |
+| N-2 | NMR frequency of isotope | `LarmorFrequencyTool` (provide B₀ or proton freq) |
+| N-3 | External B₀ from isotope NMR frequency | `LarmorFrequencyTool` (provide `larmorFrequencyInMHz`) |
+| N-4 | Proton frequency from isotope NMR frequency | `LarmorFrequencyTool` (provide `larmorFrequencyInMHz`) |
+| N-5 | RF amplitude (T / µT) for a pulse | `PulseAmplitudeTool` |
+| N-6 | Open nucleus detail view | `OpenNucleusDetailTool` |
+
+---
+
+## Implementation Steps
+
+1. **No special entitlement required.** `FoundationModels` is a system framework — just `import FoundationModels` in source files. No Signing & Capabilities change is needed.
+2. **No `@available` guards needed.** `NMRCalculator2` already targets iOS 26.0, so `FoundationModels` can be used unconditionally.
+3. **Create `NMRAssistantNavigationState.swift`** and wire it through the app environment in `NMRCalculator2App.swift`.
+4. **Implement tools** (8 files) in `NMRCalculator2/NMRAssistant/Tools/`, each using the appropriate `NMRCalculatorCommon` calculator.
+5. **Implement `NMRAssistantService.swift`** — create `LanguageModelSession` with all tools registered.
+6. **Implement `NMRAssistantView.swift`** — chat UI that talks to the service.
+7. **Update `NuclearListView.swift`** — add toolbar button, sheet, and navigation observer.
+8. **Test** each tool in isolation with `LanguageModelSession` (unit tests or Xcode previews with simulated model responses).
+
+---
+
+# Update: Per-Tool Sessions, Unit Normalization, and Response Evaluation
+
+## Motivation
+
+`SystemLanguageModel` has a small context window, and the main session's instructions currently carry a long per-tool unit-conversion rulebook (instruction item 2). The main session should focus on the conversation; the tools themselves should validate their inputs (including unit conversion) and their outputs should be evaluated before reaching the conversation. Tool outputs should also explicitly state **which** parameter was calculated, so the main model cannot confuse the computed value with an echoed input.
+
+## Design principles
+
+- **The on-device model never does arithmetic.** All numeric conversion and verification is deterministic Swift.
+- **Units are selected by constrained decoding, not generated as strings.** Each tool's unit arguments are the `@Generable` unit enums themselves (`TimeUnit?`, `AngleUnit?`, `FrequencyUnit?`, `MagneticFieldUnit?`), so the model picks among explicit case names (`microseconds`, `milliseconds`, …) while generating the tool call. *History:* the first design used free-form unit strings resolved by a lookup table with a per-tool classifier-session fallback; in practice the main model abbreviated "microsecond" to "ms" (a 1000× error the table faithfully honored), so the string layer, the table, and the classifier session were removed. Each enum keeps an `unrecognized` case so the model can flag a spelling that is not a unit of that dimension, which the tool turns into a clarification request. Per-tool sessions remain an option for normalization tasks that aren't enumerable (e.g. nucleus identifiers).
+- **Round-trip output evaluation.** The calculated value is fed back into the calculator to solve for one of the *given* parameters (exercising a different code path); the result must reproduce the given value within a relative tolerance (1e-6). On failure the tool throws instead of returning a wrong number.
+- **Explicit calculated parameter.** Tool output strings have the uniform shape `"Calculated <parameter> = <value> <unit> (given <inputs with units>)"`.
+- **Context trade-off.** Adding unit fields grows each tool's argument schema (which also lives in the main session context), but deleting the unit-conversion instruction block more than compensates. Measure with `logTokenCount`; if schemas grow too much, collapse each value/unit pair into a single string argument (e.g. `"1.5 ms"`) parsed tool-side.
+
+## Phase 1 — Shared support layer (`NMRAssistant/Support/`) ✅
+
+- `UnitNormalizer.swift` ✅ — `@Generable` enums `TimeUnit`, `AngleUnit`, `FrequencyUnit`, `MagneticFieldUnit` used directly as tool argument types, plus synchronous converters `seconds(from:unit:assuming:)` / `degrees(…)` / `hertz(…)` / `tesla(…)`. A nil unit is taken as the calling parameter's `assuming` unit (e.g. µs for dwell time, MHz for Larmor frequency), matching the units the tools previously documented in their argument guides.
+- `ToolResponseEvaluator.swift` ✅ — round-trip verification for all calculator types: `ErnstAngleResponse`, `FrequencyDomainResponse`, `TimeDomainResponse` (the number-of-points cases use a one-step tolerance because the calculator truncates `N` to an integer), `LarmorFrequencyResponse` (keyed by the *given* parameter, since all others are derived from it), `PulseParameterResponse`, and `DecibelCalcualtionResponse`.
+
+## Phase 2 — Tool argument & flow changes ✅
+
+Pipeline in each calculation tool's `call(arguments:)`:
+validate exactly-one-parameter-omitted → `UnitNormalizer` converts each input to canonical units → build request → process via `NMRCalcFactory` → `ToolResponseEvaluator` round-trip check → return explicit `"Calculated …"` string. Validation problems and unrecognized units return instructive strings (so the model can ask the user); calculator/verification failures throw.
+
+- `ErnstAngleTool` ✅ — arguments are now value + unit-string pairs (`relaxationTimeT1`/`relaxationTimeT1Unit`, `repetitionTime`/`repetitionTimeUnit`, `ernstAngle`/`ernstAngleUnit`), all optional; exactly two must be provided and the third is calculated (the calculator also supports solving for T1, so the tool now exposes that too).
+- `FrequencyDomainTool` ✅ — `spectralWidth`/`spectralWidthUnit` (blank unit ⇒ kHz), `numberOfPoints`, `frequencyResolution`/`frequencyResolutionUnit` (blank ⇒ Hz); exactly two of three.
+- `TimeDomainTool` ✅ — `acquisitionTime`/unit (blank ⇒ s), `numberOfPoints`, `dwellTime`/unit (blank ⇒ µs); exactly two of three.
+- `LarmorFrequencyTool` ✅ — nucleus plus exactly one of `magneticField` (blank ⇒ T), `larmorFrequency` (blank ⇒ MHz), `protonFrequency` (blank ⇒ MHz), `electronFrequency` (blank ⇒ GHz), each with a unit field; the output names the given parameter and lists the calculated ones.
+- `PulseAmplitudeTool` ✅ — nucleus plus exactly two of `duration` (blank ⇒ µs), `flipAngle` (blank ⇒ degrees), `amplitude` (blank ⇒ Hz), each with a unit field; the calculated direction is labeled and the amplitude is always reported in both Hz and µT.
+- `PulseRelativePowerTool` ✅ — the four pulse parameters each gained a unit field (durations blank ⇒ µs, angles blank ⇒ degrees); both intermediate pulse-amplitude responses and the final dB response are round-trip verified.
+- `NucleusListTool` and `OpenNucleusDetailTool` — no changes needed (no units).
+
+## Phase 3 — Slim down the main session (partially done)
+
+- ✅ The unit-conversion instruction block (item 2, six sub-rules) has been replaced with one line: *"Do not convert units; pass each numerical value to the tools together with the unit the user stated."*
+- Keep persona, nucleus-normalization rules, and the omit-the-calculated-parameter rule.
+- ✅ Token measurement: `testTokenCount()` in `NMRCalculator2Tests` token-counts the instructions and each tool's name/description/argument schema (schema JSON is an approximation of the runtime's private rendering; use for relative comparisons). First measurement (2026-06-11): instructions 365; tools 2,119 (ernst 311, frequency 247, time 257, relative power 370, larmor 427, pulse amplitude 315, list_nuclei 99, open_detail 93); estimated total ≈ 2,484. The tool schemas, not the instructions, now dominate the prompt overhead — slimming candidates are the larmor and relative-power schemas (most unit-enum fields) and shorter argument descriptions.
+- Optional: a post-response **answer evaluator** session in `send(_:)` that compares the final `response.content` numbers against the latest tool outputs in `session.transcript` — the only place an LLM evaluator adds value beyond the deterministic check.
+
+## Phase 4 — Tests ✅
+
+All in the `NMRCalculator2Tests` target (56 deterministic tests, no model required):
+
+- `UnitNormalizerTests.swift` ✅ — every enum case of the four unit dimensions, nil-unit `assuming` defaults (including parameter-specific defaults like µs/MHz), unit-overrides-assumption, and `unrecognized` throwing with the right dimension name.
+- `ToolResponseEvaluatorTests.swift` ✅ — for each calculator type: consistent responses pass for every `calculated`/`given` case, corrupted responses are rejected, and the truncated-point-count one-step tolerance is exercised (`SW = 10 kHz`, `res = 9.7 Hz` → `N = 1030`).
+- `NMRAssistantToolTests.swift` ✅ — direct `call(arguments:)` per tool, with `Arguments` decoded from JSON via `GeneratedContent(json:)` (the same decoding path the FoundationModels runtime uses). Covers calculated-parameter labeling for every direction, unit conversion (T1 = 1500 ms → 1.5 s, radians, mT, kHz, MHz, Gauss-free defaults), under-/over-specified arguments, placeholder-zero rejection, unrecognized units, unknown nuclei, and `OpenNucleusDetailTool` navigation-state writes.
+- `testNMRAssistantServiceUnitBearingPhrasings()` ✅ — unit-bearing phrasings from the question list, one fresh session per question; asserts a non-error assistant reply. Model-dependent: both service tests first probe an actual `respond(to:)` and skip if generation fails — in the simulator `SystemLanguageModel.default.availability` can report `.available` while every request fails with `GenerationError error -1`, so availability alone is not a sufficient guard. Run on a device (or a host with working Apple Intelligence assets) to exercise them.
+
+## Phase 5 — Placeholder-zero mitigation (2026-06-13)
+
+**Problem:** The on-device constrained decoding generates `0.0` for `Double?` fields (and `0` for `Int?`) when the model intends to omit a parameter, rather than generating `nil`. This causes the `providedCount` guard to count the placeholder as a provided value, leading to a validation failure and a retry loop with the same wrong arguments.
+
+**Approaches tried:**
+1. Rephrasing `@Guide` descriptions and instructions from "omit" to "set to nil" — did not change model behavior.
+2. `@Generable(representNilExplicitlyInGeneratedContent: true)` — available from iOS 26.4 / macOS 26.4 (requires raising the minimum from 26.0); not yet applied.
+
+**Fix applied:** Each tool's `call()` normalizes `0.0 → nil` (and `0 → nil` for `Int?`) for all optional numeric parameters immediately before the `providedCount` check. A genuine user-supplied `0` is subsequently caught by the existing `<= 0` validation with a clear error message. Five tools updated:
+
+| Tool | Parameters normalized |
+|---|---|
+| `PulseAmplitudeTool` | `duration`, `flipAngle`, `amplitude` |
+| `ErnstAngleTool` | `relaxationTimeT1`, `repetitionTime`, `ernstAngle` |
+| `LarmorFrequencyTool` | `magneticField`, `larmorFrequency`, `protonFrequency`, `electronFrequency` |
+| `TimeDomainTool` | `acquisitionTime`, `numberOfPoints`, `dwellTime` |
+| `FrequencyDomainTool` | `spectralWidth`, `numberOfPoints`, `frequencyResolution` |
+
+**Instructions update:** Removed "never pass 0 or 0.0 as a placeholder" (now enforced in code). Phrasing revised to "Do not set any parameter the user didn't provide." Token counts should be re-measured with `testTokenCount()` on a device to update the 2026-06-11 baseline (365 instructions / ~2,484 total); the instructions are marginally shorter.
+
+## Risks / open points
+
+- **Schema growth vs. instruction shrinkage**: confirm net token reduction with `tokenCount` after Phase 3 (the unit enums list their case names in each tool schema).
+- Nucleus-identifier normalization (instruction item 1) could later move tool-side the same way, further shrinking the main instructions.
+- `@Generable(representNilExplicitlyInGeneratedContent: true)` (iOS 26.4+) remains an alternative to the code-level 0→nil normalization; try if placeholder zeros reappear for other parameter types.

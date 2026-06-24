@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol ParameterConverting {
-    
+public protocol NMRCalcDelegate {
+    func process(_ request: NMRCalcRequest) -> Result<NMRCalcResponse, NMRCalcError>
 }
